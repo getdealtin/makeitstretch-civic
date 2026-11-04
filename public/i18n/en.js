@@ -127,5 +127,24 @@ export default {
   box_edit: 'Change my items',
   box_to_budget: 'Plan a grocery budget instead',
 
-  footer_privacy: 'No account. No ads. Nothing you enter is saved.',
+  // Keep this plan (no account)
+  keep_title: 'Keep this plan',
+  keep_save: 'Save on this phone',
+  keep_saved: '✓ Saved on this phone',
+  keep_text: 'Text it to me',
+  keep_email: 'Email it to me',
+  keep_copy: 'Copy link',
+  keep_saved_msg: 'Saved. Open this site on this phone and your plan will be waiting. (This replaces any plan saved before.)',
+  keep_removed: 'Removed from this phone.',
+  keep_save_failed: 'This browser won\u2019t let us save. Try Copy link or Text it to me instead.',
+  keep_copied: 'Link copied. Anyone with this link can see this plan.',
+  keep_copy_manual: 'Copy this link:',
+  full_plan_link: 'Full plan:',
+  leftover_short: 'leftovers',
+  saved_eyebrow: 'Saved on this phone',
+  saved_title: 'Your saved plan',
+  open_saved: 'Open my plan',
+  remove_saved: 'Remove it',
+
+  footer_privacy: 'No account. No ads. Nothing is saved unless you choose to save it on your phone.',
 };

@@ -9,7 +9,14 @@ Two ways in:
 - **I have a food box:** tap what's in the box. Returns meals you can make, ranked by how much of the box
   each uses, with "you'll also need: …" for anything missing.
 
-Both end with local free-food help. There's no login and no ads, and nothing is stored.
+Both end with local free-food help. There's no login and no ads, and nothing is stored on our side.
+
+**Keep this plan** (no account): *Save on this phone* (browser storage, opt-in), *Text it to me* /
+*Email it to me* (opens the person's own app, prefilled), and *Copy link*. The plan's inputs, swaps and
+checkmarks are packed into the URL after `#`, which browsers never send to the server; the deterministic
+engine rebuilds the identical plan from it (`public/keep.js`). Links are treated as untrusted input and
+cleaned on the way in. Email sign-up and profiles are deliberately left for the connector opt-in step
+(build spec §5), where identity and consent are designed once.
 
 Build spec and decisions: *The Enough Project: Austin Build Spec & Requirements* (Claude Doc).
 
@@ -31,6 +38,7 @@ cities/      One config card per city. Everything city-specific lives here.
 server.js    Express: picks the city by Host. Serves /theme.css, /api/config, /api/plan, and
              /api/prices + /api/recipes + /engine/ so the engine also runs in the browser
 public/      The UI (plain HTML/CSS/ES modules, no build step)
+  keep.js      save / text / email / link a plan without an account
   i18n/en.js   all UI strings (add es.js in Phase 3)
 data/        seed-recipes.json (161 recipes)
 test/        engine + server tests (node:test, no dependencies)

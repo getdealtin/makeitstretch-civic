@@ -8,6 +8,9 @@ import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
   matchBox, BOX_GROUPS, foodLabel,
 } from '/engine/index.js';
+import {
+  packPlan, packBox, planHash, boxHash, readHash, planText, boxText, smsHref, mailHref, store,
+} from './keep.js';
 
 const STRINGS = { en };
 let S = en;
@@ -78,7 +81,23 @@ async function boot() {
   if (qs) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + qs;
 
   getRecipes(); getPrices(null); // warm up in the background
-  renderIntro();
+  if (!openFromHash(location.hash)) renderIntro();
+  // A different plan link opened in this same tab only changes the #part: no reload happens.
+  // (Our own updates use replaceState, which doesn't fire this.)
+  window.addEventListener('hashchange', () => { if (!openFromHash(location.hash)) renderIntro(); });
+}
+
+const saveKey = () => 'mis:saved:' + (city.id || 'default');
+const setHash = h => history.replaceState(null, '', location.pathname + qs + h);
+const linkFor = h => location.origin + location.pathname + qs + h;
+
+/** Rebuild a plan or box from a "#p=…" / "#b=…" link. */
+function openFromHash(hash) {
+  const hit = readHash(hash);
+  if (!hit) return false;
+  if (hit.kind === 'plan') { answers = { ...fresh(), ...hit.state.answers }; showResults(hit.state); }
+  else { box = hit.state; renderBoxResults(); }
+  return true;
 }
 
 function focusTop(sel) {
@@ -88,7 +107,17 @@ function focusTop(sel) {
 
 // ── Start screen: two doors ─────────────────────────────────────
 function renderIntro() {
+  setHash('');
+  const saved = store.get(saveKey());
   app.innerHTML = `
+    ${saved?.hash ? `<section class="saved-card" aria-labelledby="saved-title">
+      <p class="eyebrow">${esc(t('saved_eyebrow'))}</p>
+      <h2 id="saved-title">${esc(saved.title || t('saved_title'))}</h2>
+      <div class="saved-actions">
+        <button class="btn btn-primary" id="open-saved">${esc(t('open_saved'))}</button>
+        <button class="btn-link" id="del-saved">${esc(t('remove_saved'))}</button>
+      </div>
+    </section>` : ''}
     <section class="intro">
       ${city.place ? `<p class="eyebrow">${esc(city.place)}</p>` : ''}
       <h1 tabindex="-1" id="intro-title">${esc(t('intro_title'))}</h1>
@@ -100,10 +129,13 @@ function renderIntro() {
     </section>`;
   app.querySelector('#door-budget').onclick = () => { answers = fresh(); go(0); };
   app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
+  app.querySelector('#open-saved')?.addEventListener('click', () => { if (!openFromHash(saved.hash)) { store.del(saveKey()); renderIntro(); } });
+  app.querySelector('#del-saved')?.addEventListener('click', () => { store.del(saveKey()); renderIntro(); });
 }
 
 // ── Budget flow ─────────────────────────────────────────────────
 function go(i) {
+  setHash('');
   const name = STEPS[i];
   const pct = Math.round((i / STEPS.length) * 100);
   app.innerHTML = `
@@ -265,13 +297,13 @@ const STEP_SAVE = {
 };
 
 // ── Results ─────────────────────────────────────────────────────
-async function showResults() {
+async function showResults(restore = {}) {
   app.innerHTML = `<div class="loading" role="status"><div class="spinner" aria-hidden="true"></div>${esc(t('building'))}</div>`;
-  try { renderResults(await computePlan(answers)); }
+  try { renderResults(await computePlan(answers), restore); }
   catch {
     app.innerHTML = `<p class="error" role="alert">${esc(t('error_plan'))}</p>
       <button class="btn btn-primary" id="retry">${esc(t('build_plan'))}</button>`;
-    app.querySelector('#retry').onclick = showResults;
+    app.querySelector('#retry').onclick = () => showResults(restore);
   }
 }
 
@@ -295,7 +327,7 @@ function helpSection() {
   </section>`;
 }
 
-function renderResults(plan) {
+function renderResults(plan, restore = {}) {
   const { input, result: s, shopping, weeks, priced } = plan;
   const peopleLabel = input.people === 1 ? t('person') : t('people', { n: input.people });
   const calNote = s.calPct >= 80 ? t('cal_ok') : s.calPct >= 60 ? t('cal_low') : t('cal_tight');
@@ -303,6 +335,11 @@ function renderResults(plan) {
 
   // Which option is chosen per meal slot: key "w-d-slot" → index (0 = main pick, 1 = alternate).
   const choice = {};
+  for (const k of restore.swaps || []) {
+    const [w, d, sl] = k.split('-');
+    if (weeks[w]?.[d]?.[sl]?.[1]) choice[k] = 1;
+  }
+  const checked = new Set(restore.checked || []);
   const recipes = new Map();
   weeks.flat().forEach(d => { if (!d.leftover) ['breakfast', 'lunch', 'dinner'].forEach(sl => d[sl].forEach(r => recipes.set(String(r.id), r))); });
 
@@ -312,7 +349,7 @@ function renderResults(plan) {
     <ul class="rows">${g.items.map(i => {
       const name = foodLabel(i.id);
       return `<li class="row">
-        <input type="checkbox" id="ck-${i.id}">
+        <input type="checkbox" id="ck-${i.id}" data-item="${i.id}" ${checked.has(i.id) ? 'checked' : ''}>
         <label for="ck-${i.id}">${esc(name)} <span class="qty">×${i.qty}</span></label>
         <button type="button" class="info" aria-expanded="false" aria-controls="more-${i.id}"
           aria-label="${esc(t('more_about', { item: name }))}">ⓘ</button>
@@ -329,7 +366,7 @@ function renderResults(plan) {
         : `<div class="d"><div class="day-name">${esc(d.dayName)}</div>
             ${['breakfast', 'lunch', 'dinner'].map(sl => d[sl].length ? `
               <div class="m"><span>${esc(t(sl))}</span>
-                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(d[sl][0].title)}</button></div>` : '').join('')}
+                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(d[sl][choice[`${wi}-${di}-${sl}`] || 0].title)}</button></div>` : '').join('')}
           </div>`).join('')}
     </div>`;
 
@@ -345,6 +382,8 @@ function renderResults(plan) {
         ${residents().length ? `<a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a>` : ''}
       </nav>
     </section>
+
+    ${keepBar()}
 
     <section class="section" id="list" aria-labelledby="h-list" tabindex="-1">
       <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
@@ -376,6 +415,24 @@ function renderResults(plan) {
   focusTop('#res-title');
   wireJumps();
 
+  // Keep this plan: the link, the saved copy and the text/email bodies all follow the live state.
+  const title = t('res_title', { days: input.days });
+  const currentHash = () => planHash(packPlan(answers, {
+    swaps: Object.keys(choice).filter(k => choice[k] === 1),
+    checked: [...app.querySelectorAll('.row input:checked')].map(x => x.dataset.item),
+  }));
+  const sync = wireKeep({
+    title,
+    hash: currentHash,
+    text: full => planText({
+      title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
+      shopping: shopping.map(g => ({ items: g.items.map(i => ({ label: foodLabel(i.id), qty: i.qty, subtotal: i.subtotal })) })),
+      weeks, choice, total: s.spent, url: linkFor(currentHash()), full,
+      labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), link: t('full_plan_link') },
+    }),
+  });
+  app.querySelectorAll('.row input').forEach(x => x.addEventListener('change', sync));
+
   // Shopping list: tips open on tap.
   app.querySelectorAll('.info').forEach(b => b.addEventListener('click', () => {
     const open = b.getAttribute('aria-expanded') !== 'true';
@@ -406,6 +463,7 @@ function renderResults(plan) {
         choice[b.dataset.key] = 1 - ci;
         b.textContent = opts[1 - ci].title;
         app.querySelector('#announce').textContent = t('swapped', { title: opts[1 - ci].title });
+        sync();
         showMeal(b, true);
       },
     } : {});
@@ -414,6 +472,58 @@ function renderResults(plan) {
 
   app.querySelector('#print').onclick = () => window.print();
   app.querySelector('#restart').onclick = renderIntro;
+}
+
+// ── Keep this plan (no account) ─────────────────────────────────
+function keepBar() {
+  return `<section class="keep no-print" aria-labelledby="h-keep">
+    <h2 id="h-keep" class="keep-title">${esc(t('keep_title'))}</h2>
+    <div class="keep-actions">
+      <button type="button" class="keep-btn" id="k-save" aria-pressed="false">${esc(t('keep_save'))}</button>
+      <a class="keep-btn" id="k-text" href="#">${esc(t('keep_text'))}</a>
+      <a class="keep-btn" id="k-email" href="#">${esc(t('keep_email'))}</a>
+      <button type="button" class="keep-btn" id="k-copy">${esc(t('keep_copy'))}</button>
+    </div>
+    <p class="keep-status" id="k-status" aria-live="polite"></p>
+  </section>`;
+}
+
+/** Wires the keep bar. Returns sync(), to call whenever the plan changes. */
+function wireKeep({ title, hash, text }) {
+  const saveBtn = app.querySelector('#k-save');
+  const status = app.querySelector('#k-status');
+  const isSaved = () => !!store.get(saveKey())?.hash && store.get(saveKey()).hash === app.dataset.savedHash;
+  const paintSave = () => {
+    const on = isSaved();
+    saveBtn.textContent = on ? t('keep_saved') : t('keep_save');
+    saveBtn.setAttribute('aria-pressed', on);
+  };
+  const sync = () => {
+    const h = hash();
+    setHash(h);
+    if (isSaved()) { store.set(saveKey(), { ...store.get(saveKey()), hash: h }); app.dataset.savedHash = h; }
+    app.querySelector('#k-text').href = smsHref(text(false));
+    app.querySelector('#k-email').href = mailHref(title, text(true));
+  };
+  // Already saved? (opened from the saved card, or the same plan saved earlier)
+  if (store.get(saveKey())?.hash === hash()) app.dataset.savedHash = hash(); else delete app.dataset.savedHash;
+  saveBtn.onclick = () => {
+    if (isSaved()) {
+      store.del(saveKey()); delete app.dataset.savedHash;
+      status.textContent = t('keep_removed');
+    } else if (store.set(saveKey(), { hash: hash(), title, at: Date.now() })) {
+      app.dataset.savedHash = hash();
+      status.textContent = t('keep_saved_msg');
+    } else status.textContent = t('keep_save_failed');
+    paintSave();
+  };
+  app.querySelector('#k-copy').onclick = async () => {
+    const url = linkFor(hash());
+    try { await navigator.clipboard.writeText(url); status.textContent = t('keep_copied'); }
+    catch { status.innerHTML = `${esc(t('keep_copy_manual'))} <input class="keep-url" readonly value="${esc(url)}" aria-label="${esc(t('keep_copy'))}">`; status.querySelector('input').select(); }
+  };
+  sync(); paintSave();
+  return sync;
 }
 
 // Jump links move focus too (keyboard and screen-reader users land in the section).
@@ -451,6 +561,7 @@ function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
 
 // ── Food box flow ───────────────────────────────────────────────
 function renderBox() {
+  setHash('');
   app.innerHTML = `
     <form class="step" id="boxform" novalidate>
       <h2 id="q" tabindex="-1">${esc(t('box_title'))}</h2>
@@ -507,6 +618,7 @@ async function renderBoxResults() {
       ${residents().length ? `<nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
         <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
     </section>
+    ${keepBar()}
     <section class="section" aria-label="${esc(t('box_res_title'))}">
       ${matches.length ? `<ul class="box-list">${matches.map(m => `
         <li class="box-card">
@@ -530,6 +642,14 @@ async function renderBoxResults() {
   app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => {
     const m = byId.get(b.dataset.id); openRecipe(m.recipe, { missing: m.missing });
   }));
+  wireKeep({
+    title: t('box_res_title'),
+    hash: () => boxHash(packBox(box)),
+    text: () => boxText({
+      title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${t('box_res_title')}`,
+      matches, url: linkFor(boxHash(packBox(box))), labels: { need: t('box_need'), link: t('full_plan_link') },
+    }),
+  });
   app.querySelector('#edit').onclick = renderBox;
   app.querySelector('#print').onclick = () => window.print();
   app.querySelector('#to-budget').onclick = () => { answers = fresh(); go(0); };
