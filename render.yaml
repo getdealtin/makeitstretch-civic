@@ -1,0 +1,17 @@
+# Render blueprint: one service serves every city (selected by domain).
+# Point austin.makeitstretch.org at this service; add more city domains the same way.
+services:
+  - type: web
+    name: makeitstretch-civic
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DEFAULT_CITY
+        value: austin
+      - key: BLS_KEY
+        sync: false
