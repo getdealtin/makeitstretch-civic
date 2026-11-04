@@ -207,4 +207,6 @@ export default {
   pf_err_rate: 'Too many sign-ups from this connection. Please try again in an hour.',
   pf_err_server: 'Something went wrong. Please try again.',
   pf_required: 'required',
+  list_sep: ', ',
+  label_colon: ':',
 };

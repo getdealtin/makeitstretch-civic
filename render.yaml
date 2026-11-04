@@ -15,3 +15,10 @@ services:
         value: austin
       - key: BLS_KEY
         sync: false
+      # Food directory + admin (Supabase project makeitstretch-civic, one database for all cities)
+      - key: SUPABASE_URL
+        value: https://lfdbqqnjmqcmtjcvmrcl.supabase.co
+      - key: SUPABASE_SECRET_KEY   # Supabase → Project Settings → API Keys → secret key. Server only.
+        sync: false
+      - key: ADMIN_KEY             # your password for /admin
+        sync: false

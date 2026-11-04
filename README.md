@@ -9,7 +9,7 @@ Two ways in:
 - **I have a food box:** tap what's in the box. Returns meals you can make, ranked by how much of the box
   each uses, with "you'll also need: …" for anything missing.
 
-Both end with local free-food help. There's no login and no ads, and nothing is stored on our side.
+Both end with local free-food help: approved local food sites (nearest the zip first) plus city-wide resources. There's no login and no ads, and nothing is stored on our side.
 
 **Keep this plan** (no account): *Save on this phone* (browser storage, opt-in), *Text it to me* /
 *Email it to me* (opens the person's own app, prefilled), and *Copy link*. The plan's inputs, swaps and
@@ -59,6 +59,9 @@ Outside production, `?city=austin` or `?city=national` on any URL switches the c
 |---|---|
 | `DEFAULT_CITY` | City for hosts that match no card (`austin` on the Austin deploy) |
 | `BLS_KEY` | Optional. Live BLS average prices (otherwise built-in May 2025 estimates) |
+| `SUPABASE_URL` | The `makeitstretch-civic` Supabase project (one database for every city) |
+| `SUPABASE_SECRET_KEY` | Supabase secret key, server only. Without it the directory runs in memory (test mode) |
+| `ADMIN_KEY` | Password for `/admin` |
 | `PORT` | Default 3000 |
 
 ## How the engine is protected
@@ -78,6 +81,29 @@ upgrade), we update the expected results in the same commit and say why.
 4. `npm test` checks every card for required keys and color tokens.
 
 No engine or UI code changes. If a city needs one, that's a sign the city's feature belongs on its config card.
+
+## Food directory and admin
+
+- **Providers sign up** at `/add-site`, or through a personal invite link `/join/<token>` made in `/admin`.
+  Every submission, invite or not, waits in **Needs review** until approved. Contact details are private and
+  never leave the admin API.
+- **`/admin`** (password `ADMIN_KEY`, 30-day sign-in): needs review, overdue (not re-confirmed in 6 months),
+  invite links with a ready-to-send email, the directory (add/edit/hide/restore), translation sign-off, and
+  activity (fills in when Phase 4 tracking is on). A city picker covers every city in one database.
+- Database schema: `db/schema.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
+
+## Languages
+
+English, Español, Tiếng Việt and 中文 (Austin's top languages), with a switch at the top of every page.
+- `public/i18n/<code>.js`: screen text (same keys as `en.js`).
+- `public/i18n/data/<code>.json`: food names, notes, tips, ingredient words, all 161 recipes.
+- `cities/<city>.js` → `i18n`: the city's own text (disclaimer, help listings).
+- Translations are **display-only**: the engine works in English, so a plan is identical in every language
+  and links/saved plans work across languages.
+- Non-English text is a **draft until a native speaker signs off** in `/admin → Translations`.
+- `npm test` fails if any phrase, food, tip, ingredient word or recipe is missing in any language.
+- To add a language: copy those three pieces, add it to `LANGS` in `public/i18n/index.js` and to the city's
+  `languages`, and add a row to `translation_reviews`.
 
 ## Known engine limits (deliberate, for later)
 
@@ -104,7 +130,9 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
 - [x] Phase 1: city config cards, host-based city selection, Austin theme, print packet (basic)
 - [x] Phase 2: two doors (budget / food box), blurred live preview, one-page results with jump links,
       compact list, one week at a time with meal swap, store question reworded around food access
-- [ ] Phase 3: Austin data (local prices, Data Steward capture, Spanish)
+- [x] Phase 3: four languages with a visible switch; own food directory with invite links, review queue,
+      6-month re-confirm; `/admin` page; new Supabase project
+- [ ] Data Stewards: local shelf-price capture (moved to its own phase)
 - [ ] Phase 4: privacy policy + events schema reset
 - [ ] Phase 5: city reporting with k-anonymity
 - [ ] Phase 6: full accessibility audit + offline packet

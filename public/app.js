@@ -424,10 +424,10 @@ async function loadSites(zip) {
       <span class="site-kind">${esc(t('kind_' + p.kind))}</span>
       <h3>${esc(p.name)}</h3>
       ${where ? `<p class="site-where">${esc(where)}</p>` : ''}
-      ${p.hours ? `<p><b>${esc(t('hours'))}:</b> ${esc(p.hours)}</p>` : ''}
+      ${p.hours ? `<p><b>${esc(t('hours'))}${esc(t('label_colon'))}</b> ${esc(p.hours)}</p>` : ''}
       ${facts ? `<p>${esc(facts)}</p>` : ''}
       ${offers ? `<p class="site-offers">${esc(offers)}</p>` : ''}
-      ${langs.length ? `<p>${esc(t('speaks', { langs: langs.join(', ') }))}</p>` : ''}
+      ${langs.length ? `<p>${esc(t('speaks', { langs: langs.join(t('list_sep')) }))}</p>` : ''}
       ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
       <div class="help-actions">
         ${where ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + where)}" target="_blank" rel="noopener">${esc(t('directions'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
@@ -752,9 +752,9 @@ async function renderBoxResults() {
         <li class="box-card">
           <span class="box-slot">${esc(t(m.recipe.slot))}</span>
           <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
-          <p class="box-line"><b>${esc(t('box_uses'))}:</b> ${esc(m.uses.map(ing).join(', '))}</p>
+          <p class="box-line"><b>${esc(t('box_uses'))}${esc(t('label_colon'))}</b> ${esc(m.uses.map(ing).join(t('list_sep')))}</p>
           <p class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
-            ? `<b>${esc(t('box_need'))}:</b> ${esc(m.missing.map(ing).join(', '))}` : esc(t('box_have_all'))}</p>
+            ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</p>
         </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
     </section>
     ${helpSection()}
