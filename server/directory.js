@@ -1,0 +1,243 @@
+// Food directory: provider sign-up (public form + personal invite links),
+// the public listing, and the private admin API behind /admin.
+//
+// Everything a provider submits goes to admin review first, including from
+// invite links. Contact details are private and never leave the admin API.
+
+import crypto from 'node:crypto';
+import express from 'express';
+import { PUBLIC_FIELDS, EDITABLE_FIELDS } from './db.js';
+import { CITIES } from '../cities/index.js';
+
+export const RECONFIRM_DAYS = 182; // about 6 months
+export const KINDS = ['pantry', 'fridge', 'meals', 'mutual_aid', 'other'];
+export const OFFERS = ['groceries', 'produce', 'meals', 'baby', 'hygiene', 'other'];
+export const LANGS = ['en', 'es', 'vi', 'zh', 'ar', 'other'];
+const ACCESS = ['walkup', 'appointment', 'both'];
+
+// ── Validation (shared by the public form and admin edits) ──────
+const str = (v, max) => {
+  if (v == null) return null;
+  const s = String(v).replace(/[\u0000-\u001f\u007f]/g, ' ').trim();
+  return s ? s.slice(0, max) : null;
+};
+const list = (v, allowed) => [...new Set((Array.isArray(v) ? v : []).filter(x => allowed.includes(x)))];
+
+/** Untrusted input → clean row fields, or { error } naming the first problem. */
+export function cleanProvider(b, { partial = false } = {}) {
+  const out = {};
+  const set = (k, v) => { if (!partial || k in b) out[k] = v; };
+  set('name', str(b.name, 200));
+  set('kind', KINDS.includes(b.kind) ? b.kind : null);
+  set('address', str(b.address, 300));
+  set('zip', /^\d{5}$/.test(String(b.zip || '').trim()) ? String(b.zip).trim() : null);
+  set('phone', str(b.phone, 40));
+  let web = str(b.website, 300);
+  if (web && !/^[a-z][a-z0-9+.-]*:/i.test(web)) web = 'https://' + web; // "pantry.org" → https://pantry.org
+  if (web) {
+    try {
+      const u = new URL(web);
+      web = (u.protocol === 'https:' || u.protocol === 'http:') && /\.[a-z]{2,}$/i.test(u.hostname) ? u.href : null;
+    } catch { web = null; }
+  }
+  set('website', web);
+  set('hours', str(b.hours, 500));
+  set('access', ACCESS.includes(b.access) ? b.access : null);
+  set('id_required', b.id_required === true || b.id_required === 'yes' ? true : b.id_required === false || b.id_required === 'no' ? false : null);
+  set('languages', list(b.languages, LANGS));
+  set('offers', list(b.offers, OFFERS));
+  set('description', str(b.description, 1000));
+  set('contact_name', str(b.contact_name, 200));
+  const email = str(b.contact_email, 200);
+  set('contact_email', email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null);
+  set('contact_phone', str(b.contact_phone, 40));
+  if ('admin_note' in b) out.admin_note = str(b.admin_note, 1000);
+
+  if (!partial) {
+    if (!out.name) return { error: 'name' };
+    if (!out.kind) return { error: 'kind' };
+    if (!out.zip) return { error: 'zip' };
+    if (!out.contact_email && !out.contact_phone) return { error: 'contact' };
+  } else {
+    if ('name' in out && !out.name) return { error: 'name' };
+    if ('kind' in out && !out.kind) return { error: 'kind' };
+  }
+  return { row: out };
+}
+
+const pickPublic = p => Object.fromEntries(PUBLIC_FIELDS.map(f => [f, p[f] ?? null]));
+const daysSince = iso => (iso ? (Date.now() - new Date(iso).getTime()) / 864e5 : Infinity);
+export const isOverdue = p => p.status === 'approved' && daysSince(p.confirmed_at) > RECONFIRM_DAYS;
+
+/** Nearest first: same zip, then numerically closest zip (good enough within one metro). */
+export function byZip(rows, zip) {
+  if (!/^\d{5}$/.test(zip || '')) return rows;
+  const z = Number(zip);
+  return [...rows].sort((a, b) => Math.abs(Number(a.zip || 0) - z) - Math.abs(Number(b.zip || 0) - z));
+}
+
+// ── Admin sign-in (same pattern as the prototype's /dash) ───────
+// The cookie holds a hash of ADMIN_KEY, never the key; changing ADMIN_KEY signs everyone out.
+const adminToken = key => crypto.createHash('sha256').update(key + '::admin::v1').digest('hex');
+const getCookie = (req, name) => {
+  const c = (req.headers.cookie || '').split(';').map(s => s.trim()).find(s => s.startsWith(name + '='));
+  return c ? decodeURIComponent(c.slice(name.length + 1)) : null;
+};
+const safeEqual = (a, b) => {
+  const x = Buffer.from(String(a)), y = Buffer.from(String(b));
+  return x.length === y.length && crypto.timingSafeEqual(x, y);
+};
+
+export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_KEY, secureCookies = () => process.env.NODE_ENV === 'production' }) {
+  const db = () => getDb();
+
+  // Simple in-memory rate limit for the public form (IP is never stored).
+  const hits = new Map();
+  const limited = ip => {
+    const now = Date.now(), w = hits.get(ip)?.filter(t => now - t < 3600e3) || [];
+    w.push(now); hits.set(ip, w);
+    return w.length > 8;
+  };
+
+  // ── Public ────────────────────────────────────────────────────
+  app.get('/api/providers', async (req, res) => {
+    try {
+      const rows = (await db().listProviders(req.city.id, ['approved'])).map(pickPublic);
+      res.set('Cache-Control', 'public, max-age=300').json(byZip(rows, req.query.zip).slice(0, 25));
+    } catch (e) { console.error(e.message); res.json([]); }
+  });
+
+  // Invite link → is it real? (The form shows the org name it was made for.)
+  app.get('/api/invite/:token', async (req, res) => {
+    const inv = /^[A-Za-z0-9_-]{10,64}$/.test(req.params.token) ? await db().inviteByToken(req.params.token).catch(() => null) : null;
+    if (!inv || inv.city_id !== req.city.id) return res.status(404).json({ ok: false });
+    res.json({ ok: true, org_name: inv.org_name });
+  });
+
+  app.post('/api/providers/submit', async (req, res) => {
+    const b = req.body || {};
+    if (b.company_website) return res.json({ ok: true }); // honeypot: bots fill hidden fields
+    if (limited(req.ip)) return res.status(429).json({ ok: false, error: 'rate' });
+    const { row, error } = cleanProvider(b);
+    if (error) return res.status(400).json({ ok: false, error });
+    try {
+      let invite = null;
+      if (typeof b.token === 'string' && /^[A-Za-z0-9_-]{10,64}$/.test(b.token)) {
+        invite = await db().inviteByToken(b.token);
+        if (invite && invite.city_id !== req.city.id) invite = null;
+      }
+      await db().insertProvider({
+        ...row, city_id: req.city.id, status: 'pending',
+        source: invite ? 'invite' : 'public', invite_id: invite?.id || null,
+      });
+      if (invite) await db().markInviteUsed(invite.id);
+      res.json({ ok: true });
+    } catch (e) { console.error(e.message); res.status(500).json({ ok: false, error: 'server' }); }
+  });
+
+  // ── Admin ─────────────────────────────────────────────────────
+  const cookieFlags = () => `Path=/; HttpOnly; SameSite=Strict; Max-Age=${60 * 60 * 24 * 30}${secureCookies() ? '; Secure' : ''}`;
+  const authed = req => { const k = adminKey(); return !!k && getCookie(req, 'mis_admin') === adminToken(k); };
+
+  const admin = express.Router();
+  admin.use((req, res, next) => {
+    // Writes must come from our own pages (blocks cross-site form posts).
+    if (req.method !== 'GET') {
+      const origin = req.headers.origin;
+      let ok = true;
+      if (origin) { try { ok = new URL(origin).host === req.headers.host; } catch { ok = false; } }
+      if (!ok) return res.status(403).json({ ok: false });
+    }
+    next();
+  });
+
+  admin.post('/login', (req, res) => {
+    const k = adminKey();
+    if (!k) return res.status(503).json({ ok: false, error: 'not_configured' });
+    if (!safeEqual(req.body?.password || '', k)) return res.status(401).json({ ok: false });
+    res.set('Set-Cookie', `mis_admin=${adminToken(k)}; ${cookieFlags()}`).json({ ok: true });
+  });
+  admin.post('/logout', (req, res) => res.set('Set-Cookie', `mis_admin=; ${cookieFlags().replace(/Max-Age=\d+/, 'Max-Age=0')}`).json({ ok: true }));
+
+  admin.use((req, res, next) => {
+    if (!adminKey()) return res.status(503).json({ ok: false, error: 'not_configured' });
+    if (!authed(req)) return res.status(401).json({ ok: false, error: 'signin' });
+    res.set('Cache-Control', 'no-store');
+    next();
+  });
+
+  // Admin picks the city (one admin page for every city).
+  const cityOf = req => {
+    const id = req.query.city || req.body?.city;
+    return CITIES[id] && id !== 'national' ? id : (req.city.id !== 'national' ? req.city.id : Object.keys(CITIES).find(c => c !== 'national'));
+  };
+
+  admin.get('/summary', async (req, res) => {
+    const city = cityOf(req);
+    try {
+      const [all, invites, reviews] = await Promise.all([db().listProviders(city), db().listInvites(city), db().listReviews()]);
+      const byInvite = Object.fromEntries(all.filter(p => p.invite_id).map(p => [p.invite_id, { id: p.id, name: p.name, status: p.status }]));
+      res.json({
+        city, cities: Object.values(CITIES).filter(c => c.id !== 'national').map(c => ({ id: c.id, place: c.place })),
+        db: db().kind,
+        pending: all.filter(p => p.status === 'pending'),
+        overdue: all.filter(isOverdue),
+        approved: all.filter(p => p.status === 'approved'),
+        hidden: all.filter(p => p.status === 'hidden' || p.status === 'rejected'),
+        invites: invites.map(i => ({ ...i, submission: byInvite[i.id] || null })),
+        reviews,
+        reconfirm_days: RECONFIRM_DAYS,
+        activity: { available: false }, // Phase 4: visits, plans built, food-box use
+      });
+    } catch (e) { console.error(e.message); res.status(500).json({ ok: false, error: 'db' }); }
+  });
+
+  const STATUS_FOR = { approve: 'approved', reject: 'rejected', hide: 'hidden', restore: 'approved' };
+  admin.post('/providers/:id', async (req, res) => {
+    const { action } = req.body || {};
+    const p = await db().getProvider(req.params.id).catch(() => null);
+    if (!p) return res.status(404).json({ ok: false });
+    const now = new Date().toISOString();
+    let patch;
+    if (STATUS_FOR[action]) {
+      patch = { status: STATUS_FOR[action], reviewed_at: now };
+      if (action === 'approve' || action === 'restore') patch.confirmed_at = now;
+    } else if (action === 'confirm') patch = { confirmed_at: now };
+    else if (action === 'edit') {
+      const { row, error } = cleanProvider(req.body.fields || {}, { partial: true });
+      if (error) return res.status(400).json({ ok: false, error });
+      patch = Object.fromEntries(Object.entries(row).filter(([k]) => EDITABLE_FIELDS.includes(k)));
+    } else return res.status(400).json({ ok: false, error: 'action' });
+    res.json({ ok: true, provider: await db().updateProvider(p.id, patch) });
+  });
+
+  // Admin adds a listing directly (e.g. from a phone call): goes live immediately.
+  admin.post('/providers', async (req, res) => {
+    const { row, error } = cleanProvider(req.body?.fields || {});
+    if (error) return res.status(400).json({ ok: false, error });
+    const now = new Date().toISOString();
+    res.json({ ok: true, provider: await db().insertProvider({ ...row, city_id: cityOf(req), status: 'approved', source: 'admin', reviewed_at: now, confirmed_at: now }) });
+  });
+
+  admin.post('/invites', async (req, res) => {
+    const org = str(req.body?.org_name, 200);
+    if (!org) return res.status(400).json({ ok: false, error: 'org_name' });
+    const city = cityOf(req);
+    const inv = await db().createInvite(city, org);
+    const host = CITIES[city].hosts[0] || req.headers.host;
+    const proto = CITIES[city].hosts[0] ? 'https' : req.protocol;
+    res.json({ ok: true, invite: inv, link: `${proto}://${host}/join/${inv.token}` });
+  });
+
+  admin.post('/reviews/:lang', async (req, res) => {
+    const status = req.body?.status === 'approved' ? 'approved' : 'pending';
+    const r = await db().updateReview(req.params.lang, {
+      status, reviewer: str(req.body?.reviewer, 200), note: str(req.body?.note, 1000),
+      reviewed_at: status === 'approved' ? new Date().toISOString() : null,
+    });
+    if (!r) return res.status(404).json({ ok: false });
+    res.json({ ok: true, review: r });
+  });
+
+  app.use('/api/admin', admin);
+}

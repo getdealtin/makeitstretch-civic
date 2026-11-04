@@ -11,6 +11,8 @@ import {
   groupShoppingList, zipToInfo, BENCHMARKS,
 } from './engine/index.js';
 import { resolveCity, publicConfig } from './cities/index.js';
+import { makeDb } from './server/db.js';
+import { mountDirectory } from './server/directory.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -23,6 +25,7 @@ const RECIPES = indexRecipes(JSON.parse(readFileSync(path.join(__dirname, 'data'
 
 const app = express();
 app.disable('x-powered-by');
+app.set('trust proxy', 1); // behind Render's proxy: req.ip is the visitor (used only for rate limits, never stored)
 app.use(express.json({ limit: '10kb' }));
 
 // Attach the city to every request.
@@ -176,8 +179,19 @@ app.post('/api/plan', async (req, res) => {
 // ── Ops ─────────────────────────────────────────────────────────
 // Event logging is deliberately absent until Phase 4 (privacy + schema reset):
 // no Austin data is collected before the policy matches the schema.
-app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, recipes: RECIPES.length, bls: !!BLS_KEY }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, recipes: RECIPES.length, bls: !!BLS_KEY, db: db.kind, admin: !!process.env.ADMIN_KEY }));
 app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
+
+// ── Food directory + admin (server/directory.js) ────────────────
+// The database is chosen from env: Supabase when SUPABASE_URL + SUPABASE_SECRET_KEY are set,
+// otherwise in-memory (tests, local runs). Tests can swap it with app.locals.setDb().
+let db = makeDb();
+app.locals.setDb = d => { db = d; };
+mountDirectory(app, { getDb: () => db });
+const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
+app.get('/join/:token', page('provider.html'));
+app.get('/add-site', page('provider.html'));
+app.get('/admin', page('admin.html'));
 
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', 'index.html')));
