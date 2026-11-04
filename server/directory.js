@@ -103,7 +103,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
   app.get('/api/providers', async (req, res) => {
     try {
       const rows = (await db().listProviders(req.city.id, ['approved'])).map(pickPublic);
-      res.set('Cache-Control', 'public, max-age=300').json(byZip(rows, req.query.zip).slice(0, 25));
+      res.set('Cache-Control', 'no-cache').json(byZip(rows, req.query.zip).slice(0, 25)); // approvals show up right away
     } catch (e) { console.error(e.message); res.json([]); }
   });
 
@@ -172,6 +172,11 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
     return CITIES[id] && id !== 'national' ? id : (req.city.id !== 'national' ? req.city.id : Object.keys(CITIES).find(c => c !== 'national'));
   };
 
+  const inviteLink = (city, req, token) => {
+    const host = CITIES[city].hosts[0];
+    return `${host ? 'https' : req.protocol}://${host || req.headers.host}/join/${token}`;
+  };
+
   admin.get('/summary', async (req, res) => {
     const city = cityOf(req);
     try {
@@ -184,7 +189,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
         overdue: all.filter(isOverdue),
         approved: all.filter(p => p.status === 'approved'),
         hidden: all.filter(p => p.status === 'hidden' || p.status === 'rejected'),
-        invites: invites.map(i => ({ ...i, submission: byInvite[i.id] || null })),
+        invites: invites.map(i => ({ ...i, link: inviteLink(city, req, i.token), submission: byInvite[i.id] || null })),
         reviews,
         reconfirm_days: RECONFIRM_DAYS,
         activity: { available: false }, // Phase 4: visits, plans built, food-box use
@@ -224,9 +229,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
     if (!org) return res.status(400).json({ ok: false, error: 'org_name' });
     const city = cityOf(req);
     const inv = await db().createInvite(city, org);
-    const host = CITIES[city].hosts[0] || req.headers.host;
-    const proto = CITIES[city].hosts[0] ? 'https' : req.protocol;
-    res.json({ ok: true, invite: inv, link: `${proto}://${host}/join/${inv.token}` });
+    res.json({ ok: true, invite: inv, link: inviteLink(city, req, inv.token) });
   });
 
   admin.post('/reviews/:lang', async (req, res) => {

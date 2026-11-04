@@ -83,14 +83,14 @@ export const boxHash = packed => '#b=' + encodeState(packed);
 const money = n => Number(n).toFixed(2);
 
 /** Shopping list (+ week 1 meals for email) as plain text. */
-export function planText({ title, shopping, weeks, choice = {}, total, url, labels, full = false }) {
+export function planText({ title, shopping, weeks, choice = {}, total, url, labels, full = false, titleOf = r => r.title }) {
   const lines = [title, '', `${labels.list} ($${money(total)})`];
   for (const g of shopping) for (const i of g.items) lines.push(`☐ ${i.label} ×${i.qty}  $${money(i.subtotal)}`);
   if (full && weeks.length) {
     lines.push('', labels.week1);
     weeks[0].forEach((d, di) => {
       if (d.leftover) { lines.push(`${d.dayName}: ${labels.leftover}`); return; }
-      const meals = ['breakfast', 'lunch', 'dinner'].map(sl => d[sl][choice[`0-${di}-${sl}`] || 0]?.title).filter(Boolean);
+      const meals = ['breakfast', 'lunch', 'dinner'].map(sl => d[sl][choice[`0-${di}-${sl}`] || 0]).filter(Boolean).map(titleOf);
       lines.push(`${d.dayName}: ${meals.join(' · ')}`);
     });
   }
@@ -98,9 +98,9 @@ export function planText({ title, shopping, weeks, choice = {}, total, url, labe
   return lines.join('\n');
 }
 
-export function boxText({ title, matches, url, labels }) {
+export function boxText({ title, matches, url, labels, titleOf = r => r.title, ingOf = w => w }) {
   const lines = [title, ''];
-  for (const m of matches) lines.push(`• ${m.recipe.title}${m.missing.length ? ` (${labels.need}: ${m.missing.join(', ')})` : ''}`);
+  for (const m of matches) lines.push(`• ${titleOf(m.recipe)}${m.missing.length ? ` (${labels.need}: ${m.missing.map(ingOf).join(', ')})` : ''}`);
   lines.push('', `${labels.link} ${url}`);
   return lines.join('\n');
 }

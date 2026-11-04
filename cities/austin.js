@@ -49,7 +49,9 @@ export default {
   price_region_label: 'U.S. South region averages (BLS)',
   local_prices: {},
 
-  languages: ['en'], // add 'es' in Phase 3
+  // Austin's top three non-English languages (City language-access data). Each shows as
+  // "pending review" in /admin until a native speaker signs off.
+  languages: ['en', 'es', 'vi', 'zh-Hans'],
   civic_layer: false,
   k_anon_threshold: 15,
 

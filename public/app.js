@@ -4,6 +4,7 @@
 // after the page loads. City identity comes from /api/config; strings from /i18n.
 
 import en from './i18n/en.js';
+import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
   matchBox, BOX_GROUPS, foodLabel,
@@ -13,9 +14,25 @@ import {
   savedList, addSaved, updateSaved, removeSaved, findSaved,
 } from './keep.js';
 
-const STRINGS = { en };
-let S = en;
+// ── Language ────────────────────────────────────────────────────
+let S = en;   // UI strings for the current language
+let D = {};   // data translations: foods, tips, ingredient words, recipes
+let lang = 'en';
 const t = (key, vars = {}) => (S[key] ?? en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+// Display-only translations. The engine always works in English (ids and titles),
+// so a plan is identical in every language and links work across languages.
+const fName = id => D.foods?.[id]?.name || foodLabel(id);                 // "Dry Pinto Beans"
+const fFull = (id, enName) => D.foods?.[id]?.full || enName;             // "Dry Pinto Beans (1 lb)"
+const fNote = (id, enNote) => D.foods?.[id]?.note || enNote;
+const fTip = enTip => (enTip && D.tips?.[enTip]) || enTip;
+const ing = word => D.ingredients?.[word] || word;
+const rTitle = r => D.recipes?.[r.id]?.title || r.title;
+const rSteps = r => D.recipes?.[r.id]?.instructions || r.instructions;
+const cityText = key => city?.i18n?.[lang]?.[key] || city?.[key];
+const resText = (r, key) => city?.i18n?.[lang]?.resources?.[r.id]?.[key] || r[key];
+
+// Re-renders whatever is on screen (used when the language changes).
+let current = () => renderIntro();
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const money = n => Number(n).toFixed(2);
 const qs = location.search; // keeps ?city= in dev
@@ -70,15 +87,14 @@ async function computePlan(a) {
 async function boot() {
   try { city = await (await fetch('/api/config' + qs)).json(); }
   catch { city = { name: 'Make It Stretch', languages: ['en'], resources: [] }; }
-  const lang = (navigator.language || 'en').slice(0, 2);
-  if (city.languages?.includes(lang) && STRINGS[lang]) { S = STRINGS[lang]; document.documentElement.lang = lang; }
+  const available = LANGS.map(l => l.code).filter(c => (city.languages || ['en']).includes(c));
+  await setLang(pickLang(available), { render: false });
+  renderLangSwitch(available);
 
   document.getElementById('brand-name').textContent = city.name;
   const place = document.getElementById('brand-place');
   if (city.place) { place.textContent = city.place; place.hidden = false; }
-  document.getElementById('disclaimer').textContent = city.disclaimer || '';
   document.title = city.place ? `${city.name} · ${city.place}` : city.name;
-  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
   if (qs) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + qs;
 
   getRecipes(); getPrices(null); // warm up in the background
@@ -86,6 +102,32 @@ async function boot() {
   // A different plan link opened in this same tab only changes the #part: no reload happens.
   // (Our own updates use replaceState, which doesn't fire this.)
   window.addEventListener('hashchange', () => { if (!openFromHash(location.hash)) renderIntro(); });
+}
+
+async function setLang(code, { render = true } = {}) {
+  const { ui, data } = await loadLang(code);
+  S = ui; D = data; lang = code;
+  document.documentElement.lang = LANGS.find(l => l.code === code)?.html || code;
+  document.getElementById('disclaimer').textContent = cityText('disclaimer') || '';
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  document.querySelectorAll('.lang-switch button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === code));
+  if (render) current();
+}
+
+/** The visible language switch: each name written in its own language. */
+function renderLangSwitch(available) {
+  const nav = document.getElementById('lang-switch');
+  if (!nav || available.length < 2) return;
+  nav.innerHTML = available.map(c => {
+    const l = LANGS.find(x => x.code === c);
+    return `<button type="button" lang="${l.html}" data-lang="${c}" aria-pressed="${c === lang}">${esc(l.label)}</button>`;
+  }).join('');
+  nav.hidden = false;
+  nav.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.lang === lang) return;
+    rememberLang(b.dataset.lang);
+    setLang(b.dataset.lang);
+  }));
 }
 
 const saveKey = () => 'mis:saved:' + (city.id || 'default');
@@ -113,6 +155,7 @@ function focusTop(sel) {
 
 // ── Start screen: two doors ─────────────────────────────────────
 function renderIntro() {
+  current = renderIntro;
   setHash('');
   openedSavedId = null;
   const saved = savedList(store, saveKey());
@@ -163,6 +206,7 @@ function renderIntro() {
 
 // ── Budget flow ─────────────────────────────────────────────────
 function go(i) {
+  current = () => go(i);
   setHash('');
   openedSavedId = null;
   const name = STEPS[i];
@@ -215,7 +259,7 @@ async function updatePreview(stepIdx) {
     <div class="preview-card" style="--blur:${blur}px">
       <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
       <p class="preview-big"><b>$${money(plan.result.pppd)}</b> ${esc(t('per_person_day'))}</p>
-      ${day ? ['breakfast', 'dinner'].map(s => day[s][0] ? `<p class="preview-meal">${esc(t(s))}: ${esc(day[s][0].title)}</p>` : '').join('') : ''}
+      ${day ? ['breakfast', 'dinner'].map(s => day[s][0] ? `<p class="preview-meal">${esc(t(s))}: ${esc(rTitle(day[s][0]))}</p>` : '').join('') : ''}
       <p class="preview-meal">${esc(t('preview_items', { n: items }))}</p>
     </div>
     <span class="preview-badge">${esc(left === 0 ? t('preview_badge_last') : left === 1 ? t('preview_badge_one') : t('preview_badge', { n: left }))}</span>`;
@@ -342,21 +386,64 @@ const orgs = () => (city.resources || []).filter(r => r.audience === 'organizati
 function helpSection() {
   const card = r => `
     <article class="help-card ${r.audience === 'organizations' ? 'org' : ''}">
-      <h3>${esc(r.name)}</h3><p>${esc(r.description)}</p>
+      <h3>${esc(resText(r, 'name'))}</h3><p>${esc(resText(r, 'description'))}</p>
       <div class="help-actions">
         ${r.phone ? `<a href="tel:${esc(r.phone)}">${esc(t('call', { phone: r.phone }))}</a>` : ''}
-        ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(t('visit'))}<span class="sr-only"> (${esc(r.name)})</span></a>` : ''}
+        ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(t('visit'))}<span class="sr-only"> (${esc(resText(r, 'name'))})</span></a>` : ''}
       </div>
     </article>`;
   if (!residents().length) return '';
   return `<section class="section" id="help" aria-labelledby="h-help" tabindex="-1">
     <div class="section-head"><h2 id="h-help">${esc(t('sec_help'))}</h2></div>
+    <div id="sites" hidden><h3 class="sites-head">${esc(t('sites_title'))}</h3><div class="help-list" id="sites-list"></div>
+      <h3 class="sites-head">${esc(t('sites_more_help'))}</h3></div>
     <div class="help-list">${residents().map(card).join('')}</div>
     ${orgs().length ? `<h3 class="orgs-head">${esc(t('sec_help_orgs'))}</h3><div class="help-list">${orgs().map(card).join('')}</div>` : ''}
+    <p class="add-site no-print"><a href="/add-site${qs}">${esc(t('add_site_cta'))}</a></p>
   </section>`;
 }
 
+/** Approved local food sites, nearest the zip first. Fills the help section after it renders. */
+async function loadSites(zip) {
+  const box = app.querySelector('#sites');
+  if (!box) return;
+  let sites = [];
+  try { sites = await (await fetch('/api/providers' + (qs ? qs + '&' : '?') + 'zip=' + (zip || ''))).json(); } catch { return; }
+  if (!Array.isArray(sites) || !sites.length || !box.isConnected) return;
+  const month = iso => new Date(iso).toLocaleDateString(document.documentElement.lang || 'en', { month: 'long', year: 'numeric' });
+  const shown = sites.slice(0, 6);
+  box.querySelector('#sites-list').innerHTML = shown.map(p => {
+    const where = [p.address, p.zip].filter(Boolean).join(', ');
+    const facts = [
+      p.access ? t('access_' + p.access) : '',
+      p.id_required === true ? t('id_yes') : p.id_required === false ? t('id_no') : '',
+    ].filter(Boolean).join(' · ');
+    const offers = (p.offers || []).map(o => t('offers_' + o)).join(' · ');
+    const langs = (p.languages || []).filter(l => l !== 'en').map(l => t('lang_' + l));
+    return `<article class="help-card site-card">
+      <span class="site-kind">${esc(t('kind_' + p.kind))}</span>
+      <h3>${esc(p.name)}</h3>
+      ${where ? `<p class="site-where">${esc(where)}</p>` : ''}
+      ${p.hours ? `<p><b>${esc(t('hours'))}:</b> ${esc(p.hours)}</p>` : ''}
+      ${facts ? `<p>${esc(facts)}</p>` : ''}
+      ${offers ? `<p class="site-offers">${esc(offers)}</p>` : ''}
+      ${langs.length ? `<p>${esc(t('speaks', { langs: langs.join(', ') }))}</p>` : ''}
+      ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
+      <div class="help-actions">
+        ${where ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + where)}" target="_blank" rel="noopener">${esc(t('directions'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
+        ${p.phone ? `<a href="tel:${esc(p.phone)}">${esc(t('call', { phone: p.phone }))}</a>` : ''}
+        ${p.website ? `<a href="${esc(p.website)}" target="_blank" rel="noopener">${esc(t('visit'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
+      </div>
+      ${p.confirmed_at ? `<p class="site-confirmed">${esc(t('confirmed_on', { date: month(p.confirmed_at) }))}</p>` : ''}
+    </article>`;
+  }).join('');
+  box.hidden = false;
+  const jump = app.querySelector('.jump-help span');
+  if (jump) jump.textContent = t('jump_help_sub', { n: residents().length + shown.length }) + ' ↓';
+}
+
 function renderResults(plan, restore = {}) {
+  current = () => openFromHash(location.hash, openedSavedId);
   const { input, result: s, shopping, weeks, priced } = plan;
   const peopleLabel = input.people === 1 ? t('person') : t('people', { n: input.people });
   const calNote = s.calPct >= 80 ? t('cal_ok') : s.calPct >= 60 ? t('cal_low') : t('cal_tight');
@@ -376,14 +463,14 @@ function renderResults(plan, restore = {}) {
     <div class="cat-head"><h3 class="shop-cat">${esc(t('cat_' + g.cat))}</h3>
       <span class="cat-sub">$${money(g.items.reduce((a, i) => a + i.subtotal, 0))}</span></div>
     <ul class="rows">${g.items.map(i => {
-      const name = foodLabel(i.id);
+      const name = fName(i.id);
       return `<li class="row">
         <input type="checkbox" id="ck-${i.id}" data-item="${i.id}" ${checked.has(i.id) ? 'checked' : ''}>
         <label for="ck-${i.id}">${esc(name)} <span class="qty">×${i.qty}</span></label>
         <button type="button" class="info" aria-expanded="false" aria-controls="more-${i.id}"
           aria-label="${esc(t('more_about', { item: name }))}">ⓘ</button>
         <span class="price">$${money(i.subtotal)}</span>
-        <div class="more" id="more-${i.id}" hidden><span class="size">${esc(i.name)}</span> ${esc(i.note)}${i.tip ? `<div class="shop-tip">${esc(i.tip)}</div>` : ''}</div>
+        <div class="more" id="more-${i.id}" hidden><span class="size">${esc(fFull(i.id, i.name))}</span> ${esc(fNote(i.id, i.note))}${i.tip ? `<div class="shop-tip">${esc(fTip(i.tip))}</div>` : ''}</div>
       </li>`;
     }).join('')}</ul>`).join('');
 
@@ -395,7 +482,7 @@ function renderResults(plan, restore = {}) {
         : `<div class="d"><div class="day-name">${esc(d.dayName)}</div>
             ${['breakfast', 'lunch', 'dinner'].map(sl => d[sl].length ? `
               <div class="m"><span>${esc(t(sl))}</span>
-                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(d[sl][choice[`${wi}-${di}-${sl}`] || 0].title)}</button></div>` : '').join('')}
+                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(rTitle(d[sl][choice[`${wi}-${di}-${sl}`] || 0]))}</button></div>` : '').join('')}
           </div>`).join('')}
     </div>`;
 
@@ -419,7 +506,7 @@ function renderResults(plan, restore = {}) {
         <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
       ${listHtml}
       <div class="shop-total"><span>${esc(t('total'))}</span><span>$${money(s.spent)}</span></div>
-      <p class="price-note">${esc(t('price_note', { label: priced.label }))}</p>
+      <p class="price-note">${esc(t('price_note', { label: cityText('price_region_label') || priced.label }))}</p>
     </section>
 
     <section class="section" id="meals" aria-labelledby="h-plan" tabindex="-1">
@@ -443,6 +530,7 @@ function renderResults(plan, restore = {}) {
 
   focusTop('#res-title');
   wireJumps();
+  loadSites(answers.zip);
 
   // Keep this plan: the link, the saved copy and the text/email bodies all follow the live state.
   const title = t('res_title', { days: input.days });
@@ -458,8 +546,8 @@ function renderResults(plan, restore = {}) {
     hash: currentHash,
     text: full => planText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
-      shopping: shopping.map(g => ({ items: g.items.map(i => ({ label: foodLabel(i.id), qty: i.qty, subtotal: i.subtotal })) })),
-      weeks, choice, total: s.spent, url: linkFor(currentHash()), full,
+      shopping: shopping.map(g => ({ items: g.items.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) })),
+      weeks, choice, total: s.spent, url: linkFor(currentHash()), full, titleOf: rTitle,
       labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), link: t('full_plan_link') },
     }),
   });
@@ -493,8 +581,8 @@ function renderResults(plan, restore = {}) {
       alt: opts[1 - ci],
       onSwap: () => {
         choice[b.dataset.key] = 1 - ci;
-        b.textContent = opts[1 - ci].title;
-        app.querySelector('#announce').textContent = t('swapped', { title: opts[1 - ci].title });
+        b.textContent = rTitle(opts[1 - ci]);
+        app.querySelector('#announce').textContent = t('swapped', { title: rTitle(opts[1 - ci]) });
         sync();
         showMeal(b, true);
       },
@@ -578,15 +666,15 @@ function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
   dlg.querySelector('.dialog-body').innerHTML = `
     <button type="button" class="btn btn-ghost dialog-close" id="close">${esc(t('close'))}</button>
     <p class="eyebrow">${esc(t('recipe'))}</p>
-    <h2 id="recipe-title" tabindex="-1">${esc(r.title)}</h2>
+    <h2 id="recipe-title" tabindex="-1">${esc(rTitle(r))}</h2>
     ${justSwapped ? `<p class="swapped-note">${esc(t('in_your_plan'))}</p>` : ''}
     ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
     <h3>${esc(t('ingredients'))}</h3>
-    <ul>${(r.ingredients || []).map(i => `<li>${esc(i)}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
+    <ul>${(r.ingredients || []).map(i => `<li>${esc(ing(i))}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
     <h3>${esc(t('steps'))}</h3>
-    <p>${esc(r.instructions)}</p>
+    <p>${esc(rSteps(r))}</p>
     ${alt ? `<div class="alt"><p class="eyebrow">${esc(justSwapped ? t('swap_back') : t('another_option'))}</p>
-      <p class="alt-title">${esc(alt.title)}</p>
+      <p class="alt-title">${esc(rTitle(alt))}</p>
       <button type="button" class="btn ${justSwapped ? 'btn-ghost' : 'btn-primary'}" id="swap">${esc(justSwapped ? t('switch_back') : t('use_instead'))}</button></div>` : ''}`;
   dlg.querySelector('#close').onclick = () => dlg.close();
   dlg.querySelector('#swap')?.addEventListener('click', onSwap);
@@ -598,6 +686,7 @@ function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
 
 // ── Food box flow ───────────────────────────────────────────────
 function renderBox() {
+  current = renderBox;
   setHash('');
   openedSavedId = null;
   app.innerHTML = `
@@ -605,7 +694,7 @@ function renderBox() {
       <h2 id="q" tabindex="-1">${esc(t('box_title'))}</h2>
       <p class="hint">${esc(t('box_hint'))}</p>
       ${BOX_GROUPS.map(g => `<fieldset class="pref-group"><legend>${esc(t('box_group_' + g.id))}</legend><div class="chips">
-        ${g.items.map(id => `<button type="button" class="chip" data-item="${id}" aria-pressed="${box.items.includes(id)}">${esc(foodLabel(id))}</button>`).join('')}
+        ${g.items.map(id => `<button type="button" class="chip" data-item="${id}" aria-pressed="${box.items.includes(id)}">${esc(fName(id))}</button>`).join('')}
       </div></fieldset>`).join('')}
       <fieldset class="pref-group"><legend>${esc(t('pref_avoid'))}</legend><div class="chips">
         ${['none', 'gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'].map(v => `<button type="button" class="chip" data-avoid="${v}"
@@ -642,6 +731,7 @@ function renderBox() {
 }
 
 async function renderBoxResults() {
+  current = () => openFromHash(location.hash, openedSavedId);
   app.innerHTML = `<div class="loading" role="status"><div class="spinner" aria-hidden="true"></div>${esc(t('loading_data'))}</div>`;
   let matches;
   try { matches = matchBox(await getRecipes(), box.items, { avoid: box.avoid }); }
@@ -661,10 +751,10 @@ async function renderBoxResults() {
       ${matches.length ? `<ul class="box-list">${matches.map(m => `
         <li class="box-card">
           <span class="box-slot">${esc(t(m.recipe.slot))}</span>
-          <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(m.recipe.title)}</button>
-          <p class="box-line"><b>${esc(t('box_uses'))}:</b> ${esc(m.uses.join(', '))}</p>
+          <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
+          <p class="box-line"><b>${esc(t('box_uses'))}:</b> ${esc(m.uses.map(ing).join(', '))}</p>
           <p class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
-            ? `<b>${esc(t('box_need'))}:</b> ${esc(m.missing.join(', '))}` : esc(t('box_have_all'))}</p>
+            ? `<b>${esc(t('box_need'))}:</b> ${esc(m.missing.map(ing).join(', '))}` : esc(t('box_have_all'))}</p>
         </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
     </section>
     ${helpSection()}
@@ -677,19 +767,20 @@ async function renderBoxResults() {
 
   focusTop('#res-title');
   wireJumps();
+  loadSites(null);
   app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => {
     const m = byId.get(b.dataset.id); openRecipe(m.recipe, { missing: m.missing });
   }));
   wireKeep({
     title: t('box_res_title'),
     savedTitle: t('saved_box_title'),
-    detail: box.items.length <= 3 ? box.items.map(foodLabel).join(', ')
-      : t('saved_box_detail', { first: box.items.slice(0, 2).map(foodLabel).join(', '), n: box.items.length - 2 }),
+    detail: box.items.length <= 3 ? box.items.map(fName).join(', ')
+      : t('saved_box_detail', { first: box.items.slice(0, 2).map(fName).join(', '), n: box.items.length - 2 }),
     kind: 'box',
     hash: () => boxHash(packBox(box)),
     text: () => boxText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${t('box_res_title')}`,
-      matches, url: linkFor(boxHash(packBox(box))), labels: { need: t('box_need'), link: t('full_plan_link') },
+      matches, url: linkFor(boxHash(packBox(box))), titleOf: rTitle, ingOf: ing, labels: { need: t('box_need'), link: t('full_plan_link') },
     }),
   });
   app.querySelector('#edit').onclick = renderBox;

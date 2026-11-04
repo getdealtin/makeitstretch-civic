@@ -25,5 +25,6 @@ export function publicConfig(c) {
     disclaimer: c.disclaimer, branding: c.branding, price_region: c.price_region,
     price_region_label: c.price_region_label, languages: c.languages,
     resources: c.resources.map(({ verified, ...r }) => r),
+    i18n: c.i18n || {},
   };
 }
