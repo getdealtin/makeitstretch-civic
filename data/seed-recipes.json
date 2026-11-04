@@ -1,0 +1,2861 @@
+[
+  {
+    "title": "Scrambled Eggs on Toast",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "eggs",
+      "bread",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Beat eggs with salt. Melt butter in pan over medium heat. Add eggs and stir gently until just set. Serve on toasted bread.",
+    "tags": "quick,high-protein",
+    "avoid": [
+      "eggs",
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Oatmeal with Banana",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "oats",
+      "banana",
+      "water",
+      "salt"
+    ],
+    "instructions": "Bring 2 cups water to boil. Add oats and salt, cook 5 minutes stirring. Top with sliced banana.",
+    "tags": "vegan,quick",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Peanut Butter Toast",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "bread",
+      "peanut butter",
+      "banana"
+    ],
+    "instructions": "Toast bread. Spread peanut butter generously. Top with banana slices.",
+    "tags": "quick,no-cook",
+    "avoid": [
+      "peanuts",
+      "gluten"
+    ],
+    "srv": 1
+  },
+  {
+    "title": "Pancakes",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "flour",
+      "eggs",
+      "milk",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Mix flour, eggs, milk and pinch of salt into smooth batter. Heat buttered pan. Pour 1/4 cup batter per pancake. Cook until bubbles form, flip, cook 1 more minute.",
+    "tags": "weekend,family",
+    "avoid": [
+      "eggs",
+      "gluten",
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Fried Egg and Hash Browns",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "eggs",
+      "potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Grate potatoes, squeeze out moisture. Fry in oil until golden each side. Fry eggs alongside. Season with salt.",
+    "tags": "filling,weekend",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Banana Oat Porridge",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "oats",
+      "banana",
+      "milk",
+      "cinnamon"
+    ],
+    "instructions": "Cook oats in milk 5 minutes. Mash in banana. Sprinkle cinnamon.",
+    "tags": "creamy,kid-friendly",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Egg and Vegetable Scramble",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "eggs",
+      "onions",
+      "carrots",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Dice vegetables. Fry in oil 3 minutes. Beat eggs, pour over vegetables. Stir until cooked through.",
+    "tags": "high-protein,quick",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Potato and Onion Frittata",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "eggs",
+      "potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry diced potato and onion in oil until soft. Beat eggs, pour over. Cook on low until set, finish under broiler.",
+    "tags": "hearty,meal-prep",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Peanut Butter and Oat Bowl",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "oats",
+      "peanut butter",
+      "banana",
+      "water"
+    ],
+    "instructions": "Cook oats in water. Stir in peanut butter while hot. Top with banana.",
+    "tags": "high-calorie,quick",
+    "avoid": [
+      "peanuts"
+    ],
+    "srv": 1
+  },
+  {
+    "title": "Bread and Egg Bake",
+    "slot": "breakfast",
+    "cuisine": "american",
+    "ingredients": [
+      "bread",
+      "eggs",
+      "milk",
+      "salt",
+      "butter"
+    ],
+    "instructions": "Cube bread into baking dish. Whisk eggs with milk and salt. Pour over bread. Bake 350F for 25 minutes until golden.",
+    "tags": "meal-prep,filling",
+    "avoid": [
+      "eggs",
+      "gluten",
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Potato Soup",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "potatoes",
+      "onions",
+      "milk",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Dice potatoes and onion. Boil in salted water until tender. Mash half the potatoes in pot. Stir in milk and butter.",
+    "tags": "creamy,filling",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Bean and Bread Soup",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "beans",
+      "bread",
+      "onions",
+      "canned tomatoes",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic in oil. Add beans and tomatoes, simmer 15 minutes. Serve with toasted bread for dipping.",
+    "tags": "hearty,cheap",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Tuna Rice Bowl",
+    "slot": "lunch",
+    "cuisine": "any",
+    "ingredients": [
+      "tuna",
+      "rice",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cook rice. Drain and flake tuna. Fry onion in oil. Mix tuna with rice and onion. Season with salt.",
+    "tags": "high-protein,quick",
+    "avoid": [
+      "fish"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Peanut Butter Banana Wrap",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "bread",
+      "peanut butter",
+      "banana"
+    ],
+    "instructions": "Spread peanut butter on bread. Lay banana on one edge. Roll tightly. Slice into pieces.",
+    "tags": "no-cook,portable",
+    "avoid": [
+      "peanuts",
+      "gluten"
+    ],
+    "srv": 1
+  },
+  {
+    "title": "Vegetable and Egg Soup",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "eggs",
+      "carrots",
+      "onions",
+      "potatoes",
+      "salt"
+    ],
+    "instructions": "Boil vegetables in salted water until tender. Crack eggs directly into simmering broth. Poach 3 minutes.",
+    "tags": "light,quick",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Pasta Salad with Vegetables",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "pasta",
+      "carrots",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cook pasta, drain and cool. Dice raw vegetables. Toss everything with oil and salt.",
+    "tags": "make-ahead,portable",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Baked Potato with Beans",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "potatoes",
+      "beans",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Rub potatoes with oil and salt. Bake 400F for 45 minutes. Split open. Spoon warm beans on top.",
+    "tags": "filling,simple",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Egg Salad on Toast",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "eggs",
+      "bread",
+      "onions",
+      "salt",
+      "oil"
+    ],
+    "instructions": "Hard boil eggs, cool and peel. Chop with onion. Mix with oil and salt. Serve on toast.",
+    "tags": "quick,high-protein",
+    "avoid": [
+      "eggs",
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Lentil and Vegetable Soup",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "lentils",
+      "carrots",
+      "onions",
+      "garlic",
+      "salt"
+    ],
+    "instructions": "Saut\u00e9 onion and garlic. Add lentils, carrots and water to cover. Simmer 25 minutes until lentils are tender. Season.",
+    "tags": "hearty,cheap",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Corn and Bean Chowder",
+    "slot": "lunch",
+    "cuisine": "american",
+    "ingredients": [
+      "beans",
+      "potatoes",
+      "onions",
+      "milk",
+      "salt"
+    ],
+    "instructions": "Boil potatoes and onion until soft. Mash half. Add beans and milk. Simmer 10 minutes. Season well.",
+    "tags": "creamy,filling",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Chicken and Rice",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "chicken",
+      "rice",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Brown chicken pieces in oil. Remove. Fry onion until soft. Add rice, stir to coat. Add water 1:2 ratio to rice. Return chicken. Cover and cook 20 minutes on low.",
+    "tags": "one-pan,filling",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Pasta with Tomato Sauce",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "pasta",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry garlic and onion in oil 3 minutes. Add tomatoes, simmer 15 minutes. Cook pasta per package. Toss together.",
+    "tags": "quick,cheap",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Cabbage and Potato Bake",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "cabbage",
+      "potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Slice potatoes thin. Layer with cabbage and onion in oiled baking dish. Season. Cover with foil. Bake 375F for 40 minutes.",
+    "tags": "vegan,cheap",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Ground Beef and Potato Hash",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "ground beef",
+      "potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Brown beef in pan, breaking up. Remove. Fry diced potato and onion until golden. Return beef. Season and stir together.",
+    "tags": "one-pan,hearty",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Bean and Vegetable Stew",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "beans",
+      "carrots",
+      "potatoes",
+      "onions",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Saut\u00e9 onion. Add vegetables, beans and tomatoes. Cover with water. Simmer 30 minutes until vegetables are tender.",
+    "tags": "vegan,cheap",
+    "avoid": [],
+    "srv": 6
+  },
+  {
+    "title": "Tuna Noodle Casserole",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "tuna",
+      "pasta",
+      "milk",
+      "onions",
+      "salt"
+    ],
+    "instructions": "Cook pasta. Make sauce by warming milk with onion. Mix with tuna and pasta. Bake 350F for 20 minutes.",
+    "tags": "family,filling",
+    "avoid": [
+      "fish",
+      "gluten",
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Lentil Soup",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "lentils",
+      "carrots",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Saut\u00e9 onion and garlic. Add lentils, carrots, tomatoes and water. Simmer 30 minutes. Season generously.",
+    "tags": "vegan,cheap",
+    "avoid": [],
+    "srv": 6
+  },
+  {
+    "title": "Chicken and Vegetable Soup",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "chicken",
+      "carrots",
+      "onions",
+      "potatoes",
+      "salt"
+    ],
+    "instructions": "Boil chicken in water with onion 30 minutes. Remove chicken, shred. Add vegetables to broth. Cook 20 minutes. Return chicken.",
+    "tags": "hearty,healing",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 6
+  },
+  {
+    "title": "Rice and Bean Bowl",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "rice",
+      "beans",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cook rice. Fry onion and garlic. Add beans, cook 10 minutes. Serve beans over rice.",
+    "tags": "vegan,cheap",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Pasta and Bean Soup",
+    "slot": "dinner",
+    "cuisine": "american",
+    "ingredients": [
+      "pasta",
+      "beans",
+      "canned tomatoes",
+      "garlic",
+      "onions",
+      "oil"
+    ],
+    "instructions": "Fry garlic and onion. Add tomatoes and beans. Simmer 15 minutes. Add pasta to pot. Cook until pasta is tender. Add water if too thick.",
+    "tags": "hearty,italian-style",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Huevos Rancheros",
+    "slot": "breakfast",
+    "cuisine": "latin",
+    "ingredients": [
+      "eggs",
+      "tortillas",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry onion, garlic and tomatoes for sauce. Fry eggs in separate pan. Warm tortillas. Serve eggs on tortillas, top with sauce.",
+    "tags": "classic,filling",
+    "avoid": [
+      "eggs",
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Oatmeal with Cinnamon",
+    "slot": "breakfast",
+    "cuisine": "latin",
+    "ingredients": [
+      "oats",
+      "milk",
+      "cinnamon",
+      "banana"
+    ],
+    "instructions": "Cook oats in milk 5 minutes. Stir in cinnamon. Top with sliced banana.",
+    "tags": "creamy,sweet",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Egg and Bean Tacos",
+    "slot": "breakfast",
+    "cuisine": "latin",
+    "ingredients": [
+      "eggs",
+      "tortillas",
+      "beans",
+      "onions",
+      "oil"
+    ],
+    "instructions": "Fry onion. Add beans, mash slightly. Scramble eggs separately. Fill tortillas with beans then eggs.",
+    "tags": "filling,quick",
+    "avoid": [
+      "eggs",
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Fried Plantain and Egg",
+    "slot": "breakfast",
+    "cuisine": "latin",
+    "ingredients": [
+      "banana",
+      "eggs",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Slice banana thick. Fry in oil until golden. Fry eggs alongside. Serve together.",
+    "tags": "sweet-savory,simple",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Corn Tortilla with Beans",
+    "slot": "breakfast",
+    "cuisine": "latin",
+    "ingredients": [
+      "tortillas",
+      "beans",
+      "onions",
+      "oil"
+    ],
+    "instructions": "Warm tortillas on dry pan. Heat beans with fried onion. Spread beans on tortillas. Roll and eat.",
+    "tags": "vegan,quick",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Rice and Beans",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "rice",
+      "beans",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cook rice. Fry onion and garlic. Add beans with their liquid. Simmer 15 minutes until thick. Serve beans over rice.",
+    "tags": "classic,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Vegetable Soup",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "potatoes",
+      "carrots",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic. Add chopped vegetables and tomatoes. Cover with water. Simmer 25 minutes until tender.",
+    "tags": "light,healthy",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Bean Quesadillas",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "tortillas",
+      "beans",
+      "onions",
+      "oil"
+    ],
+    "instructions": "Mash beans with fried onion. Spread on tortilla. Fold in half. Toast in dry pan until crispy on both sides.",
+    "tags": "quick,cheap",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Lentil Tacos",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "lentils",
+      "tortillas",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Cook lentils. Fry onion and garlic. Add tomatoes, cook 5 minutes. Mix in lentils. Fill tortillas.",
+    "tags": "vegan,filling",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Potato and Egg Burrito",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "potatoes",
+      "eggs",
+      "tortillas",
+      "onions",
+      "oil"
+    ],
+    "instructions": "Fry diced potato and onion until golden. Scramble eggs in same pan. Mix together. Roll in warmed tortillas.",
+    "tags": "filling,portable",
+    "avoid": [
+      "eggs",
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Arroz con Pollo",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "chicken",
+      "rice",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Brown chicken in oil. Remove. Fry onion and garlic. Add tomatoes, cook 5 minutes. Return chicken. Add rice and water. Cover, cook 20 minutes on low.",
+    "tags": "classic,one-pan",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Black Bean Stew",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic until soft. Add tomatoes, cook 5 minutes. Add beans with liquid. Simmer 20 minutes until thick. Serve with rice.",
+    "tags": "vegan,hearty",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Beef and Vegetable Soup",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "ground beef",
+      "potatoes",
+      "carrots",
+      "onions",
+      "garlic",
+      "salt"
+    ],
+    "instructions": "Brown beef. Add onion and garlic. Cover with water. Add potatoes and carrots. Simmer 30 minutes. Season well.",
+    "tags": "hearty,filling",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 6
+  },
+  {
+    "title": "Lentil and Tomato Stew",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "lentils",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, cook 5 minutes. Add lentils and water. Simmer 25 minutes until thick. Serve with tortillas or rice.",
+    "tags": "vegan,cheap",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Chicken Tortilla Soup",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "chicken",
+      "tortillas",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes and water. Simmer chicken in broth 20 minutes. Shred chicken. Slice tortillas, fry crispy. Serve soup topped with tortilla strips.",
+    "tags": "warming,classic",
+    "avoid": [
+      "meat",
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Slow-Cooked Pinto Beans",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Soak beans overnight. Drain. Cover with fresh water. Add onion and garlic. Simmer 2 hours until completely tender. Season well. Serve with rice.",
+    "tags": "cheap,vegan",
+    "avoid": [],
+    "srv": 6
+  },
+  {
+    "title": "Egg and Potato Stew",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "eggs",
+      "potatoes",
+      "onions",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Fry onion. Add tomatoes, cook 5 minutes. Add cubed potato and water. Simmer 15 minutes. Make wells in sauce, crack eggs in. Cover and cook 5 minutes.",
+    "tags": "one-pan,hearty",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Bean and Tortilla Casserole",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "tortillas",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Make tomato sauce with onion and garlic. Layer torn tortillas, beans and sauce in baking dish. Repeat layers. Bake 350F for 25 minutes.",
+    "tags": "family,filling",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Congee",
+    "slot": "breakfast",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "water",
+      "salt",
+      "eggs"
+    ],
+    "instructions": "Cook 1 cup rice with 8 cups water on low for 45 minutes, stirring occasionally. It should be thick and creamy. Top with a fried or poached egg. Season with salt.",
+    "tags": "comforting,simple",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Savory Oatmeal with Soy",
+    "slot": "breakfast",
+    "cuisine": "asian",
+    "ingredients": [
+      "oats",
+      "soy sauce",
+      "onions",
+      "oil",
+      "eggs"
+    ],
+    "instructions": "Cook oats in water. Heat oil in pan, fry onion 2 minutes. Pour over oats. Add soy sauce. Top with fried egg.",
+    "tags": "savory,unusual",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Fried Egg and Rice",
+    "slot": "breakfast",
+    "cuisine": "asian",
+    "ingredients": [
+      "eggs",
+      "rice",
+      "soy sauce",
+      "oil"
+    ],
+    "instructions": "Use leftover cold rice. Heat oil in pan until smoking. Add rice, fry pressing down. Make well, crack in eggs. Fry until whites set. Season with soy sauce.",
+    "tags": "leftover-rice,quick",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Peanut Rice Porridge",
+    "slot": "breakfast",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "peanut butter",
+      "water",
+      "salt"
+    ],
+    "instructions": "Cook rice in double water until very soft. Stir in peanut butter until melted. Season with salt. Add hot water if too thick.",
+    "tags": "high-calorie,filling",
+    "avoid": [
+      "peanuts"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Oat and Banana Congee",
+    "slot": "breakfast",
+    "cuisine": "asian",
+    "ingredients": [
+      "oats",
+      "banana",
+      "coconut milk",
+      "water"
+    ],
+    "instructions": "Cook oats in coconut milk and water 5 minutes. Mash in banana. Serve hot.",
+    "tags": "creamy,sweet",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Egg Fried Rice",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "eggs",
+      "onions",
+      "soy sauce",
+      "oil"
+    ],
+    "instructions": "Use day-old cold rice. Heat oil until very hot. Fry onion 1 minute. Add rice, stir-fry 3 minutes pressing flat. Push to side, scramble eggs. Mix together. Season with soy sauce.",
+    "tags": "classic,leftover-rice",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Garlic Cabbage with Rice",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "cabbage",
+      "garlic",
+      "onions",
+      "oil",
+      "rice",
+      "soy sauce"
+    ],
+    "instructions": "Cook rice. Heat oil, fry garlic and onion. Add shredded cabbage, stir-fry on high heat until slightly charred. Season with soy sauce. Serve over rice.",
+    "tags": "quick,vegan",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Lentil Dal",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "lentils",
+      "onions",
+      "garlic",
+      "oil",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Fry onion until golden. Add garlic, cook 1 minute. Add lentils, tomatoes and water to cover. Simmer 20 minutes until lentils dissolve into sauce. Season. Serve over rice.",
+    "tags": "classic,filling",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Stir-Fried Cabbage and Egg",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "cabbage",
+      "eggs",
+      "garlic",
+      "oil",
+      "soy sauce"
+    ],
+    "instructions": "Heat oil until smoking. Fry garlic 30 seconds. Add shredded cabbage, fry 3 minutes on high. Push aside, scramble eggs. Combine. Season with soy sauce.",
+    "tags": "quick,cheap",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Tofu and Vegetable Bowl",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "tofu",
+      "carrots",
+      "onions",
+      "soy sauce",
+      "oil",
+      "rice"
+    ],
+    "instructions": "Press tofu dry. Cube and fry in oil until golden. Remove. Fry vegetables 3 minutes. Return tofu. Add soy sauce. Serve over rice.",
+    "tags": "vegan,protein",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Cold Noodles with Peanut Sauce",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "pasta",
+      "peanut butter",
+      "soy sauce",
+      "garlic",
+      "carrots"
+    ],
+    "instructions": "Cook noodles, rinse cold. Mix peanut butter, soy sauce and garlic into sauce. Add water to thin. Toss noodles with sauce and grated carrots.",
+    "tags": "no-cook,cold",
+    "avoid": [
+      "peanuts",
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Stir-Fried Vegetables and Rice",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "carrots",
+      "cabbage",
+      "onions",
+      "oil",
+      "rice",
+      "soy sauce",
+      "garlic"
+    ],
+    "instructions": "Cook rice. Heat wok or pan very hot. Fry garlic and onion 1 minute. Add vegetables, stir-fry on high 3 minutes until slightly charred. Season with soy sauce. Serve over rice.",
+    "tags": "vegan,quick",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Khichdi",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "lentils",
+      "onions",
+      "oil",
+      "salt",
+      "garlic"
+    ],
+    "instructions": "Wash rice and lentils together. Fry onion and garlic in oil until golden. Add rice and lentils, stir to coat. Add 4 cups water and salt. Cover and cook on low 25 minutes.",
+    "tags": "one-pot,comfort",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Chicken with Soy and Garlic",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "chicken",
+      "soy sauce",
+      "garlic",
+      "onions",
+      "oil",
+      "rice"
+    ],
+    "instructions": "Marinate chicken in soy sauce and garlic 30 minutes. Fry in oil until cooked through and caramelized. Serve over rice with fried onion.",
+    "tags": "simple,flavorful",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Coconut Lentil Curry",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "lentils",
+      "coconut milk",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic until golden. Add tomatoes, cook 5 minutes. Add lentils and coconut milk. Simmer 20 minutes. Season generously. Serve with rice.",
+    "tags": "creamy,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Noodle Soup",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "pasta",
+      "carrots",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic. Add water or broth and carrots. Simmer 10 minutes. Add noodles, cook per package. Season with salt. Add soy sauce if available.",
+    "tags": "comforting,quick",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Bean and Garlic Rice Bowl",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "beans",
+      "rice",
+      "garlic",
+      "oil",
+      "soy sauce"
+    ],
+    "instructions": "Cook rice. Fry sliced garlic in oil until golden and crispy. Remove garlic. Fry beans in same oil until slightly crispy. Season with soy sauce. Serve over rice, top with crispy garlic.",
+    "tags": "simple,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Tofu and Cabbage Stir Fry",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "tofu",
+      "cabbage",
+      "garlic",
+      "soy sauce",
+      "oil",
+      "rice"
+    ],
+    "instructions": "Press and cube tofu. Fry in oil until golden on all sides. Add shredded cabbage and garlic. Stir-fry 3 minutes on high heat. Season with soy sauce. Serve over rice.",
+    "tags": "vegan,quick",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Aloo Sabzi",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "potatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic until golden. Add diced potato, stir to coat. Add tomatoes and small amount of water. Cover and cook 20 minutes until potatoes are tender. Season well.",
+    "tags": "indian-style,vegan",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Sweet Potato and Lentil Dal",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "sweet potatoes",
+      "lentils",
+      "onions",
+      "garlic",
+      "coconut milk",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add cubed sweet potato and lentils. Cover with water. Simmer 20 minutes. Stir in coconut milk. Simmer 5 more minutes. Serve with rice.",
+    "tags": "creamy,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Grits with Egg",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "cornmeal",
+      "eggs",
+      "butter",
+      "salt",
+      "milk"
+    ],
+    "instructions": "Bring 4 cups water to boil. Whisk in cornmeal slowly. Cook on low 20 minutes, stirring often. Stir in butter and milk. Season. Top with fried or poached egg.",
+    "tags": "classic,comfort",
+    "avoid": [
+      "eggs",
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Oatmeal with Brown Sugar",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "oats",
+      "milk",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Cook oats in milk 5 minutes. Stir in butter. Season with salt. Sweeten if desired.",
+    "tags": "creamy,simple",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Sweet Potato Hash",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "sweet potatoes",
+      "eggs",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Dice sweet potato small. Fry in oil 8 minutes until tender. Add onion, cook 3 more minutes. Make wells, crack in eggs. Cover and cook until whites set. Season.",
+    "tags": "hearty,sweet-savory",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Cornmeal Porridge",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "cornmeal",
+      "milk",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Whisk cornmeal into cold milk. Heat on medium, stirring constantly until thick, about 10 minutes. Stir in butter. Season with salt or sweeten with sugar.",
+    "tags": "smooth,filling",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Egg and Grits Bowl",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "cornmeal",
+      "eggs",
+      "oil",
+      "salt",
+      "milk"
+    ],
+    "instructions": "Make creamy grits with milk. Fry eggs in oil sunny side up. Serve eggs over grits. Season generously.",
+    "tags": "hearty,classic",
+    "avoid": [
+      "eggs",
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Cabbage and Potato Skillet",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "cabbage",
+      "potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry diced potato in oil until almost tender. Add sliced cabbage and onion. Cook on high heat until cabbage is wilted and potatoes are golden. Season generously.",
+    "tags": "cheap,one-pan",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Sweet Potato and Bean Bowl",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "sweet potatoes",
+      "beans",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Roast or boil sweet potatoes until tender. Fry onion. Add beans, heat through. Serve beans over split sweet potatoes. Season.",
+    "tags": "hearty,vegan",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Cornbread and Beans",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "cornmeal",
+      "beans",
+      "onions",
+      "milk",
+      "eggs",
+      "oil"
+    ],
+    "instructions": "Make cornbread: mix cornmeal, egg, milk. Pour into oiled pan, bake 400F 20 minutes. Warm beans with fried onion. Serve together.",
+    "tags": "classic,filling",
+    "avoid": [
+      "eggs",
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Pork and Bean Stew",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "pork",
+      "beans",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Brown pork pieces. Add onion and garlic. Add beans, tomatoes and water. Simmer 45 minutes until pork is tender and beans are creamy. Season.",
+    "tags": "slow-cooked,hearty",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Chicken and Cornbread",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "chicken",
+      "cornmeal",
+      "milk",
+      "eggs",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Season and bake chicken at 400F for 35 minutes. Make cornbread batter with cornmeal, egg, milk. Bake alongside in oiled pan for last 20 minutes.",
+    "tags": "classic,filling",
+    "avoid": [
+      "meat",
+      "eggs",
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Hoppin John",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "beans",
+      "rice",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Soak beans overnight. Drain. Cook with onion and garlic until very tender, about 90 minutes. Season. Serve beans and their liquid over cooked rice.",
+    "tags": "new-years,classic",
+    "avoid": [],
+    "srv": 6
+  },
+  {
+    "title": "Fried Catfish and Grits",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "tuna",
+      "cornmeal",
+      "oil",
+      "milk",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Make creamy grits with milk and butter. Season fish fillet. Coat in cornmeal. Fry in oil until golden and cooked through. Serve over grits.",
+    "tags": "classic,southern",
+    "avoid": [
+      "fish",
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Sweet Potato and Chicken Bake",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "sweet potatoes",
+      "chicken",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cut sweet potato and chicken into chunks. Toss with oil and salt. Spread in baking dish. Roast 400F for 35 minutes until chicken cooked and sweet potato tender.",
+    "tags": "easy,one-pan",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Bean and Cornmeal Stew",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "beans",
+      "cornmeal",
+      "onions",
+      "canned tomatoes",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion. Add tomatoes and beans. Simmer 15 minutes. Whisk small amount of cornmeal with water, stir into stew to thicken. Simmer 10 more minutes.",
+    "tags": "thick,hearty",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Chicken and Rice Casserole",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "chicken",
+      "rice",
+      "onions",
+      "milk",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Brown chicken. Remove. Cook onion in same pan. Add rice, stir to coat. Add milk and water. Return chicken. Cover and bake 350F for 30 minutes.",
+    "tags": "creamy,comfort",
+    "avoid": [
+      "meat",
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Egg and Potato Skillet",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "eggs",
+      "potatoes",
+      "onions",
+      "oil",
+      "garlic"
+    ],
+    "instructions": "Fry diced potatoes in oil until golden. Add onion and garlic, cook 3 minutes. Create wells in mixture. Crack eggs in. Cover and cook until eggs set.",
+    "tags": "hearty,simple",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Bread with Olive Oil",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "bread",
+      "olive oil",
+      "garlic",
+      "salt"
+    ],
+    "instructions": "Toast bread. Rub with garlic clove. Drizzle olive oil generously. Season with salt.",
+    "tags": "classic,quick",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Oatmeal with Applesauce",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "oats",
+      "applesauce",
+      "water",
+      "cinnamon"
+    ],
+    "instructions": "Cook oats in water 5 minutes. Top with applesauce and cinnamon.",
+    "tags": "sweet,simple",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Chickpea and Egg Scramble",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "eggs",
+      "chickpeas",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add chickpeas, cook 3 minutes. Beat eggs and pour over. Stir gently until just cooked. Season with salt.",
+    "tags": "high-protein,quick",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Tomato and Egg Bake",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "eggs",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, simmer 10 minutes until reduced. Season. Create wells, crack eggs in. Cover and cook until whites set.",
+    "tags": "shakshuka-style,quick",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Chickpea and Tomato Stew",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "chickpeas",
+      "canned tomatoes",
+      "garlic",
+      "onions",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, cook 5 minutes. Add chickpeas. Simmer 15 minutes until sauce thickens. Season well. Serve with bread.",
+    "tags": "vegan,hearty",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Carrot and Lentil Soup",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "lentils",
+      "carrots",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic. Add carrots and lentils. Cover with water. Simmer 25 minutes. Blend half the soup for a creamy texture. Season.",
+    "tags": "smooth,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "White Bean and Vegetable Soup",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "beans",
+      "carrots",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add vegetables and tomatoes. Add beans and water. Simmer 25 minutes. Season. Drizzle with olive oil to serve.",
+    "tags": "classic,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Pasta with Olive Oil and Garlic",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "pasta",
+      "garlic",
+      "olive oil",
+      "salt"
+    ],
+    "instructions": "Cook pasta in salted water. Drain, reserve 1 cup pasta water. Fry sliced garlic in olive oil until golden. Toss pasta with garlic oil, adding pasta water to create sauce.",
+    "tags": "quick,classic",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Pasta Aglio e Olio",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "pasta",
+      "garlic",
+      "olive oil",
+      "salt"
+    ],
+    "instructions": "Cook pasta. Slice garlic thin. Fry very slowly in olive oil until golden, not burnt. Toss with drained pasta and reserved pasta water to create silky sauce. Season generously.",
+    "tags": "classic,quick",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Mujaddara",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "lentils",
+      "rice",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cook lentils in water 20 minutes until tender. Cook rice separately. Fry onion in generous oil until very dark and caramelized, about 20 minutes. Mix lentils and rice. Top with crispy onions.",
+    "tags": "classic,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Baked Fish with Lemon",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "tuna",
+      "garlic",
+      "olive oil",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Place fish in baking dish. Pour over tomatoes and garlic. Drizzle olive oil. Season. Bake 375F for 20 minutes until fish flakes easily.",
+    "tags": "light,quick",
+    "avoid": [
+      "fish"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Chickpea and Vegetable Bake",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "chickpeas",
+      "potatoes",
+      "onions",
+      "canned tomatoes",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Combine all ingredients in baking dish. Toss with oil. Season generously. Add small amount of water. Cover and roast 375F for 45 minutes. Uncover last 15 minutes.",
+    "tags": "one-pan,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Lentil and Vegetable Stew",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "lentils",
+      "carrots",
+      "potatoes",
+      "onions",
+      "garlic",
+      "canned tomatoes"
+    ],
+    "instructions": "Saut\u00e9 onion and garlic. Add all vegetables and lentils. Cover with water. Simmer 30 minutes until lentils and vegetables are completely tender. Season generously.",
+    "tags": "hearty,vegan",
+    "avoid": [],
+    "srv": 6
+  },
+  {
+    "title": "Bean and Tomato Bake",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "beans",
+      "canned tomatoes",
+      "garlic",
+      "onions",
+      "olive oil"
+    ],
+    "instructions": "Combine beans, tomatoes, sliced garlic and onion in baking dish. Pour olive oil over. Season. Bake 350F for 35 minutes until bubbling and slightly caramelized.",
+    "tags": "simple,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Chicken with Tomatoes and Garlic",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "chicken",
+      "canned tomatoes",
+      "garlic",
+      "onions",
+      "olive oil"
+    ],
+    "instructions": "Brown chicken in oil. Remove. Fry onion and garlic. Add tomatoes, simmer 10 minutes. Return chicken. Cover and cook 25 minutes until tender. Serve with bread or rice.",
+    "tags": "classic,simple",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Shakshuka",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "eggs",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic in oil until soft. Add tomatoes, season, simmer 10 minutes until thick. Create wells in sauce. Crack eggs into wells. Cover and cook until whites set but yolks still runny. Serve from pan with bread.",
+    "tags": "classic,impressive",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Simple Oatmeal",
+    "slot": "breakfast",
+    "cuisine": "any",
+    "ingredients": [
+      "oats",
+      "water",
+      "salt"
+    ],
+    "instructions": "Bring 2 cups water to boil. Add 1 cup oats and salt. Reduce heat, cook 5 minutes stirring occasionally. Cover and rest 2 minutes. Add any topping available.",
+    "tags": "foundation,vegan",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Egg Scramble",
+    "slot": "breakfast",
+    "cuisine": "any",
+    "ingredients": [
+      "eggs",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Beat eggs with salt. Heat oil in pan. Fry onion 2 minutes. Pour in eggs. Stir gently over medium-low heat until just set. Add any available vegetables.",
+    "tags": "basic,quick",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Potato Breakfast Bowl",
+    "slot": "breakfast",
+    "cuisine": "any",
+    "ingredients": [
+      "potatoes",
+      "eggs",
+      "oil",
+      "onions",
+      "salt"
+    ],
+    "instructions": "Dice and fry potatoes until golden and crispy. Add onion, cook until soft. Crack eggs directly in pan. Stir everything together. Season generously.",
+    "tags": "filling,one-pan",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Banana Porridge",
+    "slot": "breakfast",
+    "cuisine": "any",
+    "ingredients": [
+      "oats",
+      "banana",
+      "water",
+      "salt"
+    ],
+    "instructions": "Cook oats in water 5 minutes. Mash in very ripe banana while oats are hot. Stir well. The banana provides all the sweetness needed.",
+    "tags": "naturally-sweet,vegan",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Potato and Onion Fry",
+    "slot": "dinner",
+    "cuisine": "any",
+    "ingredients": [
+      "potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Dice potatoes into cubes. Heat oil in pan. Add potatoes, cook without stirring 4 minutes until bottom is golden. Flip. Add onion. Cook until everything is golden and tender. Season.",
+    "tags": "universal,vegan",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Lentil Stew",
+    "slot": "dinner",
+    "cuisine": "any",
+    "ingredients": [
+      "lentils",
+      "onions",
+      "carrots",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic. Add lentils and carrots. Cover with water. Simmer 25 minutes. Season generously. Mash some lentils for thicker texture.",
+    "tags": "cheap,hearty",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Pasta with Sauce",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "pasta",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Cook pasta. Fry onion and garlic. Add tomatoes, simmer 15 minutes. Toss with pasta. Season.",
+    "tags": "quick,cheap",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Bean Stew",
+    "slot": "dinner",
+    "cuisine": "any",
+    "ingredients": [
+      "beans",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic until golden. Add beans with their liquid if canned, or cooked beans with water. Simmer 15 minutes until thick. Season. Serve over rice or with bread.",
+    "tags": "cheap,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Gallo Pinto",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "rice",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Use leftover cold rice. Fry onion and garlic until soft. Add cold rice, fry pressing down 2 minutes. Add cooked beans with their liquid. Stir and fry together until mixed and slightly crispy. Season.",
+    "tags": "central-american,classic",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Polenta with Tomato Sauce",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "cornmeal",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Make tomato sauce: fry onion and garlic, add tomatoes, simmer 20 minutes. Make polenta: boil 4 cups salted water, whisk in 1 cup cornmeal slowly, cook 20 minutes on low stirring constantly. Serve polenta topped with sauce.",
+    "tags": "italian-style,hearty",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Sweet Potato Stew",
+    "slot": "dinner",
+    "cuisine": "any",
+    "ingredients": [
+      "sweet potatoes",
+      "beans",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, cook 5 minutes. Add cubed sweet potato and beans. Add water to cover. Simmer 20 minutes until sweet potato is tender. Season generously.",
+    "tags": "vegan,hearty",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Arroz con Leche",
+    "slot": "breakfast",
+    "cuisine": "latin",
+    "ingredients": [
+      "rice",
+      "milk",
+      "banana",
+      "cinnamon",
+      "salt"
+    ],
+    "instructions": "Cook rice in milk slowly 20 minutes, stirring often. Add sliced banana. Season with cinnamon and small amount of salt to balance.",
+    "tags": "sweet,creamy",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Bean and Egg Bowl",
+    "slot": "breakfast",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "eggs",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion. Add beans, mash slightly while heating. Fry eggs separately. Serve beans topped with eggs. Season with salt.",
+    "tags": "protein,filling",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Sopa de Fideo",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "pasta",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Toast dry pasta in oil until golden. Add blended tomatoes, onion and garlic. Fry 2 minutes. Add water to cover. Simmer until pasta is tender. Season.",
+    "tags": "classic,comforting",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Tacos de Papa",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "potatoes",
+      "tortillas",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Boil and mash potatoes with salt. Fry onion until golden, mix into mash. Fill tortillas, fold in half. Fry in oil until crispy on both sides.",
+    "tags": "vegan,crispy",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Frijoles con Arroz Bowl",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "rice",
+      "onions",
+      "canned tomatoes",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cook rice. Fry onion in oil until soft. Add tomatoes, cook 3 minutes. Add beans with their liquid, simmer 10 minutes until thick. Season well. Serve beans over rice as a bowl. Top with raw diced onion if desired.",
+    "tags": "classic,vegan,filling",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Caldo Tlalpe\u00f1o",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "chicken",
+      "beans",
+      "carrots",
+      "onions",
+      "garlic",
+      "salt"
+    ],
+    "instructions": "Simmer chicken with onion, garlic and salt 30 minutes. Remove and shred. Add beans and carrots to broth. Cook 15 minutes. Return chicken. Season well.",
+    "tags": "hearty,traditional",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 6
+  },
+  {
+    "title": "Frijoles Charros",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "pork",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Soak beans overnight. Cook with pork, onion and garlic until very tender, 2 hours. Add tomatoes. Simmer 30 more minutes. Season generously. A thick, soupy bean dish.",
+    "tags": "traditional,hearty",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 6
+  },
+  {
+    "title": "Arroz con Frijoles Negros",
+    "slot": "dinner",
+    "cuisine": "latin",
+    "ingredients": [
+      "rice",
+      "beans",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Cook rice. Separately saut\u00e9 onion and garlic until golden. Add black beans with their liquid. Simmer until thick. Season. Serve alongside rice or mixed together.",
+    "tags": "classic,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Miso-Style Egg Soup",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "eggs",
+      "onions",
+      "soy sauce",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Boil water with diced onion and soy sauce for broth. Beat eggs. Pour slowly into simmering broth while stirring to create egg ribbons. Season.",
+    "tags": "light,warming",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Steamed Egg Custard",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "eggs",
+      "soy sauce",
+      "water",
+      "oil"
+    ],
+    "instructions": "Beat eggs with equal amount of water and soy sauce. Strain into bowl. Steam over simmering water 12 minutes until just set. Drizzle oil to serve.",
+    "tags": "silky,soft",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Teriyaki-Style Chicken",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "chicken",
+      "soy sauce",
+      "garlic",
+      "onions",
+      "oil",
+      "rice"
+    ],
+    "instructions": "Mix soy sauce with garlic. Marinate chicken 30 minutes. Fry in oil on medium heat until cooked through, basting with marinade. Caramelizes beautifully. Serve over rice with fried onion.",
+    "tags": "sweet-savory,impressive",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Congee with Toppings",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "water",
+      "salt",
+      "soy sauce",
+      "garlic"
+    ],
+    "instructions": "Bring 8 cups water to boil with 1 cup rice. Simmer 45 minutes, stirring occasionally. Should be very thick and creamy. Season with soy sauce. Top with fried garlic.",
+    "tags": "comforting,healing",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Fried Rice Cakes",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "eggs",
+      "soy sauce",
+      "oil",
+      "onions"
+    ],
+    "instructions": "Mix cold cooked rice with eggs and soy sauce. Form into patties. Fry in oil on medium heat until golden and crispy both sides. Serve with fried onion.",
+    "tags": "crispy,leftover",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Biscuits and Gravy",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "flour",
+      "butter",
+      "milk",
+      "salt",
+      "oil",
+      "onions"
+    ],
+    "instructions": "Make biscuits: mix flour and salt, cut in cold butter, add milk, mix until just combined. Pat out, cut into rounds. Bake 450F for 12 minutes. Make simple gravy: fry onion in oil, add flour, whisk in milk slowly. Season. Serve biscuits smothered in gravy.",
+    "tags": "classic,filling,southern",
+    "avoid": [
+      "gluten",
+      "dairy"
+    ],
+    "srv": 8
+  },
+  {
+    "title": "Grits Porridge",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "cornmeal",
+      "water",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Bring 4 cups salted water to boil. Whisk in 1 cup cornmeal slowly. Reduce heat to low. Cook 20 minutes stirring frequently. Stir in butter. Season.",
+    "tags": "creamy,simple",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Sweet Potato Pie Oatmeal",
+    "slot": "breakfast",
+    "cuisine": "southern",
+    "ingredients": [
+      "oats",
+      "sweet potatoes",
+      "milk",
+      "cinnamon",
+      "salt"
+    ],
+    "instructions": "Cook oats in milk. Mash in roasted or microwaved sweet potato flesh. Season with cinnamon and salt. Naturally sweet and very filling.",
+    "tags": "seasonal,filling",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Red Beans and Rice",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "beans",
+      "rice",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic until golden. Add soaked and drained beans with water to cover. Cook 2 hours until very tender. Season. Serve over rice. Mash some beans against the pot for creamy sauce.",
+    "tags": "classic,slow-cooked",
+    "avoid": [],
+    "srv": 6
+  },
+  {
+    "title": "Smothered Chicken",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "chicken",
+      "onions",
+      "garlic",
+      "oil",
+      "flour",
+      "milk",
+      "salt"
+    ],
+    "instructions": "Flour and season chicken. Brown in oil. Remove. Make gravy in same pan: cook onion and garlic, add flour, then milk slowly. Return chicken to gravy. Simmer 30 minutes.",
+    "tags": "comfort,classic",
+    "avoid": [
+      "meat",
+      "gluten",
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Sweet Potato Casserole",
+    "slot": "dinner",
+    "cuisine": "southern",
+    "ingredients": [
+      "sweet potatoes",
+      "butter",
+      "milk",
+      "salt",
+      "eggs"
+    ],
+    "instructions": "Boil and mash sweet potatoes with butter and milk. Season. Pour into baking dish. Optionally top with beaten egg for custard texture. Bake 350F for 25 minutes.",
+    "tags": "comfort,sweet",
+    "avoid": [
+      "dairy",
+      "eggs"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Fattoush",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "bread",
+      "canned tomatoes",
+      "onions",
+      "oil",
+      "garlic"
+    ],
+    "instructions": "Toast or fry stale bread until crispy. Mix with diced tomato and onion. Dress generously with oil and garlic. Let bread soak slightly before serving.",
+    "tags": "bread-using,refreshing",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Ful Medames",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "beans",
+      "garlic",
+      "oil",
+      "canned tomatoes",
+      "onions",
+      "salt"
+    ],
+    "instructions": "Simmer cooked broad beans or fava beans with garlic and tomatoes until very thick. Season generously. Drizzle with olive oil. Serve with bread. Egyptian breakfast staple.",
+    "tags": "protein,hearty",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Pasta e Ceci",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "pasta",
+      "chickpeas",
+      "canned tomatoes",
+      "garlic",
+      "onions",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, cook 10 minutes. Add chickpeas with some water. Simmer 10 minutes. Add pasta directly to pot. Cook until pasta is tender, adding water as needed. Should be thick, not soupy.",
+    "tags": "italian,hearty",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Ribollita",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "beans",
+      "bread",
+      "carrots",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Saut\u00e9 onion, garlic and carrots. Add tomatoes and beans. Simmer 20 minutes. Add torn stale bread. Cook until bread dissolves into thick stew. Season. Better the next day.",
+    "tags": "bread-using,italian",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 6
+  },
+  {
+    "title": "Spanakopita Scramble",
+    "slot": "breakfast",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "eggs",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Saut\u00e9 onion and garlic. Add any available greens. Beat eggs and pour over. Cook slowly, stirring until just set. Season. Mediterranean style scrambled eggs.",
+    "tags": "quick,simple",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Dal Makhani Style",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "lentils",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "butter"
+    ],
+    "instructions": "Cook lentils until very soft. Fry onion and garlic until deeply golden. Add tomatoes, cook 10 minutes. Add lentils, simmer 20 minutes. Stir in butter at end for richness.",
+    "tags": "rich,comfort",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Bibimbap Style Bowl",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "carrots",
+      "onions",
+      "eggs",
+      "soy sauce",
+      "oil"
+    ],
+    "instructions": "Cook rice. Separately saut\u00e9 carrots and onion. Fry egg sunny side up. Arrange vegetables and egg over rice. Drizzle with soy sauce. Mix together before eating.",
+    "tags": "colorful,assembly",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Kimchi-Style Fried Rice",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "rice",
+      "cabbage",
+      "onions",
+      "soy sauce",
+      "oil",
+      "eggs"
+    ],
+    "instructions": "Fry shredded cabbage in oil on high heat until wilted and slightly charred. Add cold rice, stir-fry pressing down. Season heavily with soy sauce. Top with fried egg.",
+    "tags": "bold,quick",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Masala Oats",
+    "slot": "breakfast",
+    "cuisine": "asian",
+    "ingredients": [
+      "oats",
+      "onions",
+      "carrots",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and carrots in oil 3 minutes. Add oats. Add water to cover. Cook 5 minutes until oats are tender and mixture is thick. Season with salt and any available spice.",
+    "tags": "savory,indian-style",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Upma",
+    "slot": "breakfast",
+    "cuisine": "asian",
+    "ingredients": [
+      "cornmeal",
+      "onions",
+      "carrots",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Toast dry semolina or cornmeal in dry pan until slightly fragrant. Fry onion and vegetables. Add water, bring to boil. Add cornmeal slowly while stirring. Cook 5 minutes. Season.",
+    "tags": "south-indian,quick",
+    "avoid": [],
+    "srv": 3
+  },
+  {
+    "title": "Chickpea Curry",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "chickpeas",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic until golden. Add tomatoes, cook 8 minutes pressing down. Add chickpeas, cook 15 minutes until sauce thickens and coats chickpeas. Season generously. Serve with rice or bread.",
+    "tags": "warming,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Palak Dal",
+    "slot": "dinner",
+    "cuisine": "asian",
+    "ingredients": [
+      "lentils",
+      "onions",
+      "garlic",
+      "oil",
+      "canned tomatoes",
+      "salt"
+    ],
+    "instructions": "Cook lentils until soft. Fry onion and garlic until deeply golden. Add tomatoes, cook 5 minutes. Pour over lentils. Simmer together 10 minutes. Season. Add any greens available.",
+    "tags": "iron-rich,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Tortilla Espa\u00f1ola",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "eggs",
+      "potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Slice potatoes thin. Fry slowly in generous oil with onion until tender, not browned, 20 minutes. Beat eggs with salt. Mix potatoes into eggs. Fry in oiled pan until set on bottom. Flip onto plate, slide back to cook other side.",
+    "tags": "spanish,impressive",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Pisto",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "salt",
+      "eggs"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, simmer 20 minutes until thick. Season. Either serve as sauce or crack eggs into sauce and cook until set.",
+    "tags": "spanish,vegan",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Acquacotta",
+    "slot": "dinner",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "bread",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "eggs"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, simmer 15 minutes. Add water, bring to boil. Place slices of stale bread in bowls. Poach eggs in simmering soup. Pour over bread.",
+    "tags": "italian,bread-using",
+    "avoid": [
+      "eggs",
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Black-Eyed Pea Soup",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "beans",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic in oil until soft. Add tomatoes, cook 5 minutes. Add black-eyed peas and water to cover. Simmer 20 minutes until thick and creamy. Season generously with salt and pepper. Serve with cornbread if available.",
+    "tags": "classic,hearty",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Sweet Potato Soup",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "sweet potatoes",
+      "onions",
+      "milk",
+      "butter",
+      "salt"
+    ],
+    "instructions": "Peel and cube sweet potatoes. Boil in salted water with onion until very tender, about 20 minutes. Drain. Mash or blend until smooth. Stir in milk and butter. Reheat gently. Season with salt. Naturally sweet and filling.",
+    "tags": "creamy,vegan-adaptable",
+    "avoid": [
+      "dairy"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Chicken and Vegetable Soup",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "chicken",
+      "carrots",
+      "onions",
+      "potatoes",
+      "garlic",
+      "salt"
+    ],
+    "instructions": "Cover chicken with water in a pot. Add onion, garlic, salt. Boil 25 minutes until cooked through. Remove chicken and shred. Return to pot with diced potatoes and carrots. Simmer 20 minutes until vegetables are tender. Season well.",
+    "tags": "hearty,healing",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 6
+  },
+  {
+    "title": "Hoppin John Soup",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "beans",
+      "rice",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic in oil until golden. Add black-eyed peas with water to cover. Simmer 15 minutes. Add cooked rice and enough water to make a thick soup. Season generously. The rice thickens the broth as it sits.",
+    "tags": "classic,quick",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Smothered Potatoes",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "potatoes",
+      "onions",
+      "milk",
+      "oil",
+      "flour",
+      "salt"
+    ],
+    "instructions": "Slice potatoes thin. Fry onion in oil until soft. Add potatoes, stir to coat. Add small amount of water, cover, cook 15 minutes until tender. Mix flour with milk and pour over. Cook until thick gravy forms. Season well.",
+    "tags": "creamy,filling",
+    "avoid": [
+      "dairy",
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Bean and Sweet Potato Bowl",
+    "slot": "lunch",
+    "cuisine": "southern",
+    "ingredients": [
+      "beans",
+      "sweet potatoes",
+      "onions",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Bake or boil sweet potato until tender. Fry onion in oil until soft. Add beans, heat through, season well. Split sweet potato open. Spoon beans over top. Mash slightly as you eat so the potato and beans combine.",
+    "tags": "simple,filling",
+    "avoid": [],
+    "srv": 2
+  },
+  {
+    "title": "Lentil and Tomato Soup",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "lentils",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic in oil until golden. Add tomatoes, cook 5 minutes pressing down. Add lentils and water to cover by 2 inches. Simmer 25 minutes until lentils are soft and starting to dissolve. Season generously. Add lemon juice if available.",
+    "tags": "classic,vegan",
+    "avoid": [],
+    "srv": 4
+  },
+  {
+    "title": "Bread and Bean Soup",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "bread",
+      "beans",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic in oil. Add tomatoes, simmer 10 minutes. Add beans and water. Simmer 15 minutes. Tear in stale bread. Cook 5 more minutes until bread absorbs broth and thickens it. Season. This is ribollita-style.",
+    "tags": "bread-using,italian",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Egg and Tomato Pan",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "eggs",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Fry onion and garlic in oil 3 minutes. Add tomatoes, season, simmer 10 minutes until thick. Create 3-4 wells in the sauce. Crack one egg into each well. Cover and cook on low until whites are set but yolks still soft, about 5 minutes. Serve from pan with bread.",
+    "tags": "quick,shakshuka-style",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Pasta e Fagioli",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "pasta",
+      "beans",
+      "onions",
+      "garlic",
+      "canned tomatoes",
+      "oil"
+    ],
+    "instructions": "Fry onion and garlic. Add tomatoes, cook 5 minutes. Add beans with water. Simmer 10 minutes, mashing some beans for creaminess. Add small pasta directly to pot. Cook until pasta is tender, adding water as needed. Should be very thick. Season well.",
+    "tags": "italian,one-pot",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Chickpea and Bread Salad",
+    "slot": "lunch",
+    "cuisine": "mediterranean",
+    "ingredients": [
+      "chickpeas",
+      "bread",
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "oil"
+    ],
+    "instructions": "Toast bread cubes in oil until golden and crispy. Dice tomatoes and onion. Mix chickpeas with tomatoes, onion and garlic. Dress with oil and salt. Add bread just before eating so it stays crisp. This is a panzanella-style salad.",
+    "tags": "bread-using,no-cook",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 3
+  },
+  {
+    "title": "Caldo de Pollo",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "chicken",
+      "potatoes",
+      "carrots",
+      "onions",
+      "garlic",
+      "salt"
+    ],
+    "instructions": "Place chicken pieces in pot with water. Add whole onion, garlic, salt. Bring to boil, skim foam. Simmer 30 minutes. Add potato and carrot chunks. Cook 20 more minutes. Remove chicken, shred, return to broth. Season. A simple healing broth.",
+    "tags": "classic,healing",
+    "avoid": [
+      "meat"
+    ],
+    "srv": 6
+  },
+  {
+    "title": "Frijoles de Olla",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "beans",
+      "onions",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Soak beans overnight. Drain, cover with fresh water by 3 inches. Add halved onion and garlic. Simmer 1.5-2 hours until very tender and creamy. The broth becomes rich and thick. Season generously at the end only. Serve as a soup with tortillas.",
+    "tags": "traditional,slow-cooked",
+    "avoid": [],
+    "srv": 6
+  },
+  {
+    "title": "Tortilla Soup",
+    "slot": "lunch",
+    "cuisine": "latin",
+    "ingredients": [
+      "canned tomatoes",
+      "onions",
+      "garlic",
+      "tortillas",
+      "oil",
+      "salt"
+    ],
+    "instructions": "Blend tomatoes with onion and garlic. Fry this sauce in oil in a pot for 5 minutes. Add water to make a broth. Simmer 15 minutes. Season. Cut tortillas into strips and fry in oil until crispy. Serve soup topped with crispy tortilla strips.",
+    "tags": "warming,classic",
+    "avoid": [
+      "gluten"
+    ],
+    "srv": 4
+  },
+  {
+    "title": "Miso Soup with Rice",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "soy sauce",
+      "tofu",
+      "onions",
+      "eggs",
+      "rice",
+      "oil"
+    ],
+    "instructions": "Bring water to simmer with soy sauce for broth. Add diced onion, cook 5 minutes. If using tofu, add cubed tofu. Beat eggs and stir slowly into simmering broth to form ribbons. Serve over or alongside steamed rice. Season.",
+    "tags": "light,warming",
+    "avoid": [
+      "eggs"
+    ],
+    "srv": 2
+  },
+  {
+    "title": "Dan Dan Noodles",
+    "slot": "lunch",
+    "cuisine": "asian",
+    "ingredients": [
+      "pasta",
+      "peanut butter",
+      "soy sauce",
+      "garlic",
+      "oil",
+      "carrots"
+    ],
+    "instructions": "Cook noodles until tender. Mix peanut butter, soy sauce, garlic and oil with hot water to make a thick sauce. Grate carrots. Drain noodles. Toss noodles with sauce and carrots. Add more hot water if sauce is too thick. Serve warm or at room temperature.",
+    "tags": "spicy-adaptable,filling",
+    "avoid": [
+      "peanuts",
+      "gluten"
+    ],
+    "srv": 2
+  }
+]
