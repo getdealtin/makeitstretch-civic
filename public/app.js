@@ -1,39 +1,71 @@
-// Make It Stretch: client. Renders the intake and the results from /api/plan.
-// City identity comes from /api/config; strings come from /i18n/<lang>.js.
+// Make It Stretch: client.
+// The shared engine runs right here in the browser (served from /engine), so the
+// blurred preview updates instantly and a plan still builds if the connection drops
+// after the page loads. City identity comes from /api/config; strings from /i18n.
 
 import en from './i18n/en.js';
+import {
+  buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
+  matchBox, BOX_GROUPS, foodLabel,
+} from '/engine/index.js';
 
 const STRINGS = { en };
 let S = en;
 const t = (key, vars = {}) => (S[key] ?? en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const money = n => Number(n).toFixed(2);
+const qs = location.search; // keeps ?city= in dev
 
 const app = document.getElementById('app');
 let city = null;
 
-// ── State ───────────────────────────────────────────────────────
-const answers = {
-  budget: null, days: null, people: null, zip: null,
-  leftover: 'sometimes', cuisine: [], avoid: [], have: [], stores: [],
-};
-const STEPS = ['budget', 'days', 'people', 'zip', 'prefs'];
-let stepIndex = -1; // -1 = intro
+// ── Data (loaded once, in the background) ───────────────────────
+let recipesP = null;
+const pricesP = {};
+const getRecipes = () => (recipesP ||= fetch('/api/recipes' + qs).then(r => r.json()));
+function getPrices(region) {
+  const key = region || '_';
+  return (pricesP[key] ||= fetch('/api/prices' + (qs ? qs + '&' : '?') + 'region=' + (region || '')).then(r => r.json()));
+}
+const regionFor = zip => (city?.price_region ? null : zipToInfo(zip || '')?.region) || null;
 
-// Preference groups, ordered few → many options (choice architecture, spec §6).
+// ── State ───────────────────────────────────────────────────────
+const fresh = () => ({
+  budget: null, days: null, people: null, zip: null,
+  leftover: 'sometimes', store: 'full', cuisine: [], avoid: [], have: [],
+});
+let answers = fresh();
+let box = { items: [], avoid: [] };
+const STEPS = ['budget', 'days', 'people', 'zip', 'prefs'];
+
+// Preference groups, fewest → most options (choice architecture, spec §6).
 const PREFS = [
   { key: 'leftover', single: true, options: ['yes', 'sometimes', 'no'] },
+  { key: 'store', single: true, options: ['full', 'dollar', 'corner'] },
   { key: 'cuisine', none: 'any', options: ['american', 'latin', 'asian', 'southern', 'mediterranean'] },
   { key: 'avoid', none: 'none', options: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'] },
-  { key: 'stores', label: 'store', none: null, options: ['full', 'walmart', 'aldi', 'dollar', 'corner'] },
   { key: 'have', none: 'none', options: ['rice', 'beans', 'oats', 'eggs', 'potatoes', 'bread', 'pasta', 'oil'] },
 ];
 
+const engineInput = a => ({
+  budget: a.budget, days: a.days || 7, people: a.people || 1,
+  cuisine: a.cuisine, avoid: a.avoid, have: a.have,
+  stores: a.store && a.store !== 'full' ? [a.store] : [], leftover: a.leftover,
+});
+
+/** Run the whole budget engine in the browser. */
+async function computePlan(a) {
+  const [recipes, priced] = await Promise.all([getRecipes(), getPrices(regionFor(a.zip))]);
+  const input = engineInput(a);
+  const result = buildCart(input, priced.prices);
+  const bySlot = matchRecipes(recipes, { ingredients: result.cart.map(i => i.id), cuisine: input.cuisine, avoid: input.avoid });
+  return { input, result, weeks: planWeeks(bySlot, input), shopping: groupShoppingList(result.cart), priced };
+}
+
 // ── Boot ────────────────────────────────────────────────────────
 async function boot() {
-  try {
-    city = await (await fetch('/api/config' + location.search)).json();
-  } catch { city = { name: 'Make It Stretch', languages: ['en'], resources: [] }; }
+  try { city = await (await fetch('/api/config' + qs)).json(); }
+  catch { city = { name: 'Make It Stretch', languages: ['en'], resources: [] }; }
   const lang = (navigator.language || 'en').slice(0, 2);
   if (city.languages?.includes(lang) && STRINGS[lang]) { S = STRINGS[lang]; document.documentElement.lang = lang; }
 
@@ -43,28 +75,35 @@ async function boot() {
   document.getElementById('disclaimer').textContent = city.disclaimer || '';
   document.title = city.place ? `${city.name} · ${city.place}` : city.name;
   document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  if (qs) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + qs;
 
-  // Keep the city override (?city=) on theme in dev.
-  if (location.search) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + location.search;
-
+  getRecipes(); getPrices(null); // warm up in the background
   renderIntro();
 }
 
-// ── Intake ──────────────────────────────────────────────────────
+function focusTop(sel) {
+  const el = app.querySelector(sel);
+  if (el) { el.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); }
+}
+
+// ── Start screen: two doors ─────────────────────────────────────
 function renderIntro() {
-  stepIndex = -1;
   app.innerHTML = `
     <section class="intro">
       ${city.place ? `<p class="eyebrow">${esc(city.place)}</p>` : ''}
-      <h1 tabindex="-1">${esc(t('intro_title'))}</h1>
+      <h1 tabindex="-1" id="intro-title">${esc(t('intro_title'))}</h1>
       <p>${esc(t('intro_body'))}</p>
-      <button class="btn btn-primary" id="start">${esc(t('intro_cta'))}</button>
+      <div class="doors">
+        <button class="door" id="door-budget"><b>${esc(t('door_budget'))}</b><span>${esc(t('door_budget_sub'))}</span></button>
+        <button class="door" id="door-box"><b>${esc(t('door_box'))}</b><span>${esc(t('door_box_sub'))}</span></button>
+      </div>
     </section>`;
-  app.querySelector('#start').onclick = () => go(0);
+  app.querySelector('#door-budget').onclick = () => { answers = fresh(); go(0); };
+  app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
 }
 
+// ── Budget flow ─────────────────────────────────────────────────
 function go(i) {
-  stepIndex = i;
   const name = STEPS[i];
   const pct = Math.round((i / STEPS.length) * 100);
   app.innerHTML = `
@@ -76,22 +115,49 @@ function go(i) {
       ${STEP_VIEWS[name]()}
       <p class="error" id="err" role="alert"></p>
       <div class="nav">
-        ${i > 0 ? `<button type="button" class="btn btn-ghost" id="back">${esc(t('back'))}</button>` : ''}
+        <button type="button" class="btn btn-ghost" id="back">${esc(t('back'))}</button>
         <button type="submit" class="btn btn-primary">${esc(i === STEPS.length - 1 ? t('build_plan') : t('continue'))}</button>
         ${name === 'zip' ? `<button type="button" class="btn-link" id="skip">${esc(t('zip_skip'))}</button>` : ''}
       </div>
-    </form>`;
+    </form>
+    <div id="preview" class="preview" aria-hidden="true"></div>`;
   const form = app.querySelector('#step');
-  STEP_WIRE[name]?.(form);
+  const refresh = () => updatePreview(i);
+  STEP_WIRE[name]?.(form, refresh);
   form.onsubmit = e => {
     e.preventDefault();
     const err = STEP_SAVE[name](form);
     if (err) { form.querySelector('#err').textContent = t(err); return; }
-    i === STEPS.length - 1 ? buildPlan() : go(i + 1);
+    i === STEPS.length - 1 ? showResults() : go(i + 1);
   };
-  form.querySelector('#back')?.addEventListener('click', () => go(i - 1));
+  form.querySelector('#back').addEventListener('click', () => (i === 0 ? renderIntro() : go(i - 1)));
   form.querySelector('#skip')?.addEventListener('click', () => { answers.zip = null; go(i + 1); });
   (form.querySelector('#budget, #zip') || form.querySelector('h2')).focus();
+  refresh();
+}
+
+// The "this close" preview: a real plan from the answers so far, sharpening each step.
+let previewSeq = 0;
+async function updatePreview(stepIdx) {
+  const el = app.querySelector('#preview');
+  if (!el) return;
+  if (!answers.budget) { el.innerHTML = ''; return; }
+  const seq = ++previewSeq;
+  let plan;
+  try { plan = await computePlan(answers); } catch { return; }
+  if (seq !== previewSeq || !el.isConnected) return;
+  const left = STEPS.length - stepIdx - 1; // steps after this one
+  const blur = [7, 6, 4.5, 3, 1.5][stepIdx] ?? 1.5;
+  const day = plan.weeks[0]?.find(d => !d.leftover);
+  const items = plan.result.cart.length;
+  el.innerHTML = `
+    <div class="preview-card" style="--blur:${blur}px">
+      <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
+      <p class="preview-big"><b>$${money(plan.result.pppd)}</b> ${esc(t('per_person_day'))}</p>
+      ${day ? ['breakfast', 'dinner'].map(s => day[s][0] ? `<p class="preview-meal">${esc(t(s))}: ${esc(day[s][0].title)}</p>` : '').join('') : ''}
+      <p class="preview-meal">${esc(t('preview_items', { n: items }))}</p>
+    </div>
+    <span class="preview-badge">${esc(left === 0 ? t('preview_badge_last') : left === 1 ? t('preview_badge_one') : t('preview_badge', { n: left }))}</span>`;
 }
 
 const optionBtn = (group, value, label, sub, pressed) =>
@@ -132,16 +198,14 @@ const STEP_VIEWS = {
     <h2 id="q" tabindex="-1">${esc(t('q_prefs'))}</h2>
     <p class="hint">${esc(t('q_prefs_hint'))}</p>
     ${PREFS.map(g => {
-      const label = g.label || g.key;
       const opts = [...(g.none ? [g.none] : []), ...g.options];
-      return `<fieldset class="pref-group"><legend>${esc(t('pref_' + label))}</legend><div class="chips">
-        ${opts.map(v => {
-          const on = g.single ? answers[g.key] === v : (v === g.none ? answers[g.key].length === 0 : answers[g.key].includes(v));
-          return `<button type="button" class="chip" data-pref="${g.key}" data-value="${v}" aria-pressed="${on}">${esc(t(label + '_' + v))}</button>`;
-        }).join('')}
+      return `<fieldset class="pref-group"><legend>${esc(t('pref_' + g.key))}</legend><div class="chips">
+        ${opts.map(v => `<button type="button" class="chip" data-pref="${g.key}" data-value="${v}" aria-pressed="${prefOn(g, v)}">${esc(t(g.key + '_' + v))}</button>`).join('')}
       </div></fieldset>`;
     }).join('')}`,
 };
+
+const prefOn = (g, v) => g.single ? answers[g.key] === v : (v === g.none ? answers[g.key].length === 0 : answers[g.key].includes(v));
 
 function wireOptions(form, group, onPick) {
   form.querySelectorAll(`[data-group="${group}"]`).forEach(b => b.addEventListener('click', () => {
@@ -151,28 +215,31 @@ function wireOptions(form, group, onPick) {
 }
 
 const STEP_WIRE = {
-  days: f => wireOptions(f, 'days', v => { answers.days = v; }),
-  people: f => {
+  budget: (f, refresh) => f.querySelector('#budget').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (v >= 1 && v <= 9999) { answers.budget = v; refresh(); }
+  }),
+  days: (f, refresh) => wireOptions(f, 'days', v => { answers.days = v; refresh(); }),
+  people: (f, refresh) => {
     const exact = f.querySelector('#people-exact');
-    wireOptions(f, 'people', v => { answers.people = v; exact.value = ''; });
-    exact.addEventListener('input', () => f.querySelectorAll('[data-group="people"]').forEach(x => x.setAttribute('aria-pressed', 'false')));
+    wireOptions(f, 'people', v => { answers.people = v; exact.value = ''; refresh(); });
+    exact.addEventListener('input', () => {
+      f.querySelectorAll('[data-group="people"]').forEach(x => x.setAttribute('aria-pressed', 'false'));
+      const n = parseInt(exact.value, 10);
+      if (n >= 1 && n <= 20) { answers.people = n; refresh(); }
+    });
   },
-  prefs: f => f.querySelectorAll('[data-pref]').forEach(b => b.addEventListener('click', () => {
+  zip: (f, refresh) => f.querySelector('#zip').addEventListener('input', e => {
+    if (/^\d{5}$/.test(e.target.value)) { answers.zip = e.target.value; refresh(); }
+  }),
+  prefs: (f, refresh) => f.querySelectorAll('[data-pref]').forEach(b => b.addEventListener('click', () => {
     const g = PREFS.find(p => p.key === b.dataset.pref);
     const v = b.dataset.value;
     if (g.single) answers[g.key] = v;
     else if (v === g.none) answers[g.key] = [];
-    else {
-      const arr = answers[g.key];
-      const at = arr.indexOf(v);
-      at >= 0 ? arr.splice(at, 1) : arr.push(v);
-    }
-    // re-sync pressed states for this group
-    f.querySelectorAll(`[data-pref="${g.key}"]`).forEach(x => {
-      const xv = x.dataset.value;
-      const on = g.single ? answers[g.key] === xv : (xv === g.none ? answers[g.key].length === 0 : answers[g.key].includes(xv));
-      x.setAttribute('aria-pressed', on);
-    });
+    else { const arr = answers[g.key]; const at = arr.indexOf(v); at >= 0 ? arr.splice(at, 1) : arr.push(v); }
+    f.querySelectorAll(`[data-pref="${g.key}"]`).forEach(x => x.setAttribute('aria-pressed', prefOn(g, x.dataset.value)));
+    refresh();
   })),
 };
 
@@ -197,60 +264,22 @@ const STEP_SAVE = {
   prefs: () => null,
 };
 
-// ── Plan ────────────────────────────────────────────────────────
-async function buildPlan() {
+// ── Results ─────────────────────────────────────────────────────
+async function showResults() {
   app.innerHTML = `<div class="loading" role="status"><div class="spinner" aria-hidden="true"></div>${esc(t('building'))}</div>`;
-  try {
-    const r = await fetch('/api/plan' + location.search, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(answers),
-    });
-    if (!r.ok) throw new Error(r.status);
-    renderResults(await r.json());
-  } catch {
+  try { renderResults(await computePlan(answers)); }
+  catch {
     app.innerHTML = `<p class="error" role="alert">${esc(t('error_plan'))}</p>
       <button class="btn btn-primary" id="retry">${esc(t('build_plan'))}</button>`;
-    app.querySelector('#retry').onclick = buildPlan;
+    app.querySelector('#retry').onclick = showResults;
   }
 }
 
-function renderResults(plan) {
-  const { input, summary: s } = plan;
-  const recipes = new Map();
-  const peopleLabel = input.people === 1 ? t('person') : t('people', { n: input.people });
-  const calNote = s.calPct >= 80 ? t('cal_ok') : s.calPct >= 60 ? t('cal_low') : t('cal_tight');
+const residents = () => (city.resources || []).filter(r => r.audience !== 'organizations');
+const orgs = () => (city.resources || []).filter(r => r.audience === 'organizations');
 
-  const mealBtn = r => { recipes.set(String(r.id), r); return `<button type="button" class="meal-pick" data-recipe="${r.id}">${esc(r.title)}</button>`; };
-
-  const weeksHtml = plan.weeks.map((week, wi) => `
-    <details class="week" ${wi === 0 ? 'open' : ''}>
-      <summary>${esc(t('week', { n: wi + 1 }))}</summary>
-      ${week.map(d => d.leftover
-        ? `<div class="day"><div class="day-name">${esc(d.dayName)}</div><p class="leftover">${esc(t('leftovers'))}</p></div>`
-        : `<div class="day"><div class="day-name">${esc(d.dayName)}</div>
-            ${['breakfast', 'lunch', 'dinner'].map(slot => d[slot].length ? `
-              <div class="meal"><div class="meal-slot">${esc(t(slot))}</div>
-                <div>${mealBtn(d[slot][0])}${d[slot][1] ? `<div class="meal-alt">${esc(t('or_try'))} ${mealBtn(d[slot][1])}</div>` : ''}</div>
-              </div>` : '').join('')}
-          </div>`).join('')}
-    </details>`).join('');
-
-  const shopHtml = plan.shopping.map(g => `
-    <h3 class="shop-cat">${esc(t('cat_' + g.cat))}</h3>
-    ${g.items.map(i => `
-      <div class="shop-item">
-        <input type="checkbox" id="ck-${i.id}" aria-describedby="note-${i.id}">
-        <label for="ck-${i.id}">
-          <span class="shop-name">${esc(i.name)} <span class="shop-qty">×${i.qty}</span></span>
-          <span class="tier tier-${i.tier}">${esc(t('tier_' + i.tier))}</span>
-          <div class="shop-note" id="note-${i.id}">${esc(i.note)}</div>
-          ${i.tip ? `<div class="shop-tip">${esc(i.tip)}</div>` : ''}
-        </label>
-        <span class="shop-price">$${money(i.subtotal)}</span>
-      </div>`).join('')}`).join('');
-
-  const residents = (city.resources || []).filter(r => r.audience !== 'organizations');
-  const orgs = (city.resources || []).filter(r => r.audience === 'organizations');
-  const helpCard = r => `
+function helpSection() {
+  const card = r => `
     <article class="help-card ${r.audience === 'organizations' ? 'org' : ''}">
       <h3>${esc(r.name)}</h3><p>${esc(r.description)}</p>
       <div class="help-actions">
@@ -258,52 +287,143 @@ function renderResults(plan) {
         ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(t('visit'))}<span class="sr-only"> (${esc(r.name)})</span></a>` : ''}
       </div>
     </article>`;
+  if (!residents().length) return '';
+  return `<section class="section" id="help" aria-labelledby="h-help" tabindex="-1">
+    <div class="section-head"><h2 id="h-help">${esc(t('sec_help'))}</h2></div>
+    <div class="help-list">${residents().map(card).join('')}</div>
+    ${orgs().length ? `<h3 class="orgs-head">${esc(t('sec_help_orgs'))}</h3><div class="help-list">${orgs().map(card).join('')}</div>` : ''}
+  </section>`;
+}
+
+function renderResults(plan) {
+  const { input, result: s, shopping, weeks, priced } = plan;
+  const peopleLabel = input.people === 1 ? t('person') : t('people', { n: input.people });
+  const calNote = s.calPct >= 80 ? t('cal_ok') : s.calPct >= 60 ? t('cal_low') : t('cal_tight');
+  const nItems = s.cart.length;
+
+  // Which option is chosen per meal slot: key "w-d-slot" → index (0 = main pick, 1 = alternate).
+  const choice = {};
+  const recipes = new Map();
+  weeks.flat().forEach(d => { if (!d.leftover) ['breakfast', 'lunch', 'dinner'].forEach(sl => d[sl].forEach(r => recipes.set(String(r.id), r))); });
+
+  const listHtml = shopping.map(g => `
+    <div class="cat-head"><h3 class="shop-cat">${esc(t('cat_' + g.cat))}</h3>
+      <span class="cat-sub">$${money(g.items.reduce((a, i) => a + i.subtotal, 0))}</span></div>
+    <ul class="rows">${g.items.map(i => {
+      const name = foodLabel(i.id);
+      return `<li class="row">
+        <input type="checkbox" id="ck-${i.id}">
+        <label for="ck-${i.id}">${esc(name)} <span class="qty">×${i.qty}</span></label>
+        <button type="button" class="info" aria-expanded="false" aria-controls="more-${i.id}"
+          aria-label="${esc(t('more_about', { item: name }))}">ⓘ</button>
+        <span class="price">$${money(i.subtotal)}</span>
+        <div class="more" id="more-${i.id}" hidden><span class="size">${esc(i.name)}</span> ${esc(i.note)}${i.tip ? `<div class="shop-tip">${esc(i.tip)}</div>` : ''}</div>
+      </li>`;
+    }).join('')}</ul>`).join('');
+
+  const weekPanel = (week, wi) => `
+    <div class="week-panel" data-week="${wi}" ${wi === 0 ? '' : 'hidden'}>
+      <p class="print-only week-print-title">${esc(t('week_of', { n: wi + 1, total: weeks.length }))}</p>
+      ${week.map((d, di) => d.leftover
+        ? `<div class="d"><div class="day-name">${esc(d.dayName)}</div><p class="lo">${esc(t('leftovers'))}</p></div>`
+        : `<div class="d"><div class="day-name">${esc(d.dayName)}</div>
+            ${['breakfast', 'lunch', 'dinner'].map(sl => d[sl].length ? `
+              <div class="m"><span>${esc(t(sl))}</span>
+                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(d[sl][0].title)}</button></div>` : '').join('')}
+          </div>`).join('')}
+    </div>`;
 
   app.innerHTML = `
     <section class="summary" aria-labelledby="res-title">
       <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
       <h2 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h2>
-      <div class="stats">
-        <div class="stat"><b>$${Math.round(input.budget)}</b><span>${esc(t('stat_budget'))}</span></div>
-        <div class="stat"><b>${input.days}</b><span>${esc(t('stat_days'))}</span></div>
-        <div class="stat"><b>${input.people}</b><span>${esc(t('stat_people'))}</span></div>
-        <div class="stat"><b>$${money(s.pppd)}</b><span>${esc(t('stat_pppd'))}</span></div>
-        <div class="stat"><b>$${money(s.ppmeal)}</b><span>${esc(t('stat_meal'))}</span></div>
-      </div>
-      <p>${esc(t('res_summary', { budget: money(input.budget), people: peopleLabel, days: input.days, pppd: money(s.pppd), ppmeal: money(s.ppmeal) }))}${s.remaining > 1 ? esc(t('res_left', { remaining: money(s.remaining) })) : ''}</p>
-      <p class="cal-note">${esc(calNote)}</p>
+      <p class="sum-big"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}</p>
+      <p class="sum-facts">${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote)}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}</p>
+      <nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
+        <a href="#list">${esc(t('jump_list'))} <span>${esc(t('jump_list_sub', { n: nItems, total: money(s.spent) }))} ↓</span></a>
+        <a href="#meals">${esc(t('jump_meals'))} <span>${esc(weeks.length === 1 ? t('jump_meals_sub_1') : t('jump_meals_sub', { n: weeks.length }))} ↓</span></a>
+        ${residents().length ? `<a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a>` : ''}
+      </nav>
     </section>
 
-    <section class="section" aria-labelledby="h-list">
+    <section class="section" id="list" aria-labelledby="h-list" tabindex="-1">
       <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
-        <button type="button" class="btn btn-ghost no-print" id="print">${esc(t('print'))}</button></div>
-      ${shopHtml}
+        <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
+      ${listHtml}
       <div class="shop-total"><span>${esc(t('total'))}</span><span>$${money(s.spent)}</span></div>
-      <p class="price-note">${esc(t('price_note', { label: plan.prices.label }))}</p>
+      <p class="price-note">${esc(t('price_note', { label: priced.label }))}</p>
     </section>
 
-    <section class="section" aria-labelledby="h-plan">
+    <section class="section" id="meals" aria-labelledby="h-plan" tabindex="-1">
       <div class="section-head"><h2 id="h-plan">${esc(t('sec_plan'))}</h2></div>
-      ${weeksHtml}
+      ${weeks.length > 1 ? `<div class="wk no-print">
+        <button type="button" id="wk-prev" aria-label="${esc(t('prev_week'))}">‹</button>
+        <span id="wk-label" aria-live="polite">${esc(t('week_of', { n: 1, total: weeks.length }))}</span>
+        <button type="button" id="wk-next" aria-label="${esc(t('next_week'))}">›</button></div>` : ''}
+      ${weeks.map(weekPanel).join('')}
+      <p class="muted meals-hint no-print">${esc(t('meals_hint'))}</p>
     </section>
 
-    ${residents.length ? `<section class="section" aria-labelledby="h-help">
-      <div class="section-head"><h2 id="h-help">${esc(t('sec_help'))}</h2></div>
-      <div class="help-list">${residents.map(helpCard).join('')}</div>
-      ${orgs.length ? `<h3 style="margin-top:24px">${esc(t('sec_help_orgs'))}</h3><div class="help-list">${orgs.map(helpCard).join('')}</div>` : ''}
-    </section>` : ''}
+    ${helpSection()}
 
-    <div class="nav no-print"><button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button></div>
-
+    <div class="nav no-print">
+      <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
+      <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
+    </div>
+    <p class="sr-only" id="announce" aria-live="polite"></p>
     <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
 
-  app.querySelector('#res-title').focus();
+  focusTop('#res-title');
+  wireJumps();
+
+  // Shopping list: tips open on tap.
+  app.querySelectorAll('.info').forEach(b => b.addEventListener('click', () => {
+    const open = b.getAttribute('aria-expanded') !== 'true';
+    b.setAttribute('aria-expanded', open);
+    app.querySelector('#' + b.getAttribute('aria-controls')).hidden = !open;
+  }));
+
+  // One week at a time.
+  let wk = 0;
+  const showWeek = n => {
+    wk = (n + weeks.length) % weeks.length;
+    app.querySelectorAll('.week-panel').forEach(p => { p.hidden = Number(p.dataset.week) !== wk; });
+    app.querySelector('#wk-label').textContent = t('week_of', { n: wk + 1, total: weeks.length });
+  };
+  app.querySelector('#wk-prev')?.addEventListener('click', () => showWeek(wk - 1));
+  app.querySelector('#wk-next')?.addEventListener('click', () => showWeek(wk + 1));
+
+  // Meals: recipe + swap to the alternate.
+  app.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => {
+    const [w, d, sl] = b.dataset.key.split('-');
+    const opts = weeks[w][d][sl];
+    const ci = choice[b.dataset.key] || 0;
+    openRecipe(opts[ci], opts[1 - ci] ? {
+      alt: opts[1 - ci],
+      onSwap: () => {
+        choice[b.dataset.key] = 1 - ci;
+        b.textContent = opts[1 - ci].title;
+        app.querySelector('#announce').textContent = t('swapped', { title: opts[1 - ci].title });
+        b.focus();
+      },
+    } : {});
+  }));
+
   app.querySelector('#print').onclick = () => window.print();
-  app.querySelector('#restart').onclick = () => { Object.assign(answers, { budget: null, days: null, people: null, zip: null }); renderIntro(); };
-  app.querySelectorAll('[data-recipe]').forEach(b => b.addEventListener('click', () => openRecipe(recipes.get(b.dataset.recipe))));
+  app.querySelector('#restart').onclick = renderIntro;
 }
 
-function openRecipe(r) {
+// Jump links move focus too (keyboard and screen-reader users land in the section).
+function wireJumps() {
+  app.querySelectorAll('.jump a').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = app.querySelector(a.getAttribute('href'));
+    target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    target.focus({ preventScroll: true });
+  }));
+}
+
+function openRecipe(r, { alt, onSwap, uses, missing } = {}) {
   const dlg = app.querySelector('#recipe');
   dlg.querySelector('.dialog-body').innerHTML = `
     <button type="button" class="btn btn-ghost dialog-close" id="close">${esc(t('close'))}</button>
@@ -311,16 +431,106 @@ function openRecipe(r) {
     <h2 id="recipe-title">${esc(r.title)}</h2>
     ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
     <h3>${esc(t('ingredients'))}</h3>
-    <ul>${(r.ingredients || []).map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+    <ul>${(r.ingredients || []).map(i => `<li>${esc(i)}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
     <h3>${esc(t('steps'))}</h3>
-    <p>${esc(r.instructions)}</p>`;
+    <p>${esc(r.instructions)}</p>
+    ${alt ? `<div class="alt"><p class="eyebrow">${esc(t('another_option'))}</p>
+      <p class="alt-title">${esc(alt.title)}</p>
+      <button type="button" class="btn btn-primary" id="swap">${esc(t('use_instead'))}</button></div>` : ''}`;
   dlg.querySelector('#close').onclick = () => dlg.close();
+  dlg.querySelector('#swap')?.addEventListener('click', () => { dlg.close(); onSwap(); });
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }, { once: true });
   dlg.showModal();
 }
 
-// Print the whole plan, not just the open week.
-window.addEventListener('beforeprint', () => document.querySelectorAll('details.week').forEach(d => { d.dataset.wasOpen = d.open; d.open = true; }));
-window.addEventListener('afterprint', () => document.querySelectorAll('details.week').forEach(d => { d.open = d.dataset.wasOpen === 'true'; }));
+// ── Food box flow ───────────────────────────────────────────────
+function renderBox() {
+  app.innerHTML = `
+    <form class="step" id="boxform" novalidate>
+      <h2 id="q" tabindex="-1">${esc(t('box_title'))}</h2>
+      <p class="hint">${esc(t('box_hint'))}</p>
+      ${BOX_GROUPS.map(g => `<fieldset class="pref-group"><legend>${esc(t('box_group_' + g.id))}</legend><div class="chips">
+        ${g.items.map(id => `<button type="button" class="chip" data-item="${id}" aria-pressed="${box.items.includes(id)}">${esc(foodLabel(id))}</button>`).join('')}
+      </div></fieldset>`).join('')}
+      <fieldset class="pref-group"><legend>${esc(t('pref_avoid'))}</legend><div class="chips">
+        ${['none', 'gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'].map(v => `<button type="button" class="chip" data-avoid="${v}"
+          aria-pressed="${v === 'none' ? box.avoid.length === 0 : box.avoid.includes(v)}">${esc(t('avoid_' + v))}</button>`).join('')}
+      </div></fieldset>
+      <p class="error" id="err" role="alert"></p>
+      <div class="nav sticky-go">
+        <button type="button" class="btn btn-ghost" id="back">${esc(t('back'))}</button>
+        <button type="submit" class="btn btn-primary">${esc(t('box_go'))}</button>
+        <span class="muted count" id="count" aria-live="polite">${box.items.length ? esc(t('box_selected', { n: box.items.length })) : ''}</span>
+      </div>
+    </form>`;
+  const f = app.querySelector('#boxform');
+  f.querySelectorAll('[data-item]').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.item; const at = box.items.indexOf(id);
+    at >= 0 ? box.items.splice(at, 1) : box.items.push(id);
+    b.setAttribute('aria-pressed', at < 0);
+    f.querySelector('#count').textContent = box.items.length ? t('box_selected', { n: box.items.length }) : '';
+  }));
+  f.querySelectorAll('[data-avoid]').forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.avoid;
+    if (v === 'none') box.avoid = [];
+    else { const at = box.avoid.indexOf(v); at >= 0 ? box.avoid.splice(at, 1) : box.avoid.push(v); }
+    f.querySelectorAll('[data-avoid]').forEach(x => x.setAttribute('aria-pressed',
+      x.dataset.avoid === 'none' ? box.avoid.length === 0 : box.avoid.includes(x.dataset.avoid)));
+  }));
+  f.querySelector('#back').onclick = renderIntro;
+  f.onsubmit = e => {
+    e.preventDefault();
+    if (!box.items.length) { f.querySelector('#err').textContent = t('err_box'); return; }
+    renderBoxResults();
+  };
+  focusTop('#q');
+}
+
+async function renderBoxResults() {
+  app.innerHTML = `<div class="loading" role="status"><div class="spinner" aria-hidden="true"></div>${esc(t('loading_data'))}</div>`;
+  let matches;
+  try { matches = matchBox(await getRecipes(), box.items, { avoid: box.avoid }); }
+  catch { app.innerHTML = `<p class="error" role="alert">${esc(t('error_plan'))}</p>`; return; }
+  const byId = new Map(matches.map(m => [String(m.recipe.id), m]));
+
+  app.innerHTML = `
+    <section class="summary" aria-labelledby="res-title">
+      <p class="eyebrow">${esc(t('door_box'))}</p>
+      <h2 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h2>
+      <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length }))}</p>
+      ${residents().length ? `<nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
+        <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
+    </section>
+    <section class="section" aria-label="${esc(t('box_res_title'))}">
+      ${matches.length ? `<ul class="box-list">${matches.map(m => `
+        <li class="box-card">
+          <span class="box-slot">${esc(t(m.recipe.slot))}</span>
+          <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(m.recipe.title)}</button>
+          <p class="box-line"><b>${esc(t('box_uses'))}:</b> ${esc(m.uses.join(', '))}</p>
+          <p class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
+            ? `<b>${esc(t('box_need'))}:</b> ${esc(m.missing.join(', '))}` : esc(t('box_have_all'))}</p>
+        </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
+    </section>
+    ${helpSection()}
+    <div class="nav no-print">
+      <button type="button" class="btn btn-ghost" id="edit">${esc(t('box_edit'))}</button>
+      <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
+      <button type="button" class="btn-link" id="to-budget">${esc(t('box_to_budget'))}</button>
+    </div>
+    <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
+
+  focusTop('#res-title');
+  wireJumps();
+  app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => {
+    const m = byId.get(b.dataset.id); openRecipe(m.recipe, { missing: m.missing });
+  }));
+  app.querySelector('#edit').onclick = renderBox;
+  app.querySelector('#print').onclick = () => window.print();
+  app.querySelector('#to-budget').onclick = () => { answers = fresh(); go(0); };
+}
+
+// Print every week, not just the one on screen.
+window.addEventListener('beforeprint', () => document.querySelectorAll('.week-panel').forEach(p => { p.dataset.wasHidden = p.hidden; p.hidden = false; }));
+window.addEventListener('afterprint', () => document.querySelectorAll('.week-panel').forEach(p => { p.hidden = p.dataset.wasHidden === 'true'; }));
 
 boot();

@@ -91,13 +91,40 @@ async function blsPrices(region) {
   } catch { return null; }
 }
 
+// ── Data for the in-browser engine (instant preview, works if the connection drops) ──
+/** Region → merged prices: fallback ← live BLS ← city local shelf prices. */
+async function pricesFor(city, zipRegion) {
+  const region = city.price_region || zipRegion || 'national';
+  const live = await blsPrices(region);
+  return {
+    region,
+    prices: resolvePrices(region, { ...(live || {}), ...city.local_prices }),
+    label: city.price_region_label || `${region} region averages (BLS)`,
+    live: !!live,
+    local: Object.keys(city.local_prices).length > 0,
+  };
+}
+
+app.get('/api/prices', async (req, res) => {
+  const zipRegion = BLS_REGION[req.query.region] ? req.query.region : null;
+  res.set('Cache-Control', 'public, max-age=3600').json(await pricesFor(req.city, zipRegion));
+});
+
+const RECIPES_JSON = JSON.stringify(RECIPES.map(r => ({
+  id: r.id, title: r.title, slot: r.slot, cuisine: r.cuisine, ingredients: r.ingredients,
+  instructions: r.instructions, tags: r.tags, avoid: r.avoid, srv: r.srv,
+})));
+app.get('/api/recipes', (req, res) => res.type('json').set('Cache-Control', 'public, max-age=3600').send(RECIPES_JSON));
+
+app.use('/engine', express.static(path.join(__dirname, 'engine'), { maxAge: '1h' }));
+
 // ── The plan ────────────────────────────────────────────────────
 const LIST = /^[a-z,]{0,120}$/;
 const ALLOWED = {
   cuisine: ['american', 'latin', 'asian', 'southern', 'mediterranean'],
   avoid: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'],
   have: ['rice', 'beans', 'oats', 'eggs', 'potatoes', 'bread', 'pasta', 'oil'],
-  stores: ['full', 'walmart', 'aldi', 'dollar', 'corner'],
+  stores: ['full', 'dollar', 'corner'],
 };
 const pickList = (v, key) => (Array.isArray(v) ? v : String(v || '').split(','))
   .filter(x => typeof x === 'string' && ALLOWED[key].includes(x));
@@ -120,9 +147,8 @@ app.post('/api/plan', async (req, res) => {
 
   const city = req.city;
   const zipInfo = zip ? zipToInfo(zip) : null;
-  const region = city.price_region || zipInfo?.region || 'national';
-  const live = await blsPrices(region);
-  const prices = resolvePrices(region, { ...(live || {}), ...city.local_prices });
+  const priced = await pricesFor(city, zipInfo?.region);
+  const { region, prices } = priced;
 
   const result = buildCart(input, prices);
   const bySlot = matchRecipes(RECIPES, { ingredients: result.cart.map(i => i.id), cuisine: input.cuisine, avoid: input.avoid });
@@ -143,10 +169,7 @@ app.post('/api/plan', async (req, res) => {
       dayName: d.dayName, leftover: false,
       breakfast: d.breakfast.map(slim), lunch: d.lunch.map(slim), dinner: d.dinner.map(slim),
     })),
-    prices: {
-      region, label: city.price_region_label || `${region} region averages (BLS)`,
-      live: !!live, local: Object.keys(city.local_prices).length > 0,
-    },
+    prices: { region, label: priced.label, live: priced.live, local: priced.local },
   });
 });
 

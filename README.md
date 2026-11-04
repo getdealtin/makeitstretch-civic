@@ -3,9 +3,13 @@
 One codebase, one settings file per city. **Austin is city #1** (FACE grant; internal program name *The Enough Project*).
 The public brand is **Make It Stretch**.
 
-Someone enters a grocery budget, how long it has to last, and how many people they're feeding. The tool
-returns a shopping list and a day-by-day meal plan built to stretch it, plus local free-food help.
-There's no login and no ads, and nothing is stored.
+Two ways in:
+- **Plan my grocery budget:** budget, how long it has to last, household size. Returns a shopping list and a
+  day-by-day meal plan built to stretch it. A blurred, real preview of the plan sharpens under each question.
+- **I have a food box:** tap what's in the box. Returns meals you can make, ranked by how much of the box
+  each uses, with "you'll also need: …" for anything missing.
+
+Both end with local free-food help. There's no login and no ads, and nothing is stored.
 
 Build spec and decisions: *The Enough Project: Austin Build Spec & Requirements* (Claude Doc).
 
@@ -17,13 +21,15 @@ engine/      The shared math. No DOM, no network, no city names.
   recipes.js   recipe matcher (cart → candidate recipes per meal)
   plan.js      meal planner with variety safeguards (recipes → weeks)
   shopping.js  shopping-list grouping + tips
+  box.js       food-box mode: box items → meals you can make (explicit ingredient map)
   food-db.js   58-item food catalogue + regional fallback prices
   zip-map.js   zip3 → state/BLS region
 cities/      One config card per city. Everything city-specific lives here.
   austin.js    Austin: tokens, price region, local resources, languages
   national.js  generic fallback for unknown domains
   index.js     registry + host → city resolver
-server.js    Express: picks the city by Host, serves /theme.css, /api/config, /api/plan
+server.js    Express: picks the city by Host. Serves /theme.css, /api/config, /api/plan, and
+             /api/prices + /api/recipes + /engine/ so the engine also runs in the browser
 public/      The UI (plain HTML/CSS/ES modules, no build step)
   i18n/en.js   all UI strings (add es.js in Phase 3)
 data/        seed-recipes.json (161 recipes)
@@ -65,6 +71,15 @@ upgrade), we update the expected results in the same commit and say why.
 
 No engine or UI code changes. If a city needs one, that's a sign the city's feature belongs on its config card.
 
+## Known engine limits (deliberate, for later)
+
+- The budget flow's recipe matcher (kept word-for-word from the live tool) misses multi-word ingredients:
+  "canned tomatoes", "sweet potatoes", "peanut butter", "coconut milk" and "ground beef" never match the
+  cart. The food-box matcher (`engine/box.js`) already uses a correct explicit map. Fixing the budget flow is
+  a deliberate math change: update the reference and goldens in the same commit.
+- The cart buys one of almost every item in each category's budget (40+ line items). See the "fewer,
+  larger items" decision in the build spec.
+
 ## Guardrails
 
 - **Not the City.** Austin's colors are matched, but the site never uses the City's logo, wordmark or seal,
@@ -79,7 +94,8 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
 
 - [x] Phase 0: engine extracted, civic layer dropped, 360-case equivalence with the live tool
 - [x] Phase 1: city config cards, host-based city selection, Austin theme, print packet (basic)
-- [ ] Phase 2: question flow with blurred results preview
+- [x] Phase 2: two doors (budget / food box), blurred live preview, one-page results with jump links,
+      compact list, one week at a time with meal swap, store question reworded around food access
 - [ ] Phase 3: Austin data (local prices, Data Steward capture, Spanish)
 - [ ] Phase 4: privacy policy + events schema reset
 - [ ] Phase 5: city reporting with k-anonymity

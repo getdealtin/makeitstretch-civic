@@ -61,3 +61,33 @@ test('theme.css carries the city tokens', async () => {
   assert.match(css, /--violet: #38377E/);
   assert.match(css, /font-family:'Zilla Slab'/);
 });
+
+test('/api/prices returns the city region for Austin, zip region elsewhere', async () => {
+  const a = await (await fetch(`${base}/api/prices?city=austin&region=west`)).json();
+  assert.equal(a.region, 'south');
+  const n = await (await fetch(`${base}/api/prices?city=national&region=west`)).json();
+  assert.equal(n.region, 'west');
+  assert.ok(n.prices.rice > 0);
+});
+
+test('/api/recipes and /engine are served for the in-browser engine', async () => {
+  const r = await (await fetch(`${base}/api/recipes`)).json();
+  assert.equal(r.length, 161);
+  assert.ok(r[0].id && r[0].ingredients);
+  const js = await fetch(`${base}/engine/index.js`);
+  assert.equal(js.status, 200);
+  assert.match(js.headers.get('content-type'), /javascript/);
+});
+
+test('the browser engine and /api/plan give the same plan', async () => {
+  const { buildCart, matchRecipes, planWeeks } = await import('../engine/index.js');
+  const body = { budget: 75, days: 7, people: 2, cuisine: ['southern'], stores: ['dollar'] };
+  const api = await (await plan(body)).json();
+  const priced = await (await fetch(`${base}/api/prices?city=austin`)).json();
+  const input = { ...body, avoid: [], have: [], leftover: 'sometimes' };
+  const cart = buildCart(input, priced.prices);
+  assert.equal(cart.spent, api.summary.spent);
+  const recipes = await (await fetch(`${base}/api/recipes`)).json();
+  const weeks = planWeeks(matchRecipes(recipes, { ingredients: cart.cart.map(i => i.id), cuisine: input.cuisine, avoid: [] }), input);
+  assert.deepEqual(weeks.map(w => w.map(d => d.leftover ? 'L' : d.dinner.map(r => r.id))), api.weeks.map(w => w.map(d => d.leftover ? 'L' : d.dinner.map(r => r.id))));
+});
