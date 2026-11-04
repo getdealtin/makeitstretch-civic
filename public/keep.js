@@ -109,6 +109,46 @@ export function boxText({ title, matches, url, labels }) {
 export const smsHref = body => 'sms:?&body=' + encodeURIComponent(body);
 export const mailHref = (subject, body) => 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 
+// ── Saved plans on this phone: a list, newest first ─────────────
+// Entry: { id, kind: 'plan'|'box', hash, title, detail, at }. Capped so storage stays small;
+// past the cap the oldest entry drops off (the page says so).
+export const SAVED_MAX = 12;
+
+export function savedList(st, key) {
+  const v = st.get(key);
+  if (Array.isArray(v)) return v.filter(e => e && typeof e.hash === 'string' && e.id);
+  // Carry over the earlier one-slot format ({ hash, title, at }).
+  if (v && typeof v.hash === 'string') {
+    const list = [{ id: 'm' + (v.at || 0), kind: v.hash.startsWith('#b=') ? 'box' : 'plan', hash: v.hash, title: v.title || '', detail: '', at: v.at || 0 }];
+    st.set(key, list);
+    return list;
+  }
+  return [];
+}
+
+/** Adds to the top of the list. Returns { id, dropped } (dropped = how many old entries fell off), or null if storage failed. */
+export function addSaved(st, key, entry, now = Date.now()) {
+  const id = 's' + now.toString(36) + Math.random().toString(36).slice(2, 6);
+  const list = [{ id, at: now, ...entry }, ...savedList(st, key)];
+  const kept = list.slice(0, SAVED_MAX);
+  return st.set(key, kept) ? { id, dropped: list.length - kept.length } : null;
+}
+
+export function updateSaved(st, key, id, patch) {
+  const list = savedList(st, key);
+  const i = list.findIndex(e => e.id === id);
+  if (i < 0) return false;
+  list[i] = { ...list[i], ...patch };
+  return st.set(key, list);
+}
+
+export function removeSaved(st, key, id) {
+  const list = savedList(st, key).filter(e => e.id !== id);
+  return list.length ? st.set(key, list) : (st.del(key), true);
+}
+
+export const findSaved = (st, key, id) => savedList(st, key).find(e => e.id === id) || null;
+
 // ── This-phone storage (opt-in; private mode or blocked storage fails quietly) ──
 export const store = {
   get(key) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch { return null; } },

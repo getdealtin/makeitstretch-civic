@@ -10,6 +10,7 @@ import {
 } from '/engine/index.js';
 import {
   packPlan, packBox, planHash, boxHash, readHash, planText, boxText, smsHref, mailHref, store,
+  savedList, addSaved, updateSaved, removeSaved, findSaved,
 } from './keep.js';
 
 const STRINGS = { en };
@@ -91,10 +92,15 @@ const saveKey = () => 'mis:saved:' + (city.id || 'default');
 const setHash = h => history.replaceState(null, '', location.pathname + qs + h);
 const linkFor = h => location.origin + location.pathname + qs + h;
 
+// Which saved entry (if any) the plan on screen belongs to, so edits update that entry.
+let openedSavedId = null;
+const SAVED_SHOWN = 3; // most recent shown on the start screen; the rest behind a visible "Show all" button
+
 /** Rebuild a plan or box from a "#p=…" / "#b=…" link. */
-function openFromHash(hash) {
+function openFromHash(hash, savedId = null) {
   const hit = readHash(hash);
   if (!hit) return false;
+  openedSavedId = savedId;
   if (hit.kind === 'plan') { answers = { ...fresh(), ...hit.state.answers }; showResults(hit.state); }
   else { box = hit.state; renderBoxResults(); }
   return true;
@@ -108,15 +114,24 @@ function focusTop(sel) {
 // ── Start screen: two doors ─────────────────────────────────────
 function renderIntro() {
   setHash('');
-  const saved = store.get(saveKey());
+  openedSavedId = null;
+  const saved = savedList(store, saveKey());
+  const when = at => new Date(at).toLocaleDateString(document.documentElement.lang || 'en', { month: 'short', day: 'numeric' });
   app.innerHTML = `
-    ${saved?.hash ? `<section class="saved-card" aria-labelledby="saved-title">
-      <p class="eyebrow">${esc(t('saved_eyebrow'))}</p>
-      <h2 id="saved-title">${esc(saved.title || t('saved_title'))}</h2>
-      <div class="saved-actions">
-        <button class="btn btn-primary" id="open-saved">${esc(t('open_saved'))}</button>
-        <button class="btn-link" id="del-saved">${esc(t('remove_saved'))}</button>
-      </div>
+    ${saved.length ? `<section class="saved-card" aria-labelledby="saved-title">
+      <h2 id="saved-title">${esc(t('saved_list_title'))}</h2>
+      <p class="saved-sub">${esc(t('saved_list_sub'))}</p>
+      <ul class="saved-list">${saved.map((e, i) => `
+        <li class="saved-item" ${i >= SAVED_SHOWN ? 'hidden' : ''}>
+          <div class="saved-text">
+            <b>${esc(e.title || t('saved_title'))}</b>
+            <span>${esc([e.detail, e.at ? t('saved_on', { date: when(e.at) }) : ''].filter(Boolean).join(' · '))}</span>
+            <button class="saved-del" data-del="${esc(e.id)}">${esc(t('remove_saved'))}<span class="sr-only">: ${esc(e.title)}</span></button>
+          </div>
+          <button class="btn btn-primary btn-sm" data-open="${esc(e.id)}">${esc(t('open_saved'))}<span class="sr-only">: ${esc(e.title)}</span></button>
+        </li>`).join('')}
+      </ul>
+      ${saved.length > SAVED_SHOWN ? `<button class="saved-more" id="saved-more" aria-expanded="false">${esc(t('saved_show_all', { n: saved.length }))}</button>` : ''}
     </section>` : ''}
     <section class="intro">
       ${city.place ? `<p class="eyebrow">${esc(city.place)}</p>` : ''}
@@ -129,13 +144,27 @@ function renderIntro() {
     </section>`;
   app.querySelector('#door-budget').onclick = () => { answers = fresh(); go(0); };
   app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
-  app.querySelector('#open-saved')?.addEventListener('click', () => { if (!openFromHash(saved.hash)) { store.del(saveKey()); renderIntro(); } });
-  app.querySelector('#del-saved')?.addEventListener('click', () => { store.del(saveKey()); renderIntro(); });
+  app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
+    const e = findSaved(store, saveKey(), b.dataset.open);
+    if (!e || !openFromHash(e.hash, e.id)) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }
+  }));
+  app.querySelector('#saved-more')?.addEventListener('click', e => {
+    app.querySelectorAll('.saved-item[hidden]').forEach(li => { li.hidden = false; });
+    const first = app.querySelectorAll('.saved-item')[SAVED_SHOWN]?.querySelector('[data-open]');
+    e.currentTarget.remove();
+    first?.focus();
+  });
+  app.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+    removeSaved(store, saveKey(), b.dataset.del);
+    renderIntro();
+    (app.querySelector('[data-open]') || app.querySelector('#door-budget')).focus();
+  }));
 }
 
 // ── Budget flow ─────────────────────────────────────────────────
 function go(i) {
   setHash('');
+  openedSavedId = null;
   const name = STEPS[i];
   const pct = Math.round((i / STEPS.length) * 100);
   app.innerHTML = `
@@ -423,6 +452,9 @@ function renderResults(plan, restore = {}) {
   }));
   const sync = wireKeep({
     title,
+    savedTitle: t('saved_plan_title', { days: input.days }),
+    detail: `$${Math.round(input.budget)} · ${peopleLabel}`,
+    kind: 'plan',
     hash: currentHash,
     text: full => planText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
@@ -489,10 +521,14 @@ function keepBar() {
 }
 
 /** Wires the keep bar. Returns sync(), to call whenever the plan changes. */
-function wireKeep({ title, hash, text }) {
+function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
   const saveBtn = app.querySelector('#k-save');
   const status = app.querySelector('#k-status');
-  const isSaved = () => !!store.get(saveKey())?.hash && store.get(saveKey()).hash === app.dataset.savedHash;
+  const key = saveKey();
+  // Which saved entry is this? The one it was opened from, or one saved with the identical plan.
+  let savedId = (openedSavedId && findSaved(store, key, openedSavedId)) ? openedSavedId
+    : savedList(store, key).find(e => e.hash === hash())?.id || null;
+  const isSaved = () => !!(savedId && findSaved(store, key, savedId));
   const paintSave = () => {
     const on = isSaved();
     saveBtn.textContent = on ? t('keep_saved') : t('keep_save');
@@ -501,20 +537,21 @@ function wireKeep({ title, hash, text }) {
   const sync = () => {
     const h = hash();
     setHash(h);
-    if (isSaved()) { store.set(saveKey(), { ...store.get(saveKey()), hash: h }); app.dataset.savedHash = h; }
+    if (isSaved()) updateSaved(store, key, savedId, { hash: h });
     app.querySelector('#k-text').href = smsHref(text(false));
     app.querySelector('#k-email').href = mailHref(title, text(true));
   };
-  // Already saved? (opened from the saved card, or the same plan saved earlier)
-  if (store.get(saveKey())?.hash === hash()) app.dataset.savedHash = hash(); else delete app.dataset.savedHash;
   saveBtn.onclick = () => {
     if (isSaved()) {
-      store.del(saveKey()); delete app.dataset.savedHash;
+      removeSaved(store, key, savedId); savedId = null;
       status.textContent = t('keep_removed');
-    } else if (store.set(saveKey(), { hash: hash(), title, at: Date.now() })) {
-      app.dataset.savedHash = hash();
-      status.textContent = t('keep_saved_msg');
-    } else status.textContent = t('keep_save_failed');
+    } else {
+      const r = addSaved(store, key, { kind, hash: hash(), title: savedTitle, detail });
+      if (r) {
+        savedId = r.id;
+        status.textContent = t('keep_saved_msg') + (r.dropped ? ' ' + t('keep_dropped', { max: 12 }) : '');
+      } else status.textContent = t('keep_save_failed');
+    }
     paintSave();
   };
   app.querySelector('#k-copy').onclick = async () => {
@@ -562,6 +599,7 @@ function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
 // ── Food box flow ───────────────────────────────────────────────
 function renderBox() {
   setHash('');
+  openedSavedId = null;
   app.innerHTML = `
     <form class="step" id="boxform" novalidate>
       <h2 id="q" tabindex="-1">${esc(t('box_title'))}</h2>
@@ -644,6 +682,10 @@ async function renderBoxResults() {
   }));
   wireKeep({
     title: t('box_res_title'),
+    savedTitle: t('saved_box_title'),
+    detail: box.items.length <= 3 ? box.items.map(foodLabel).join(', ')
+      : t('saved_box_detail', { first: box.items.slice(0, 2).map(foodLabel).join(', '), n: box.items.length - 2 }),
+    kind: 'box',
     hash: () => boxHash(packBox(box)),
     text: () => boxText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${t('box_res_title')}`,

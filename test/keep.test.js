@@ -1,7 +1,57 @@
 // "Keep this plan": links and saved copies carry only plan inputs, and links are untrusted.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { encodeState, decodeState, packPlan, unpackPlan, packBox, unpackBox, readHash, planHash, boxHash, planText, smsHref, mailHref } from '../public/keep.js';
+import {
+  encodeState, decodeState, packPlan, unpackPlan, packBox, unpackBox, readHash, planHash, boxHash, planText, smsHref, mailHref,
+  savedList, addSaved, updateSaved, removeSaved, findSaved, SAVED_MAX,
+} from '../public/keep.js';
+
+// In-memory stand-in for the browser's storage.
+const fakeStore = () => {
+  const m = new Map();
+  return { get: k => (m.has(k) ? JSON.parse(m.get(k)) : null), set: (k, v) => (m.set(k, JSON.stringify(v)), true), del: k => m.delete(k), m };
+};
+
+test('saved plans: several at once, newest first; update and remove one', () => {
+  const st = fakeStore(), K = 'k';
+  const a = addSaved(st, K, { kind: 'plan', hash: '#p=a', title: '14-day grocery plan', detail: '$90 · 2 people' }, 1000);
+  const b = addSaved(st, K, { kind: 'box', hash: '#b=b', title: 'Food box meals', detail: 'rice, beans' }, 2000);
+  const c = addSaved(st, K, { kind: 'plan', hash: '#p=c', title: '7-day grocery plan', detail: '$40 · 1 person' }, 3000);
+  assert.deepEqual(savedList(st, K).map(e => e.hash), ['#p=c', '#b=b', '#p=a']);
+  assert.ok(updateSaved(st, K, a.id, { hash: '#p=a2' }));
+  assert.equal(findSaved(st, K, a.id).hash, '#p=a2');
+  removeSaved(st, K, b.id);
+  assert.deepEqual(savedList(st, K).map(e => e.id), [c.id, a.id]);
+  removeSaved(st, K, c.id); removeSaved(st, K, a.id);
+  assert.deepEqual(savedList(st, K), []);
+  assert.equal(st.m.size, 0, 'storage is cleared when the last plan is removed');
+});
+
+test(`saved plans: capped at ${SAVED_MAX}, oldest drops off and is reported`, () => {
+  const st = fakeStore();
+  let r;
+  for (let i = 0; i < SAVED_MAX + 2; i++) r = addSaved(st, 'k', { kind: 'plan', hash: '#p=' + i, title: 't' }, i);
+  const list = savedList(st, 'k');
+  assert.equal(list.length, SAVED_MAX);
+  assert.equal(list[0].hash, '#p=' + (SAVED_MAX + 1));
+  assert.ok(!list.some(e => e.hash === '#p=0'));
+  assert.equal(r.dropped, 1);
+});
+
+test('saved plans: a plan saved by the earlier one-slot version carries over', () => {
+  const st = fakeStore();
+  st.set('k', { hash: '#p=old', title: 'Your 14-day plan', at: 5 });
+  const list = savedList(st, 'k');
+  assert.equal(list.length, 1);
+  assert.equal(list[0].hash, '#p=old');
+  addSaved(st, 'k', { kind: 'box', hash: '#b=new', title: 'Food box meals' }, 9);
+  assert.deepEqual(savedList(st, 'k').map(e => e.hash), ['#b=new', '#p=old']);
+});
+
+test('saved plans: storage that refuses to save is reported, not hidden', () => {
+  const st = { ...fakeStore(), set: () => false };
+  assert.equal(addSaved(st, 'k', { kind: 'plan', hash: '#p=x' }), null);
+});
 
 const answers = { budget: 120, days: 14, people: 3, zip: '78702', leftover: 'yes', store: 'corner', cuisine: ['latin'], avoid: ['dairy'], have: ['rice'] };
 
