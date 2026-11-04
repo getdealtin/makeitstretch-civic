@@ -104,6 +104,9 @@ export default {
   another_option: 'Another option',
   use_instead: 'Use this instead',
   swapped: 'Swapped in {title}.',
+  in_your_plan: '✓ Now in your plan',
+  swap_back: 'Switch back to',
+  switch_back: 'Switch back',
   call: 'Call {phone}',
   visit: 'Visit site',
 

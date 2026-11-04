@@ -393,21 +393,24 @@ function renderResults(plan) {
   app.querySelector('#wk-prev')?.addEventListener('click', () => showWeek(wk - 1));
   app.querySelector('#wk-next')?.addEventListener('click', () => showWeek(wk + 1));
 
-  // Meals: recipe + swap to the alternate.
-  app.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => {
+  // Meals: recipe + swap to the alternate. After a swap the dialog stays open on the
+  // new meal's recipe, with the swapped-out meal offered as the way back.
+  const showMeal = (b, justSwapped = false) => {
     const [w, d, sl] = b.dataset.key.split('-');
     const opts = weeks[w][d][sl];
     const ci = choice[b.dataset.key] || 0;
     openRecipe(opts[ci], opts[1 - ci] ? {
+      justSwapped,
       alt: opts[1 - ci],
       onSwap: () => {
         choice[b.dataset.key] = 1 - ci;
         b.textContent = opts[1 - ci].title;
         app.querySelector('#announce').textContent = t('swapped', { title: opts[1 - ci].title });
-        b.focus();
+        showMeal(b, true);
       },
     } : {});
-  }));
+  };
+  app.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => showMeal(b)));
 
   app.querySelector('#print').onclick = () => window.print();
   app.querySelector('#restart').onclick = renderIntro;
@@ -423,24 +426,27 @@ function wireJumps() {
   }));
 }
 
-function openRecipe(r, { alt, onSwap, uses, missing } = {}) {
+function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
   const dlg = app.querySelector('#recipe');
   dlg.querySelector('.dialog-body').innerHTML = `
     <button type="button" class="btn btn-ghost dialog-close" id="close">${esc(t('close'))}</button>
     <p class="eyebrow">${esc(t('recipe'))}</p>
-    <h2 id="recipe-title">${esc(r.title)}</h2>
+    <h2 id="recipe-title" tabindex="-1">${esc(r.title)}</h2>
+    ${justSwapped ? `<p class="swapped-note">${esc(t('in_your_plan'))}</p>` : ''}
     ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
     <h3>${esc(t('ingredients'))}</h3>
     <ul>${(r.ingredients || []).map(i => `<li>${esc(i)}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
     <h3>${esc(t('steps'))}</h3>
     <p>${esc(r.instructions)}</p>
-    ${alt ? `<div class="alt"><p class="eyebrow">${esc(t('another_option'))}</p>
+    ${alt ? `<div class="alt"><p class="eyebrow">${esc(justSwapped ? t('swap_back') : t('another_option'))}</p>
       <p class="alt-title">${esc(alt.title)}</p>
-      <button type="button" class="btn btn-primary" id="swap">${esc(t('use_instead'))}</button></div>` : ''}`;
+      <button type="button" class="btn ${justSwapped ? 'btn-ghost' : 'btn-primary'}" id="swap">${esc(justSwapped ? t('switch_back') : t('use_instead'))}</button></div>` : ''}`;
   dlg.querySelector('#close').onclick = () => dlg.close();
-  dlg.querySelector('#swap')?.addEventListener('click', () => { dlg.close(); onSwap(); });
-  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }, { once: true });
-  dlg.showModal();
+  dlg.querySelector('#swap')?.addEventListener('click', onSwap);
+  dlg.onclick = e => { if (e.target === dlg) dlg.close(); };
+  if (!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+  if (justSwapped) dlg.querySelector('#recipe-title').focus();
 }
 
 // ── Food box flow ───────────────────────────────────────────────
