@@ -26,5 +26,6 @@ export function publicConfig(c) {
     price_region_label: c.price_region_label, languages: c.languages,
     resources: c.resources.map(({ verified, ...r }) => r),
     i18n: c.i18n || {},
+    sources: c.sources || [],
   };
 }

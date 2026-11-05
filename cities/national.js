@@ -23,6 +23,7 @@ export default {
   languages: ['en'],
   civic_layer: false,
   k_anon_threshold: 15,
+  sources: [],
   focus_area: null,
   resources: [
     { id: 'foodbank', name: 'Find a food bank near you', description: 'Free food, no questions asked. Feeding America has 200+ food banks nationwide.', url: 'https://www.feedingamerica.org/find-your-local-foodbank', kind: 'food', audience: 'residents', event: 'foodbank_clicked', verified: 'ported from live tool' },

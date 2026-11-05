@@ -25,7 +25,7 @@ const slug = v => (/^[a-z0-9][a-z0-9_-]{0,59}$/i.test(String(v ?? '')) ? String(
 const LANGS = ['en', 'es', 'vi', 'zh-Hans'];
 
 export const SCHEMA = {
-  page_view: {},
+  page_view: { src: slug },  // source tag; checked against the city's list in the route
   step_completed: { step: oneOf(['budget', 'days', 'people', 'zip', 'prefs']) },
   plan_built: {
     budget: num(1, 9999), days: int(1, 31), people: int(1, 20), zip,
@@ -45,6 +45,7 @@ export const SCHEMA = {
   language_changed: { from: oneOf(LANGS), to: oneOf(LANGS) },
   cant_use: { item: oneOf(BOX_ITEMS), reason: oneOf(REASONS) },
   plan_reopened: { source: oneOf(['saved', 'link']), kind: oneOf(['plan', 'box']) },
+  plan_outcome: { answer: oneOf(['yes', 'some', 'no']), kind: oneOf(['plan', 'box']) },
 };
 
 /** Untrusted request body → { event, session_id, lang, data } or null. */
@@ -134,6 +135,7 @@ export function mountEvents(app, { getDb }) {
     if (n > 300) return res.status(429).end();
     const ev = cleanEvent(req.body);
     if (!ev) return res.status(400).end();
+    if (ev.data.src && !(req.city.sources || []).includes(ev.data.src)) delete ev.data.src;
     try { await getDb().insertEvent({ ...ev, city_id: req.city.id }); } catch (e) { console.error(e.message); }
     res.status(204).end();
   });

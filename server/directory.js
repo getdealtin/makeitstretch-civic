@@ -9,6 +9,7 @@ import express from 'express';
 import { PUBLIC_FIELDS, EDITABLE_FIELDS } from './db.js';
 import { CITIES } from '../cities/index.js';
 import { summarize } from './events.js';
+import { cityReport, reportCsv, directoryCsv } from './report.js';
 import { readFileSync } from 'node:fs';
 
 // Zip → [lat, lon] at the center of each zip area (US Census ZCTAs, via the MIT-licensed
@@ -254,6 +255,34 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
     const city = cityOf(req);
     const inv = await db().createInvite(city, org);
     res.json({ ok: true, invite: inv, link: inviteLink(city, req, inv.token) });
+  });
+
+  // ── City report (Phase 5) and CTFB handoff ──
+  const reportFor = async req => {
+    const city = cityOf(req);
+    const day = s => (/^\d{4}-\d{2}-\d{2}$/.test(s || '') ? s : null);
+    const to = day(req.query.to) || new Date().toISOString().slice(0, 10);
+    const from = day(req.query.from) || new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10);
+    const [events, providers] = await Promise.all([
+      db().listEvents(city, from + 'T00:00:00Z'),
+      db().listProviders(city, ['approved']),
+    ]);
+    const inRange = events.filter(e => e.created_at.slice(0, 10) <= to);
+    return cityReport(inRange, { k: CITIES[city].k_anon_threshold || 15, providers, from, to, city: CITIES[city].place || city });
+  };
+  admin.get('/report', async (req, res) => {
+    try { res.json(await reportFor(req)); } catch (e) { console.error(e.message); res.status(500).json({ ok: false }); }
+  });
+  admin.get('/report.csv', async (req, res) => {
+    try {
+      const r = await reportFor(req);
+      res.type('text/csv').set('Content-Disposition', `attachment; filename="make-it-stretch-report-${r.from}-to-${r.to}.csv"`).send(reportCsv(r));
+    } catch (e) { console.error(e.message); res.status(500).end(); }
+  });
+  admin.get('/directory.csv', async (req, res) => {
+    const city = cityOf(req);
+    const rows = await db().listProviders(city, ['approved']);
+    res.type('text/csv').set('Content-Disposition', `attachment; filename="food-sites-${city}-${new Date().toISOString().slice(0, 10)}.csv"`).send(directoryCsv(rows));
   });
 
   admin.post('/reviews/:lang', async (req, res) => {

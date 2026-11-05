@@ -55,6 +55,10 @@ export default {
   civic_layer: false,
   k_anon_threshold: 15,
 
+  // Source tags allowed on links and printed QR codes (?src=...). Anything else is ignored.
+  // Add a tag here before using it on a flyer or partner link.
+  sources: ['library', 'ctfb', 'pantry', 'partner', 'flyer', 'qr', 'social', 'city'],
+
   // Grant geography: Council Districts 1–4, east of I-35. Used for reporting, not gating:
   // anyone can use the tool with any zip.
   focus_area: 'Council Districts 1–4 (eastern crescent)',
