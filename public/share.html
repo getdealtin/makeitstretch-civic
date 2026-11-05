@@ -30,6 +30,8 @@
     .btn-dark:hover { background: var(--forest); color: #fff; }
     .qr .btn-dark { margin-top: 8px; width: 100%; }
     .note { font-size: 15px; color: var(--text-muted); margin-top: 14px; }
+    .sub-legend { font: 600 14px var(--font-label); color: var(--text-muted); margin: 16px 0 8px; }
+    .result[hidden], fieldset[hidden] { display: none; }
   </style>
 </head>
 <body>
@@ -54,14 +56,16 @@
       <p>Pick where you’ll share it. You’ll get a link to post or text, and a QR code to print on a flyer or sign.</p>
 
       <form id="share-form">
-        <p id="city-row" hidden><label for="city"><b>City</b></label><br><select id="city"></select></p>
-        <fieldset>
+        <p id="city-row" hidden><label for="city"><b>Which city?</b></label><br><select id="city"></select></p>
+        <fieldset id="where" hidden>
           <legend>Where will you share it?</legend>
           <div class="chips" id="sources"></div>
+          <p class="sub-legend" id="local-legend" hidden></p>
+          <div class="chips" id="local-sources"></div>
         </fieldset>
       </form>
 
-      <div class="result" aria-live="polite">
+      <div class="result" id="result" aria-live="polite" hidden>
         <div>
           <label for="link"><b>Your link</b></label>
           <div class="linkrow">
@@ -86,24 +90,31 @@
   </footer>
 
   <script type="module">
-    const LABEL = {
-      library: 'Library', pantry: 'Food pantry', partner: 'Community group', flyer: 'Printed flyer',
-      qr: 'Poster or sign', social: 'Social media', ctfb: 'Central Texas Food Bank', city: 'City office or program',
-    };
+    // General places to share, the same in every city. A city's own partners (its food bank,
+    // city offices) are named in that city's settings (source_labels) and listed separately.
+    const GENERAL = { library: 'Library', pantry: 'Food pantry', partner: 'Community group', flyer: 'Printed flyer', qr: 'Poster or sign', social: 'Social media' };
     const $ = id => document.getElementById(id);
     const cities = await fetch('/api/cities').then(r => r.json()).catch(() => []);
     if (!cities.length) { $('share-form').insertAdjacentHTML('beforebegin', '<p class="error">Couldn’t load cities. Please reload.</p>'); }
     const name = c => c.region ? `${c.place}, ${c.region}` : c.place;
-    $('city').innerHTML = cities.map(c => `<option value="${c.id}">${name(c)}</option>`).join('');
-    $('city-row').hidden = cities.length < 2;
-    const city = () => cities.find(c => c.id === $('city').value) || cities[0];
+    const many = cities.length > 1;
+    // One city: no question. Several: ask, with nothing picked yet.
+    $('city').innerHTML = (many ? '<option value="">Choose a city</option>' : '') + cities.map(c => `<option value="${c.id}">${name(c)}</option>`).join('');
+    $('city-row').hidden = !many;
+    const city = () => cities.find(c => c.id === $('city').value);
 
     function drawSources() {
-      const c = city(); if (!c) return;
-      const order = ['library', 'pantry', 'partner', 'flyer', 'qr', 'social', ...c.sources];
-      const tags = [...new Set(order)].filter(s => c.sources.includes(s));
-      $('sources').innerHTML = tags.map((s, i) => `<label><input type="radio" name="src" value="${s}" ${i === 0 ? 'checked' : ''}><span>${LABEL[s] || s}</span></label>`).join('');
-      $('sources').querySelectorAll('input').forEach(r => r.addEventListener('change', update));
+      const c = city();
+      $('where').hidden = $('result').hidden = !c;
+      if (!c) return;
+      const chip = (s, label, checked) => `<label><input type="radio" name="src" value="${s}" ${checked ? 'checked' : ''}><span>${label}</span></label>`;
+      const general = Object.keys(GENERAL).filter(s => c.sources.includes(s));
+      const local = c.sources.filter(s => !GENERAL[s] && c.source_labels?.[s]);
+      $('sources').innerHTML = general.map((s, i) => chip(s, GENERAL[s], i === 0)).join('');
+      $('local-sources').innerHTML = local.map(s => chip(s, c.source_labels[s], false)).join('');
+      $('local-legend').hidden = !local.length;
+      $('local-legend').textContent = `${c.place} partners`;
+      document.querySelectorAll('input[name=src]').forEach(r => r.addEventListener('change', update));
       update();
     }
     function update() {

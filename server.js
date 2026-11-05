@@ -194,7 +194,7 @@ mountEvents(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
 // ── Cities that are live, and share links / QR codes for partners (landing + /share) ──
 const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.length).map(c => ({
-  id: c.id, place: c.place, region: c.region || '', url: `https://${c.hosts[0]}/`, sources: c.sources || [],
+  id: c.id, place: c.place, region: c.region || '', url: `https://${c.hosts[0]}/`, sources: c.sources || [], source_labels: c.source_labels || {},
 }));
 app.get('/api/cities', (req, res) => res.json(liveCities()));
 app.get('/share/qr.svg', async (req, res) => {

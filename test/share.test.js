@@ -32,3 +32,8 @@ test('bare domain gets the landing page; city subdomain gets the tool', async ()
   assert.match(await get('makeitstretch.org'), /id="hero-title"/);
   assert.match(await get('austin.makeitstretch.org'), /id="app"/);
 });
+
+test('city-specific partner names come from city settings', async () => {
+  const [austin] = await (await fetch(`${base}/api/cities`)).json();
+  assert.equal(austin.source_labels.ctfb, 'Central Texas Food Bank');
+});
