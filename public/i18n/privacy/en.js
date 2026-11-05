@@ -1,32 +1,33 @@
-// Privacy policy, English (source). Must match what the code records: server/events.js.
+// Privacy policy, English (source). Structured by category, in the style of large consumer
+// policies. Must stay consistent with what the code records (server/events.js).
 export default {
   title: 'Privacy policy',
-  updated: 'Last updated November 5, 2026',
-  intro: 'Make It Stretch is a free tool. You never need an account, and we never ask for your name, email, phone number or address. This page explains exactly what we count, and why.',
+  updated: 'Effective November 5, 2026',
+  intro: 'Make It Stretch is a free tool that helps people plan groceries and find free food. You don’t need an account to use it. This policy explains what information we collect, why we collect it, and the choices you have.',
   sections: [
-    { h: 'Who runs this', p: ['Make It Stretch is run by Margin Ventures LLC. It is an independent tool built for Austin residents. It is not an official City of Austin website.'] },
-    { h: 'What we never collect', list: [
-      'Your name, email, phone number or home address.',
-      'Your IP address. It is used for a moment to block spam, then thrown away. It is never saved.',
-      'Anything that identifies your phone or computer. We don’t use tracking cookies or ads.',
-      'The number or email you send a plan to. Texts and emails go from your own phone, not through us.',
+    { h: 'Who we are', p: ['Make It Stretch is operated by Margin Ventures LLC (“we”). It is an independent tool and not an official City of Austin website.'] },
+    { h: 'Information we collect', p: [
+      'We don’t ask for your name, email address, phone number or home address, and we don’t use advertising or tracking cookies.',
+      'We collect information about how the tool is used, without identifying who you are. This includes the answers you give (such as your budget, household size, zip code, food preferences and dietary needs), the plans and meal ideas the tool shows you, and how you use them (such as recipes you open, help resources you select, and items from a food box you tell us you can’t use).',
+      'Like most websites, our servers briefly receive technical information such as your IP address when you connect. We use it only to keep the service running and protect it from abuse, and we don’t store it with your activity.',
     ] },
-    { h: 'What we count, anonymously', p: ['When you use the tool, we save small records of what happened, with no way to know who you are:'], list: [
-      'That someone opened the site, and which questions they finished.',
-      'The plan details you enter: budget, how many days, how many people, your zip code if you give it, where you shop, food preferences, foods you can’t eat (including halal, kosher, diabetic or low-sodium), and foods you already have.',
-      'Plan totals, like cost per person per day.',
-      'For food boxes: which items were in the box, about what they’re worth, and any items you tell us you can’t use, with the reason.',
-      'Which recipes were opened or swapped, which help links or food sites were tapped, and how a plan was kept (saved, texted, emailed or copied), but never where it was sent.',
-      'The language you use.',
+    { h: 'Information stored on your device', p: ['Some information stays on your own device and is not sent to us, such as plans you choose to save on your phone and your language setting. You can remove saved plans at any time from the start screen.'] },
+    { h: 'Why we collect information', list: [
+      'To provide the tool and make it work better, for example by fixing questions people find hard to answer.',
+      'To understand food needs in the community and share anonymous, combined statistics with the City of Austin and food assistance partners.',
+      'To protect the tool against spam, abuse and security risks.',
     ] },
-    { h: 'The visit code', p: ['Each visit gets a random code so we can see how one visit flowed, for example whether people who build a tight-budget plan then tap SNAP. The code lives only in your browser’s memory and disappears when you close the page. It is not stored on your device, so we can’t tell when the same person comes back.'] },
-    { h: 'Why we count', p: ['To make the tool better, and to give the City of Austin and food partners anonymous totals about food needs that don’t exist today: where budgets are tightest, which foods people can’t use, and where people look for help.'] },
-    { h: 'What we share', p: ['Reports to the City and partners show only totals. Any number about fewer than 15 people is never shared. We never sell data. Food sites in our directory may be shared with the Central Texas Food Bank, using only the public listing details.'] },
-    { h: 'What stays on your phone', p: ['If you tap “Save on this phone”, your plan is saved in your browser only. We never see it. Your language choice is remembered the same way. A plan link keeps your plan after the # sign, a part of the link browsers never send to us.'] },
-    { h: 'Service providers', p: ['Our database is run by Supabase and our website by Render, both in the United States. They store data for us and may not use it for anything else.'] },
-    { h: 'How long we keep it', p: ['Activity records are deleted automatically after 24 months. We keep only monthly totals after that. Because we don’t know who anyone is, we can’t find or delete one person’s activity; it is all deleted on that schedule.'] },
-    { h: 'Food providers who list a site', p: ['If you add a food site, the contact name, email and phone you give us are private. We never show them on the site. We use them only to confirm your listing about every 6 months. Email us to change or remove your listing or contact details.'] },
-    { h: 'Your choices', p: ['Every question except budget, days and household size is optional, including your zip code. You can skip the “can’t use” question.'] },
-    { h: 'Questions', p: ['Email getdealtin.hq@gmail.com. If this policy changes, we’ll update the date at the top.'] },
+    { h: 'Your choices', p: ['Most questions are optional, including your zip code and the question about food you can’t use. You can use the tool without saving anything on your device.'] },
+    { h: 'Sharing information', p: ['We do not sell information. We share information only in these cases:'], list: [
+      'Combined statistics: We share totals that don’t identify anyone with the City of Austin and food assistance partners. We never share a number that describes fewer than 15 people.',
+      'Food site listings: Public details about food sites in our directory may be shared with food assistance partners.',
+      'Service providers: We use trusted companies to host the tool and store information on our behalf. They must follow our instructions and keep information confidential.',
+      'Legal reasons: We may share information if required by law or to protect the safety of people using the tool.',
+    ] },
+    { h: 'Keeping information secure', p: ['We protect information with encryption in transit and access controls that limit who can see it.'] },
+    { h: 'How long we keep information', p: ['Activity information is deleted after 24 months. After that, we keep only combined monthly totals. Because we don’t know who uses the tool, we can’t look up or delete one person’s activity; it is deleted on this schedule.'] },
+    { h: 'Food sites that list with us', p: ['If you add a food site to our directory, we keep the contact details you provide private and use them only to confirm your listing from time to time. Contact us to update or remove your listing.'] },
+    { h: 'Changes to this policy', p: ['We may update this policy. When we do, we’ll change the date at the top of this page.'] },
+    { h: 'Contact us', p: ['Questions about this policy: getdealtin.hq@gmail.com'] },
   ],
 };
