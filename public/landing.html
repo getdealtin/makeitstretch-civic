@@ -25,7 +25,19 @@
     .partners-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
     .partners h2 { font-size: clamp(28px, 5vw, 40px); margin: 0; }
     .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 24px; }
-    .pcard { border-radius: 18px; padding: 20px 20px 22px; border: 2px solid var(--text); display: flex; flex-direction: column; }
+    .pcard { border-radius: 18px; padding: 20px 20px 22px; border: 2px solid var(--text); display: flex; flex-direction: column; color: var(--text); text-decoration: none; transition: transform .15s, box-shadow .15s; }
+    .pcard:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(43,43,51,.14); color: var(--text); }
+    .pcard:hover .pgo { text-decoration: underline; }
+    .pgo { margin-top: auto; padding-top: 14px; font: 600 15px var(--font-label); color: var(--text); }
+    .band .band-card h2.cities-title { font-size: 22px; margin: 16px 0 8px; color: var(--indigo-ink); }
+    .city-list { list-style: none; padding: 0; margin: 0; }
+    .city-list a { display: flex; flex-direction: column; text-decoration: none; color: var(--text); border: 2px solid var(--text); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; background: #fff; }
+    .city-list a:hover { background: var(--sage); }
+    .city-list b { font: 700 18px var(--font-display); color: var(--indigo-ink); }
+    .city-list b::after { content: ' →'; }
+    .city-list span { font-size: 14px; color: var(--text-muted); }
+    .band .band-card .city-ask { font-size: 15px; margin: 10px 0 0; color: var(--text-muted); }
+    .city-ask a { color: var(--green-text); }
     .pcard:nth-child(1) { background: var(--peach); }
     .pcard:nth-child(2) { background: var(--sage); }
     .pcard:nth-child(3) { background: #F9E3A6; }
@@ -38,6 +50,17 @@
   <script type="module">
     import { paintArt } from '/art.js';
     paintArt();
+    // The city list comes from the city settings, so a new city appears here on its own.
+    fetch('/api/cities').then(r => r.json()).then(cities => {
+      if (!cities.length) return;
+      const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const name = c => c.region ? `${c.place}, ${c.region}` : c.place;
+      document.getElementById('city-list').innerHTML = cities.map(c =>
+        `<li><a href="${esc(c.url)}"><b>${esc(name(c))}</b><span>Local prices, food sites and benefits help</span></a></li>`).join('');
+      const cta = document.getElementById('hero-cta'), text = document.getElementById('hero-cta-text');
+      if (cities.length === 1) { cta.href = cities[0].url; text.textContent = `Start in ${name(cities[0])}`; }
+      else { cta.href = '#cities-title'; text.textContent = 'Find your city'; }
+    }).catch(() => {});
   </script>
 </head>
 <body>
@@ -55,7 +78,7 @@
       <nav class="top-nav" aria-label="Main">
         <a class="nav-link" href="#how-title">How it works</a>
         <a class="nav-link" href="#partners-title">Partners</a>
-        <a class="btn-dark" href="https://austin.makeitstretch.org/">Open in Austin</a>
+        <a class="btn-dark" href="#cities-title">Cities</a>
       </nav>
     </div>
   </header>
@@ -65,9 +88,9 @@
       <div class="hero-text">
         <p class="pill">Free · No sign-up · No ads</p>
         <h1 id="hero-title">Make your grocery money <em class="accent">stretch</em>.</h1>
-        <p class="hero-blurb">A free tool that turns the grocery money you have into a shopping list and a week of real meals, or turns a food box into dinners. Plus free food and benefits nearby.</p>
+        <p class="hero-blurb">You already know how to make things work. We’re here to help your grocery money go further, with a shopping list, a week of good meals, and free food nearby. No judgment, just help.</p>
         <div class="ctas">
-          <a class="btn-dark" href="https://austin.makeitstretch.org/">Use it in Austin <span aria-hidden="true">→</span></a>
+          <a class="btn-dark" id="hero-cta" href="https://austin.makeitstretch.org/"><span id="hero-cta-text">Start in Austin, TX</span> <span aria-hidden="true">→</span></a>
           <a class="btn-line" href="#partners-title">Bring it to your community</a>
         </div>
       </div>
@@ -101,11 +124,13 @@
             <li>Cities get aggregated reports that never identify anyone</li>
           </ul>
         </div>
-        <div class="band-card">
-          <div class="band-art" aria-hidden="true" data-art="box"></div>
-          <b>Live in Austin, Texas</b>
-          <p>Local prices, local food sites, and help with SNAP and WIC.</p>
-          <a class="btn-dark" href="https://austin.makeitstretch.org/">Open Make It Stretch Austin</a>
+        <div class="band-card" id="cities">
+          <div class="band-art" aria-hidden="true" data-art="pin"></div>
+          <h2 id="cities-title" class="cities-title">Where it’s live</h2>
+          <ul class="city-list" id="city-list">
+            <li><a href="https://austin.makeitstretch.org/"><b>Austin, TX</b><span>Local prices, food sites, SNAP and WIC help</span></a></li>
+          </ul>
+          <p class="city-ask">Don’t see your city? <a href="mailto:getdealtin.hq@gmail.com?subject=Make%20It%20Stretch%20in%20my%20city">Tell us where you are</a>.</p>
         </div>
       </div>
     </section>
@@ -118,25 +143,24 @@
         </div>
       </div>
       <div class="cards">
-        <article class="pcard">
+        <a class="pcard" href="https://austin.makeitstretch.org/add-site">
           <p class="kicker">Food banks and pantries</p>
           <h3>List your site for free</h3>
           <p>People see your hours, ID rules and languages when they look for free food near their ZIP code.</p>
-        </article>
-        <article class="pcard">
+          <span class="pgo">Add your site <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="pcard" href="/share">
           <p class="kicker">Libraries and community groups</p>
           <h3>Share a link or a QR code</h3>
           <p>Hand it out with food boxes, at the front desk, or on a flyer. It works on any phone.</p>
-        </article>
-        <article class="pcard">
+          <span class="pgo">Get your link and QR code <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="pcard" href="mailto:getdealtin.hq@gmail.com?subject=Make%20It%20Stretch%20for%20our%20city">
           <p class="kicker">Cities and counties</p>
           <h3>Set it up for your city</h3>
           <p>Your local prices, local help and languages, plus reports organized around your own food plan.</p>
-        </article>
-      </div>
-      <div class="contact">
-        <p>Want to partner or bring Make It Stretch to your city?</p>
-        <a class="btn-dark" href="mailto:getdealtin.hq@gmail.com?subject=Make%20It%20Stretch">Email us</a>
+          <span class="pgo">Email us <span aria-hidden="true">→</span></span>
+        </a>
       </div>
     </section>
   </main>

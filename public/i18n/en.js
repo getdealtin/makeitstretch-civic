@@ -10,7 +10,7 @@ export default {
 
   // Start screen: two doors
   intro_title: "Make your grocery money *stretch*.",
-  intro_body: "A shopping list and a week of real meals from the money you have. Plus free food and benefits near you.",
+  intro_body: "You know how to make things work. We’re here to help it go further: a shopping list and a week of good meals from what you have, plus free food nearby.",
   hero_eyebrow: "Free · No sign-up · About a minute",
   tag_list: "Shopping list",
   tag_meals: "A week of meals",

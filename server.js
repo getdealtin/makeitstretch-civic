@@ -10,7 +10,8 @@ import {
   buildCart, resolvePrices, indexRecipes, matchRecipes, planWeeks,
   groupShoppingList, zipToInfo, BENCHMARKS,
 } from './engine/index.js';
-import { resolveCity, publicConfig } from './cities/index.js';
+import QRCode from 'qrcode';
+import { resolveCity, publicConfig, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
 import { mountDirectory } from './server/directory.js';
 import { mountEvents, AVOID } from './server/events.js';
@@ -191,6 +192,21 @@ app.locals.setDb = d => { db = d; };
 mountDirectory(app, { getDb: () => db });
 mountEvents(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
+// ── Cities that are live, and share links / QR codes for partners (landing + /share) ──
+const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.length).map(c => ({
+  id: c.id, place: c.place, region: c.region || '', url: `https://${c.hosts[0]}/`, sources: c.sources || [],
+}));
+app.get('/api/cities', (req, res) => res.json(liveCities()));
+app.get('/share/qr.svg', async (req, res) => {
+  const c = liveCities().find(x => x.id === req.query.city);
+  if (!c) return res.status(404).end();
+  const src = c.sources.includes(req.query.src) ? req.query.src : '';
+  const svg = await QRCode.toString(c.url + (src ? `?src=${src}` : ''), { type: 'svg', margin: 2, errorCorrectionLevel: 'M', color: { dark: '#26264F', light: '#FFFFFF' } });
+  res.type('image/svg+xml');
+  if (req.query.download) res.attachment(`make-it-stretch-${c.id}${src ? '-' + src : ''}.svg`);
+  res.send(svg);
+});
+
 // makeitstretch.org (the bare domain) shows the project landing page; city subdomains show
 // their tool. Outside production, /?site=landing previews it.
 const LANDING_HOSTS = ['makeitstretch.org', 'www.makeitstretch.org'];
@@ -199,6 +215,7 @@ app.get('/', (req, res, next) => {
   if (LANDING_HOSTS.includes(host) || (ALLOW_CITY_OVERRIDE && req.query.site === 'landing')) return page('landing.html')(req, res);
   next();
 });
+app.get('/share', page('share.html'));
 app.get('/join/:token', page('provider.html'));
 app.get('/add-site', page('provider.html'));
 app.get('/admin', page('admin.html'));

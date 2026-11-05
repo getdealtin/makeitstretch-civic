@@ -13,6 +13,7 @@ export default {
   // only (name collision with enoughproject.org); the public brand is Make It Stretch.
   name: 'Make It Stretch',
   place: 'Austin',
+  region: 'TX',
   tagline: 'Turn the grocery money you have into a week of real meals.',
   maker: 'Margin Ventures LLC',
   // Impersonation guardrail: aligned with Austin's visual language, never presented

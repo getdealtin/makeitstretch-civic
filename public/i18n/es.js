@@ -8,7 +8,7 @@ export default {
   build_plan: 'Crear mi plan',
   start_over: 'Empezar de nuevo',
   intro_title: "Haga que su dinero para comida *rinda*.",
-  intro_body: "Una lista de compras y una semana de comidas de verdad con el dinero que tiene. Además, comida gratis y beneficios cerca de usted.",
+  intro_body: "Usted sabe salir adelante. Estamos aquí para ayudarle a que su dinero rinda más: una lista de compras y una semana de buenas comidas con lo que tiene, además de comida gratis cerca.",
   hero_eyebrow: "Gratis · Sin registrarse · Como un minuto",
   tag_list: "Lista de compras",
   tag_meals: "Una semana de comidas",

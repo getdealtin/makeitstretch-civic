@@ -7,7 +7,7 @@ export default {
   build_plan: '生成我的计划',
   start_over: '重新开始',
   intro_title: "让您的买菜钱*更耐用*。",
-  intro_body: "用您手头的钱，得到购物清单和一周的家常饭菜。还能找到附近的免费食物和福利援助。",
+  intro_body: "您一直在努力把日子过好。我们在这里帮您把钱用得更远：用手头的钱得到购物清单和一周的好饭菜，还能找到附近的免费食物。",
   hero_eyebrow: "免费 · 无需注册 · 大约一分钟",
   tag_list: "购物清单",
   tag_meals: "一周饭菜",
