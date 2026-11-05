@@ -213,4 +213,9 @@ export default {
   cu_thanks: "✓ 谢谢，已记录。",
   footer_privacy: "无需账户，没有广告。我们会统计匿名使用情况来改进这个工具。",
   privacy_link: "隐私政策",
+  outcome_q: "欢迎回来。您用过这个计划吗？",
+  outcome_yes: "用过",
+  outcome_some: "用了一部分",
+  outcome_no: "没用",
+  outcome_thanks: "✓ 谢谢您告诉我们。",
 };

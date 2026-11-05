@@ -137,5 +137,7 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
 - [ ] Data Stewards: local shelf-price capture (moved to its own phase)
 - [x] Phase 4: anonymous activity events (strict schema), /privacy in four languages, admin Activity,
       "can't use this" in food boxes, box value, return visits, halal/kosher/diabetic/low-sodium notes
-- [ ] Phase 5: city reporting with k-anonymity
+- [x] Phase 5: City report in /admin (by Food Plan goal, people-based counts, cells under 15 hidden plus
+      secondary suppression, limits section, print/PDF + CSV), CTFB directory CSV, `?src=` source tags,
+      "Don't count this browser", "Did you use this plan?" on return visits
 - [ ] Phase 6: full accessibility audit + offline packet

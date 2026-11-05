@@ -213,4 +213,9 @@ export default {
   cu_thanks: "✓ Cảm ơn, đã ghi nhận.",
   footer_privacy: "Không cần tài khoản. Không quảng cáo. Chúng tôi đếm hoạt động ẩn danh để cải thiện công cụ này.",
   privacy_link: "Chính sách quyền riêng tư",
+  outcome_q: "Chào mừng bạn quay lại. Bạn đã dùng kế hoạch này chưa?",
+  outcome_yes: "Có",
+  outcome_some: "Một phần",
+  outcome_no: "Không",
+  outcome_thanks: "✓ Cảm ơn bạn đã cho biết.",
 };

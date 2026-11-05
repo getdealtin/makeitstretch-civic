@@ -34,7 +34,12 @@ const resText = (r, key) => city?.i18n?.[lang]?.resources?.[r.id]?.[key] || r[ke
 // ── Anonymous activity (Phase 4; see /privacy) ──────────────────
 // A random token for this visit only: kept in memory, gone when the tab closes, never stored on the device.
 const SESSION = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join('');
+// "Don't count this browser" (set from /admin): test visits are never sent.
+const TESTING = (() => { try { return localStorage.getItem('mis:test') === '1'; } catch { return false; } })();
+// Source tag from links and printed QR codes (?src=library); the server keeps only the city's allowed tags.
+const SRC = new URLSearchParams(location.search).get('src');
 function track(event, data = {}) {
+  if (TESTING) return;
   try {
     fetch('/api/event' + qs, {
       method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
@@ -118,7 +123,7 @@ async function boot() {
   if (qs) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + qs;
 
   getRecipes(); getPrices(null); // warm up in the background
-  track('page_view');
+  track('page_view', SRC && (city.sources || []).includes(SRC) ? { src: SRC } : {});
   if (!openFromHash(location.hash, null, 'link')) renderIntro();
   // A different plan link opened in this same tab only changes the #part: no reload happens.
   // (Our own updates use replaceState, which doesn't fire this.)
@@ -595,7 +600,7 @@ function renderResults(plan, restore = {}) {
     cuisine: input.cuisine, avoid: input.avoid, have: input.have, leftover: input.leftover,
     pppd: s.pppd, cal_pct: s.calPct, items: s.cart.length, spent: s.spent,
   });
-  else if (logNext?.reopened) track('plan_reopened', { source: logNext.reopened, kind: 'plan' });
+  else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'plan' }); askOutcome('plan'); }
   logNext = null;
 
   // Keep this plan: the link, the saved copy and the text/email bodies all follow the live state.
@@ -861,7 +866,7 @@ async function renderBoxResults() {
   wireJumps();
   loadSites(siteZip);
   if (logNext?.built) track('box_built', { items: box.items, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue });
-  else if (logNext?.reopened) track('plan_reopened', { source: logNext.reopened, kind: 'box' });
+  else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'box' }); askOutcome('box'); }
   logNext = null;
   // "Can't use this": one report per item per change (Food Plan Goal 4 cultural/medical proxy).
   app.querySelectorAll('.cu-row select').forEach(sel => sel.addEventListener('change', () => {
@@ -890,6 +895,22 @@ async function renderBoxResults() {
   app.querySelector('#edit').onclick = renderBox;
   app.querySelector('#print').onclick = () => window.print();
   app.querySelector('#to-budget').onclick = () => { answers = fresh(); go(0); };
+}
+
+// "Did you use this plan?" — asked once when someone comes back to a saved plan or a shared link.
+function askOutcome(kind) {
+  const summary = app.querySelector('.summary');
+  if (!summary) return;
+  summary.insertAdjacentHTML('beforebegin', `
+    <section class="outcome no-print" aria-labelledby="outcome-q">
+      <p id="outcome-q" class="outcome-q">${esc(t('outcome_q'))}</p>
+      <div class="outcome-actions">${['yes', 'some', 'no'].map(a => `<button type="button" class="chip" data-answer="${a}">${esc(t('outcome_' + a))}</button>`).join('')}</div>
+    </section>`);
+  const box = app.querySelector('.outcome');
+  box.querySelectorAll('[data-answer]').forEach(b => b.addEventListener('click', () => {
+    track('plan_outcome', { answer: b.dataset.answer, kind });
+    box.innerHTML = `<p class="outcome-q" role="status">${esc(t('outcome_thanks'))}</p>`;
+  }));
 }
 
 // One listener for every help / food-site link on any page.

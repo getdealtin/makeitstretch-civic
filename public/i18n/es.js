@@ -214,4 +214,9 @@ export default {
   cu_thanks: "✓ Gracias, anotado.",
   footer_privacy: "Sin cuenta. Sin anuncios. Contamos actividad anónima para mejorar esta herramienta.",
   privacy_link: "Política de privacidad",
+  outcome_q: "Bienvenido de nuevo. ¿Usó este plan?",
+  outcome_yes: "Sí",
+  outcome_some: "En parte",
+  outcome_no: "No",
+  outcome_thanks: "✓ Gracias por decirnos.",
 };

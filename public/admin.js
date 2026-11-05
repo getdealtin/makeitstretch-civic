@@ -85,7 +85,11 @@ function render() {
     <div class="admin-bar">
       <label>City <select id="city">${d.cities.map(c => `<option value="${esc(c.id)}" ${c.id === d.city ? 'selected' : ''}>${esc(c.place || c.id)}</option>`).join('')}</select></label>
       <span class="muted" style="font:14px var(--font-label)">${d.db === 'memory' ? '⚠ Test mode: no database connected, changes are not saved' : ''}</span>
-      <button class="btn-xs" id="logout">Sign out</button>
+      <span class="actions">
+        <button class="btn-xs go" id="open-report">City report</button>
+        <button class="btn-xs" id="testing" aria-pressed="${isTesting()}">${isTesting() ? '✓ Not counting this browser' : 'Don’t count this browser'}</button>
+        <button class="btn-xs" id="logout">Sign out</button>
+      </span>
     </div>
 
     <nav class="counts" aria-label="Summary">
@@ -133,7 +137,9 @@ function render() {
 
     <section class="a-section" id="directory" aria-labelledby="h-dir">
       <h2 id="h-dir">Directory <small>${d.approved.length} live</small></h2>
-      <div class="actions" style="margin:8px 0 12px">${btn('+ Add a listing yourself', 'add', '')}</div>
+      <div class="actions" style="margin:8px 0 12px">${btn('+ Add a listing yourself', 'add', '')}
+        <a class="btn-xs" href="/api/admin/directory.csv?city=${encodeURIComponent(d.city)}" download>Download for CTFB (CSV)</a></div>
+      <p class="a-hint">The CTFB file has public listing details only (hours, walk-up or appointment, ID rules, languages, offers). Contact details are never included.</p>
       ${d.approved.length ? `<ul class="row-list">${d.approved.map(p => `
         <li><span><b>${esc(p.name)}</b><span class="sub">${esc(KIND[p.kind])} · ${esc(p.zip || '')} · confirmed ${day(p.confirmed_at)}</span></span>
           <span class="actions">${btn('Edit', 'edit', p.id)}${btn('Hide', 'hide', p.id, 'warn')}</span></li>`).join('')}</ul>`
@@ -163,6 +169,12 @@ function render() {
 function wire() {
   root.querySelector('#city').onchange = e => { city = e.target.value; history.replaceState(null, '', '?city=' + city); load(); };
   root.querySelectorAll('[data-days]').forEach(b => b.addEventListener('click', () => { days = Number(b.dataset.days); load(); }));
+  root.querySelector('#open-report').onclick = () => renderReport();
+  root.querySelector('#testing').onclick = () => {
+    try { isTesting() ? localStorage.removeItem('mis:test') : localStorage.setItem('mis:test', '1'); } catch { /* ignore */ }
+    toast(isTesting() ? 'This browser’s visits won’t be counted' : 'This browser counts again');
+    render();
+  };
   root.querySelector('#logout').onclick = async () => { await api('/logout', {}); renderLogin(); };
 
   root.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', async () => {
@@ -272,6 +284,49 @@ function activityHtml(a) {
         <h4>Return visits</h4>${table(Object.entries(a.returns), ['How', 'Count'], k => PRETTY.source[k] || k)}</div>
     </div>
   </section>`;
+}
+
+// ── "Don't count this browser": test visits are never sent (the main site checks this flag) ──
+function isTesting() { try { return localStorage.getItem('mis:test') === '1'; } catch { return false; } }
+
+// ── City report (Phase 5): aggregated, small groups hidden ──
+const iso = d => d.toISOString().slice(0, 10);
+let repFrom = iso(new Date(Date.now() - 90 * 864e5)), repTo = iso(new Date());
+
+async function renderReport() {
+  root.innerHTML = '<p class="muted">Building report…</p>';
+  const q = `?city=${encodeURIComponent(city)}&from=${repFrom}&to=${repTo}`;
+  const r = await fetch('/api/admin/report' + q).then(x => x.json()).catch(() => null);
+  if (!r || r.ok === false) { root.innerHTML = '<p class="error">Couldn’t build the report.</p><button class="btn-xs" id="back">Back</button>'; root.querySelector('#back').onclick = load; return; }
+  const cell = v => (v === null || v === undefined ? `<span class="hidden-cell" title="Fewer than ${r.k} people">&lt;${r.k}</span>` : esc(v));
+  const tbl = t => `<div class="rep-table"><h3>${esc(t.title)}</h3>${t.rows.length
+    ? `<table class="act-table"><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(([l, v]) => `<tr><td>${esc(l)}</td><td>${cell(v)}</td></tr>`).join('')}</tbody></table>`
+    : '<p class="empty">No data in this range.</p>'}${t.note ? `<p class="a-hint">${esc(t.note)}</p>` : ''}</div>`;
+  root.innerHTML = `
+    <div class="admin-bar no-print">
+      <button class="btn-xs" id="back">← Back to admin</button>
+      <form class="actions" id="range">
+        <label>From <input type="date" id="from" value="${repFrom}"></label>
+        <label>To <input type="date" id="to" value="${repTo}"></label>
+        <button class="btn-xs go" type="submit">Update</button>
+      </form>
+      <span class="actions">
+        <button class="btn-xs" id="print">Print or save as PDF</button>
+        <a class="btn-xs" href="/api/admin/report.csv${q}" download>Download CSV</a>
+      </span>
+    </div>
+    <article class="report">
+      <p class="eyebrow">Make It Stretch · ${esc(r.city)}</p>
+      <h1>Food access report</h1>
+      <p class="muted">${esc(r.from)} to ${esc(r.to)} · aggregated · any number under ${r.k} people is hidden (shown as &lt;${r.k})</p>
+      <section class="rep-section"><h2>Overview</h2>${tbl({ title: 'At a glance', head: ['', 'Count'], rows: r.overview })}</section>
+      ${r.sections.map(sec => `<section class="rep-section"><h2>${esc(sec.goal)}</h2><p>${esc(sec.intro)}</p><div class="rep-grid">${sec.tables.map(tbl).join('')}</div></section>`).join('')}
+      <section class="rep-section"><h2>How to read these numbers</h2><ul>${r.limits.map(l => `<li>${esc(l)}</li>`).join('')}</ul></section>
+      <p class="muted rep-foot">Generated ${esc(new Date(r.generated_at).toLocaleString('en-US'))}.</p>
+    </article>`;
+  root.querySelector('#back').onclick = load;
+  root.querySelector('#print').onclick = () => window.print();
+  root.querySelector('#range').onsubmit = e => { e.preventDefault(); repFrom = root.querySelector('#from').value || repFrom; repTo = root.querySelector('#to').value || repTo; renderReport(); };
 }
 
 const findP = id => [...data.pending, ...data.overdue, ...data.approved, ...data.hidden].find(p => p.id === id);

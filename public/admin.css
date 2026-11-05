@@ -54,3 +54,19 @@ details.more-list > summary { cursor: pointer; font: 600 15px var(--font-label);
 .act-table th { text-align: left; font: 600 12px var(--font-label); color: var(--text-muted); border-bottom: 1.5px solid var(--rule); padding: 4px 6px; }
 .act-table td { border-bottom: 1px solid var(--rule); padding: 5px 6px; }
 .act-table td:last-child, .act-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* City report */
+.report h1 { margin-bottom: .2em; }
+.rep-section { margin: 28px 0; }
+.rep-section > h2 { border-bottom: 2px solid var(--violet); padding-bottom: 6px; }
+.rep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px 24px; }
+.rep-table h3 { font-size: 16px; margin: 8px 0 6px; }
+.hidden-cell { color: var(--text-muted); font-style: italic; }
+.admin-bar label { font: 600 14px var(--font-label); display: inline-flex; gap: 6px; align-items: center; }
+.admin-bar input[type=date] { font: 14px var(--font-label); padding: 6px 8px; border: 1.5px solid var(--rule); border-radius: 8px; }
+a.btn-xs { display: inline-flex; align-items: center; text-decoration: none; }
+@media print {
+  .admin .site-header, .no-print { display: none !important; }
+  .rep-section { break-inside: avoid-page; }
+  .rep-grid { grid-template-columns: 1fr 1fr; }
+}
