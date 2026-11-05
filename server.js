@@ -68,8 +68,13 @@ const BLS_ITEMS = {
   cannedtomatoes: '717311', tuna: '703612', pasta: '714212', flour: '714232',
 };
 
+// HOTFIX (Nov 5): the series codes below were wrong (e.g. 'rice' was BLS white potatoes, 'chicken' was
+// round steak, 'canned tomatoes' was coffee), BLS prices are per pound not per package, and the region
+// codes were off by one (South was getting West prices). Live BLS prices stay OFF until the verified
+// mapping with pound→package conversion replaces this. Built-in estimates are used meanwhile.
+const BLS_ENABLED = false;
 async function blsPrices(region) {
-  if (!BLS_KEY) return null;
+  if (!BLS_KEY || !BLS_ENABLED) return null;
   const hit = blsCache.get(region);
   if (hit && Date.now() - hit.at < 24 * 3600e3) return hit.prices;
   const code = BLS_REGION[region] || '0000';
