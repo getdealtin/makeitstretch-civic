@@ -93,7 +93,7 @@ test('privacy page is served and the policy lists every recorded detail in all f
     assert.doesNotMatch(all, /Supabase|Render/, `${code} doesn't name service providers`);
   }
   const en = JSON.stringify((await import('../public/i18n/privacy/en.js')).default).toLowerCase();
-  for (const word of ['budget', 'household size', 'zip code', 'dietary needs', 'food box', 'can’t use', 'recipes', 'language', 'ip address', 'do not sell', 'don’t identify anyone', 'as long as we need it', 'don’t publish them'])
+  for (const word of ['budget', 'household size', 'zip code', 'dietary needs', 'food-box', 'cannot use', 'recipes', 'language', 'ip address', 'do not sell', 'aggregated statistics that do not identify anyone', 'only as long as necessary', 'do not publish them'])
     assert.ok(en.includes(word), `policy mentions ${word}`);
 });
 
