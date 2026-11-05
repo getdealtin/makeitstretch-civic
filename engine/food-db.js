@@ -1,8 +1,13 @@
-// Food catalogue + regional fallback prices. Ported verbatim from the live tool.
+// Food catalogue + regional fallback prices. Ported from the live tool; calories now come from
+// USDA FoodData Central (engine/nutrition.js) instead of the original hand-typed numbers, which
+// were off by 2–3x for some foods (potatoes were listed at double, oil at a third).
 // Prices are the 'May 2025' BLS-based estimates; a city can override any of
 // them through its config card (price_overrides) or live BLS data.
 
-export const FOOD_DB = [
+import { NUTRITION } from './nutrition.js';
+import { SATIETY } from './satiety.js';
+
+const RAW_FOODS = [
   // GRAINS & STARCHES
   {id:'rice',      name:'White Rice (2 lb)',       cal:3280,srv:16,cat:'grain',  tier:1,note:'The backbone. Pairs with everything.',          avoid:[],hasProp:'rice'},
   {id:'drybeans',  name:'Dry Pinto Beans (1 lb)',  cal:1560,srv:10,cat:'protein',tier:1,note:'Cheapest protein per dollar anywhere.',          avoid:[],hasProp:'beans'},
@@ -75,6 +80,12 @@ export const FOOD_DB = [
   {id:'cannedsoups',name:'Canned Soup (10.5 oz)',      cal:200, srv:2, cat:'pantry',tier:2,note:'Emergency meal. Add crackers or bread.',          avoid:[],hasProp:null},
   {id:'salsa',     name:'Salsa (16 oz)',               cal:80,  srv:8, cat:'pantry',tier:2,note:'Latin flavor base. Also works as a pasta sauce.', avoid:[],hasProp:null},
 ];
+
+/** Every food with USDA calories, protein and fiber per package, and its satiety weight. */
+export const FOOD_DB = RAW_FOODS.map(f => {
+  const n = NUTRITION[f.id];
+  return n ? { ...f, cal: n.kcal, protein: n.protein, fiber: n.fiber, fdc: n.fdc, sat: SATIETY[f.id] } : { ...f, sat: 0.5 };
+});
 
 
 export const FALLBACK_PRICES = {

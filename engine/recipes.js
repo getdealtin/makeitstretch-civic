@@ -2,6 +2,11 @@
 // Faithful port of the live /api/recipes-for-cart route (server.js L559–669)
 // plus the client-side cuisine guard (index.html L2978–2991).
 // Pure: takes the recipe list as an argument, so it runs on server or client.
+//
+// Fixed (Nov 2026): cart ids like 'cannedtomatoes' never matched recipe words like
+// 'canned tomatoes', so those foods never pulled in their recipes. Words now also match
+// through the explicit word → food map the food-box flow uses (INGREDIENT_FOODS).
+import { INGREDIENT_FOODS } from './box.js';
 
 const SIDE_DISH_BLOCKLIST = new Set([
   'potato salad', 'potato salad bowl', 'succotash', 'collard-style cabbage',
@@ -49,7 +54,8 @@ export function matchRecipes(recipes, { ingredients, cuisine = [], avoid = [] })
     // One shared ingredient qualifies a recipe (two was too strict).
     const matchScore = cartIngredients.filter(cartIng =>
       recipeIngs.some(ri => typeof ri === 'string' && (
-        ri.toLowerCase().includes(cartIng) || cartIng.includes(ri.toLowerCase())
+        ri.toLowerCase().includes(cartIng) || cartIng.includes(ri.toLowerCase()) ||
+        (INGREDIENT_FOODS[ri.toLowerCase()] || []).includes(cartIng)
       ))
     ).length;
     if (matchScore < 1) return null;

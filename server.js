@@ -8,9 +8,10 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import {
   buildCart, resolvePrices, indexRecipes, matchRecipes, planWeeks,
-  groupShoppingList, zipToInfo, BENCHMARKS,
+  groupShoppingList, zipToInfo, BENCHMARKS, FALLBACK_PRICES,
 } from './engine/index.js';
 import QRCode from 'qrcode';
+import { seriesFor, toPackagePrices, BLS_REGION } from './server/prices.js';
 import { BOX_GROUPS, BOX_SYNONYMS, foodLabel } from './engine/box.js';
 import { resolveCity, publicConfig, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
@@ -61,29 +62,19 @@ app.get('/api/config', (req, res) => res.json(publicConfig(req.city)));
 // BLS average prices exist per Census region. Cached 24h. City local_prices
 // (Data Steward shelf captures) override BLS item by item.
 const blsCache = new Map();
-const BLS_REGION = { northeast: '0200', midwest: '0300', south: '0400', west: '0500', national: '0000' };
-const BLS_ITEMS = {
-  chicken: '703511', eggs: '708111', milk: '710211', rice: '712112', drybeans: '716114',
-  bread: '702111', oats: '702421', potatoes: '711311', bananas: '711412', peanutbutter: '715211',
-  cannedtomatoes: '717311', tuna: '703612', pasta: '714212', flour: '714232',
-};
-
-// HOTFIX (Nov 5): the series codes below were wrong (e.g. 'rice' was BLS white potatoes, 'chicken' was
-// round steak, 'canned tomatoes' was coffee), BLS prices are per pound not per package, and the region
-// codes were off by one (South was getting West prices). Live BLS prices stay OFF until the verified
-// mapping with pound→package conversion replaces this. Built-in estimates are used meanwhile.
-const BLS_ENABLED = false;
+// Verified series codes, pound→package conversion and the safety check live in server/prices.js.
+// Each region's series are asked for alongside the national ones; a food a region doesn't
+// publish falls back to the national average.
 async function blsPrices(region) {
-  if (!BLS_KEY || !BLS_ENABLED) return null;
+  if (!BLS_KEY) return null;
   const hit = blsCache.get(region);
   if (hit && Date.now() - hit.at < 24 * 3600e3) return hit.prices;
-  const code = BLS_REGION[region] || '0000';
   const year = String(new Date().getFullYear());
   try {
     const r = await fetch('https://api.bls.gov/publicAPI/v2/timeseries/data/', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        seriesid: Object.values(BLS_ITEMS).map(i => `APU${code}${i}`),
+        seriesid: [...new Set([...seriesFor(region), ...seriesFor('national')])],
         startyear: String(+year - 1), endyear: year, registrationkey: BLS_KEY,
       }),
       signal: AbortSignal.timeout(8000),
@@ -95,8 +86,8 @@ async function blsPrices(region) {
       const v = parseFloat(s.data?.[0]?.value);
       if (v > 0) bySeries[s.seriesID] = v;
     }
-    const prices = Object.fromEntries(Object.entries(BLS_ITEMS)
-      .map(([food, item]) => [food, bySeries[`APU${code}${item}`]]).filter(([, v]) => v));
+    const estimates = FALLBACK_PRICES[region] || FALLBACK_PRICES.national;
+    const prices = { ...toPackagePrices(bySeries, 'national', estimates), ...toPackagePrices(bySeries, region, estimates) };
     blsCache.set(region, { at: Date.now(), prices });
     return prices;
   } catch { return null; }

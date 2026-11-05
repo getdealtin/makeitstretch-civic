@@ -1,20 +1,57 @@
 // Engine tests. Three layers:
-//   1. Equivalence: the new engine matches the frozen live reference on a
-//      360-case input grid (cart, leftover money, calories, and full meal plan).
-//   2. Goldens: five pinned snapshots in fixtures.json.
+//   1. Better than the original: on a 360-case grid the satiety engine must be at least as
+//      filling as the frozen live reference, keep the calorie floor, and use the budget.
+//   2. Goldens: five pinned snapshots of the current engine in fixtures.json.
 //   3. Invariants: properties that must hold for any input.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { allCases } from './cases.js';
 import { runNew, runLegacy, RECIPES } from './run-both.js';
-import { buildCart, resolvePrices, matchRecipes, planWeeks, groupShoppingList, zipToInfo, FOOD_DB } from '../engine/index.js';
+import { buildCart, resolvePrices, matchRecipes, planWeeks, groupShoppingList, zipToInfo, FOOD_DB, NUTRITION, SATIETY } from '../engine/index.js';
+import { FLOOR_KCAL } from '../engine/cart.js';
 
 const fixtures = JSON.parse(readFileSync(new URL('./fixtures.json', import.meta.url), 'utf8'));
 const cases = allCases();
 
-test(`equivalence with live reference (${cases.length} cases)`, () => {
-  for (const c of cases) assert.deepEqual(runNew(c), runLegacy(c), JSON.stringify(c));
+// The satiety upgrade deliberately changes the cart, so instead of matching the original tool
+// exactly, the new engine must beat it on every input (scored with the same USDA calories):
+// at least as filling, never under the calorie floor where the original met it, same budget use.
+const kcalOf = cart => cart.reduce((t, [id, qty]) => t + NUTRITION[id].kcal * qty, 0);
+const fullOf = cart => cart.reduce((t, [id, qty]) => t + NUTRITION[id].kcal * qty * SATIETY[id], 0) / kcalOf(cart);
+test(`satiety upgrade beats the original tool (${cases.length} cases)`, () => {
+  let better = 0;
+  for (const c of cases) {
+    const L = runLegacy(c).cart, N = runNew(c).cart, d = c.people * c.days, tag = JSON.stringify(c);
+    assert.ok(fullOf(N) >= fullOf(L) - 0.03, `less filling: ${tag}`);
+    if (kcalOf(L) / d >= FLOOR_KCAL) assert.ok(kcalOf(N) / d >= FLOOR_KCAL, `under the calorie floor: ${tag}`);
+    const spent = x => x.reduce((t, [, , sub]) => t + sub, 0);
+    // Tight budgets (up to $10 a person a day; SNAP is $6.22) must use every dollar. Above that the
+    // original spent the extra on more oil and sauces, which the new engine deliberately does not.
+    if (c.budget / d <= 10) assert.ok(spent(N) >= spent(L) - 1, `leaves money unspent: ${tag}`);
+    if (fullOf(N) > fullOf(L) + 0.005) better++;
+  }
+  assert.ok(better > cases.length / 4, `only ${better} cases more filling`);
+});
+
+test('oil and pantry items are never scaled up', () => {
+  for (const c of cases) for (const i of buildCart(c, resolvePrices(c.region)).cart)
+    if (i.cat === 'fat' || i.cat === 'pantry') assert.equal(i.qty, 1, `${i.id} ×${i.qty}`);
+});
+
+test('every food has USDA nutrition', () => {
+  for (const f of FOOD_DB) {
+    assert.ok(NUTRITION[f.id]?.fdc > 0, `${f.id} has no FoodData Central id`);
+    assert.equal(f.cal, NUTRITION[f.id].kcal, f.id);
+    assert.ok(f.sat >= 0.5 && f.sat <= 1.4, f.id);
+  }
+});
+
+test('multi-word ingredients pull in their recipes (canned tomatoes, sweet potatoes, peanut butter)', () => {
+  for (const [id, word] of [['cannedtomatoes', 'canned tomatoes'], ['sweetpotatoes', 'sweet potatoes'], ['peanutbutter', 'peanut butter']]) {
+    const hits = Object.values(matchRecipes(RECIPES, { ingredients: [id] })).flat();
+    assert.ok(hits.some(r => r.ingredients.includes(word)), `${id} found no recipe with "${word}"`);
+  }
 });
 
 for (const [name, { input, expected }] of Object.entries(fixtures)) {

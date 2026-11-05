@@ -10,8 +10,13 @@
 //   3. Category fill    USDA Thrifty Food Plan category weights
 //   4. Scale-up         spend what's left on staples, best calories-per-dollar first
 //
-// Known, preserved behavior: ranking is calories-per-dollar, so calorie totals
-// run high. The satiety upgrade (spec §12, Option A) is a deliberate later change.
+// Satiety upgrade (spec §12, Option A, built Nov 2026):
+//   • Foods are ranked by filling-calories per dollar (eff = calories per dollar × satiety),
+//     not raw calories per dollar, so beans, oats, eggs and potatoes beat flour and oil.
+//   • The scale-up spreads leftover money across the top filling staples (whoever has the
+//     fewest so far gets the next one) instead of piling it on one item ("flour ×9").
+//   • Calorie floor: while the plan is under FLOOR_KCAL per person per day, the scale-up buys
+//     the most calories per dollar instead, so a tight budget never gets less food.
 
 import { FOOD_DB, FALLBACK_PRICES } from './food-db.js';
 
@@ -30,6 +35,11 @@ export const CUISINE_BOOSTS = {
 };
 
 export const FLOOR_IDS = ['rice', 'drybeans', 'oil', 'oats'];
+
+/** Calories per person per day the plan must reach before fullness is optimized. */
+export const FLOOR_KCAL = 2000;
+/** How many top staples the scale-up spreads across. */
+const SPREAD = 4;
 
 // Store-type price adjustments (corner stores cost more, dollar stores less).
 const CORNER_ADJ = { bread: 1.2, eggs: 1.3, milk: 1.25, bananas: 1.15 };
@@ -84,7 +94,10 @@ export function buildCart(input, prices) {
     if (f.avoid.some(a => avoidItems.includes(a))) return false;
     if (f.hasProp && haveItems.includes(f.hasProp)) return false;
     return true;
-  }).map(f => ({ ...f, price: p[f.id] || 0, cpd: p[f.id] ? Math.round(f.cal / p[f.id]) : 0 }));
+  }).map(f => {
+    const cpd = p[f.id] ? Math.round(f.cal / p[f.id]) : 0;
+    return { ...f, price: p[f.id] || 0, cpd, eff: Math.round(cpd * (f.sat || 1)) };
+  });
 
   const cart = [];
   let totalCals = 0;
@@ -137,7 +150,7 @@ export function buildCart(input, prices) {
     const categoryBudgets = {};
     for (const [cat, w] of Object.entries(USDA_WEIGHTS)) categoryBudgets[cat] = +(fillBase * w).toFixed(2);
     const catSpent = {};
-    const sorted = [...foods].sort((a, b) => a.tier - b.tier || b.cpd - a.cpd);
+    const sorted = [...foods].sort((a, b) => a.tier - b.tier || b.eff - a.eff || a.id.localeCompare(b.id));
     for (const f of sorted) {
       if (cart.find(c => c.id === f.id)) continue;
       const limit = categoryBudgets[f.cat] || 0;
@@ -151,23 +164,31 @@ export function buildCart(input, prices) {
   // Phase 4: scale up staples with what's left
   const daysMultiplier = Math.max(1, Math.floor(days / 7));
   let iter = 0;
-  while (remaining >= 0.50 && iter < 200) {
+  const maxQty = item => (item.tier === 1 ? Math.max(8, daysMultiplier * 4) : Math.max(4, daysMultiplier * 2));
+  // Oils and pantry items never get extra units: cheap calories, but not a meal.
+  const canBuy = item => item.cat !== 'fat' && item.cat !== 'pantry' && item.qty < maxQty(item) && remaining >= item.price;
+  const buy = item => {
+    item.qty++;
+    item.subtotal = +(item.price * item.qty).toFixed(2);
+    remaining = +(remaining - item.price).toFixed(2);
+    totalCals += item.cal;
+  };
+  while (remaining >= 0.50 && iter < 400) {
     iter++;
-    const scalables = cart.filter(c => c.tier === 1).sort((a, b) => b.cpd - a.cpd);
-    const tier2 = cart.filter(c => c.tier === 2).sort((a, b) => b.cpd - a.cpd);
-    let bought = false;
-    for (const item of [...scalables, ...tier2]) {
-      const maxQty = item.tier === 1 ? Math.max(8, daysMultiplier * 4) : Math.max(4, daysMultiplier * 2);
-      if (item.qty < maxQty && remaining >= item.price) {
-        item.qty++;
-        item.subtotal = +(item.price * item.qty).toFixed(2);
-        remaining = +(remaining - item.price).toFixed(2);
-        totalCals += item.cal;
-        bought = true;
-        break;
-      }
+    const byTier = key => [...cart.filter(c => c.tier === 1).sort((a, b) => b[key] - a[key] || a.id.localeCompare(b.id)),
+                           ...cart.filter(c => c.tier === 2).sort((a, b) => b[key] - a[key] || a.id.localeCompare(b.id))];
+    const underFloor = totalCals / people / days < FLOOR_KCAL;
+    let pick;
+    if (underFloor) {
+      pick = byTier('cpd').find(canBuy);              // most calories per dollar first
+    } else {
+      const top = byTier('eff').filter(canBuy);
+      const spread = top.filter(c => c.tier === 1).slice(0, SPREAD);
+      // Fewest bought so far goes next; ties go to the more filling-per-dollar staple.
+      pick = (spread.length ? spread : top).reduce((best, c) => (!best || c.qty < best.qty ? c : best), null);
     }
-    if (!bought) break;
+    if (!pick) break;
+    buy(pick);
   }
 
   return { cart, remaining, totalCals, ...summarize(input, remaining, totalCals) };
