@@ -90,12 +90,10 @@ test('privacy page is served and the policy lists every recorded detail in all f
     assert.equal(P.sections.length, en.sections.length, `${code} has every section`);
     const all = JSON.stringify(P);
     assert.match(all, /getdealtin\.hq@gmail\.com/, `${code} contact email`);
-    assert.match(all, /24/, `${code} retention`);
-    assert.match(all, /15/, `${code} small-group rule`);
     assert.doesNotMatch(all, /Supabase|Render/, `${code} doesn't name service providers`);
   }
   const en = JSON.stringify((await import('../public/i18n/privacy/en.js')).default).toLowerCase();
-  for (const word of ['budget', 'household size', 'zip code', 'dietary needs', 'food box', 'can’t use', 'recipes', 'language', 'ip address', 'do not sell', 'fewer than 15', '24 months'])
+  for (const word of ['budget', 'household size', 'zip code', 'dietary needs', 'food box', 'can’t use', 'recipes', 'language', 'ip address', 'do not sell', 'don’t identify anyone', 'as long as we need it', 'don’t publish them'])
     assert.ok(en.includes(word), `policy mentions ${word}`);
 });
 
