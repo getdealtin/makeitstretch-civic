@@ -34,7 +34,7 @@ export default {
   err_people: 'Pick how many people you’re feeding.',
 
   q_zip: 'What’s your zip code?',
-  q_zip_hint: 'Optional. Used only to match local prices and nearby help.',
+  q_zip_hint: 'Optional. So we can show free food closest to you.',
   zip_skip: 'Skip this',
   err_zip: 'Enter a 5-digit zip code, or skip this step.',
 
@@ -209,4 +209,9 @@ export default {
   pf_required: 'required',
   list_sep: ', ',
   label_colon: ':',
+  sites_zip_prompt: 'Add your zip to see the closest ones first',
+  sites_zip_go: 'Show closest',
+  sites_zip_err: 'Enter a 5-digit zip code.',
+  sites_sorted: 'Closest to {zip} first.',
+  sites_zip_change: 'Change',
 };

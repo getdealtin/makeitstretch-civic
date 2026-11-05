@@ -8,6 +8,11 @@ import crypto from 'node:crypto';
 import express from 'express';
 import { PUBLIC_FIELDS, EDITABLE_FIELDS } from './db.js';
 import { CITIES } from '../cities/index.js';
+import { readFileSync } from 'node:fs';
+
+// Zip → [lat, lon] at the center of each zip area (US Census ZCTAs, via the MIT-licensed
+// us-zips package; see data/README). Used only to sort food sites by distance.
+const ZIP_CENTERS = JSON.parse(readFileSync(new URL('../data/zip-centroids.json', import.meta.url), 'utf8'));
 
 export const RECONFIRM_DAYS = 182; // about 6 months
 export const KINDS = ['pantry', 'fridge', 'meals', 'mutual_aid', 'other'];
@@ -69,11 +74,21 @@ const pickPublic = p => Object.fromEntries(PUBLIC_FIELDS.map(f => [f, p[f] ?? nu
 const daysSince = iso => (iso ? (Date.now() - new Date(iso).getTime()) / 864e5 : Infinity);
 export const isOverdue = p => p.status === 'approved' && daysSince(p.confirmed_at) > RECONFIRM_DAYS;
 
-/** Nearest first: same zip, then numerically closest zip (good enough within one metro). */
+/** Miles between two zip-area centers, or Infinity if either zip is unknown. */
+export function zipMiles(a, b) {
+  const p = ZIP_CENTERS[a], q = ZIP_CENTERS[b];
+  if (!p || !q) return Infinity;
+  const rad = d => (d * Math.PI) / 180;
+  const dLat = rad(q[0] - p[0]), dLon = rad(q[1] - p[1]);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(p[0])) * Math.cos(rad(q[0])) * Math.sin(dLon / 2) ** 2;
+  return 3958.8 * 2 * Math.asin(Math.sqrt(h));
+}
+
+/** Nearest first, by real distance between zip centers. Same zip first; unknown zips last. */
 export function byZip(rows, zip) {
-  if (!/^\d{5}$/.test(zip || '')) return rows;
-  const z = Number(zip);
-  return [...rows].sort((a, b) => Math.abs(Number(a.zip || 0) - z) - Math.abs(Number(b.zip || 0) - z));
+  if (!/^\d{5}$/.test(zip || '') || !ZIP_CENTERS[zip]) return rows;
+  const d = r => (r.zip === zip ? -1 : zipMiles(zip, r.zip));
+  return [...rows].sort((a, b) => d(a) - d(b));
 }
 
 // ── Admin sign-in (same pattern as the prototype's /dash) ───────

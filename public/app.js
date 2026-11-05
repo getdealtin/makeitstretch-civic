@@ -395,7 +395,7 @@ function helpSection() {
   if (!residents().length) return '';
   return `<section class="section" id="help" aria-labelledby="h-help" tabindex="-1">
     <div class="section-head"><h2 id="h-help">${esc(t('sec_help'))}</h2></div>
-    <div id="sites" hidden><h3 class="sites-head">${esc(t('sites_title'))}</h3><div class="help-list" id="sites-list"></div>
+    <div id="sites" hidden><h3 class="sites-head">${esc(t('sites_title'))}</h3><div id="sites-zip" class="sites-zip no-print"></div><div class="help-list" id="sites-list"></div>
       <h3 class="sites-head">${esc(t('sites_more_help'))}</h3></div>
     <div class="help-list">${residents().map(card).join('')}</div>
     ${orgs().length ? `<h3 class="orgs-head">${esc(t('sec_help_orgs'))}</h3><div class="help-list">${orgs().map(card).join('')}</div>` : ''}
@@ -403,7 +403,40 @@ function helpSection() {
   </section>`;
 }
 
-/** Approved local food sites, nearest the zip first. Fills the help section after it renders. */
+// A zip typed only to sort food sites. Kept for the visit; it never changes the plan.
+let siteZip = null;
+
+function renderSitesZip(box, zip) {
+  const slot = box.querySelector('#sites-zip');
+  const hasZip = /^\d{5}$/.test(zip || '');
+  if (hasZip) {
+    slot.innerHTML = `<p class="sites-sorted">${esc(t('sites_sorted', { zip }))}
+      <button type="button" class="btn-link sites-change">${esc(t('sites_zip_change'))}</button></p>`;
+    slot.querySelector('.sites-change').onclick = () => { renderSitesZip(box, null); slot.querySelector('input')?.focus(); };
+    return;
+  }
+  slot.innerHTML = `<form class="sites-zip-form" novalidate>
+      <label for="sites-zip-input">${esc(t('sites_zip_prompt'))}</label>
+      <div class="sites-zip-row">
+        <input id="sites-zip-input" class="fi fi-sm" inputmode="numeric" autocomplete="postal-code" maxlength="5" pattern="[0-9]{5}">
+        <button type="submit" class="btn-xs-site">${esc(t('sites_zip_go'))}</button>
+      </div>
+      <p class="error" role="alert"></p>
+    </form>`;
+  const f = slot.querySelector('form');
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const v = f.querySelector('input').value.trim();
+    if (!/^\d{5}$/.test(v)) { f.querySelector('.error').textContent = t('sites_zip_err'); return; }
+    siteZip = v;
+    await loadSites(v);
+    box.querySelector('.sites-sorted')?.setAttribute('tabindex', '-1');
+    box.querySelector('.sites-sorted')?.focus();
+  };
+}
+
+/** Approved local food sites, nearest the zip first. Fills the help section after it renders.
+ *  No zip yet? A small box asks for one right there, where it's useful. */
 async function loadSites(zip) {
   const box = app.querySelector('#sites');
   if (!box) return;
@@ -437,6 +470,7 @@ async function loadSites(zip) {
       ${p.confirmed_at ? `<p class="site-confirmed">${esc(t('confirmed_on', { date: month(p.confirmed_at) }))}</p>` : ''}
     </article>`;
   }).join('');
+  renderSitesZip(box, zip);
   box.hidden = false;
   const jump = app.querySelector('.jump-help span');
   if (jump) jump.textContent = t('jump_help_sub', { n: residents().length + shown.length }) + ' ↓';
@@ -530,7 +564,7 @@ function renderResults(plan, restore = {}) {
 
   focusTop('#res-title');
   wireJumps();
-  loadSites(answers.zip);
+  loadSites(answers.zip || siteZip);
 
   // Keep this plan: the link, the saved copy and the text/email bodies all follow the live state.
   const title = t('res_title', { days: input.days });
@@ -767,7 +801,7 @@ async function renderBoxResults() {
 
   focusTop('#res-title');
   wireJumps();
-  loadSites(null);
+  loadSites(siteZip);
   app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => {
     const m = byId.get(b.dataset.id); openRecipe(m.recipe, { missing: m.missing });
   }));

@@ -27,7 +27,7 @@ export default {
   people_exact: 'O escriba el número exacto',
   err_people: 'Elija para cuántas personas cocina.',
   q_zip: '¿Cuál es su código postal?',
-  q_zip_hint: 'Opcional. Solo se usa para los precios locales y la ayuda cercana.',
+  q_zip_hint: 'Opcional. Para mostrarle la comida gratis más cerca de usted.',
   zip_skip: 'Saltar este paso',
   err_zip: 'Escriba un código postal de 5 dígitos o salte este paso.',
   q_prefs: 'Unas preferencias rápidas',
@@ -186,4 +186,9 @@ export default {
   pf_required: 'obligatorio',
   list_sep: ', ',
   label_colon: ':',
+  sites_zip_prompt: 'Escriba su código postal para ver primero los más cercanos',
+  sites_zip_go: 'Ver los más cercanos',
+  sites_zip_err: 'Escriba un código postal de 5 dígitos.',
+  sites_sorted: 'Los más cercanos a {zip} primero.',
+  sites_zip_change: 'Cambiar',
 };

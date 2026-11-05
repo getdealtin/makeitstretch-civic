@@ -326,3 +326,15 @@ dialog::backdrop { background: rgba(38,38,79,.5); }
 .notice { background: #FBEFD9; border-radius: 10px; padding: 10px 14px; font-family: var(--font-label); font-size: 15px; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .pform .btn { margin-top: 8px; }
+
+/* Zip box in "Food sites near you" (asked where it's useful, not up front) */
+.sites-zip { margin: 8px 0 4px; }
+.sites-zip-form { background: var(--tint); border-radius: 12px; padding: 12px 14px; }
+.sites-zip-form label { display: block; font-family: var(--font-label); font-weight: 600; font-size: 15px; color: var(--indigo-ink); margin-bottom: 8px; }
+.sites-zip-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.sites-zip-row .fi { max-width: 140px; font-size: 18px; padding: 9px 12px; }
+.btn-xs-site { font: 600 15px var(--font-label); padding: 10px 16px; min-height: 44px; border-radius: 10px; border: 0; background: var(--violet); color: #fff; cursor: pointer; }
+.btn-xs-site:hover { background: var(--indigo-ink); }
+.sites-zip-form .error { margin: 6px 0 0; min-height: 0; }
+.sites-sorted { font-family: var(--font-label); font-size: 14px; color: var(--text-muted); margin: 0; }
+.sites-sorted .btn-link { padding: 4px 6px; font-size: 14px; }

@@ -3,7 +3,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import app from '../server.js';
 import { memoryDb, supabaseDb } from '../server/db.js';
-import { cleanProvider, byZip, isOverdue } from '../server/directory.js';
+import { cleanProvider, byZip, isOverdue, zipMiles } from '../server/directory.js';
 
 let server, base, cookie = '';
 process.env.ADMIN_KEY = 'test-admin-key';
@@ -72,7 +72,7 @@ test('approve → public listing without private fields, nearest zip first', asy
   for (const p of s.pending) assert.equal((await post(`/api/admin/providers/${p.id}`, { action: 'approve' })).status, 200);
   const pub = await (await get('/api/providers?city=austin&zip=78721')).json();
   assert.equal(pub.length, 2);
-  assert.equal(pub[0].zip, '78721');
+  assert.equal(pub[0].zip, '78721', 'same zip first');
   for (const p of pub) {
     for (const k of ['contact_name', 'contact_email', 'contact_phone', 'admin_note', 'invite_id', 'status', 'city_id']) assert.ok(!(k in p), k);
     assert.ok(p.confirmed_at);
@@ -118,10 +118,16 @@ test('form validation: required fields, cleaned values, honeypot, cities kept ap
   assert.deepEqual(await (await get('/api/providers?city=national')).json(), [], 'other cities never see Austin listings');
 });
 
-test('byZip leaves order alone without a zip', () => {
-  const rows = [{ zip: '78745' }, { zip: '78702' }];
-  assert.deepEqual(byZip(rows, ''), rows);
-  assert.deepEqual(byZip(rows, '78701').map(r => r.zip), ['78702', '78745']);
+test('byZip sorts by real distance, not by zip number', () => {
+  const rows = [{ zip: '78758' }, { zip: '78702' }, { zip: '78745' }];   // North, East, South Austin
+  assert.deepEqual(byZip(rows, ''), rows, 'no zip: order unchanged');
+  assert.deepEqual(byZip(rows, '99999'), rows, 'unknown zip: order unchanged');
+  // 78744 (southeast): 78758 is numerically closest but ~15 miles north; 78702 and 78745 are much nearer.
+  assert.deepEqual(byZip(rows, '78744').map(r => r.zip).at(-1), '78758');
+  assert.deepEqual(byZip(rows, '78702').map(r => r.zip)[0], '78702', 'same zip first');
+  assert.ok(zipMiles('78744', '78758') > 12 && zipMiles('78744', '78758') < 18);
+  assert.equal(zipMiles('78702', '00000'), Infinity);
+  assert.ok(zipMiles('01001', '02108') > 70, 'leading-zero zips work (MA)');
 });
 
 test('Supabase adapter sends the secret key and the right PostgREST calls', async () => {

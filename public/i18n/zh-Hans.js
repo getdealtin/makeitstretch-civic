@@ -26,7 +26,7 @@ export default {
   people_exact: '或输入确切人数',
   err_people: '请选择为几个人做饭。',
   q_zip: '您的邮政编码（zip code）是多少？',
-  q_zip_hint: '可选。仅用于匹配本地价格和附近的帮助。',
+  q_zip_hint: '可选。这样我们能为您显示离您最近的免费食物。',
   zip_skip: '跳过',
   err_zip: '请输入 5 位邮政编码，或跳过这一步。',
   q_prefs: '几个简单的偏好',
@@ -185,4 +185,9 @@ export default {
   pf_required: '必填',
   list_sep: '、',
   label_colon: '：',
+  sites_zip_prompt: '输入邮政编码，先看离您最近的',
+  sites_zip_go: '显示最近的',
+  sites_zip_err: '请输入 5 位邮政编码。',
+  sites_sorted: '离 {zip} 最近的排在前面。',
+  sites_zip_change: '更改',
 };

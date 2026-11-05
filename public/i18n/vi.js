@@ -26,7 +26,7 @@ export default {
   people_exact: 'Hoặc nhập con số chính xác',
   err_people: 'Chọn số người bạn nấu ăn cho.',
   q_zip: 'Mã bưu điện (zip code) của bạn là gì?',
-  q_zip_hint: 'Không bắt buộc. Chỉ dùng để tính giá ở địa phương và tìm trợ giúp gần bạn.',
+  q_zip_hint: 'Không bắt buộc. Để chúng tôi chỉ cho bạn nơi có thực phẩm miễn phí gần nhất.',
   zip_skip: 'Bỏ qua',
   err_zip: 'Nhập mã bưu điện 5 chữ số, hoặc bỏ qua bước này.',
   q_prefs: 'Vài lựa chọn nhanh',
@@ -185,4 +185,9 @@ export default {
   pf_required: 'bắt buộc',
   list_sep: ', ',
   label_colon: ':',
+  sites_zip_prompt: 'Nhập mã bưu điện để xem những nơi gần nhất trước',
+  sites_zip_go: 'Xem nơi gần nhất',
+  sites_zip_err: 'Nhập mã bưu điện 5 chữ số.',
+  sites_sorted: 'Nơi gần {zip} nhất ở trên cùng.',
+  sites_zip_change: 'Đổi',
 };
