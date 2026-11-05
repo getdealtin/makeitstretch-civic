@@ -7,7 +7,7 @@ export default {
   build_plan: 'Lập kế hoạch',
   start_over: 'Làm lại từ đầu',
   intro_title: "Giúp tiền đi chợ của bạn *đủ dùng* lâu hơn.",
-  intro_body: "Chúng tôi ở đây để giúp tiền đi chợ của bạn đi xa hơn. Thực phẩm ngày càng đắt, nên chúng tôi tính toán và tìm cách tiết kiệm giúp bạn, để bạn thêm chút thảnh thơi và cả nhà được ăn ngon.",
+  intro_body: "Chúng tôi ở đây để giúp tiền đi chợ của bạn đi xa hơn. Thực phẩm ngày càng đắt, nên chúng tôi tính toán, tìm cách tiết kiệm và trao cho bạn công cụ để lo bữa ăn cho bản thân và gia đình.",
   hero_eyebrow: "Miễn phí · Không cần đăng ký · Khoảng một phút",
   tag_list: "Danh sách mua sắm",
   tag_meals: "Thực đơn một tuần",
