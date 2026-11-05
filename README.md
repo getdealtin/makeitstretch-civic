@@ -145,4 +145,8 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
       goals), otherwise the neutral DEFAULT_FRAMEWORK is used. Resources carry `role: 'benefits' | 'food_help'`.
 - [x] Home redesign (Nov 5): warm illustrated start screen (hero + two doors, how it works, green band) in all
       four languages; makeitstretch.org landing page (`public/landing.html`, served for the bare domain by host)
-- [ ] Phase 6: full accessibility audit + offline packet
+- [x] Phase 6: accessibility audit (scripts/a11y-audit.cjs: every screen x 4 languages, WCAG 2.2 AA, keyboard,
+      320px reflow, text spacing, titles, forced colors) and the print packet: "Print or save as PDF" on any plan
+      gives shopping checklist + week of meals + every recipe + local help + QR back to the plan (~4 pages);
+      /packet lets library and pantry staff print packets for a household and weekly budget in any language
+      (staff visits aren't counted; scans from a packet count under the `packet` source tag)

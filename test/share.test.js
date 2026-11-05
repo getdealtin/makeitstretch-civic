@@ -37,3 +37,18 @@ test('city-specific partner names come from city settings', async () => {
   const [austin] = await (await fetch(`${base}/api/cities`)).json();
   assert.equal(austin.source_labels.ctfb, 'Central Texas Food Bank');
 });
+
+test('plan QR code: only this site\'s own plan links', async () => {
+  const ok = await fetch(`${base}/qr.svg?h=${encodeURIComponent('#p=abc123_-')}`);
+  assert.equal(ok.status, 200);
+  assert.match(await ok.text(), /<svg/);
+  for (const bad of ['https://evil.example', '#x=abc', '#p=<script>', '']) {
+    assert.equal((await fetch(`${base}/qr.svg?h=${encodeURIComponent(bad)}`)).status, 400, bad);
+  }
+});
+
+test('/packet serves the tool (staff packet page)', async () => {
+  const r = await fetch(`${base}/packet`);
+  assert.equal(r.status, 200);
+  assert.match(await r.text(), /id="app"/);
+});

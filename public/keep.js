@@ -83,15 +83,15 @@ export const boxHash = packed => '#b=' + encodeState(packed);
 const money = n => Number(n).toFixed(2);
 
 /** Shopping list (+ week 1 meals for email) as plain text. */
-export function planText({ title, shopping, weeks, choice = {}, total, url, labels, full = false, titleOf = r => r.title }) {
+export function planText({ title, shopping, weeks, choice = {}, total, url, labels, full = false, titleOf = r => r.title, dayOf = d => d }) {
   const lines = [title, '', `${labels.list} ($${money(total)})`];
   for (const g of shopping) for (const i of g.items) lines.push(`☐ ${i.label} ×${i.qty}  $${money(i.subtotal)}`);
   if (full && weeks.length) {
     lines.push('', labels.week1);
     weeks[0].forEach((d, di) => {
-      if (d.leftover) { lines.push(`${d.dayName}: ${labels.leftover}`); return; }
+      if (d.leftover) { lines.push(`${dayOf(d.dayName)}: ${labels.leftover}`); return; }
       const meals = ['breakfast', 'lunch', 'dinner'].map(sl => d[sl][choice[`0-${di}-${sl}`] || 0]).filter(Boolean).map(titleOf);
-      lines.push(`${d.dayName}: ${meals.join(' · ')}`);
+      lines.push(`${dayOf(d.dayName)}: ${meals.join(' · ')}`);
     });
   }
   lines.push('', `${labels.link} ${url}`);

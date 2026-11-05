@@ -41,8 +41,9 @@ const SESSION = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => 'abc
 const TESTING = (() => { try { return localStorage.getItem('mis:test') === '1'; } catch { return false; } })();
 // Source tag from links and printed QR codes (?src=library); the server keeps only the city's allowed tags.
 const SRC = new URLSearchParams(location.search).get('src');
+const PACKET = location.pathname === '/packet'; // library/pantry staff printing packets
 function track(event, data = {}) {
-  if (TESTING) return;
+  if (TESTING || PACKET) return;
   try {
     fetch('/api/event' + qs, {
       method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
@@ -127,7 +128,7 @@ async function boot() {
 
   getRecipes(); getPrices(null); // warm up in the background
   track('page_view', SRC && (city.sources || []).includes(SRC) ? { src: SRC } : {});
-  if (!openFromHash(location.hash, null, 'link')) renderIntro();
+  if (!openFromHash(location.hash, null, 'link')) (PACKET ? renderPacket() : renderIntro());
   // A different plan link opened in this same tab only changes the #part: no reload happens.
   // (Our own updates use replaceState, which doesn't fire this.)
   window.addEventListener('hashchange', () => { if (!openFromHash(location.hash, null, 'link')) renderIntro(); });
@@ -192,7 +193,9 @@ function focusTop(sel) {
 
 // ── Start screen: two doors ─────────────────────────────────────
 function renderIntro() {
+  if (PACKET) return renderPacket();
   current = renderIntro;
+  printFill = null;
   setHash('');
   openedSavedId = null;
   const saved = savedList(store, saveKey());
@@ -274,6 +277,44 @@ function renderIntro() {
     renderIntro();
     (app.querySelector('[data-open]') || app.querySelector('#door-budget')).focus();
   }));
+}
+
+// ── Library / pantry packet (/packet) ───────────────────────────
+// Staff pick a household and a weekly budget, then print a packet in the language chosen at the top.
+let packet = { people: 2, budget: 60, days: 7 };
+function renderPacket() {
+  current = renderPacket;
+  printFill = null;
+  setHash('');
+  const chips = (group, vals, label) => vals.map(v => `<button type="button" class="chip" data-p="${group}" data-v="${v}" aria-pressed="${packet[group] === v}">${esc(label(v))}</button>`).join('');
+  app.innerHTML = `
+    <form class="step packet" id="packet" novalidate>
+      <p class="pill">${esc(t('packet_eyebrow'))}</p>
+      <h1 id="q" class="q-head" tabindex="-1">${esc(t('packet_title'))}</h1>
+      <p class="hint">${esc(t('packet_intro'))}</p>
+      <fieldset class="pref-group"><legend>${esc(t('packet_people'))}</legend><div class="chips">${chips('people', [1, 2, 3, 4, 5, 6], n => n === 1 ? t('person') : t('people', { n }))}</div></fieldset>
+      <fieldset class="pref-group"><legend>${esc(t('packet_days'))}</legend><div class="chips">${chips('days', [7, 14], n => n === 7 ? t('days_week') : t('days_two_short'))}</div></fieldset>
+      <label class="fl" for="pk-budget">${esc(t('packet_budget'))}</label>
+      <div class="money"><span aria-hidden="true">$</span><input id="pk-budget" class="field" inputmode="decimal" autocomplete="off" value="${packet.budget}"></div>
+      <p class="fh">${esc(t('packet_budget_hint'))}</p>
+      <p class="fh">${esc(t('packet_lang'))}</p>
+      <p class="error" id="err" role="alert"></p>
+      <div class="nav"><button type="submit" class="btn btn-primary">${esc(t('packet_go'))}</button></div>
+    </form>`;
+  const f = app.querySelector('#packet');
+  f.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => {
+    packet[b.dataset.p] = Number(b.dataset.v);
+    f.querySelectorAll(`[data-p="${b.dataset.p}"]`).forEach(x => x.setAttribute('aria-pressed', x === b));
+  }));
+  f.onsubmit = e => {
+    e.preventDefault();
+    const v = parseFloat(f.querySelector('#pk-budget').value);
+    if (!(v >= 1 && v <= 9999)) { f.querySelector('#err').textContent = t('err_budget'); return; }
+    packet.budget = Math.round(v * 100) / 100;
+    answers = { ...fresh(), budget: packet.budget * (packet.days / 7), days: packet.days, people: packet.people };
+    showResults();
+  };
+  focusTop('#q');
 }
 
 // ── Budget flow ─────────────────────────────────────────────────
@@ -455,6 +496,12 @@ async function showResults(restore = {}) {
   }
 }
 
+// Day names come from the planner in English ('Mon'…); show them in the reader's language.
+const DAYS_EN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const dayOf = name => {
+  const i = DAYS_EN.indexOf(name);
+  try { return i < 0 ? name : new Intl.DateTimeFormat(lang, { weekday: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + i, 12))); } catch { return name; }
+};
 const residents = () => (city.resources || []).filter(r => r.audience !== 'organizations');
 const orgs = () => (city.resources || []).filter(r => r.audience === 'organizations');
 
@@ -473,7 +520,7 @@ function helpSection() {
     <div id="sites" hidden><h3 class="sites-head">${esc(t('sites_title'))}</h3><div id="sites-zip" class="sites-zip no-print"></div><div class="help-list" id="sites-list"></div>
       <h3 class="sites-head">${esc(t('sites_more_help'))}</h3></div>
     <div class="help-list">${residents().map(card).join('')}</div>
-    ${orgs().length ? `<h3 class="orgs-head">${esc(t('sec_help_orgs'))}</h3><div class="help-list">${orgs().map(card).join('')}</div>` : ''}
+    ${orgs().length ? `<h3 class="orgs-head no-print">${esc(t('sec_help_orgs'))}</h3><div class="help-list no-print">${orgs().map(card).join('')}</div>` : ''}
     <p class="add-site no-print"><a href="/add-site${qs}">${esc(t('add_site_cta'))}</a></p>
   </section>`;
 }
@@ -588,8 +635,8 @@ function renderResults(plan, restore = {}) {
     <div class="week-panel" data-week="${wi}" ${wi === 0 ? '' : 'hidden'}>
       <p class="print-only week-print-title">${esc(t('week_of', { n: wi + 1, total: weeks.length }))}</p>
       ${week.map((d, di) => d.leftover
-        ? `<div class="d"><div class="day-name">${esc(d.dayName)}</div><p class="lo">${esc(t('leftovers'))}</p></div>`
-        : `<div class="d"><div class="day-name">${esc(d.dayName)}</div>
+        ? `<div class="d"><div class="day-name">${esc(dayOf(d.dayName))}</div><p class="lo">${esc(t('leftovers'))}</p></div>`
+        : `<div class="d"><div class="day-name">${esc(dayOf(d.dayName))}</div>
             ${['breakfast', 'lunch', 'dinner'].map(sl => d[sl].length ? `
               <div class="m"><span>${esc(t(sl))}</span>
                 <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(rTitle(d[sl][choice[`${wi}-${di}-${sl}`] || 0]))}</button></div>` : '').join('')}
@@ -597,6 +644,10 @@ function renderResults(plan, restore = {}) {
     </div>`;
 
   app.innerHTML = `
+    ${PACKET ? `<div class="packet-bar no-print" role="status"><p>${esc(t('packet_ready'))}</p>
+      <button type="button" class="btn btn-primary btn-sm" id="packet-print">${esc(t('print'))}</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="packet-again">${esc(t('packet_another'))}</button></div>` : ''}
+    <p class="print-block print-brand">${esc(city.name)}${city.place ? ' · ' + esc(city.place) : ''} · ${esc(location.host)}</p>
     <section class="summary" aria-labelledby="res-title">
       <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
       <h1 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h1>
@@ -635,6 +686,7 @@ function renderResults(plan, restore = {}) {
       <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
       <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
     </div>
+    <div class="print-block" id="print-extra"></div>
     <p class="sr-only" id="announce" aria-live="polite"></p>
     <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
 
@@ -664,7 +716,7 @@ function renderResults(plan, restore = {}) {
     text: full => planText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
       shopping: shopping.map(g => ({ items: g.items.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) })),
-      weeks, choice, total: s.spent, url: linkFor(currentHash()), full, titleOf: rTitle,
+      weeks, choice, total: s.spent, url: linkFor(currentHash()), full, titleOf: rTitle, dayOf,
       labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), link: t('full_plan_link') },
     }),
   });
@@ -709,9 +761,36 @@ function renderResults(plan, restore = {}) {
   };
   app.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => showMeal(b)));
 
-  app.querySelector('#print').onclick = () => window.print();
-  app.querySelector('#restart').onclick = renderIntro;
+  // Paper copy: every chosen meal's recipe, plus a QR code that reopens this plan on a phone.
+  const fillPrint = () => {
+    const chosen = new Map();
+    weeks.forEach((w, wi) => w.forEach((d, di) => { if (!d.leftover) ['breakfast', 'lunch', 'dinner'].forEach(sl => {
+      const r = d[sl][choice[`${wi}-${di}-${sl}`] || 0]; if (r) chosen.set(String(r.id), r);
+    }); }));
+    const qrHash = planHash(packPlan(answers, { swaps: Object.keys(choice).filter(k => choice[k] === 1), checked: [] }));
+    app.querySelector('#print-extra').innerHTML = `
+      <section class="print-recipes"><h2>${esc(t('print_recipes'))}</h2>
+        ${[...chosen.values()].map(r => `<article class="print-recipe"><h3>${esc(rTitle(r))}</h3>
+          ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
+          <p><b>${esc(t('ingredients'))}${esc(t('label_colon'))}</b> ${esc((r.ingredients || []).map(ing).join(t('list_sep')))}</p>
+          <p>${esc(rSteps(r))}</p></article>`).join('')}
+      </section>
+      <section class="print-qr"><img src="/qr.svg?h=${encodeURIComponent(qrHash)}" alt="" width="120" height="120">
+        <p>${esc(t('print_scan'))}</p></section>`;
+    return app.querySelector('#print-extra img');
+  };
+  printFill = fillPrint;
+  const doPrint = async () => {
+    const img = fillPrint();
+    try { await img.decode(); } catch { /* print anyway */ }
+    window.print();
+  };
+  app.querySelector('#print').onclick = doPrint;
+  app.querySelector('#packet-print')?.addEventListener('click', doPrint);
+  app.querySelector('#packet-again')?.addEventListener('click', renderPacket);
+  app.querySelector('#restart').onclick = PACKET ? renderPacket : renderIntro;
 }
+let printFill = null; // fills the print-only extras for whatever plan is on screen
 
 // ── Keep this plan (no account) ─────────────────────────────────
 function keepBar() {
@@ -966,6 +1045,7 @@ app.addEventListener('click', e => {
 });
 
 // Print every week, not just the one on screen.
+window.addEventListener('beforeprint', () => printFill?.());
 window.addEventListener('beforeprint', () => document.querySelectorAll('.week-panel').forEach(p => { p.dataset.wasHidden = p.hidden; p.hidden = false; }));
 window.addEventListener('afterprint', () => document.querySelectorAll('.week-panel').forEach(p => { p.hidden = p.dataset.wasHidden === 'true'; }));
 

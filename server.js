@@ -207,6 +207,16 @@ app.get('/share/qr.svg', async (req, res) => {
   res.send(svg);
 });
 
+// QR code back to a plan, for the print packet. Only this site's own plan links (#p=… / #b=…),
+// so it can't be used as a general QR maker. ?src=packet lets the City report count packet reach.
+app.get('/qr.svg', async (req, res) => {
+  const h = String(req.query.h || '');
+  if (!/^#[pb]=[A-Za-z0-9_\-.~%]{1,1800}$/.test(h)) return res.status(400).end();
+  const proto = process.env.NODE_ENV === 'production' ? 'https' : req.protocol;
+  const svg = await QRCode.toString(`${proto}://${req.headers.host}/?src=packet${h}`, { type: 'svg', margin: 1, errorCorrectionLevel: 'L', color: { dark: '#000000', light: '#FFFFFF' } });
+  res.type('image/svg+xml').set('Cache-Control', 'public, max-age=86400').send(svg);
+});
+
 // makeitstretch.org (the bare domain) shows the project landing page; city subdomains show
 // their tool. Outside production, /?site=landing previews it.
 const LANDING_HOSTS = ['makeitstretch.org', 'www.makeitstretch.org'];
@@ -216,6 +226,7 @@ app.get('/', (req, res, next) => {
   next();
 });
 app.get('/share', page('share.html'));
+app.get('/packet', page('index.html'));
 app.get('/join/:token', page('provider.html'));
 app.get('/add-site', page('provider.html'));
 app.get('/admin', page('admin.html'));

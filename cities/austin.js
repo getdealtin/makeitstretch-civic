@@ -58,7 +58,7 @@ export default {
 
   // Source tags allowed on links and printed QR codes (?src=...). Anything else is ignored.
   // Add a tag here before using it on a flyer or partner link.
-  sources: ['library', 'ctfb', 'pantry', 'partner', 'flyer', 'qr', 'social', 'city'],
+  sources: ['library', 'ctfb', 'pantry', 'partner', 'flyer', 'qr', 'social', 'city', 'packet'],
   // Names for this city's own partner tags on the /share page (general tags like 'library' are named there).
   source_labels: { ctfb: 'Central Texas Food Bank', city: 'City of Austin office or program' },
 

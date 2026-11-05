@@ -373,3 +373,68 @@ input[type=checkbox] { width: 24px; height: 24px; accent-color: var(--violet); }
 .chip { min-width: 48px; justify-content: center; }
 /* Keep a focused control clear of the sticky button bar (WCAG 2.4.11) */
 html { scroll-padding-bottom: 110px; }
+
+/* ── Print packet (Phase 6) ───────────────────── */
+.print-block { display: none; }
+.packet-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #E5F4E4; border-radius: 14px; padding: 12px 16px; margin-bottom: 18px; }
+.packet-bar p { margin: 0; flex: 1 1 240px; font-weight: 600; }
+.packet .money { margin-bottom: 6px; }
+@media print {
+  @page { margin: 14mm 12mm; }
+  .print-block { display: block; }
+  .print-brand { font: 600 9pt var(--font-label); color: #000; margin: 0 0 6px; }
+  .site-footer { margin-top: 18px; border: 0; background: none; }
+  .site-footer .inner { padding: 0; font-size: 8pt; }
+  .info, .more, .outcome, .keep, .saved-card, .add-site, .sites-zip { display: none !important; }
+  .row input[type=checkbox] { width: 14px; height: 14px; }
+  .section { break-inside: auto; }
+  h2 { break-after: avoid; }
+  .print-recipes { break-before: page; }
+  .print-recipes h2 { font-size: 16pt; }
+  .print-recipe { break-inside: avoid; border-top: 1px solid #999; padding: 6px 0 2px; }
+  .print-recipe h3 { font-size: 12pt; margin: 0 0 2px; }
+  .print-recipe p { font-size: 10pt; margin: 0 0 4px; }
+  .print-qr { display: flex; gap: 14px; align-items: center; break-inside: avoid; border: 1.5px solid #000; border-radius: 8px; padding: 10px; margin-top: 14px; }
+  .print-qr img { width: 30mm; height: 30mm; }
+  .print-qr p { font-size: 11pt; margin: 0; }
+  .help-card { break-inside: avoid; background: none; border: 1px solid #999; }
+}
+
+/* Packet: compact enough for a library to print in stacks (list ≈ 1 page, meals ≈ 1, recipes 2 columns) */
+@media print {
+  body { font-size: 10pt; line-height: 1.35; }
+  main { padding-top: 0; }
+  .summary { padding: 8px 12px; margin-bottom: 8px; }
+  .summary h1 { font-size: 16pt; margin: 0 0 2px; }
+  .sum-big, .sum-facts { margin: 0; font-size: 10pt; }
+  .section { margin: 10px 0 0; }
+  .section-head h2, .print-recipes h2, #h-help { font-size: 13pt; margin: 6px 0 4px; }
+  #list .rows { columns: 2; column-gap: 8mm; margin: 0; }
+  #list .row { break-inside: avoid; padding: 0; min-height: 0; font-size: 9.5pt; }
+  .cat-head { margin: 4px 0 0; }
+  .shop-cat { font-size: 8pt; margin: 0; }
+  .cat-sub { font-size: 8pt; }
+  .shop-total { font-size: 12pt; padding: 4px 0 0; }
+  .price-note { font-size: 8pt; margin: 0; }
+  #meals { break-before: auto; }
+  .week-panel { columns: 2; column-gap: 8mm; }
+  .week-print-title { column-span: all; font-size: 11pt; }
+  .week-panel .d { break-inside: avoid; padding: 3px 0; }
+  .week-panel .m { font-size: 9.5pt; }
+  .print-recipes { columns: 2; column-gap: 8mm; }
+  .print-recipes h2 { column-span: all; }
+  .print-recipe h3 { font-size: 10.5pt; }
+  .print-recipe p { font-size: 9pt; }
+  #help { break-inside: auto; }
+  .help-list { display: block; columns: 2; column-gap: 6mm; }
+  .help-card { padding: 6px 8px; margin: 0 0 6px; font-size: 9pt; }
+  .help-card h3 { font-size: 10pt; }
+  .help-card p { font-size: 9pt; margin: 0 0 3px; }
+  .help-actions a { min-height: 0; }
+}
+@media print {
+  #list .row { padding: 0 !important; line-height: 1.25; font-size: 9pt; border-bottom-width: .5px; gap: 4px; }
+  #list .row input[type=checkbox] { width: 11px; height: 11px; margin: 0; }
+  .help-actions { font-size: 8.5pt; gap: 0 10px; }
+}
+@media print { #list .price { font-size: 9.5pt; } #list .qty { font-size: 8.5pt; } .print-brand { margin: 0 0 2px; } }
