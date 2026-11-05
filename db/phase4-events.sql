@@ -1,6 +1,6 @@
 -- Phase 4: anonymous activity events + 24-month retention.
--- Applied Nov 5, 2026: tables + permissions (part 1). The retention job below (part 2) still
--- needs the owner to run it in the Supabase SQL Editor.
+-- Applied Nov 5, 2026: tables + permissions (part 1) and the retention job (part 2, run by the
+-- owner in the SQL Editor; cron job 'retain-events-monthly' verified active).
 -- Never stored: name, email, phone, address, IP address, device identifiers.
 -- session_id is a random per-visit token held in browser memory only.
 
