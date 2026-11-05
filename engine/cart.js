@@ -38,6 +38,7 @@ export const FLOOR_IDS = ['rice', 'drybeans', 'oil', 'oats'];
 
 /** Calories per person per day the plan must reach before fullness is optimized. */
 export const FLOOR_KCAL = 2000;
+const LEGUMES = new Set(['drybeans', 'blackbeans', 'kidneybean', 'chickpeas', 'lentils', 'splitpeas']);
 /** How many top staples the scale-up spreads across. */
 const SPREAD = 4;
 
@@ -151,12 +152,31 @@ export function buildCart(input, prices) {
     for (const [cat, w] of Object.entries(USDA_WEIGHTS)) categoryBudgets[cat] = +(fillBase * w).toFixed(2);
     const catSpent = {};
     const sorted = [...foods].sort((a, b) => a.tier - b.tier || b.eff - a.eff || a.id.localeCompare(b.id));
+    // Optional cap on different items (input.maxItems): each food group gets its share of the
+    // cap by USDA weight, so a shorter list stays balanced. Off unless a city turns it on.
+    const groupCap = cat => (input.maxItems ? Math.max(1, Math.round(input.maxItems * (USDA_WEIGHTS[cat] || 0))) : Infinity);
     for (const f of sorted) {
       if (cart.find(c => c.id === f.id)) continue;
+      if (cart.filter(c => c.cat === f.cat).length >= groupCap(f.cat)) continue;
+      // Under a cap, beans, lentils and peas take at most half the protein spots, so eggs, meat or fish fit too.
+      if (input.maxItems && LEGUMES.has(f.id) && cart.filter(c => LEGUMES.has(c.id)).length >= Math.ceil(groupCap('protein') / 2)) continue;
       const limit = categoryBudgets[f.cat] || 0;
       const spent = catSpent[f.cat] || 0;
       if (spent + f.price <= limit && remaining >= f.price) {
         if (addToCart(f)) catSpent[f.cat] = (catSpent[f.cat] || 0) + f.price;
+      }
+    }
+    // With a cap, a food group's money stays in that group: buy more of the foods it already has
+    // (fewest bought first), so vegetables and protein don't lose out to cheap grains.
+    if (input.maxItems) {
+      for (const cat of Object.keys(USDA_WEIGHTS)) {
+        if (cat === 'fat' || cat === 'pantry') continue;
+        for (let guard = 0; guard < 100; guard++) {
+          const pick = cart.filter(c => c.cat === cat && (catSpent[cat] || 0) + c.price <= categoryBudgets[cat] && remaining >= c.price)
+            .sort((x, y) => x.qty - y.qty || y.eff - x.eff)[0];
+          if (!pick || !addToCart(pick)) break;
+          catSpent[cat] = (catSpent[cat] || 0) + pick.price;
+        }
       }
     }
   }
