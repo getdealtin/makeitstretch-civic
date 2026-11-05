@@ -131,3 +131,5 @@ body { overflow-x: clip; }
 .band-deco { width: 240px; height: 240px; border-radius: 50%; background: var(--lilac); border: 2.5px solid #000; display: grid; place-items: center; justify-self: center; }
 .band-deco svg { width: 62%; height: 62%; }
 @media (max-width: 859px) { .band-deco { display: none; } }
+/* Windows high-contrast mode drops backgrounds: keep the button shape visible */
+@media (forced-colors: active) { .dc-go, .btn-dark { border: 2px solid ButtonText; } .accent { text-decoration-color: CanvasText; } }

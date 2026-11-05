@@ -122,7 +122,7 @@ async function boot() {
   document.getElementById('brand-name').textContent = city.name;
   const place = document.getElementById('brand-place');
   if (city.place) { place.textContent = city.place; place.hidden = false; }
-  document.title = city.place ? `${city.name} · ${city.place}` : city.name;
+  document.title = baseTitle = city.place ? `${city.name} · ${city.place}` : city.name;
   if (qs) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + qs;
 
   getRecipes(); getPrices(null); // warm up in the background
@@ -179,9 +179,15 @@ function openFromHash(hash, savedId = null, source = null) {
   return true;
 }
 
+// Each screen names itself in the browser tab, so screen readers announce where you are (WCAG 2.4.2).
+let baseTitle = document.title;
+function screenTitle(heading) {
+  const step = app.querySelector('.progress-label')?.textContent;
+  document.title = [step, heading?.textContent.trim(), baseTitle].filter(Boolean).join(' · ');
+}
 function focusTop(sel) {
   const el = app.querySelector(sel);
-  if (el) { el.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); }
+  if (el) { el.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); screenTitle(el); }
 }
 
 // ── Start screen: two doors ─────────────────────────────────────
@@ -304,7 +310,9 @@ function go(i) {
   };
   form.querySelector('#back').addEventListener('click', () => (i === 0 ? renderIntro() : go(i - 1)));
   form.querySelector('#skip')?.addEventListener('click', () => { answers.zip = null; track('step_completed', { step: name }); go(i + 1); });
-  (form.querySelector('#budget, #zip') || form.querySelector('h2')).focus();
+  // Typing steps put the cursor in the box; tap steps focus the question.
+  (form.querySelector('#budget, #zip') || form.querySelector('#q')).focus();
+  screenTitle(form.querySelector('#q'));
   refresh();
 }
 
@@ -338,21 +346,21 @@ const optionBtn = (group, value, label, sub, pressed) =>
 
 const STEP_VIEWS = {
   budget: () => `
-    <h2 id="q" tabindex="-1">${esc(t('q_budget'))}</h2>
+    <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_budget'))}</h1>
     <p class="hint" id="h">${esc(t('q_budget_hint'))}</p>
     <div class="money"><span aria-hidden="true">$</span>
       <input id="budget" type="number" inputmode="decimal" min="1" max="9999" step="any" placeholder="0"
         aria-labelledby="q" aria-describedby="h" value="${answers.budget ?? ''}"></div>`,
 
   days: () => `
-    <h2 id="q" tabindex="-1">${esc(t('q_days'))}</h2>
+    <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_days'))}</h1>
     <div class="options" role="group" aria-labelledby="q">
       ${[['few', 4], ['week', 7], ['two', 14], ['month', 30]].map(([k, d]) =>
         optionBtn('days', d, t('days_' + k), t('days_' + k + '_sub'), answers.days === d)).join('')}
     </div>`,
 
   people: () => `
-    <h2 id="q" tabindex="-1">${esc(t('q_people'))}</h2>
+    <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_people'))}</h1>
     <div class="options" role="group" aria-labelledby="q">
       ${[1, 2, 3, 5].map(n => optionBtn('people', n, t('people_' + n), '', answers.people === n)).join('')}
     </div>
@@ -361,13 +369,13 @@ const STEP_VIEWS = {
         value="${answers.people && ![1, 2, 3, 5].includes(answers.people) ? answers.people : ''}"></p>`,
 
   zip: () => `
-    <h2 id="q" tabindex="-1">${esc(t('q_zip'))}</h2>
+    <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_zip'))}</h1>
     <p class="hint" id="h">${esc(t('q_zip_hint'))}</p>
     <input class="field" id="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5"
       pattern="[0-9]{5}" placeholder="78702" aria-labelledby="q" aria-describedby="h" value="${answers.zip ?? ''}">`,
 
   prefs: () => `
-    <h2 id="q" tabindex="-1">${esc(t('q_prefs'))}</h2>
+    <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_prefs'))}</h1>
     <p class="hint">${esc(t('q_prefs_hint'))}</p>
     ${PREFS.map(g => {
       const opts = [...(g.none ? [g.none] : []), ...g.options];
@@ -591,7 +599,7 @@ function renderResults(plan, restore = {}) {
   app.innerHTML = `
     <section class="summary" aria-labelledby="res-title">
       <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
-      <h2 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h2>
+      <h1 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h1>
       <p class="sum-big"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}</p>
       <p class="sum-facts">${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote)}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}</p>
       <nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
@@ -806,7 +814,7 @@ function renderBox() {
   openedSavedId = null;
   app.innerHTML = `
     <form class="step" id="boxform" novalidate>
-      <h2 id="q" tabindex="-1">${esc(t('box_title'))}</h2>
+      <h1 id="q" class="q-head" tabindex="-1">${esc(t('box_title'))}</h1>
       <p class="hint">${esc(t('box_hint'))}</p>
       ${BOX_GROUPS.map(g => `<fieldset class="pref-group"><legend>${esc(t('box_group_' + g.id))}</legend><div class="chips">
         ${g.items.map(id => `<button type="button" class="chip" data-item="${id}" aria-pressed="${box.items.includes(id)}">${esc(fName(id))}</button>`).join('')}
@@ -862,13 +870,13 @@ async function renderBoxResults() {
   app.innerHTML = `
     <section class="summary" aria-labelledby="res-title">
       <p class="eyebrow">${esc(t('door_box'))}</p>
-      <h2 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h2>
+      <h1 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h1>
       <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length }))}</p>
       ${boxValue > 0 ? `<p class="sum-big box-value">${esc(t('box_value', { value: money(boxValue) }))}</p>` : ''}
       ${residents().length ? `<nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
         <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
     </section>
-    <section class="section" aria-label="${esc(t('box_res_title'))}">
+    <section class="section">
       ${matches.length ? `<ul class="box-list">${matches.map(m => `
         <li class="box-card">
           <span class="box-slot">${esc(t(m.recipe.slot))}</span>

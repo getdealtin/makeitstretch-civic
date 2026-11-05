@@ -50,11 +50,13 @@ main { padding-top: 32px; padding-bottom: 16px; }
 .progress-label { font-family: var(--font-label); font-size: 13px; color: var(--text-muted); margin-top: 8px; }
 
 .step[hidden] { display: none; }
-.step h2 { margin-bottom: .35em; }
+.step h2, .step h1 { margin-bottom: .35em; }
+/* Screen headings are h1 for screen readers but keep the question size */
+h1.q-head, .summary h1 { font-size: clamp(24px, 4.5vw, 30px); }
 .hint { color: var(--text-muted); margin-bottom: 20px; }
 
 .money { display: flex; align-items: center; max-width: 280px; border: 2px solid var(--rule); border-radius: 12px; background: var(--page); padding: 0 16px; }
-.money:focus-within { border-color: var(--violet); }
+.money:focus-within { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(56,55,126,.25); }
 .money span { font-family: var(--font-display); font-size: 34px; color: var(--violet); }
 .money input, .field {
   font-family: var(--font-display); font-size: 34px; color: var(--indigo-ink);
@@ -142,7 +144,7 @@ input[type=number] { -moz-appearance: textfield; }
 
 /* ── Results ─────────────────────────────────── */
 .summary { background: var(--violet); color: var(--on-violet); border-radius: 18px; padding: 28px; margin-bottom: 32px; }
-.summary h2 { color: #fff; }
+.summary h1, .summary h2 { color: #fff; }
 .summary .eyebrow { color: var(--on-violet-eyebrow); }
 .sum-big { font-size: 21px; margin: 0 0 .35em; }
 .sum-big b { font-family: var(--font-display); color: #fff; }
@@ -205,7 +207,8 @@ input[type=number] { -moz-appearance: textfield; }
 .help-card { background: var(--tint); border-radius: 14px; padding: 18px 20px; border-left: 4px solid var(--green); }
 .help-card h3 { margin-bottom: .25em; }
 .help-card p { margin-bottom: .6em; font-size: 16px; }
-.help-actions { display: flex; gap: 16px; flex-wrap: wrap; font-family: var(--font-label); font-weight: 600; font-size: 15px; }
+.help-actions { display: flex; gap: 4px 16px; flex-wrap: wrap; font-family: var(--font-label); font-weight: 600; font-size: 15px; }
+.help-actions a { display: inline-flex; align-items: center; min-height: 44px; }
 .help-card.org { background: var(--tint-light); border-left-color: var(--rule); }
 .orgs-head { margin-top: 28px; }
 
@@ -247,7 +250,7 @@ dialog::backdrop { background: rgba(38,38,79,.5); }
   body { font-size: 11pt; }
   .site-header, .no-print, .nav, .skip, .progress, dialog, .preview, .info { display: none !important; }
   .summary { background: none; color: #000; border: 2px solid #000; padding: 14px; }
-  .summary h2, .sum-big b, .summary .eyebrow { color: #000; }
+  .summary h1, .summary h2, .sum-big b, .summary .eyebrow { color: #000; }
   .week-panel { display: block !important; break-inside: avoid; }
   .print-only { display: block; font-weight: 700; margin: 12px 0 0; }
   .meal-pick { text-decoration: none; }
@@ -364,3 +367,9 @@ dialog::backdrop { background: rgba(38,38,79,.5); }
 .outcome-q { font-family: var(--font-display); font-weight: 600; font-size: 19px; color: var(--indigo-ink); margin: 0 0 10px; }
 .outcome-q[role=status] { margin: 0; font-size: 17px; }
 .outcome-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Phase 6 accessibility: tap targets of at least 24px (WCAG 2.5.8), 44px where we can */
+input[type=checkbox] { width: 24px; height: 24px; accent-color: var(--violet); }
+.chip { min-width: 48px; justify-content: center; }
+/* Keep a focused control clear of the sticky button bar (WCAG 2.4.11) */
+html { scroll-padding-bottom: 110px; }

@@ -92,6 +92,7 @@ function render() {
       </span>
     </div>
 
+    <h1 class="sr-only">Make It Stretch admin</h1>
     <nav class="counts" aria-label="Summary">
       <a class="count ${d.pending.length ? 'alert' : ''}" href="#review"><b>${d.pending.length}</b><span>Needs review</span></a>
       <a class="count ${d.overdue.length ? 'alert' : ''}" href="#overdue"><b>${d.overdue.length}</b><span>Overdue to re-confirm</span></a>
@@ -300,7 +301,7 @@ async function renderReport() {
   if (!r || r.ok === false) { root.innerHTML = '<p class="error">Couldn’t build the report.</p><button class="btn-xs" id="back">Back</button>'; root.querySelector('#back').onclick = load; return; }
   const cell = v => (v === null || v === undefined ? `<span class="hidden-cell" title="Fewer than ${r.k} people">&lt;${r.k}</span>` : esc(v));
   const tbl = t => `<div class="rep-table"><h3>${esc(t.title)}</h3>${t.rows.length
-    ? `<table class="act-table"><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(([l, v]) => `<tr><td>${esc(l)}</td><td>${cell(v)}</td></tr>`).join('')}</tbody></table>`
+    ? `<table class="act-table"><thead><tr>${t.head.map(h => `<th scope="col">${h ? esc(h) : '<span class="sr-only">Measure</span>'}</th>`).join('')}</tr></thead><tbody>${t.rows.map(([l, v]) => `<tr><td>${esc(l)}</td><td>${cell(v)}</td></tr>`).join('')}</tbody></table>`
     : '<p class="empty">No data in this range.</p>'}${t.note ? `<p class="a-hint">${esc(t.note)}</p>` : ''}</div>`;
   root.innerHTML = `
     <div class="admin-bar no-print">
