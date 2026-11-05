@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Make It Stretch</title>
+  <meta name="description" content="A free tool that turns the grocery money you have into a shopping list and a week of real meals, and points you to free food nearby.">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/home.css">
+  <style>
+    .site-header .inner, .site-footer .inner { max-width: 1080px; }
+    main.landing { max-width: 760px; }
+    .top-nav { display: flex; align-items: center; gap: 18px; font: 600 15px var(--font-label); }
+    .top-nav a { color: var(--text); text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .btn-dark { display: inline-flex; align-items: center; gap: 8px; background: var(--text); color: #fff !important; border-radius: 999px; padding: 10px 18px; min-height: 44px; font: 600 15px var(--font-label); text-decoration: none; }
+    .btn-dark:hover { background: var(--forest); }
+    .btn-line { display: inline-flex; align-items: center; background: transparent; color: var(--text); border: 2px solid var(--text); border-radius: 999px; padding: 8px 18px; min-height: 44px; font: 600 15px var(--font-label); text-decoration: none; }
+    .btn-line:hover { background: #fff; }
+    .ctas { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    @media (max-width: 640px) { .top-nav .nav-link { display: none; } }
+    .band-card .btn-dark { margin-top: 14px; }
+    .partners { padding: 64px 0 8px; }
+    .partners-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+    .partners h2 { font-size: clamp(28px, 5vw, 40px); margin: 0; }
+    .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 24px; }
+    .pcard { border-radius: 18px; padding: 20px 20px 22px; border: 2px solid var(--text); display: flex; flex-direction: column; }
+    .pcard:nth-child(1) { background: var(--peach); }
+    .pcard:nth-child(2) { background: var(--sage); }
+    .pcard:nth-child(3) { background: #F9E3A6; }
+    .pcard .kicker { font: 600 12px var(--font-label); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; }
+    .pcard h3 { font-size: 21px; margin: 0 0 6px; }
+    .pcard p { font-size: 16px; margin: 0; }
+    .contact { margin-top: 28px; background: var(--cream-warm); border-radius: 18px; padding: 20px 22px; display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .contact p { margin: 0; font-size: 17px; }
+  </style>
+  <script type="module">
+    import { paintArt } from '/art.js';
+    paintArt();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="/" aria-label="Make It Stretch home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="var(--violet)"/>
+          <path d="M7 15h18a9 9 0 0 1-18 0Z" fill="var(--on-violet)"/>
+          <path d="M9 11c2-2 4 2 7 0s5 2 7 0" stroke="var(--green)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Make It Stretch</span>
+      </a>
+      <nav class="top-nav" aria-label="Main">
+        <a class="nav-link" href="#how-title">How it works</a>
+        <a class="nav-link" href="#partners-title">Partners</a>
+        <a class="btn-dark" href="https://austin.makeitstretch.org/">Open in Austin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="landing" tabindex="-1">
+    <section class="hero bleed" aria-labelledby="hero-title">
+      <div class="hero-text">
+        <p class="pill">Free · No sign-up · No ads</p>
+        <h1 id="hero-title">Make your grocery money <em class="accent">stretch</em>.</h1>
+        <p class="hero-blurb">Make It Stretch turns the grocery money you have into a shopping list and a week of real meals. Got a food box instead? Tap what’s in it and see what you can cook. It also points you to free food and benefits near you, in the language you speak at home.</p>
+        <div class="ctas">
+          <a class="btn-dark" href="https://austin.makeitstretch.org/">Use it in Austin <span aria-hidden="true">→</span></a>
+          <a class="btn-line" href="#partners-title">Bring it to your community</a>
+        </div>
+      </div>
+      <div class="collage" aria-hidden="true">
+        <div class="tile t1"><span data-art="bag"></span><span class="tag">Shopping list</span></div>
+        <div class="tile t2"><span data-art="pot"></span><span class="tag">A week of meals</span></div>
+        <div class="tile t3"><span data-art="pin"></span><span class="tag">Free food nearby</span></div>
+        <span class="spark s1" data-art="sparkle"></span><span class="spark s2" data-art="sparkle"></span><span class="spark s3" data-art="sparkle"></span>
+      </div>
+    </section>
+
+    <section class="how bleed" aria-labelledby="how-title">
+      <h2 id="how-title">How it <em class="accent">works</em></h2>
+      <ol class="how-grid">
+        <li><div class="how-art" data-art="coins" aria-hidden="true"></div><h3>Tell us your budget</h3><p>Money for groceries, how many days, how many people. Just taps.</p></li>
+        <li><div class="how-art" data-art="list" aria-hidden="true"></div><h3>Get your shopping list</h3><p>Low-cost foods that fill you up, priced for your area.</p></li>
+        <li><div class="how-art" data-art="pot" aria-hidden="true"></div><h3>Cook a week of meals</h3><p>Simple recipes from your list. Swap any meal you don’t like.</p></li>
+        <li><div class="how-art" data-art="pin" aria-hidden="true"></div><h3>Find free food nearby</h3><p>Food pantries, and benefits like SNAP and WIC, close to your ZIP code.</p></li>
+      </ol>
+    </section>
+
+    <section class="band bleed-full" aria-labelledby="band-title" style="margin-bottom:0">
+      <div class="band-inner">
+        <div>
+          <p class="pill">Why it matters</p>
+          <h2 id="band-title">Less to figure out when money is <em class="accent">tight</em></h2>
+          <p>When every dollar counts, every choice takes work: what to buy, what it makes, whether it lasts the week. Make It Stretch does the math, so people can get to dinner.</p>
+          <ul class="promises">
+            <li>No account, no names, no ads</li>
+            <li>Works on any phone, in English, Spanish, Vietnamese and Chinese</li>
+            <li>Cities get aggregated reports that never identify anyone</li>
+          </ul>
+        </div>
+        <div class="band-card">
+          <div class="band-art" aria-hidden="true" data-art="box"></div>
+          <b>Live in Austin, Texas</b>
+          <p>Local prices, local food sites, and help with SNAP and WIC.</p>
+          <a class="btn-dark" href="https://austin.makeitstretch.org/">Open Make It Stretch Austin</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="partners bleed" aria-labelledby="partners-title">
+      <div class="partners-head">
+        <div>
+          <p class="pill">Working together</p>
+          <h2 id="partners-title">Bring it to your <em class="accent">community</em></h2>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="pcard">
+          <p class="kicker">Food banks and pantries</p>
+          <h3>List your site for free</h3>
+          <p>People see your hours, ID rules and languages when they look for free food near their ZIP code.</p>
+        </article>
+        <article class="pcard">
+          <p class="kicker">Libraries and community groups</p>
+          <h3>Share a link or a QR code</h3>
+          <p>Hand it out with food boxes, at the front desk, or on a flyer. It works on any phone.</p>
+        </article>
+        <article class="pcard">
+          <p class="kicker">Cities and counties</p>
+          <h3>Set it up for your city</h3>
+          <p>Your local prices, local help and languages, plus reports organized around your own food plan.</p>
+        </article>
+      </div>
+      <div class="contact">
+        <p>Want to partner or bring Make It Stretch to your city?</p>
+        <a class="btn-dark" href="mailto:getdealtin.hq@gmail.com?subject=Make%20It%20Stretch">Email us</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="inner">
+      <p>No account. No ads. We count anonymous activity to improve this tool.</p>
+      <p class="footer-links"><a href="/privacy">Privacy policy</a></p>
+      <p>Made by Margin Ventures LLC. An independent tool, not an official government website.</p>
+    </div>
+  </footer>
+</body>
+</html>

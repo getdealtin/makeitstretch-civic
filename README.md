@@ -143,4 +143,6 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
       Report is multi-city: shared measures in `server/report.js` (METRICS); each city's card can set
       `report: { title, labels, sections: [{ goal, intro, metrics }] }` (Austin maps to its Food Plan
       goals), otherwise the neutral DEFAULT_FRAMEWORK is used. Resources carry `role: 'benefits' | 'food_help'`.
+- [x] Home redesign (Nov 5): warm illustrated start screen (hero + two doors, how it works, green band) in all
+      four languages; makeitstretch.org landing page (`public/landing.html`, served for the bare domain by host)
 - [ ] Phase 6: full accessibility audit + offline packet

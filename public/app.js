@@ -4,6 +4,7 @@
 // after the page loads. City identity comes from /api/config; strings from /i18n.
 
 import en from './i18n/en.js';
+import { ART } from './art.js';
 import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
@@ -18,6 +19,8 @@ import {
 let S = en;   // UI strings for the current language
 let D = {};   // data translations: foods, tips, ingredient words, recipes
 let lang = 'en';
+/** Escape, then show *word* as the accent word (headlines). */
+const accent = s => esc(s).replace(/\*([^*]+)\*/g, '<em class="accent">$1</em>');
 const t = (key, vars = {}) => (S[key] ?? en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 // Display-only translations. The engine always works in English (ids and titles),
 // so a plan is identical in every language and links work across languages.
@@ -204,17 +207,51 @@ function renderIntro() {
       </ul>
       ${saved.length > SAVED_SHOWN ? `<button class="saved-more" id="saved-more" aria-expanded="false">${esc(t('saved_show_all', { n: saved.length }))}</button>` : ''}
     </section>` : ''}
-    <section class="intro">
-      ${city.place ? `<p class="eyebrow">${esc(city.place)}</p>` : ''}
-      <h1 tabindex="-1" id="intro-title">${esc(t('intro_title'))}</h1>
-      <p>${esc(t('intro_body'))}</p>
-      <div class="doors">
-        <button class="door" id="door-budget"><b>${esc(t('door_budget'))}</b><span>${esc(t('door_budget_sub'))}</span></button>
-        <button class="door" id="door-box"><b>${esc(t('door_box'))}</b><span>${esc(t('door_box_sub'))}</span></button>
+    <section class="hero bleed" aria-labelledby="intro-title">
+      <div class="hero-text">
+        <p class="pill">${esc(t('hero_eyebrow'))}</p>
+        <h1 tabindex="-1" id="intro-title">${accent(t('intro_title'))}</h1>
+        <p class="hero-blurb">${esc(t('intro_body'))}</p>
+        <div class="doors">
+          <button class="door" id="door-budget"><b>${esc(t('door_budget'))}</b><span>${esc(t('door_budget_sub'))}</span></button>
+          <button class="door" id="door-box"><b>${esc(t('door_box'))}</b><span>${esc(t('door_box_sub'))}</span></button>
+        </div>
+      </div>
+      <div class="collage" aria-hidden="true">
+        <div class="tile t1">${ART.bag}<span class="tag">${esc(t('tag_list'))}</span></div>
+        <div class="tile t2">${ART.pot}<span class="tag">${esc(t('tag_meals'))}</span></div>
+        <div class="tile t3">${ART.pin}<span class="tag">${esc(t('tag_near'))}</span></div>
+        <span class="spark s1">${ART.sparkle}</span><span class="spark s2">${ART.sparkle}</span><span class="spark s3">${ART.sparkle}</span>
+      </div>
+    </section>
+    <section class="how bleed" aria-labelledby="how-title">
+      <h2 id="how-title">${accent(t('how_title'))}</h2>
+      <ol class="how-grid">
+        ${[['coins', 1], ['list', 2], ['pot', 3], ['pin', 4]].map(([art, n]) => `<li>
+          <div class="how-art" aria-hidden="true">${ART[art]}</div>
+          <h3>${esc(t('how_' + n + '_t'))}</h3>
+          <p>${esc(t('how_' + n))}</p>
+        </li>`).join('')}
+      </ol>
+    </section>
+    <section class="band bleed-full" aria-labelledby="band-title">
+      <div class="band-inner">
+        <div>
+          <p class="pill">${esc(t('band_eyebrow'))}</p>
+          <h2 id="band-title">${accent(t('band_title'))}</h2>
+          <p>${esc(t('band_body'))}</p>
+          <ul class="promises"><li>${esc(t('band_p1'))}</li><li>${esc(t('band_p2'))}</li><li>${esc(t('band_p3'))}</li></ul>
+        </div>
+        <div class="band-card">
+          <div class="band-art" aria-hidden="true">${ART.box}</div>
+          <b>${esc(t('door_box'))}</b>
+          <p>${esc(t('door_box_sub'))}</p>
+          <button class="btn btn-primary btn-sm" id="band-box" style="margin-top:14px">${esc(t('band_box_btn'))}</button>
+        </div>
       </div>
     </section>`;
   app.querySelector('#door-budget').onclick = () => { answers = fresh(); go(0); };
-  app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
+  app.querySelector('#door-box').onclick = app.querySelector('#band-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
     const e = findSaved(store, saveKey(), b.dataset.open);
     if (!e || !openFromHash(e.hash, e.id, 'saved')) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }

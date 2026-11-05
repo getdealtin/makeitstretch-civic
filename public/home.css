@@ -1,0 +1,105 @@
+/* Home screen look, shared by the Austin start screen and the makeitstretch.org landing page:
+   warm cream, a serif headline with one accent word, pill labels, color tiles with
+   illustrations, a deep green band. Colors that sit under text are checked for WCAG AA. */
+:root {
+  --clay: #A63E28;        /* accent text: 5.6:1 on cream */
+  --mustard: #F2C14E;
+  --sage: #D8EAC4;
+  --lilac: #DDD8F8;
+  --peach: #F8DCCB;
+  --forest: #1F4A39;
+  --on-forest: #F3EFE4;
+  --on-forest-accent: #F5CF6B;
+  --cream-warm: #FBF6EE;
+}
+body { overflow-x: clip; }
+
+/* Break out of the 760px column (home screen only). */
+.bleed { margin-left: calc(50% - min(540px, 50vw - 16px)); margin-right: calc(50% - min(540px, 50vw - 16px)); }
+.bleed-full { margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+
+.pill {
+  display: inline-block; font: 600 11px var(--font-label); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--text); border: 1.5px solid currentColor; border-radius: 999px; padding: 4px 12px; margin: 0 0 18px;
+}
+.accent {
+  color: var(--clay); font-style: normal;
+  text-decoration: underline wavy var(--mustard); text-decoration-thickness: 3px; text-underline-offset: .18em;
+  text-decoration-skip-ink: none;
+}
+
+/* ── Hero ─────────────────────────────── */
+.hero {
+  position: relative; background: var(--cream-warm); border-radius: 28px; padding: 36px 24px 28px;
+  display: grid; gap: 28px; align-items: center;
+}
+@media (min-width: 860px) { .hero { grid-template-columns: 1.1fr .9fr; padding: 52px 48px; } }
+.hero h1 { font-size: clamp(36px, 7vw, 60px); line-height: 1.05; letter-spacing: -.01em; margin-bottom: .35em; }
+.hero-blurb { font-size: 19px; max-width: 32em; color: var(--text); }
+.hero .doors { margin-top: 18px; }
+
+/* Collage: three tilted color tiles, each with a drawing and a tag. */
+.collage { position: relative; height: 300px; max-width: 420px; width: 100%; justify-self: center; }
+.tile { position: absolute; border-radius: 22px; border: 2.5px solid var(--text); display: grid; place-items: center; box-shadow: 6px 6px 0 rgba(43,43,51,.12); }
+.tile svg { width: 72%; height: 72%; }
+.tile.t1 { left: 0; top: 30px; width: 46%; aspect-ratio: 1; background: var(--mustard); transform: rotate(-5deg); }
+.tile.t2 { right: 0; top: 0; width: 42%; aspect-ratio: 1; background: var(--sage); transform: rotate(4deg); }
+.tile.t3 { left: 34%; bottom: 0; width: 40%; aspect-ratio: 1; background: var(--lilac); transform: rotate(-2deg); }
+.tag {
+  position: absolute; white-space: nowrap; font: 600 13px var(--font-label); color: var(--text);
+  background: #fff; border: 2px solid var(--text); border-radius: 8px; padding: 3px 9px;
+}
+.t1 .tag { left: -6px; bottom: -14px; background: var(--peach); }
+.t2 .tag { right: -8px; top: -14px; }
+.t3 .tag { left: 50%; bottom: -14px; transform: translateX(-50%); background: #fff; }
+.spark { position: absolute; width: 22px; height: 22px; }
+.spark svg { width: 100%; height: 100%; }
+.spark.s1 { left: 48%; top: 6px; fill: var(--clay); }
+.spark.s2 { left: 2%; bottom: 40px; fill: #7B6FD6; width: 18px; height: 18px; }
+.spark.s3 { right: 6%; bottom: 60px; fill: #7FB069; }
+@media (max-width: 859px) {
+  .collage { height: 210px; max-width: 340px; }
+  .tag { font-size: 12px; }
+}
+
+/* ── How it works ─────────────────────── */
+.how { text-align: center; padding: 56px 8px 24px; }
+.how h2 { font-size: clamp(28px, 5vw, 40px); }
+.how-grid { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 28px 20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.how-grid li { display: flex; flex-direction: column; align-items: center; }
+.how-art { width: 112px; height: 112px; border-radius: 50%; display: grid; place-items: center; border: 2.5px solid var(--text); margin-bottom: 14px; }
+.how-art svg { width: 76%; height: 76%; }
+.how-grid li:nth-child(1) .how-art { background: var(--peach); }
+.how-grid li:nth-child(2) .how-art { background: var(--sage); }
+.how-grid li:nth-child(3) .how-art { background: var(--mustard); }
+.how-grid li:nth-child(4) .how-art { background: var(--lilac); }
+.how-grid h3 { font-size: 19px; margin: 0 0 .3em; text-decoration: underline 2px var(--clay); text-underline-offset: 5px; }
+.how-grid p { font-size: 16px; color: var(--text-muted); max-width: 17em; margin: 0; }
+
+/* ── Deep green band ──────────────────── */
+.band { background: var(--forest); color: var(--on-forest); margin-top: 48px; margin-bottom: -80px; }
+.band-inner { max-width: 1080px; margin: 0 auto; padding: 56px 24px; display: grid; gap: 32px; align-items: center; }
+@media (min-width: 860px) { .band-inner { grid-template-columns: 1.2fr .8fr; padding: 72px 48px; } }
+.band .pill { color: var(--on-forest); }
+.band h2 { color: #fff; font-size: clamp(28px, 5vw, 42px); line-height: 1.1; }
+.band .accent { color: var(--on-forest-accent); text-decoration-color: #7FB069; }
+.band p { font-size: 18px; max-width: 32em; }
+.promises { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 10px; }
+.promises li { display: flex; gap: 10px; align-items: center; font: 600 16px var(--font-label); }
+.promises li::before { content: ''; width: 22px; height: 22px; flex: none; border-radius: 50%; background: var(--on-forest-accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cpath d='M6 11.5l3.2 3.2L16 8' stroke='%231F4A39' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat; }
+.band-card { background: var(--cream-warm); color: var(--text); border-radius: 22px; padding: 22px; border: 2.5px solid #000; max-width: 360px; justify-self: center; width: 100%; }
+.band-card .band-art { background: var(--peach); border-radius: 14px; height: 170px; display: grid; place-items: center; }
+.band-card .band-art svg { height: 82%; }
+.band-card b { display: block; font-family: var(--font-display); font-size: 20px; color: var(--indigo-ink); margin: 14px 0 4px; }
+.band-card p { font-size: 15px; margin: 0; color: var(--text-muted); }
+
+@media print { .collage, .how, .band { display: none; } }
+.band .pill { font-size: 11px; margin-bottom: 18px; }
+@media (max-width: 559px) {
+  .how { padding-top: 40px; }
+  .how-grid { grid-template-columns: 1fr 1fr; gap: 24px 14px; }
+  .how-art { width: 84px; height: 84px; }
+  .how-grid h3 { font-size: 17px; }
+  .how-grid p { font-size: 15px; }
+}
+.t1 .tag { top: -14px; bottom: auto; }

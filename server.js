@@ -191,6 +191,14 @@ app.locals.setDb = d => { db = d; };
 mountDirectory(app, { getDb: () => db });
 mountEvents(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
+// makeitstretch.org (the bare domain) shows the project landing page; city subdomains show
+// their tool. Outside production, /?site=landing previews it.
+const LANDING_HOSTS = ['makeitstretch.org', 'www.makeitstretch.org'];
+app.get('/', (req, res, next) => {
+  const host = (req.headers.host || '').toLowerCase().split(':')[0];
+  if (LANDING_HOSTS.includes(host) || (ALLOW_CITY_OVERRIDE && req.query.site === 'landing')) return page('landing.html')(req, res);
+  next();
+});
 app.get('/join/:token', page('provider.html'));
 app.get('/add-site', page('provider.html'));
 app.get('/admin', page('admin.html'));
