@@ -15,6 +15,7 @@ const SOURCE = { invite: 'Invite link', public: 'Public form', admin: 'Added by 
 
 let city = new URLSearchParams(location.search).get('city') || '';
 let data = null;
+let days = 30;
 
 async function api(path, body) {
   const r = await fetch('/api/admin' + path + (body ? '' : (path.includes('?') ? '&' : '?') + 'city=' + encodeURIComponent(city)), body
@@ -30,7 +31,7 @@ function toast(msg) {
 }
 
 async function load() {
-  const r = await api('/summary');
+  const r = await api('/summary?days=' + days);
   if (r.status === 401) return renderLogin();
   if (r.status === 503) {
     root.innerHTML = `<div class="login"><h1>Admin isn't set up yet</h1><p>Add an <code>ADMIN_KEY</code> environment variable (your admin password) to the Render service, then reload.</p></div>`;
@@ -153,10 +154,7 @@ function render() {
             : `<button class="btn-xs go" data-review="${esc(r.lang)}" data-to="approved">Mark reviewed…</button>`}</span></li>`).join('')}</ul>
     </section>
 
-    <section class="a-section" id="activity" aria-labelledby="h-act">
-      <h2 id="h-act">Activity</h2>
-      <p class="empty">Visits, plans built and food-box use will show here once visitor tracking is turned on (Phase 4, with the privacy policy update). Nothing is being collected yet.</p>
-    </section>
+    ${activityHtml(d.activity)}
 
     <dialog id="edit" aria-labelledby="edit-title"><form class="dialog-body" id="edit-form" method="dialog"></form></dialog>`;
   wire();
@@ -164,6 +162,7 @@ function render() {
 
 function wire() {
   root.querySelector('#city').onchange = e => { city = e.target.value; history.replaceState(null, '', '?city=' + city); load(); };
+  root.querySelectorAll('[data-days]').forEach(b => b.addEventListener('click', () => { days = Number(b.dataset.days); load(); }));
   root.querySelector('#logout').onclick = async () => { await api('/logout', {}); renderLogin(); };
 
   root.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', async () => {
@@ -211,6 +210,68 @@ function wireCopy(scope) {
     try { await navigator.clipboard.writeText(b.dataset.copy); toast('Copied'); }
     catch { toast('Select the text and copy it'); }
   }));
+}
+
+// ── Activity (Phase 4). The operator's private view: every zip and number shown.
+const money = n => '$' + Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
+const pct = (n, d) => (d ? Math.round((n / d) * 100) + '%' : '—');
+const PRETTY = {
+  step: { budget: 'Budget', days: 'How long', people: 'People', zip: 'Zip', prefs: 'Preferences' },
+  store: { full: 'Grocery store', dollar: 'Dollar store', corner: 'Corner store' },
+  group: { cultural: 'Culture or religion', medical: 'Health', practical: 'Other reasons' },
+  how: { save: 'Saved on phone', text: 'Texted', email: 'Emailed', copy: 'Link copied' },
+  source: { saved: 'Reopened a saved plan', link: 'Opened a shared link' },
+};
+const table = (rows, head = ['', 'Count'], fmt = v => v) => rows.length
+  ? `<table class="act-table"><thead><tr>${head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(([k, v]) => `<tr><td>${esc(fmt(k))}</td><td>${esc(v)}</td></tr>`).join('')}</tbody></table>`
+  : '<p class="empty">None yet.</p>';
+
+function activityHtml(a) {
+  const head = `<h2 id="h-act">Activity <small>last ${days} days</small></h2>
+    <div class="actions" role="group" aria-label="Date range" style="margin:8px 0 14px">${[7, 30, 90, 365].map(n =>
+      `<button class="btn-xs ${n === days ? 'go' : ''}" data-days="${n}" aria-pressed="${n === days}">${n === 365 ? '1 year' : n + ' days'}</button>`).join('')}</div>`;
+  if (!a?.available) return `<section class="a-section" id="activity" aria-labelledby="h-act">${head}
+    <p class="empty">${a?.error ? 'Couldn’t load activity. Check the database connection.' : 'No activity yet.'}</p></section>`;
+  if (!a.events) return `<section class="a-section" id="activity" aria-labelledby="h-act">${head}<p class="empty">No activity in this range yet.</p></section>`;
+  const steps = a.steps.map(([s, n]) => [s, `${n} (${pct(n, a.visits)} of visits)`]);
+  const cu = a.cant_use;
+  return `<section class="a-section" id="activity" aria-labelledby="h-act">${head}
+    <div class="counts">
+      <div class="count"><b>${a.visits}</b><span>Visits</span></div>
+      <div class="count"><b>${a.plans}</b><span>Grocery plans built</span></div>
+      <div class="count"><b>${a.boxes}</b><span>Food boxes</span></div>
+      <div class="count"><b>${money(a.budget_total)}</b><span>Grocery dollars planned</span></div>
+      <div class="count"><b>${money(a.box_value_total)}</b><span>Food-box value (store prices)</span></div>
+      <div class="count"><b>${Object.values(a.returns).reduce((x, y) => x + y, 0)}</b><span>Return visits (saved plan or link)</span></div>
+    </div>
+    <div class="act-grid">
+      <div><h3>Visits per day</h3>${table(a.per_day, ['Day', 'Visits'])}</div>
+      <div><h3>Where people stop</h3>${table(steps, ['Question finished', 'Visits'], k => PRETTY.step[k] || k)}</div>
+      <div><h3>Budget pressure</h3>${table([
+        ['Under $5.36/person/day (below Thrifty Food Plan)', a.pressure.under_tfp],
+        ['$5.36–$6.22 (between TFP and SNAP)', a.pressure.tfp_to_snap],
+        ['$6.22 or more (at or above SNAP)', a.pressure.over_snap]], ['Per person per day', 'Plans'])}</div>
+      <div><h3>Shortfall routing</h3>${table([
+        ['Plans below the SNAP benchmark', a.shortfall.sessions],
+        ['…then tapped SNAP or WIC', a.shortfall.routed_benefits],
+        ['…then tapped food bank or 2-1-1', a.shortfall.routed_food]], ['', 'Visits'])}
+        <p class="a-hint">Taps on a link, not applications: the tool can't see who applies.</p></div>
+      <div><h3>Top zips</h3>${table(a.zips, ['Zip', 'Plans, boxes or zip added'])}</div>
+      <div><h3>Where people shop</h3>${table(Object.entries(a.store), ['Store type', 'Plans'], k => PRETTY.store[k] || k)}
+        <h4>By zip</h4>${table(a.store_by_zip, ['Zip · store', 'Plans'], k => k.replace(/ · (full|dollar|corner)$/, (m, x) => ' · ' + PRETTY.store[x]))}</div>
+      <div><h3>Can't use from food boxes</h3>
+        <p class="a-hint">${cu.reports} reports out of ${cu.box_items} box items (${pct(cu.reports, cu.box_items)}). Recipient-reported; a proxy for Food Plan Goal 4, not a storage percentage.</p>
+        ${table(Object.entries(cu.by_group), ['Reason group', 'Reports'], k => PRETTY.group[k] || k)}
+        <h4>By reason</h4>${table(cu.by_reason, ['Reason', 'Reports'])}
+        <h4>By item</h4>${table(cu.by_item, ['Item', 'Reports'])}</div>
+      <div><h3>Dietary needs</h3>${table(a.avoid, ['Can’t eat', 'Plans and boxes'])}
+        <h4>Food style</h4>${table(a.cuisine, ['Cuisine', 'Plans'])}</div>
+      <div><h3>Help and food sites tapped</h3>${table(a.help, ['Resource or site id', 'Taps'])}</div>
+      <div><h3>Languages</h3>${table(Object.entries(a.languages), ['Language', 'Visits'])}
+        <h4>Plans kept</h4>${table(Object.entries(a.kept), ['How', 'Count'], k => PRETTY.how[k] || k)}
+        <h4>Return visits</h4>${table(Object.entries(a.returns), ['How', 'Count'], k => PRETTY.source[k] || k)}</div>
+    </div>
+  </section>`;
 }
 
 const findP = id => [...data.pending, ...data.overdue, ...data.approved, ...data.hidden].find(p => p.id === id);

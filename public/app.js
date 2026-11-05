@@ -31,6 +31,26 @@ const rSteps = r => D.recipes?.[r.id]?.instructions || r.instructions;
 const cityText = key => city?.i18n?.[lang]?.[key] || city?.[key];
 const resText = (r, key) => city?.i18n?.[lang]?.resources?.[r.id]?.[key] || r[key];
 
+// ── Anonymous activity (Phase 4; see /privacy) ──────────────────
+// A random token for this visit only: kept in memory, gone when the tab closes, never stored on the device.
+const SESSION = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join('');
+function track(event, data = {}) {
+  try {
+    fetch('/api/event' + qs, {
+      method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event, session_id: SESSION, lang, data }),
+    }).catch(() => {});
+  } catch { /* never let counting break the page */ }
+}
+// What the next results render should record: a new build, a reopened plan, or nothing (re-render).
+let logNext = null;
+// "Can't use this" reasons, grouped as the Food Plan's Goal 4 indicators split them (must match server/events.js).
+const CU_REASONS = {
+  cultural: ['halal', 'kosher', 'unfamiliar'],
+  medical: ['diabetic', 'low_sodium', 'allergy'],
+  practical: ['no_kitchen', 'dont_know_how', 'spoiled'],
+};
+
 // Re-renders whatever is on screen (used when the language changes).
 let current = () => renderIntro();
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -64,7 +84,7 @@ const PREFS = [
   { key: 'leftover', single: true, options: ['yes', 'sometimes', 'no'] },
   { key: 'store', single: true, options: ['full', 'dollar', 'corner'] },
   { key: 'cuisine', none: 'any', options: ['american', 'latin', 'asian', 'southern', 'mediterranean'] },
-  { key: 'avoid', none: 'none', options: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'] },
+  { key: 'avoid', none: 'none', options: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'] },
   { key: 'have', none: 'none', options: ['rice', 'beans', 'oats', 'eggs', 'potatoes', 'bread', 'pasta', 'oil'] },
 ];
 
@@ -98,10 +118,11 @@ async function boot() {
   if (qs) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + qs;
 
   getRecipes(); getPrices(null); // warm up in the background
-  if (!openFromHash(location.hash)) renderIntro();
+  track('page_view');
+  if (!openFromHash(location.hash, null, 'link')) renderIntro();
   // A different plan link opened in this same tab only changes the #part: no reload happens.
   // (Our own updates use replaceState, which doesn't fire this.)
-  window.addEventListener('hashchange', () => { if (!openFromHash(location.hash)) renderIntro(); });
+  window.addEventListener('hashchange', () => { if (!openFromHash(location.hash, null, 'link')) renderIntro(); });
 }
 
 async function setLang(code, { render = true } = {}) {
@@ -125,6 +146,7 @@ function renderLangSwitch(available) {
   nav.hidden = false;
   nav.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
     if (b.dataset.lang === lang) return;
+    track('language_changed', { from: lang, to: b.dataset.lang });
     rememberLang(b.dataset.lang);
     setLang(b.dataset.lang);
   }));
@@ -139,10 +161,11 @@ let openedSavedId = null;
 const SAVED_SHOWN = 3; // most recent shown on the start screen; the rest behind a visible "Show all" button
 
 /** Rebuild a plan or box from a "#p=…" / "#b=…" link. */
-function openFromHash(hash, savedId = null) {
+function openFromHash(hash, savedId = null, source = null) {
   const hit = readHash(hash);
   if (!hit) return false;
   openedSavedId = savedId;
+  logNext = source ? { reopened: source } : null;
   if (hit.kind === 'plan') { answers = { ...fresh(), ...hit.state.answers }; showResults(hit.state); }
   else { box = hit.state; renderBoxResults(); }
   return true;
@@ -189,7 +212,7 @@ function renderIntro() {
   app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
     const e = findSaved(store, saveKey(), b.dataset.open);
-    if (!e || !openFromHash(e.hash, e.id)) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }
+    if (!e || !openFromHash(e.hash, e.id, 'saved')) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }
   }));
   app.querySelector('#saved-more')?.addEventListener('click', e => {
     app.querySelectorAll('.saved-item[hidden]').forEach(li => { li.hidden = false; });
@@ -233,10 +256,11 @@ function go(i) {
     e.preventDefault();
     const err = STEP_SAVE[name](form);
     if (err) { form.querySelector('#err').textContent = t(err); return; }
-    i === STEPS.length - 1 ? showResults() : go(i + 1);
+    track('step_completed', { step: name });
+    if (i === STEPS.length - 1) { logNext = { built: true }; showResults(); } else go(i + 1);
   };
   form.querySelector('#back').addEventListener('click', () => (i === 0 ? renderIntro() : go(i - 1)));
-  form.querySelector('#skip')?.addEventListener('click', () => { answers.zip = null; go(i + 1); });
+  form.querySelector('#skip')?.addEventListener('click', () => { answers.zip = null; track('step_completed', { step: name }); go(i + 1); });
   (form.querySelector('#budget, #zip') || form.querySelector('h2')).focus();
   refresh();
 }
@@ -306,7 +330,7 @@ const STEP_VIEWS = {
       const opts = [...(g.none ? [g.none] : []), ...g.options];
       return `<fieldset class="pref-group"><legend>${esc(t('pref_' + g.key))}</legend><div class="chips">
         ${opts.map(v => `<button type="button" class="chip" data-pref="${g.key}" data-value="${v}" aria-pressed="${prefOn(g, v)}">${esc(t(g.key + '_' + v))}</button>`).join('')}
-      </div></fieldset>`;
+      </div>${g.key === 'avoid' ? `<p class="fh avoid-note">${esc(t('avoid_note'))}</p>` : ''}</fieldset>`;
     }).join('')}`,
 };
 
@@ -388,8 +412,8 @@ function helpSection() {
     <article class="help-card ${r.audience === 'organizations' ? 'org' : ''}">
       <h3>${esc(resText(r, 'name'))}</h3><p>${esc(resText(r, 'description'))}</p>
       <div class="help-actions">
-        ${r.phone ? `<a href="tel:${esc(r.phone)}">${esc(t('call', { phone: r.phone }))}</a>` : ''}
-        ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(t('visit'))}<span class="sr-only"> (${esc(resText(r, 'name'))})</span></a>` : ''}
+        ${r.phone ? `<a href="tel:${esc(r.phone)}" data-track="resource" data-target="${esc(r.id)}" data-action="call">${esc(t('call', { phone: r.phone }))}</a>` : ''}
+        ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener" data-track="resource" data-target="${esc(r.id)}" data-action="website">${esc(t('visit'))}<span class="sr-only"> (${esc(resText(r, 'name'))})</span></a>` : ''}
       </div>
     </article>`;
   if (!residents().length) return '';
@@ -429,6 +453,7 @@ function renderSitesZip(box, zip) {
     const v = f.querySelector('input').value.trim();
     if (!/^\d{5}$/.test(v)) { f.querySelector('.error').textContent = t('sites_zip_err'); return; }
     siteZip = v;
+    track('zip_added_later', { zip: v });
     await loadSites(v);
     box.querySelector('.sites-sorted')?.setAttribute('tabindex', '-1');
     box.querySelector('.sites-sorted')?.focus();
@@ -463,9 +488,9 @@ async function loadSites(zip) {
       ${langs.length ? `<p>${esc(t('speaks', { langs: langs.join(t('list_sep')) }))}</p>` : ''}
       ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
       <div class="help-actions">
-        ${where ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + where)}" target="_blank" rel="noopener">${esc(t('directions'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
-        ${p.phone ? `<a href="tel:${esc(p.phone)}">${esc(t('call', { phone: p.phone }))}</a>` : ''}
-        ${p.website ? `<a href="${esc(p.website)}" target="_blank" rel="noopener">${esc(t('visit'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
+        ${where ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + where)}" target="_blank" rel="noopener" data-track="site" data-target="${esc(p.id)}" data-action="directions">${esc(t('directions'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
+        ${p.phone ? `<a href="tel:${esc(p.phone)}" data-track="site" data-target="${esc(p.id)}" data-action="call">${esc(t('call', { phone: p.phone }))}</a>` : ''}
+        ${p.website ? `<a href="${esc(p.website)}" target="_blank" rel="noopener" data-track="site" data-target="${esc(p.id)}" data-action="website">${esc(t('visit'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
       </div>
       ${p.confirmed_at ? `<p class="site-confirmed">${esc(t('confirmed_on', { date: month(p.confirmed_at) }))}</p>` : ''}
     </article>`;
@@ -565,6 +590,13 @@ function renderResults(plan, restore = {}) {
   focusTop('#res-title');
   wireJumps();
   loadSites(answers.zip || siteZip);
+  if (logNext?.built) track('plan_built', {
+    budget: input.budget, days: input.days, people: input.people, zip: answers.zip, store: answers.store,
+    cuisine: input.cuisine, avoid: input.avoid, have: input.have, leftover: input.leftover,
+    pppd: s.pppd, cal_pct: s.calPct, items: s.cart.length, spent: s.spent,
+  });
+  else if (logNext?.reopened) track('plan_reopened', { source: logNext.reopened, kind: 'plan' });
+  logNext = null;
 
   // Keep this plan: the link, the saved copy and the text/email bodies all follow the live state.
   const title = t('res_title', { days: input.days });
@@ -610,11 +642,13 @@ function renderResults(plan, restore = {}) {
     const [w, d, sl] = b.dataset.key.split('-');
     const opts = weeks[w][d][sl];
     const ci = choice[b.dataset.key] || 0;
+    if (!justSwapped) track('recipe_opened', { recipe: opts[ci].id, flow: 'plan' });
     openRecipe(opts[ci], opts[1 - ci] ? {
       justSwapped,
       alt: opts[1 - ci],
       onSwap: () => {
         choice[b.dataset.key] = 1 - ci;
+        track('meal_swapped', { recipe: opts[1 - ci].id });
         b.textContent = rTitle(opts[1 - ci]);
         app.querySelector('#announce').textContent = t('swapped', { title: rTitle(opts[1 - ci]) });
         sync();
@@ -670,6 +704,7 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
     } else {
       const r = addSaved(store, key, { kind, hash: hash(), title: savedTitle, detail });
       if (r) {
+        track('plan_kept', { how: 'save', kind });
         savedId = r.id;
         status.textContent = t('keep_saved_msg') + (r.dropped ? ' ' + t('keep_dropped', { max: 12 }) : '');
       } else status.textContent = t('keep_save_failed');
@@ -678,9 +713,12 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
   };
   app.querySelector('#k-copy').onclick = async () => {
     const url = linkFor(hash());
+    track('plan_kept', { how: 'copy', kind });
     try { await navigator.clipboard.writeText(url); status.textContent = t('keep_copied'); }
     catch { status.innerHTML = `${esc(t('keep_copy_manual'))} <input class="keep-url" readonly value="${esc(url)}" aria-label="${esc(t('keep_copy'))}">`; status.querySelector('input').select(); }
   };
+  app.querySelector('#k-text').addEventListener('click', () => track('plan_kept', { how: 'text', kind }));
+  app.querySelector('#k-email').addEventListener('click', () => track('plan_kept', { how: 'email', kind }));
   sync(); paintSave();
   return sync;
 }
@@ -731,9 +769,9 @@ function renderBox() {
         ${g.items.map(id => `<button type="button" class="chip" data-item="${id}" aria-pressed="${box.items.includes(id)}">${esc(fName(id))}</button>`).join('')}
       </div></fieldset>`).join('')}
       <fieldset class="pref-group"><legend>${esc(t('pref_avoid'))}</legend><div class="chips">
-        ${['none', 'gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'].map(v => `<button type="button" class="chip" data-avoid="${v}"
+        ${['none', 'gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'].map(v => `<button type="button" class="chip" data-avoid="${v}"
           aria-pressed="${v === 'none' ? box.avoid.length === 0 : box.avoid.includes(v)}">${esc(t('avoid_' + v))}</button>`).join('')}
-      </div></fieldset>
+      </div><p class="fh avoid-note">${esc(t('avoid_note'))}</p></fieldset>
       <p class="error" id="err" role="alert"></p>
       <div class="nav sticky-go">
         <button type="button" class="btn btn-ghost" id="back">${esc(t('back'))}</button>
@@ -759,6 +797,7 @@ function renderBox() {
   f.onsubmit = e => {
     e.preventDefault();
     if (!box.items.length) { f.querySelector('#err').textContent = t('err_box'); return; }
+    logNext = { built: true };
     renderBoxResults();
   };
   focusTop('#q');
@@ -767,8 +806,13 @@ function renderBox() {
 async function renderBoxResults() {
   current = () => openFromHash(location.hash, openedSavedId);
   app.innerHTML = `<div class="loading" role="status"><div class="spinner" aria-hidden="true"></div>${esc(t('loading_data'))}</div>`;
-  let matches;
-  try { matches = matchBox(await getRecipes(), box.items, { avoid: box.avoid }); }
+  let matches, boxValue = 0;
+  try {
+    matches = matchBox(await getRecipes(), box.items, { avoid: box.avoid });
+    // What the box's items would cost at local prices: the "this box saved you $X" number.
+    const priced = await getPrices(regionFor(siteZip));
+    boxValue = +box.items.reduce((sum, id) => sum + (priced.prices[id] || 0), 0).toFixed(2);
+  }
   catch { app.innerHTML = `<p class="error" role="alert">${esc(t('error_plan'))}</p>`; return; }
   const byId = new Map(matches.map(m => [String(m.recipe.id), m]));
 
@@ -777,6 +821,7 @@ async function renderBoxResults() {
       <p class="eyebrow">${esc(t('door_box'))}</p>
       <h2 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h2>
       <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length }))}</p>
+      ${boxValue > 0 ? `<p class="sum-big box-value">${esc(t('box_value', { value: money(boxValue) }))}</p>` : ''}
       ${residents().length ? `<nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
         <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
     </section>
@@ -791,6 +836,19 @@ async function renderBoxResults() {
             ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</p>
         </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
     </section>
+    <section class="section cant-use no-print" aria-labelledby="h-cant">
+      <div class="section-head"><h2 id="h-cant">${esc(t('cu_title'))}</h2></div>
+      <p class="hint">${esc(t('cu_hint'))}</p>
+      <ul class="cu-list">${box.items.map(id => `
+        <li class="cu-row">
+          <label for="cu-${id}">${esc(fName(id))}</label>
+          <select id="cu-${id}" data-item="${id}">
+            <option value="">${esc(t('cu_none'))}</option>
+            ${Object.entries(CU_REASONS).map(([g, rs]) => `<optgroup label="${esc(t('cu_g_' + g))}">${rs.map(r => `<option value="${r}">${esc(t('cu_' + r))}</option>`).join('')}</optgroup>`).join('')}
+          </select>
+          <span class="cu-ok" aria-live="polite"></span>
+        </li>`).join('')}</ul>
+    </section>
     ${helpSection()}
     <div class="nav no-print">
       <button type="button" class="btn btn-ghost" id="edit">${esc(t('box_edit'))}</button>
@@ -802,8 +860,20 @@ async function renderBoxResults() {
   focusTop('#res-title');
   wireJumps();
   loadSites(siteZip);
+  if (logNext?.built) track('box_built', { items: box.items, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue });
+  else if (logNext?.reopened) track('plan_reopened', { source: logNext.reopened, kind: 'box' });
+  logNext = null;
+  // "Can't use this": one report per item per change (Food Plan Goal 4 cultural/medical proxy).
+  app.querySelectorAll('.cu-row select').forEach(sel => sel.addEventListener('change', () => {
+    const ok = sel.parentElement.querySelector('.cu-ok');
+    if (!sel.value) { ok.textContent = ''; return; }
+    track('cant_use', { item: sel.dataset.item, reason: sel.value });
+    ok.textContent = t('cu_thanks');
+  }));
   app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => {
-    const m = byId.get(b.dataset.id); openRecipe(m.recipe, { missing: m.missing });
+    const m = byId.get(b.dataset.id);
+    track('recipe_opened', { recipe: m.recipe.id, flow: 'box' });
+    openRecipe(m.recipe, { missing: m.missing });
   }));
   wireKeep({
     title: t('box_res_title'),
@@ -821,6 +891,12 @@ async function renderBoxResults() {
   app.querySelector('#print').onclick = () => window.print();
   app.querySelector('#to-budget').onclick = () => { answers = fresh(); go(0); };
 }
+
+// One listener for every help / food-site link on any page.
+app.addEventListener('click', e => {
+  const a = e.target.closest('a[data-track]');
+  if (a) track('help_clicked', { target: a.dataset.target, kind: a.dataset.track, action: a.dataset.action });
+});
 
 // Print every week, not just the one on screen.
 window.addEventListener('beforeprint', () => document.querySelectorAll('.week-panel').forEach(p => { p.dataset.wasHidden = p.hidden; p.hidden = false; }));

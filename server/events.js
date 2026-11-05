@@ -76,7 +76,7 @@ export function summarize(events) {
 
   // Visits per day (last 30 days present in the data)
   const perDay = count(by('page_view'), e => e.created_at.slice(0, 10));
-  const days = Object.keys(perDay).sort().slice(-30).map(d => [d, perDay[d]]);
+  const per_day = Object.keys(perDay).sort().slice(-30).map(d => [d, perDay[d]]);
 
   // Shortfall sessions: built a plan under the SNAP benchmark; of those, how many tapped benefits or food help
   const shortfall = new Set(plans.filter(p => p.data.pppd != null && p.data.pppd < SNAP).map(p => p.session_id));
@@ -92,7 +92,7 @@ export function summarize(events) {
     events: events.length,
     sessions: sessions.size,
     visits: new Set(by('page_view').map(e => e.session_id)).size,
-    days,
+    per_day,
     plans: plans.length,
     boxes: boxes.length,
     returns: count(by('plan_reopened'), e => e.data.source || 'unknown'),

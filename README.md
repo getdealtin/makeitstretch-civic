@@ -118,8 +118,10 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
 
 - **Not the City.** Austin's colors are matched, but the site never uses the City's logo, wordmark or seal,
   and every page says it is not an official City of Austin website.
-- **No data collection yet.** Event logging comes back in Phase 4, after the privacy policy and schema
-  are reset (spec §7). Until then nothing a visitor enters leaves the request.
+- **Anonymous activity only** (Phase 4). `server/events.js` holds a fixed schema per event; unknown events
+  and fields are dropped, and no event type can carry a name, email, phone, address or IP. The IP is used in
+  memory for spam limits only. A random per-visit code links one visit's events and is never stored on the
+  device. Raw events are deleted after 24 months (`db/phase4-events.sql`); `/privacy` says exactly this.
 - **Fonts are self-hosted** (Zilla Slab, Source Serif 4, Inter; SIL OFL), so no third-party requests.
 - **WCAG 2.1 AA:** axe-core scans clean on every screen. Text green is `--green-text` (#236B46), because
   the brand green #2F8B5C is below 4.5:1 for text, so it's used only for accents.
@@ -133,6 +135,7 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
 - [x] Phase 3: four languages with a visible switch; own food directory with invite links, review queue,
       6-month re-confirm; `/admin` page; new Supabase project
 - [ ] Data Stewards: local shelf-price capture (moved to its own phase)
-- [ ] Phase 4: privacy policy + events schema reset
+- [x] Phase 4: anonymous activity events (strict schema), /privacy in four languages, admin Activity,
+      "can't use this" in food boxes, box value, return visits, halal/kosher/diabetic/low-sodium notes
 - [ ] Phase 5: city reporting with k-anonymity
 - [ ] Phase 6: full accessibility audit + offline packet

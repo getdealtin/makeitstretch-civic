@@ -12,7 +12,7 @@ const ALLOWED = {
   leftover: ['yes', 'sometimes', 'no'],
   store: ['full', 'dollar', 'corner'],
   cuisine: ['american', 'latin', 'asian', 'southern', 'mediterranean'],
-  avoid: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'],
+  avoid: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'],
   have: ['rice', 'beans', 'oats', 'eggs', 'potatoes', 'bread', 'pasta', 'oil'],
   boxItems: BOX_GROUPS.flatMap(g => g.items),
 };

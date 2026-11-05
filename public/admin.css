@@ -46,3 +46,11 @@
 .edit-grid .wide { grid-column: 1 / -1; }
 details.more-list > summary { cursor: pointer; font: 600 15px var(--font-label); padding: 8px 0; }
 @media (max-width: 600px) { .kv { grid-template-columns: 1fr; } .kv dt { margin-top: 6px; } .edit-grid { grid-template-columns: 1fr; } }
+
+.act-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px 24px; }
+.act-grid h3 { font-size: 17px; margin: 0 0 6px; }
+.act-grid h4 { font: 600 13px var(--font-label); color: var(--text-muted); margin: 12px 0 4px; text-transform: uppercase; letter-spacing: .06em; }
+.act-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.act-table th { text-align: left; font: 600 12px var(--font-label); color: var(--text-muted); border-bottom: 1.5px solid var(--rule); padding: 4px 6px; }
+.act-table td { border-bottom: 1px solid var(--rule); padding: 5px 6px; }
+.act-table td:last-child, .act-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
