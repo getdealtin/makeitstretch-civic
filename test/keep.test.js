@@ -90,9 +90,11 @@ test('edited or hostile links are rejected or cleaned', () => {
 
 test('box links keep only real box items', () => {
   const h = boxHash(packBox({ items: ['rice', 'drybeans'], avoid: ['eggs'] }));
-  assert.deepEqual(readHash(h), { kind: 'box', state: { items: ['rice', 'drybeans'], avoid: ['eggs'] } });
-  assert.deepEqual(unpackBox({ t: 'b', i: ['rice', 'bogus'] }), { items: ['rice'], avoid: [] });
+  assert.deepEqual(readHash(h), { kind: 'box', state: { items: ['rice', 'drybeans'], avoid: ['eggs'], other: [] } });
+  assert.deepEqual(unpackBox({ t: 'b', i: ['rice', 'bogus'] }), { items: ['rice'], avoid: [], other: [] });
   assert.equal(unpackBox({ t: 'b', i: ['bogus'] }), null);
+  // typed foods ride along, cleaned; a box of only typed foods still opens
+  assert.deepEqual(unpackBox({ t: 'b', i: [], o: ['Canned Salmon', '555-0101'] }), { items: [], avoid: [], other: ['canned salmon'] });
 });
 
 test('unicode survives packing', () => {

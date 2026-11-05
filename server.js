@@ -11,6 +11,7 @@ import {
   groupShoppingList, zipToInfo, BENCHMARKS,
 } from './engine/index.js';
 import QRCode from 'qrcode';
+import { BOX_GROUPS, BOX_SYNONYMS, foodLabel } from './engine/box.js';
 import { resolveCity, publicConfig, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
 import { mountDirectory } from './server/directory.js';
@@ -197,6 +198,13 @@ const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.l
   id: c.id, place: c.place, region: c.region || '', url: `https://${c.hosts[0]}/`, sources: c.sources || [], source_labels: c.source_labels || {},
 }));
 app.get('/api/cities', (req, res) => res.json(liveCities()));
+
+// Every name a box food goes by (English, synonyms, es/vi/zh), for the "Something else?" box field.
+const BOX_WORDS = (() => {
+  const data = ['es', 'vi', 'zh-Hans'].map(l => { try { return JSON.parse(readFileSync(path.join(__dirname, 'public/i18n/data', l + '.json'), 'utf8')); } catch { return {}; } });
+  return Object.fromEntries(BOX_GROUPS.flatMap(g => g.items).map(id => [id, [foodLabel(id), ...(BOX_SYNONYMS[id] || []), ...data.map(d => d.foods?.[id]?.name).filter(Boolean)]]));
+})();
+app.get('/api/box-words', (req, res) => res.set('Cache-Control', 'public, max-age=3600').json(BOX_WORDS));
 app.get('/share/qr.svg', async (req, res) => {
   const c = liveCities().find(x => x.id === req.query.city);
   if (!c) return res.status(404).end();

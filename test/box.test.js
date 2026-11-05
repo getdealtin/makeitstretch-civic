@@ -55,3 +55,18 @@ test('empty box → no matches; labels drop package sizes', () => {
   assert.deepEqual(matchBox(RECIPES, []), []);
   assert.equal(foodLabel('drybeans'), 'Dry Pinto Beans');
 });
+
+test('typed foods find box foods by other names, in other languages', async () => {
+  const { findBoxFood, BOX_SYNONYMS, BOX_GROUPS, foodLabel } = await import('../engine/index.js');
+  const words = Object.fromEntries(BOX_GROUPS.flatMap(g => g.items).map(id => [id, [foodLabel(id), ...BOX_SYNONYMS[id]]]));
+  words.chickpeas.push('Garbanzos en lata'); words.eggs.push('鸡蛋'); words.rice.push('大米'); words.cornmeal.push('玉米粉');
+  const top = q => findBoxFood(q, words)[0];
+  assert.equal(top('garbanzo'), 'chickpeas');
+  assert.equal(top('spaghetti'), 'pasta');
+  assert.equal(top('Canned Black Beans'), 'blackbeans');
+  assert.equal(top('hamburger'), 'groundbeef');
+  assert.equal(top('鸡蛋'), 'eggs');
+  assert.equal(top('米'), 'rice');
+  assert.deepEqual(findBoxFood('canned salmon', words), []);
+  assert.deepEqual(findBoxFood('corn', words), [], 'corn is not cornmeal');
+});

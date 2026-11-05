@@ -8,7 +8,7 @@ export default {
     { h: 'Who we are', p: ['Make It Stretch is operated by Margin Ventures LLC (“we,” “us”). It is an independent service, not an official City of Austin service.'] },
     { h: 'Information we collect', p: [
       'You do not need to give us your name, email address, phone number or home address to use the tool. We do not use advertising or tracking cookies.',
-      'We collect information about how the tool is used, in a form that does not identify you. This includes the answers you provide (such as budget, household size, ZIP code, food preferences and dietary needs), the plans and meal suggestions created for you, and how you interact with them (such as recipes you view, help resources you select, and food-box items you tell us you cannot use).',
+      'We collect information about how the tool is used, in a form that does not identify you. This includes the answers you provide (such as budget, household size, ZIP code, food preferences, dietary needs and foods in a food box, including ones you type in), the plans and meal suggestions created for you, and how you interact with them (such as recipes you view, help resources you select, and food-box items you tell us you cannot use).',
       'As with most websites, our servers receive technical information, such as your IP address, when you connect. We use it only to operate the service and protect it from abuse, and we do not store it with usage information.',
     ] },
     { h: 'Information stored on your device', p: ['Some information stays on your device and is not sent to us, including plans you choose to save and your language preference. You can delete saved plans at any time from the start screen.'] },

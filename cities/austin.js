@@ -75,7 +75,7 @@ export default {
     sections: [
       { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'store', 'store_by_zip', 'cuisine'] },
       { goal: 'Strategy 6.6 · Benefits navigation', intro: 'People routed toward SNAP and WIC. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
-      { goal: 'Goal 4 · Preparedness (strategy 4.2)', intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'diet'] },
+      { goal: 'Goal 4 · Preparedness (strategy 4.2)', intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
       { goal: 'Strategy 6.7 · Language and technology barriers', intro: 'Language used, and whether people kept plans to use later.', metrics: ['language'] },
       { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link.', metrics: ['outcome', 'returns'] },
       { goal: 'Goal 9 · Empower (participation)', intro: 'Organizations taking part through the food directory.', metrics: ['directory'] },

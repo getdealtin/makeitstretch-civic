@@ -438,3 +438,14 @@ html { scroll-padding-bottom: 110px; }
   .help-actions { font-size: 8.5pt; gap: 0 10px; }
 }
 @media print { #list .price { font-size: 9.5pt; } #list .qty { font-size: 8.5pt; } .print-brand { margin: 0 0 2px; } }
+
+/* Food box: "Something else in your box?" */
+.other-food { margin-top: 8px; }
+.other-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.other-row .fi { flex: 1 1 220px; max-width: 360px; }
+.other-pick { margin-top: 8px; }
+.other-list { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.other-list li { display: inline-flex; align-items: center; gap: 4px; background: var(--tint); border-radius: 999px; padding: 2px 4px 2px 14px; font: 500 15px var(--font-label); }
+.other-list button { min-width: 40px; min-height: 40px; border: 0; background: none; cursor: pointer; border-radius: 50%; font-size: 15px; color: var(--text-muted); }
+.other-list button:hover { background: var(--cream); color: var(--text); }
+.box-other-note { background: var(--tint-light); border-left: 4px solid var(--green); border-radius: 10px; padding: 12px 14px; font-size: 16px; }

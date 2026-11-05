@@ -3,7 +3,7 @@
 // Never stored: name, email, phone, address, IP address, device identifiers.
 // session_id is a random per-visit token from browser memory (gone when the tab closes).
 
-import { BOX_GROUPS } from '../engine/box.js';
+import { BOX_GROUPS, cleanFoodWord } from '../engine/box.js';
 
 const BOX_ITEMS = BOX_GROUPS.flatMap(g => g.items);
 export const AVOID = ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'];
@@ -23,6 +23,8 @@ const listOf = (list, max = 20) => v => (Array.isArray(v) ? [...new Set(v.filter
 const zip = v => (/^\d{5}$/.test(String(v ?? '')) ? String(v) : undefined);
 const slug = v => (/^[a-z0-9][a-z0-9_-]{0,59}$/i.test(String(v ?? '')) ? String(v) : undefined);
 const LANGS = ['en', 'es', 'vi', 'zh-Hans'];
+// Foods typed in that aren't on the box list: letters only, 2–30 characters, at most 5. Anything else is dropped.
+const foodWords = v => (Array.isArray(v) ? [...new Set(v.map(cleanFoodWord).filter(Boolean))].slice(0, 5) : undefined);
 
 export const SCHEMA = {
   page_view: { src: slug },  // source tag; checked against the city's list in the route
@@ -36,7 +38,7 @@ export const SCHEMA = {
     leftover: oneOf(['yes', 'sometimes', 'no']),
     pppd: num(0, 9999), cal_pct: int(0, 1000), items: int(0, 200), spent: num(0, 9999),
   },
-  box_built: { items: listOf(BOX_ITEMS, 60), avoid: listOf(AVOID), meals: int(0, 200), zip, value: num(0, 9999) },
+  box_built: { items: listOf(BOX_ITEMS, 60), other: foodWords, avoid: listOf(AVOID), meals: int(0, 200), zip, value: num(0, 9999) },
   recipe_opened: { recipe: int(1, 100000), flow: oneOf(['plan', 'box']) },
   meal_swapped: { recipe: int(1, 100000) },
   help_clicked: { target: slug, kind: oneOf(['resource', 'site']), action: oneOf(['call', 'directions', 'website']) },
@@ -118,6 +120,7 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
       by_reason: top(count(cant, c => c.data.reason)),
       by_item: top(count(cant, c => c.data.item)),
     },
+    unlisted: top(count(boxes, b => b.data.other || []), 30),
     languages: count(events.filter(e => e.event === 'page_view'), e => e.lang),
     kept: count(by('plan_kept'), e => e.data.how),
     by_zip_session: Object.keys(zipOf).length,

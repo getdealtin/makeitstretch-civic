@@ -6,7 +6,7 @@
 //   • Text / email: opens the person's own app with the list filled in.
 // Pure functions here; app.js wires them to the page.
 
-import { BOX_GROUPS } from '../engine/box.js';
+import { BOX_GROUPS, cleanFoodWord } from '../engine/box.js';
 
 const ALLOWED = {
   leftover: ['yes', 'sometimes', 'no'],
@@ -59,12 +59,13 @@ export function unpackPlan(o) {
   };
 }
 
-export const packBox = b => ({ v: 1, t: 'b', i: b.items, a: b.avoid.length ? b.avoid : undefined });
+export const packBox = b => ({ v: 1, t: 'b', i: b.items, a: b.avoid.length ? b.avoid : undefined, o: b.other?.length ? b.other : undefined });
 
 export function unpackBox(o) {
   if (!o || o.t !== 'b') return null;
   const items = pick(o.i, 'boxItems');
-  return items.length ? { items, avoid: pick(o.a, 'avoid') } : null;
+  const other = (Array.isArray(o.o) ? o.o : []).map(cleanFoodWord).filter(Boolean).slice(0, 5);
+  return items.length || other.length ? { items, avoid: pick(o.a, 'avoid'), other } : null;
 }
 
 /** "#p=…" / "#b=…" → { kind, state } or null. */

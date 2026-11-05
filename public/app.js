@@ -8,7 +8,7 @@ import { ART } from './art.js';
 import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
-  matchBox, BOX_GROUPS, foodLabel,
+  matchBox, BOX_GROUPS, foodLabel, findBoxFood, cleanFoodWord,
 } from '/engine/index.js';
 import {
   packPlan, packBox, planHash, boxHash, readHash, planText, boxText, smsHref, mailHref, store,
@@ -85,7 +85,7 @@ const fresh = () => ({
   leftover: 'sometimes', store: 'full', cuisine: [], avoid: [], have: [],
 });
 let answers = fresh();
-let box = { items: [], avoid: [] };
+let box = { items: [], avoid: [], other: [] };
 const STEPS = ['budget', 'days', 'people', 'zip', 'prefs'];
 
 // Preference groups, fewest → most options (choice architecture, spec §6).
@@ -261,7 +261,7 @@ function renderIntro() {
       </div>
     </section>`;
   app.querySelector('#door-budget').onclick = () => { answers = fresh(); go(0); };
-  app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
+  app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [], other: [] }; renderBox(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
     const e = findSaved(store, saveKey(), b.dataset.open);
     if (!e || !openFromHash(e.hash, e.id, 'saved')) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }
@@ -898,6 +898,16 @@ function renderBox() {
       ${BOX_GROUPS.map(g => `<fieldset class="pref-group"><legend>${esc(t('box_group_' + g.id))}</legend><div class="chips">
         ${g.items.map(id => `<button type="button" class="chip" data-item="${id}" aria-pressed="${box.items.includes(id)}">${esc(fName(id))}</button>`).join('')}
       </div></fieldset>`).join('')}
+      <div class="pref-group other-food">
+        <label class="fl" for="other">${esc(t('box_other_label'))}</label>
+        <p class="fh" id="other-hint">${esc(t('box_other_hint'))}</p>
+        <div class="other-row"><input id="other" class="fi" autocomplete="off" maxlength="30" aria-describedby="other-hint other-err">
+          <button type="button" class="btn btn-ghost btn-sm" id="other-add">${esc(t('box_other_add'))}</button></div>
+        <p class="error" id="other-err"></p>
+        <div class="other-pick" id="other-pick" hidden></div>
+        <ul class="other-list" id="other-list"></ul>
+        <p class="sr-only" id="other-status" aria-live="polite"></p>
+      </div>
       <fieldset class="pref-group"><legend>${esc(t('pref_avoid'))}</legend><div class="chips">
         ${['none', 'gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'].map(v => `<button type="button" class="chip" data-avoid="${v}"
           aria-pressed="${v === 'none' ? box.avoid.length === 0 : box.avoid.includes(v)}">${esc(t('avoid_' + v))}</button>`).join('')}
@@ -923,14 +933,61 @@ function renderBox() {
     f.querySelectorAll('[data-avoid]').forEach(x => x.setAttribute('aria-pressed',
       x.dataset.avoid === 'none' ? box.avoid.length === 0 : box.avoid.includes(x.dataset.avoid)));
   }));
+  wireOtherFood(f);
   f.querySelector('#back').onclick = renderIntro;
   f.onsubmit = e => {
     e.preventDefault();
-    if (!box.items.length) { f.querySelector('#err').textContent = t('err_box'); return; }
+    if (!box.items.length && !box.other.length) { f.querySelector('#err').textContent = t('err_box'); return; }
     logNext = { built: true };
     renderBoxResults();
   };
   focusTop('#q');
+}
+
+// "Something else in your box?": a known food under another name (any language) ticks its chip;
+// anything else stays in the box as typed, so nobody hits a dead end.
+let boxWordsP = null;
+function wireOtherFood(f) {
+  const input = f.querySelector('#other'), pickBox = f.querySelector('#other-pick'), err = f.querySelector('#other-err');
+  const status = msg => { f.querySelector('#other-status').textContent = msg; };
+  const drawList = () => {
+    f.querySelector('#other-list').innerHTML = box.other.map((w, i) => `<li><span>${esc(w)}</span>
+      <button type="button" data-rm="${i}" aria-label="${esc(t('box_other_remove', { item: w }))}">✕</button></li>`).join('');
+    f.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => { box.other.splice(Number(b.dataset.rm), 1); drawList(); input.focus(); }));
+    f.querySelector('#count').textContent = box.items.length + box.other.length ? t('box_selected', { n: box.items.length + box.other.length }) : '';
+  };
+  const tick = id => {
+    if (!box.items.includes(id)) box.items.push(id);
+    f.querySelector(`[data-item="${id}"]`)?.setAttribute('aria-pressed', 'true');
+    drawList(); status(t('box_other_found', { item: fName(id) }));
+  };
+  const keepTyped = raw => {
+    const w = cleanFoodWord(raw);
+    if (!w) { err.textContent = t('box_other_bad'); return false; }
+    if (box.other.length >= 5 && !box.other.includes(w)) { err.textContent = t('box_other_max'); return false; }
+    if (!box.other.includes(w)) box.other.push(w);
+    drawList(); status(t('box_other_added', { item: w })); return true;
+  };
+  const done = () => { input.value = ''; pickBox.hidden = true; pickBox.innerHTML = ''; input.focus(); };
+  const add = async () => {
+    err.textContent = '';
+    const raw = input.value.trim();
+    if (!raw) return;
+    const words = await (boxWordsP ||= fetch('/api/box-words').then(r => r.json()).catch(() => ({})));
+    const ids = findBoxFood(raw, words).slice(0, 4);
+    if (ids.length === 1) { tick(ids[0]); done(); return; }
+    if (!ids.length) { if (keepTyped(raw)) done(); return; }
+    pickBox.innerHTML = `<p class="fh">${esc(t('box_other_pick'))}</p><div class="chips">${ids.map(id => `<button type="button" class="chip" data-pick="${id}">${esc(fName(id))}</button>`).join('')}
+      <button type="button" class="chip" data-keep>${esc(t('box_other_none', { item: raw }))}</button></div>`;
+    pickBox.hidden = false;
+    pickBox.querySelectorAll('[data-pick]').forEach(b => b.addEventListener('click', () => { tick(b.dataset.pick); done(); }));
+    pickBox.querySelector('[data-keep]').addEventListener('click', () => { if (keepTyped(raw)) done(); });
+    pickBox.querySelector('button').focus();
+  };
+  f.querySelector('#other-add').addEventListener('click', add);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+  input.addEventListener('focus', () => { boxWordsP ||= fetch('/api/box-words').then(r => r.json()).catch(() => ({})); }, { once: true });
+  drawList();
 }
 
 async function renderBoxResults() {
@@ -950,12 +1007,13 @@ async function renderBoxResults() {
     <section class="summary" aria-labelledby="res-title">
       <p class="eyebrow">${esc(t('door_box'))}</p>
       <h1 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h1>
-      <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length }))}</p>
+      <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length + (box.other?.length || 0) }))}</p>
       ${boxValue > 0 ? `<p class="sum-big box-value">${esc(t('box_value', { value: money(boxValue) }))}</p>` : ''}
       ${residents().length ? `<nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
         <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
     </section>
     <section class="section">
+      ${box.other?.length ? `<p class="box-other-note">${esc(t('box_other_note', { items: box.other.join(t('list_sep')) }))}</p>` : ''}
       ${matches.length ? `<ul class="box-list">${matches.map(m => `
         <li class="box-card">
           <span class="box-slot">${esc(t(m.recipe.slot))}</span>
@@ -990,7 +1048,7 @@ async function renderBoxResults() {
   focusTop('#res-title');
   wireJumps();
   loadSites(siteZip);
-  if (logNext?.built) track('box_built', { items: box.items, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue });
+  if (logNext?.built) track('box_built', { items: box.items, other: box.other, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue });
   else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'box' }); askOutcome('box'); }
   logNext = null;
   // "Can't use this": one report per item per change (Food Plan Goal 4 cultural/medical proxy).

@@ -5,7 +5,7 @@ export { buildCart, resolvePrices, applyStoreAdjustments, summarize, USDA_WEIGHT
 export { indexRecipes, matchRecipes } from './recipes.js';
 export { planWeeks, SLOTS } from './plan.js';
 export { groupShoppingList, CATEGORY_ORDER, TIER_KEYS } from './shopping.js';
-export { matchBox, BOX_GROUPS, INGREDIENT_FOODS, PANTRY_BASICS, foodLabel } from './box.js';
+export { matchBox, BOX_GROUPS, INGREDIENT_FOODS, PANTRY_BASICS, foodLabel, BOX_SYNONYMS, findBoxFood, cleanFoodWord } from './box.js';
 
 // Benchmarks used in the plan summary and city reports (spec §8).
 export const BENCHMARKS = { tfpPerPersonDay: 5.36, snapPerPersonDay: 6.22 };

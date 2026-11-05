@@ -35,7 +35,7 @@ export const DEFAULT_FRAMEWORK = {
   sections: [
     { goal: 'Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'store', 'store_by_zip', 'cuisine'] },
     { goal: 'Benefits and food help', intro: 'People routed toward benefits and free food. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
-    { goal: 'Food that fits', intro: 'Food-box items people report they cannot use, and dietary needs.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'diet'] },
+    { goal: 'Food that fits', intro: 'Food-box items people report they cannot use, and dietary needs.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
     { goal: 'Language', intro: 'Language used.', metrics: ['language'] },
     { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link.', metrics: ['outcome', 'returns'] },
     { goal: 'Participation', intro: 'Organizations taking part through the food directory.', metrics: ['directory'] },
@@ -98,6 +98,7 @@ export const METRICS = {
   cant_group: c => c.table('Reason group', ['Reason', 'People'], lab(LABEL.group, countBy(c.cant, e => c.groupOf(e.data.reason) || 'other'))),
   cant_reason: c => c.table('Reason', ['Reason', 'People'], lab(LABEL.reason, countBy(c.cant, e => e.data.reason))),
   cant_item: c => c.table('Item', ['Food-box item', 'People'], countBy(c.cant, e => e.data.item)),
+  unlisted_food: c => c.table('Foods in boxes that aren’t on our list', ['Food (as typed)', 'People'], countBy(c.boxEv, e => e.data.other || []), { note: 'What people typed in. Shows what pantries hand out that the tool can’t use yet.' }),
   diet: c => c.table('Dietary needs (plans and boxes)', ['Need', 'People'], countBy([...c.planEv, ...c.boxEv], e => e.data.avoid || [])),
   language: c => c.table('Language used', ['Language', 'People'], countBy(c.views, e => e.lang).map(([code, v]) => [langName(code), v]), { total: c.visits.size }),
   outcome: c => c.table('“Did you use this plan?”', ['Answer', 'People'], lab(LABEL.answer, countBy(c.outcome, e => e.data.answer))),

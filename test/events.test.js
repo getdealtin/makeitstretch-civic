@@ -103,3 +103,9 @@ test('footer links to the privacy policy on every resident page', () => {
     if (f !== 'privacy.html') assert.match(html, /href="\/privacy"/, f);
   }
 });
+
+test('typed box foods: letters kept, anything that could identify someone dropped', async () => {
+  const { cleanEvent: ce } = await import('../server/events.js');
+  const e = ce({ event: 'box_built', session_id: 'abc123def456', data: { items: ['rice'], other: ['Canned Salmon', 'call 512-555-0101', 'me@x.com', 'cereal', 'cereal', 'a', 'x'.repeat(40), 'café de olla', 'ramen', 'grits', 'spam'] } });
+  assert.deepEqual(e.data.other, ['canned salmon', 'cereal', 'café de olla', 'ramen', 'grits']);
+});
