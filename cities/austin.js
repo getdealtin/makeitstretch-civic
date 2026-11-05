@@ -63,11 +63,29 @@ export default {
   // anyone can use the tool with any zip.
   focus_area: 'Council Districts 1–4 (eastern crescent)',
 
+  // City report framing: the shared measures (server/report.js METRICS) grouped by the
+  // Austin-Travis County Food Plan goals the FACE grant is tied to. Another city writes its own
+  // `report` block, or leaves it out to get the neutral default layout.
+  report: {
+    title: 'Food access report',
+    labels: { benefits: 'SNAP or WIC', food_help: 'a food bank or 2-1-1' },
+    sections: [
+      { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'store', 'store_by_zip', 'cuisine'] },
+      { goal: 'Strategy 6.6 · Benefits navigation', intro: 'People routed toward SNAP and WIC. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
+      { goal: 'Goal 4 · Preparedness (strategy 4.2)', intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'diet'] },
+      { goal: 'Strategy 6.7 · Language and technology barriers', intro: 'Language used, and whether people kept plans to use later.', metrics: ['language'] },
+      { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link.', metrics: ['outcome', 'returns'] },
+      { goal: 'Goal 9 · Empower (participation)', intro: 'Organizations taking part through the food directory.', metrics: ['directory'] },
+      { goal: 'How people found the tool', intro: 'From source tags on links and printed QR codes.', metrics: ['sources'] },
+    ],
+  },
+
   // Local help, HSDS-lite shape so it can feed a registry later.
   // verified: how/when the entry was last checked. Re-verify before launch.
   resources: [
     {
       id: 'ctfb-find-food',
+      role: 'food_help',
       name: 'Central Texas Food Bank: Find Food Now',
       description: 'Enter your zip to find free groceries near you: pantries, mobile distributions, and meal sites. Many sites only ask for your zip and household size.',
       url: 'https://www.centraltexasfoodbank.org/find-food-now',
@@ -76,6 +94,7 @@ export default {
     },
     {
       id: '211-texas',
+      role: 'food_help',
       name: '2-1-1 Texas',
       description: 'Call 2-1-1 for same-day food help near you. Press 2 for help applying for state benefits like SNAP.',
       phone: '211', url: 'https://www.211texas.org',
@@ -84,6 +103,7 @@ export default {
     },
     {
       id: 'tx-snap',
+      role: 'benefits',
       name: 'SNAP (food benefits): Your Texas Benefits',
       description: 'Monthly money for groceries on a Lone Star Card. Apply online in about 20–30 minutes.',
       url: 'https://www.yourtexasbenefits.com',
@@ -92,6 +112,7 @@ export default {
     },
     {
       id: 'tx-wic',
+      role: 'benefits',
       name: 'Texas WIC',
       description: 'Free food and nutrition help for pregnant people, new parents, and kids under 5. You can get WIC and SNAP at the same time.',
       url: 'https://texaswic.org',

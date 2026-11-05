@@ -1,4 +1,14 @@
-// Phase 5: the City report. Aggregated, organized by Food Plan goal, with small-cell suppression.
+// Phase 5: the City report. Aggregated, with small-cell suppression, and organized however
+// each city needs it.
+//
+// Two layers, so any city can adopt it:
+//  • METRICS: one shared library of measures (people by ZIP, budget bands, can't-use reasons…).
+//    Every city computes them the same way.
+//  • A framework: how the measures are grouped and titled. A city's config card can set
+//    `report: { title, labels, sections: [{ goal, intro, metrics: [ids] }] }` to match its own
+//    plan or grant (Austin maps to its Food Plan goals). Cities without one get DEFAULT_FRAMEWORK.
+//  Which links count as "benefits" or "food help" comes from `role` on the city's resources,
+//  never from hard-coded ids.
 //
 // Rules:
 //  • Every number counts people (distinct visits), never clicks.
@@ -10,8 +20,28 @@
 import { CANT_USE } from './events.js';
 
 const TFP = 5.36, SNAP = 6.22;
-const BENEFITS = ['tx-snap', 'tx-wic', 'snap', 'wic'];
-const FOOD_HELP = ['ctfb-find-food', '211-texas', 'foodbank', '211'];
+
+/** Resource ids by role, from a city's resources: { benefits: [...], food_help: [...] }. */
+export function rolesOf(resources = []) {
+  const out = { benefits: [], food_help: [] };
+  for (const r of resources) if (r.role && out[r.role]) out[r.role].push(r.id);
+  return out;
+}
+
+/** Used when a city has no `report` section in its config card. */
+export const DEFAULT_FRAMEWORK = {
+  title: 'Food access report',
+  labels: { benefits: 'a benefits link', food_help: 'a food help link' },
+  sections: [
+    { goal: 'Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'store', 'store_by_zip', 'cuisine'] },
+    { goal: 'Benefits and food help', intro: 'People routed toward benefits and free food. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
+    { goal: 'Food that fits', intro: 'Food-box items people report they cannot use, and dietary needs.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'diet'] },
+    { goal: 'Language', intro: 'Language used.', metrics: ['language'] },
+    { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link.', metrics: ['outcome', 'returns'] },
+    { goal: 'Participation', intro: 'Organizations taking part through the food directory.', metrics: ['directory'] },
+    { goal: 'How people found the tool', intro: 'From source tags on links and printed QR codes.', metrics: ['sources'] },
+  ],
+};
 
 /** Rows of [label, n] → rows with n replaced by null where hidden. */
 export function suppress(rows, k, { total = null } = {}) {
@@ -37,12 +67,53 @@ const countBy = (events, keyOf) => {
 };
 const n = (v, k) => (v < k ? null : v);
 
+const LABEL = {
+  group: { cultural: 'Culture or religion', medical: 'Health', practical: 'Other reasons' },
+  reason: { halal: 'Not halal', kosher: 'Not kosher', unfamiliar: 'Not a familiar food', diabetic: 'Not OK for diabetes', low_sodium: 'Too much salt', allergy: 'Allergy', no_kitchen: 'No way to cook it', dont_know_how: 'Don’t know how to cook it', spoiled: 'Spoiled or expired' },
+  store: { full: 'Grocery store', dollar: 'Dollar store', corner: 'Corner store' },
+  answer: { yes: 'Yes', some: 'Some of it', no: 'No' },
+};
+const langName = code => { try { return new Intl.DisplayNames(['en'], { type: 'language' }).of(code) || code; } catch { return code; } };
+const lab = (map, rows) => rows.map(([k, v]) => [map[k] || k, v]);
+
+/**
+ * The shared measure library. Each entry takes the computed context and returns one table.
+ * Add a measure here once and any city's framework can list it by id.
+ */
+export const METRICS = {
+  zip: c => c.table('People by ZIP code', ['ZIP code', 'People'], countBy(c.withZip, e => e.zip)),
+  budget_band: c => c.table('Budget per person per day (grocery plans)', ['Band', 'People'], c.bandRows, { total: c.plans.size }),
+  store: c => c.table('Where people can shop most easily', ['Store type', 'People'], lab(LABEL.store, countBy(c.planEv, p => p.data.store || 'full')), { total: c.plans.size }),
+  store_by_zip: c => c.table('Store type by ZIP code', ['ZIP · store', 'People'], countBy(c.planEv.filter(p => c.zipOf[p.session_id]), p => `${c.zipOf[p.session_id]} · ${LABEL.store[p.data.store || 'full']}`)),
+  cuisine: c => c.table('Food style chosen', ['Cuisine', 'People'], countBy(c.planEv, p => (p.data.cuisine?.length ? p.data.cuisine : ['no preference']))),
+  routed: c => c.table('People routed to benefits', ['', 'People'], [
+    [`Tapped ${c.labels.benefits}`, c.routedBenefits.size],
+    [`Tapped ${c.labels.food_help}`, c.routedFood.size],
+    ['Budget below the SNAP benchmark', c.shortfall.size],
+    [`…of those, tapped ${c.labels.benefits}`, c.shortfallBenefits],
+    [`…of those, tapped ${c.labels.food_help}`, c.shortfallFood],
+  ]),
+  benefits_by_zip: c => c.table(`Taps on ${c.labels.benefits} by ZIP code`, ['ZIP code', 'People'], countBy(c.withZip.filter(e => e.event === 'help_clicked' && c.roles.benefits.includes(e.data.target)), e => e.zip)),
+  cant_use: c => c.table('People reporting food they can’t use', ['', 'People'], [['Entered a food box', c.boxes.size], ['Reported at least one item they can’t use', c.cantSessions.size]]),
+  cant_group: c => c.table('Reason group', ['Reason', 'People'], lab(LABEL.group, countBy(c.cant, e => c.groupOf(e.data.reason) || 'other'))),
+  cant_reason: c => c.table('Reason', ['Reason', 'People'], lab(LABEL.reason, countBy(c.cant, e => e.data.reason))),
+  cant_item: c => c.table('Item', ['Food-box item', 'People'], countBy(c.cant, e => e.data.item)),
+  diet: c => c.table('Dietary needs (plans and boxes)', ['Need', 'People'], countBy([...c.planEv, ...c.boxEv], e => e.data.avoid || [])),
+  language: c => c.table('Language used', ['Language', 'People'], countBy(c.views, e => e.lang).map(([code, v]) => [langName(code), v]), { total: c.visits.size }),
+  outcome: c => c.table('“Did you use this plan?”', ['Answer', 'People'], lab(LABEL.answer, countBy(c.outcome, e => e.data.answer))),
+  returns: c => c.table('Return visits', ['How', 'People'], lab({ saved: 'Reopened a saved plan', link: 'Opened a shared link' }, countBy(c.events.filter(e => e.event === 'plan_reopened'), e => e.data.source))),
+  directory: c => ({ title: 'Food sites in the directory', head: ['Type', 'Organizations'], rows: Object.entries(c.providers.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {})), note: 'Organizations, not people: not suppressed.' }),
+  sources: c => c.table('Visits by source', ['Source', 'People'], countBy(c.views, e => e.data?.src || 'direct'), { total: c.visits.size }),
+};
+
 /**
  * @param {object[]} events   raw events for one city and date range (test traffic already excluded)
- * @param {{k:number, providers:object[], from:string, to:string, city:string}} opts
+ * @param {{k:number, providers:object[], from:string, to:string, city:string,
+ *          roles?:{benefits:string[], food_help:string[]}, framework?:object}} opts
  */
-export function cityReport(events, { k = 15, providers = [], from, to, city }) {
-  const visits = sessionsWhere(events, e => e.event === 'page_view');
+export function cityReport(events, { k = 15, providers = [], from, to, city, roles = { benefits: [], food_help: [] }, framework = DEFAULT_FRAMEWORK }) {
+  const views = events.filter(e => e.event === 'page_view');
+  const visits = new Set(views.map(e => e.session_id));
   const planEv = events.filter(e => e.event === 'plan_built');
   const boxEv = events.filter(e => e.event === 'box_built');
   const plans = new Set(planEv.map(e => e.session_id));
@@ -60,26 +131,25 @@ export function cityReport(events, { k = 15, providers = [], from, to, city }) {
   const shortfall = new Set(planEv.filter(p => p.data.pppd != null && p.data.pppd < SNAP).map(p => p.session_id));
   const helps = events.filter(e => e.event === 'help_clicked');
   const routed = targets => sessionsWhere(helps, h => targets.includes(h.data.target));
-  const routedBenefits = routed(BENEFITS), routedFood = routed(FOOD_HELP);
-  const shortfallBenefits = [...shortfall].filter(s => routedBenefits.has(s)).length;
-  const shortfallFood = [...shortfall].filter(s => routedFood.has(s)).length;
+  const routedBenefits = routed(roles.benefits || []), routedFood = routed(roles.food_help || []);
 
   const cant = events.filter(e => e.event === 'cant_use');
-  const groupOf = r => Object.keys(CANT_USE).find(g => CANT_USE[g].includes(r));
-  const cantSessions = new Set(cant.map(e => e.session_id));
-  const outcome = events.filter(e => e.event === 'plan_outcome');
-  const LABEL = {
-    group: { cultural: 'Culture or religion', medical: 'Health', practical: 'Other reasons' },
-    reason: { halal: 'Not halal', kosher: 'Not kosher', unfamiliar: 'Not a familiar food', diabetic: 'Not OK for diabetes', low_sodium: 'Too much salt', allergy: 'Allergy', no_kitchen: 'No way to cook it', dont_know_how: 'Don’t know how to cook it', spoiled: 'Spoiled or expired' },
-    store: { full: 'Grocery store', dollar: 'Dollar store', corner: 'Corner store' },
-    answer: { yes: 'Yes', some: 'Some of it', no: 'No' },
-    lang: { en: 'English', es: 'Spanish', vi: 'Vietnamese', 'zh-Hans': 'Chinese' },
+  const ctx = {
+    events, views, visits, planEv, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
+    roles: { benefits: roles.benefits || [], food_help: roles.food_help || [] },
+    labels: { ...DEFAULT_FRAMEWORK.labels, ...(framework.labels || {}) },
+    routedBenefits, routedFood,
+    shortfallBenefits: [...shortfall].filter(s => routedBenefits.has(s)).length,
+    shortfallFood: [...shortfall].filter(s => routedFood.has(s)).length,
+    cant, cantSessions: new Set(cant.map(e => e.session_id)),
+    groupOf: r => Object.keys(CANT_USE).find(g => CANT_USE[g].includes(r)),
+    outcome: events.filter(e => e.event === 'plan_outcome'),
+    table: (title, head, rows, opts = {}) => ({ title, head, rows: suppress(rows, k, opts), note: opts.note || null }),
   };
-  const lab = (map, rows) => rows.map(([k2, v]) => [map[k2] || k2, v]);
-  const table = (title, head, rows, opts = {}) => ({ title, head, rows: suppress(rows, k, opts), note: opts.note || null });
 
   return {
     city, from, to, k,
+    title: framework.title || DEFAULT_FRAMEWORK.title,
     generated_at: new Date().toISOString(),
     overview: [
       ['Visits', n(visits.size, k)],
@@ -88,76 +158,16 @@ export function cityReport(events, { k = 15, providers = [], from, to, city }) {
       ['Visits that gave a ZIP code', n(Object.keys(zipOf).length, k)],
       ['Food sites listed in the directory (organizations)', providers.length],
     ],
-    sections: [
-      {
-        goal: 'Goal 6 · Access',
-        intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.',
-        tables: [
-          table('People by ZIP code', ['ZIP code', 'People'], countBy(withZip, e => e.zip)),
-          table('Budget per person per day (grocery plans)', ['Band', 'People'], bandRows, { total: plans.size }),
-          table('Where people can shop most easily', ['Store type', 'People'], lab(LABEL.store, countBy(planEv, p => p.data.store || 'full')), { total: plans.size }),
-          table('Store type by ZIP code', ['ZIP · store', 'People'], countBy(planEv.filter(p => zipOf[p.session_id]), p => `${zipOf[p.session_id]} · ${LABEL.store[p.data.store || 'full']}`)),
-          table('Food style chosen', ['Cuisine', 'People'], countBy(planEv, p => (p.data.cuisine?.length ? p.data.cuisine : ['no preference']))),
-        ],
-      },
-      {
-        goal: 'Strategy 6.6 · Benefits navigation',
-        intro: 'People routed toward SNAP and WIC. These are link taps, not applications: the tool cannot see who applies.',
-        tables: [
-          table('People routed to benefits', ['', 'People'], [
-            ['Tapped SNAP or WIC', routedBenefits.size],
-            ['Tapped a food bank or 2-1-1', routedFood.size],
-            ['Budget below the SNAP benchmark', shortfall.size],
-            ['…of those, tapped SNAP or WIC', shortfallBenefits],
-            ['…of those, tapped a food bank or 2-1-1', shortfallFood],
-          ]),
-          table('SNAP or WIC taps by ZIP code', ['ZIP code', 'People'], countBy(withZip.filter(e => e.event === 'help_clicked' && BENEFITS.includes(e.data.target)), e => e.zip)),
-        ],
-      },
-      {
-        goal: 'Goal 4 · Preparedness (strategy 4.2)',
-        intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.',
-        tables: [
-          table('People reporting food they can’t use', ['', 'People'], [['Entered a food box', boxes.size], ['Reported at least one item they can’t use', cantSessions.size]]),
-          table('Reason group', ['Reason', 'People'], lab(LABEL.group, countBy(cant, c => groupOf(c.data.reason) || 'other'))),
-          table('Reason', ['Reason', 'People'], lab(LABEL.reason, countBy(cant, c => c.data.reason))),
-          table('Item', ['Food-box item', 'People'], countBy(cant, c => c.data.item)),
-          table('Dietary needs (plans and boxes)', ['Need', 'People'], countBy([...planEv, ...boxEv], e => e.data.avoid || [])),
-        ],
-      },
-      {
-        goal: 'Strategy 6.7 · Language and technology barriers',
-        intro: 'Language used, and whether people kept plans to use later.',
-        tables: [
-          table('Language used', ['Language', 'People'], lab(LABEL.lang, countBy(events.filter(e => e.event === 'page_view'), e => e.lang)), { total: visits.size }),
-        ],
-      },
-      {
-        goal: 'Outcomes',
-        intro: 'Asked when someone returns to a saved plan or link.',
-        tables: [
-          table('“Did you use this plan?”', ['Answer', 'People'], lab(LABEL.answer, countBy(outcome, e => e.data.answer))),
-          table('Return visits', ['How', 'People'], lab({ saved: 'Reopened a saved plan', link: 'Opened a shared link' }, countBy(events.filter(e => e.event === 'plan_reopened'), e => e.data.source))),
-        ],
-      },
-      {
-        goal: 'Goal 9 · Empower (participation)',
-        intro: 'Organizations taking part through the food directory.',
-        tables: [
-          { title: 'Food sites in the directory', head: ['Type', 'Organizations'], rows: Object.entries(providers.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {})), note: 'Organizations, not people: not suppressed.' },
-        ],
-      },
-      {
-        goal: 'How people found the tool',
-        intro: 'From source tags on links and printed QR codes.',
-        tables: [table('Visits by source', ['Source', 'People'], countBy(events.filter(e => e.event === 'page_view'), e => e.data?.src || 'direct'), { total: visits.size })],
-      },
-    ],
+    sections: framework.sections.map(sec => ({
+      goal: sec.goal,
+      intro: sec.intro,
+      tables: sec.metrics.filter(id => METRICS[id]).map(id => ({ id, ...METRICS[id](ctx) })),
+    })),
     limits: [
       `Counts are people who used the tool between ${from} and ${to}, not the population. Say “among people who used the tool.”`,
       `Any number under ${k} people is hidden, along with any number that would reveal it.`,
       'Answers are self-reported and not verified. The same person visiting twice is counted twice.',
-      'Link taps are not outcomes: the tool cannot see SNAP applications or pantry visits.',
+      'Link taps are not outcomes: the tool cannot see benefit applications or pantry visits.',
       'Dollar figures use regional BLS average prices until local Data Steward prices are added.',
     ],
   };

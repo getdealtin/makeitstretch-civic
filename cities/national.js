@@ -26,9 +26,9 @@ export default {
   sources: [],
   focus_area: null,
   resources: [
-    { id: 'foodbank', name: 'Find a food bank near you', description: 'Free food, no questions asked. Feeding America has 200+ food banks nationwide.', url: 'https://www.feedingamerica.org/find-your-local-foodbank', kind: 'food', audience: 'residents', event: 'foodbank_clicked', verified: 'ported from live tool' },
-    { id: '211', name: 'Call or text 2-1-1', description: 'Same-day emergency food help in most areas.', phone: '211', url: 'https://www.211.org', kind: 'phone', audience: 'residents', event: 'resource_clicked', verified: 'ported from live tool' },
-    { id: 'snap', name: 'SNAP food benefits', description: 'Monthly food benefits on a card that works at most grocery stores.', url: 'https://www.benefits.gov/benefit/361', kind: 'benefits', audience: 'residents', event: 'snap_screener_clicked', verified: 'ported from live tool' },
-    { id: 'wic', name: 'WIC', description: 'Free food and nutrition support for pregnant people and kids under 5.', url: 'https://www.fns.usda.gov/wic/wic-contacts', kind: 'benefits', audience: 'residents', event: 'wic_clicked', verified: 'ported from live tool' },
+    { id: 'foodbank', role: 'food_help', name: 'Find a food bank near you', description: 'Free food, no questions asked. Feeding America has 200+ food banks nationwide.', url: 'https://www.feedingamerica.org/find-your-local-foodbank', kind: 'food', audience: 'residents', event: 'foodbank_clicked', verified: 'ported from live tool' },
+    { id: '211', role: 'food_help', name: 'Call or text 2-1-1', description: 'Same-day emergency food help in most areas.', phone: '211', url: 'https://www.211.org', kind: 'phone', audience: 'residents', event: 'resource_clicked', verified: 'ported from live tool' },
+    { id: 'snap', role: 'benefits', name: 'SNAP food benefits', description: 'Monthly food benefits on a card that works at most grocery stores.', url: 'https://www.benefits.gov/benefit/361', kind: 'benefits', audience: 'residents', event: 'snap_screener_clicked', verified: 'ported from live tool' },
+    { id: 'wic', role: 'benefits', name: 'WIC', description: 'Free food and nutrition support for pregnant people and kids under 5.', url: 'https://www.fns.usda.gov/wic/wic-contacts', kind: 'benefits', audience: 'residents', event: 'wic_clicked', verified: 'ported from live tool' },
   ],
 };

@@ -9,7 +9,7 @@ import express from 'express';
 import { PUBLIC_FIELDS, EDITABLE_FIELDS } from './db.js';
 import { CITIES } from '../cities/index.js';
 import { summarize } from './events.js';
-import { cityReport, reportCsv, directoryCsv } from './report.js';
+import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
 import { readFileSync } from 'node:fs';
 
 // Zip → [lat, lon] at the center of each zip area (US Census ZCTAs, via the MIT-licensed
@@ -198,7 +198,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
   const activityFor = async (city, daysParam) => {
     const days = [7, 30, 90, 365].includes(Number(daysParam)) ? Number(daysParam) : 30;
     const since = new Date(Date.now() - days * 864e5).toISOString();
-    try { return { available: true, days, ...summarize(await db().listEvents(city, since)) }; }
+    try { return { available: true, days, ...summarize(await db().listEvents(city, since), rolesOf(CITIES[city].resources)) }; }
     catch (e) { console.error(e.message); return { available: false, error: true, days }; }
   };
 
@@ -268,7 +268,8 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
       db().listProviders(city, ['approved']),
     ]);
     const inRange = events.filter(e => e.created_at.slice(0, 10) <= to);
-    return cityReport(inRange, { k: CITIES[city].k_anon_threshold || 15, providers, from, to, city: CITIES[city].place || city });
+    const c = CITIES[city];
+    return cityReport(inRange, { k: c.k_anon_threshold || 15, providers, from, to, city: c.place || c.name || city, roles: rolesOf(c.resources), framework: c.report || DEFAULT_FRAMEWORK });
   };
   admin.get('/report', async (req, res) => {
     try { res.json(await reportFor(req)); } catch (e) { console.error(e.message); res.status(500).json({ ok: false }); }

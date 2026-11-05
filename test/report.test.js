@@ -3,10 +3,12 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import app from '../server.js';
 import { memoryDb } from '../server/db.js';
-import { suppress, cityReport, reportCsv, directoryCsv } from '../server/report.js';
+import { suppress, cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK, METRICS } from '../server/report.js';
+import austin from '../cities/austin.js';
 import { cleanEvent } from '../server/events.js';
 
 const K = 15;
+const AUS = { roles: rolesOf(austin.resources), framework: austin.report };
 const t = '2026-11-05T12:00:00Z';
 const sid = i => String(i).padStart(12, 'a').slice(-12).replace(/[^a-z0-9]/g, 'a');
 const ev = (i, event, data = {}) => ({ session_id: 's' + String(i).padStart(11, '0'), event, lang: 'en', data, created_at: t });
@@ -30,7 +32,7 @@ test('report counts people, not clicks, and hides small groups', () => {
     // one person tapping SNAP five times still counts once
     if (i < 16) for (let j = 0; j < 5; j++) events.push(ev(i, 'help_clicked', { target: 'tx-snap', kind: 'resource', action: 'website' }));
   }
-  const r = cityReport(events, { k: K, providers: [{ kind: 'pantry' }, { kind: 'fridge' }], from: '2026-11-01', to: '2026-11-30', city: 'Austin' });
+  const r = cityReport(events, { k: K, providers: [{ kind: 'pantry' }, { kind: 'fridge' }], from: '2026-11-01', to: '2026-11-30', city: 'Austin', ...AUS });
   assert.deepEqual(r.overview[0], ['Visits', 30]);
   const access = r.sections.find(s => s.goal.startsWith('Goal 6'));
   const byZip = access.tables.find(x => x.title === 'People by ZIP code').rows;
@@ -49,7 +51,7 @@ test('no number under k appears anywhere in the report (people tables)', () => {
     events.push(ev(i, 'box_built', { items: ['rice', 'tuna'] }));
     events.push(ev(i, 'cant_use', { item: i < 16 ? 'tuna' : 'rice', reason: i < 16 ? 'kosher' : 'allergy' }));
   }
-  const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin' });
+  const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS });
   for (const s of r.sections) if (!s.goal.startsWith('Goal 9'))
     for (const tb of s.tables) for (const [, v] of tb.rows) assert.ok(v === null || v >= K, `${tb.title}: ${v}`);
   for (const [, v] of r.overview.slice(0, 4)) assert.ok(v === null || v >= K);
@@ -62,6 +64,27 @@ test('CSV marks hidden cells as <15; CTFB file never includes contact details', 
   assert.match(csv, /"Eastside Pantry"/);
   assert.match(csv, /"es; en"/);
   for (const secret of ['secret@x.org', 'private', 'contact']) assert.ok(!csv.includes(secret), secret);
+});
+
+test('another city: no framework → neutral layout; its own resource ids count by role', () => {
+  const events = [];
+  for (let i = 0; i < 20; i++) {
+    events.push(ev(i, 'page_view'));
+    events.push(ev(i, 'help_clicked', { target: 'mn-snap', kind: 'resource', action: 'website' }));
+  }
+  const roles = rolesOf([{ id: 'mn-snap', role: 'benefits' }, { id: 'mn-foodshelf', role: 'food_help' }, { id: 'other' }]);
+  assert.deepEqual(roles, { benefits: ['mn-snap'], food_help: ['mn-foodshelf'] });
+  const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Minneapolis', roles });
+  assert.deepEqual(r.sections.map(s => s.goal), DEFAULT_FRAMEWORK.sections.map(s => s.goal));
+  assert.ok(!r.sections.some(s => /Goal|Strategy/.test(s.goal)), 'no Austin Food Plan wording');
+  const routed = r.sections.find(s => s.goal === 'Benefits and food help').tables[0].rows;
+  assert.deepEqual(routed[0], ['Tapped a benefits link', 20]);
+});
+
+test('every metric a city framework lists exists in the shared library', () => {
+  for (const fw of [DEFAULT_FRAMEWORK, austin.report]) for (const s of fw.sections) for (const id of s.metrics) assert.ok(METRICS[id], id);
+  // Austin's grant layout is unchanged
+  assert.deepEqual(austin.report.sections.map(s => s.goal).slice(0, 3), ['Goal 6 · Access', 'Strategy 6.6 · Benefits navigation', 'Goal 4 · Preparedness (strategy 4.2)']);
 });
 
 test('outcome answers and source tags validate', () => {

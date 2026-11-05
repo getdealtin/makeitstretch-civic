@@ -65,10 +65,9 @@ export function cleanEvent(b) {
 
 // ── Totals for the admin Activity section (operator's private view: nothing hidden) ──
 const TFP = 5.36, SNAP = 6.22;
-const BENEFIT_TARGETS = ['tx-snap', 'tx-wic', 'snap', 'wic'];
-const FOOD_TARGETS = ['ctfb-find-food', '211-texas', 'foodbank', '211'];
 
-export function summarize(events) {
+/** @param {{benefits:string[], food_help:string[]}} roles  resource ids by role (from the city's resources) */
+export function summarize(events, roles = { benefits: [], food_help: [] }) {
   const by = e => events.filter(x => x.event === e);
   const count = (rows, f) => rows.reduce((m, r) => { for (const k of [].concat(f(r) ?? [])) m[k] = (m[k] || 0) + 1; return m; }, {});
   const top = (m, n = 15) => Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n);
@@ -106,7 +105,7 @@ export function summarize(events) {
       tfp_to_snap: plans.filter(p => p.data.pppd >= TFP && p.data.pppd < SNAP).length,
       over_snap: plans.filter(p => p.data.pppd >= SNAP).length,
     },
-    shortfall: { sessions: shortfall.size, routed_benefits: routedTo(BENEFIT_TARGETS), routed_food: routedTo(FOOD_TARGETS) },
+    shortfall: { sessions: shortfall.size, routed_benefits: routedTo(roles.benefits || []), routed_food: routedTo(roles.food_help || []) },
     store_by_zip: top(count(plans, p => `${p.data.zip || 'none'} · ${p.data.store || 'full'}`), 30),
     store: count(plans, p => p.data.store || 'full'),
     avoid: top(count([...plans, ...boxes], e => e.data.avoid || [])),

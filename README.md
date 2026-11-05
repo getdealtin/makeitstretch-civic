@@ -140,4 +140,7 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
 - [x] Phase 5: City report in /admin (by Food Plan goal, people-based counts, cells under 15 hidden plus
       secondary suppression, limits section, print/PDF + CSV), CTFB directory CSV, `?src=` source tags,
       "Don't count this browser", "Did you use this plan?" on return visits
+      Report is multi-city: shared measures in `server/report.js` (METRICS); each city's card can set
+      `report: { title, labels, sections: [{ goal, intro, metrics }] }` (Austin maps to its Food Plan
+      goals), otherwise the neutral DEFAULT_FRAMEWORK is used. Resources carry `role: 'benefits' | 'food_help'`.
 - [ ] Phase 6: full accessibility audit + offline packet

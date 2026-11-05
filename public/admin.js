@@ -317,7 +317,7 @@ async function renderReport() {
     </div>
     <article class="report">
       <p class="eyebrow">Make It Stretch · ${esc(r.city)}</p>
-      <h1>Food access report</h1>
+      <h1>${esc(r.title || 'Food access report')}</h1>
       <p class="muted">${esc(r.from)} to ${esc(r.to)} · aggregated · any number under ${r.k} people is hidden (shown as &lt;${r.k})</p>
       <section class="rep-section"><h2>Overview</h2>${tbl({ title: 'At a glance', head: ['', 'Count'], rows: r.overview })}</section>
       ${r.sections.map(sec => `<section class="rep-section"><h2>${esc(sec.goal)}</h2><p>${esc(sec.intro)}</p><div class="rep-grid">${sec.tables.map(tbl).join('')}</div></section>`).join('')}

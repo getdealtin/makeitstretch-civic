@@ -257,7 +257,7 @@ dialog::backdrop { background: rgba(38,38,79,.5); }
 .swapped-note { font-family: var(--font-label); font-weight: 600; font-size: 14px; color: var(--green-text); background: #E5F4E4; display: inline-block; border-radius: 999px; padding: 3px 10px; }
 
 /* Keep this plan */
-.keep { border: 1.5px solid var(--rule); border-radius: 14px; padding: 16px 18px; margin: -12px 0 32px; background: var(--tint-light); }
+.keep { border: 1.5px solid var(--rule); border-radius: 14px; padding: 16px 18px; margin: 0 0 40px; background: var(--tint-light); }
 .keep-title { font-size: 19px; margin-bottom: 10px; }
 .keep-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 @media (min-width: 640px) { .keep-actions { grid-template-columns: repeat(4, 1fr); } }

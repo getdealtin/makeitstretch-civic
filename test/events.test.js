@@ -59,7 +59,7 @@ test('summary: visits, drop-off, budget pressure, shortfall routing, can\'t-use 
     ev('c', 'cant_use', { item: 'tuna', reason: 'kosher' }),
     ev('c', 'cant_use', { item: 'oats', reason: 'no_kitchen' }),
     ev('b', 'plan_reopened', { source: 'saved', kind: 'plan' }),
-  ]);
+  ], { benefits: ['tx-snap', 'tx-wic'], food_help: ['ctfb-find-food'] });
   assert.equal(a.visits, 3);
   assert.equal(a.plans, 2);
   assert.equal(a.boxes, 1);

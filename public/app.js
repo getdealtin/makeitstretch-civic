@@ -563,8 +563,6 @@ function renderResults(plan, restore = {}) {
       </nav>
     </section>
 
-    ${keepBar()}
-
     <section class="section" id="list" aria-labelledby="h-list" tabindex="-1">
       <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
         <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
@@ -582,6 +580,8 @@ function renderResults(plan, restore = {}) {
       ${weeks.map(weekPanel).join('')}
       <p class="muted meals-hint no-print">${esc(t('meals_hint'))}</p>
     </section>
+
+    ${keepBar()}
 
     ${helpSection()}
 
@@ -830,7 +830,6 @@ async function renderBoxResults() {
       ${residents().length ? `<nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
         <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
     </section>
-    ${keepBar()}
     <section class="section" aria-label="${esc(t('box_res_title'))}">
       ${matches.length ? `<ul class="box-list">${matches.map(m => `
         <li class="box-card">
@@ -854,6 +853,7 @@ async function renderBoxResults() {
           <span class="cu-ok" aria-live="polite"></span>
         </li>`).join('')}</ul>
     </section>
+    ${keepBar()}
     ${helpSection()}
     <div class="nav no-print">
       <button type="button" class="btn btn-ghost" id="edit">${esc(t('box_edit'))}</button>
