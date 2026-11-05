@@ -20,6 +20,7 @@ export const newToken = () => crypto.randomBytes(18).toString('base64url');
 // ── In-memory ───────────────────────────────────────────────────
 export function memoryDb() {
   const providers = new Map(), invites = new Map();
+  const events = [];
   const reviews = new Map(['es', 'vi', 'zh-Hans'].map(l => [l, { lang: l, status: 'pending', reviewer: null, reviewed_at: null, note: null }]));
   const now = () => new Date().toISOString();
   const copy = o => (o ? structuredClone(o) : null);
@@ -51,6 +52,8 @@ export function memoryDb() {
       return [...invites.values()].filter(i => i.city_id === city).sort((a, b) => b.created_at.localeCompare(a.created_at)).map(copy);
     },
     async listReviews() { return [...reviews.values()].map(copy); },
+    async insertEvent(ev) { events.push({ ...ev, created_at: now() }); },
+    async listEvents(city, since) { return events.filter(e => e.city_id === city && e.created_at >= since).map(copy); },
     async updateReview(lang, patch) { const r = reviews.get(lang); if (!r) return null; Object.assign(r, patch); return copy(r); },
   };
 }
@@ -84,6 +87,17 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
     markInviteUsed: id => call(`invites?id=eq.${enc(id)}&used_at=is.null`, { method: 'PATCH', body: { used_at: new Date().toISOString() } }),
     listInvites: city => call(`invites?city_id=eq.${enc(city)}&order=created_at.desc`),
     listReviews: () => call('translation_reviews?order=lang'),
+    insertEvent: ev => call('events', { method: 'POST', body: ev, prefer: 'return=minimal' }),
+    // PostgREST returns at most 1,000 rows per request, so page through.
+    listEvents: async (city, since) => {
+      const out = [];
+      for (let off = 0; off < 200000; off += 1000) {
+        const page = await call(`events?select=session_id,event,lang,data,created_at&city_id=eq.${enc(city)}&created_at=gte.${enc(since)}&order=created_at.asc&limit=1000&offset=${off}`);
+        out.push(...page);
+        if (page.length < 1000) break;
+      }
+      return out;
+    },
     updateReview: async (lang, patch) => one(await call(`translation_reviews?lang=eq.${enc(lang)}`, { method: 'PATCH', body: patch, prefer: 'return=representation' })),
   };
 }

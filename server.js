@@ -13,6 +13,7 @@ import {
 import { resolveCity, publicConfig } from './cities/index.js';
 import { makeDb } from './server/db.js';
 import { mountDirectory } from './server/directory.js';
+import { mountEvents, AVOID } from './server/events.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -125,7 +126,7 @@ app.use('/engine', express.static(path.join(__dirname, 'engine'), { maxAge: '1h'
 const LIST = /^[a-z,]{0,120}$/;
 const ALLOWED = {
   cuisine: ['american', 'latin', 'asian', 'southern', 'mediterranean'],
-  avoid: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish'],
+  avoid: AVOID,
   have: ['rice', 'beans', 'oats', 'eggs', 'potatoes', 'bread', 'pasta', 'oil'],
   stores: ['full', 'dollar', 'corner'],
 };
@@ -188,10 +189,12 @@ app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOStri
 let db = makeDb();
 app.locals.setDb = d => { db = d; };
 mountDirectory(app, { getDb: () => db });
+mountEvents(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
 app.get('/join/:token', page('provider.html'));
 app.get('/add-site', page('provider.html'));
 app.get('/admin', page('admin.html'));
+app.get('/privacy', page('privacy.html'));
 
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', 'index.html')));

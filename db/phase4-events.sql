@@ -1,4 +1,6 @@
 -- Phase 4: anonymous activity events + 24-month retention.
+-- Applied Nov 5, 2026: tables + permissions (part 1). The retention job below (part 2) still
+-- needs the owner to run it in the Supabase SQL Editor.
 -- Never stored: name, email, phone, address, IP address, device identifiers.
 -- session_id is a random per-visit token held in browser memory only.
 
@@ -8,7 +10,8 @@ create table if not exists public.events (
   session_id  text not null check (session_id ~ '^[a-z0-9]{12}$'),
   event       text not null check (event in (
                 'page_view', 'step_completed', 'plan_built', 'box_built', 'recipe_opened',
-                'meal_swapped', 'help_clicked', 'zip_added_later', 'plan_kept', 'language_changed')),
+                'meal_swapped', 'help_clicked', 'zip_added_later', 'plan_kept', 'language_changed',
+                'cant_use', 'plan_reopened')),
   lang        text not null default 'en' check (lang ~ '^[a-z]{2}(-[A-Za-z]{2,4})?$'),
   data        jsonb not null default '{}'::jsonb check (pg_column_size(data) < 2000),
   created_at  timestamptz not null default now()
