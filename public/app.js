@@ -212,9 +212,15 @@ function renderIntro() {
         <p class="pill">${esc(t('hero_eyebrow'))}</p>
         <h1 tabindex="-1" id="intro-title">${accent(t('intro_title'))}</h1>
         <p class="hero-blurb">${esc(t('intro_body'))}</p>
-        <div class="doors">
-          <button class="door" id="door-budget"><b>${esc(t('door_budget'))}</b><span>${esc(t('door_budget_sub'))}</span></button>
-          <button class="door" id="door-box"><b>${esc(t('door_box'))}</b><span>${esc(t('door_box_sub'))}</span></button>
+        <div class="door-cards">
+          <button class="door-card dc-budget" id="door-budget">
+            <span class="dc-art" aria-hidden="true">${ART.coins}</span>
+            <span class="dc-text"><b>${esc(t('door_budget'))}</b><span class="dc-sub">${esc(t('door_budget_sub'))}</span><span class="dc-go" aria-hidden="true">${esc(t('door_budget_go'))}</span></span>
+          </button>
+          <button class="door-card dc-box" id="door-box">
+            <span class="dc-art" aria-hidden="true">${ART.box}</span>
+            <span class="dc-text"><b>${esc(t('door_box'))}</b><span class="dc-sub">${esc(t('door_box_sub'))}</span><span class="dc-go" aria-hidden="true">${esc(t('band_box_btn'))}</span></span>
+          </button>
         </div>
       </div>
       <div class="collage" aria-hidden="true">
@@ -242,16 +248,11 @@ function renderIntro() {
           <p>${esc(t('band_body'))}</p>
           <ul class="promises"><li>${esc(t('band_p1'))}</li><li>${esc(t('band_p2'))}</li><li>${esc(t('band_p3'))}</li></ul>
         </div>
-        <div class="band-card">
-          <div class="band-art" aria-hidden="true">${ART.box}</div>
-          <b>${esc(t('door_box'))}</b>
-          <p>${esc(t('door_box_sub'))}</p>
-          <button class="btn btn-primary btn-sm" id="band-box" style="margin-top:14px">${esc(t('band_box_btn'))}</button>
-        </div>
+        <div class="band-deco" aria-hidden="true">${ART.pin}</div>
       </div>
     </section>`;
   app.querySelector('#door-budget').onclick = () => { answers = fresh(); go(0); };
-  app.querySelector('#door-box').onclick = app.querySelector('#band-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
+  app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [] }; renderBox(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
     const e = findSaved(store, saveKey(), b.dataset.open);
     if (!e || !openFromHash(e.hash, e.id, 'saved')) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }

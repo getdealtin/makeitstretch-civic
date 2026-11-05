@@ -10,7 +10,7 @@ export default {
 
   // Start screen: two doors
   intro_title: "Make your grocery money *stretch*.",
-  intro_body: "Tell us what you can spend. We’ll build a shopping list and a week of real meals that fit it. Got a food box instead? Tap what’s in it and see what you can cook. We’ll also point you to free food and benefits near you.",
+  intro_body: "A shopping list and a week of real meals from the money you have. Plus free food and benefits near you.",
   hero_eyebrow: "Free · No sign-up · About a minute",
   tag_list: "Shopping list",
   tag_meals: "A week of meals",
@@ -33,6 +33,7 @@ export default {
   band_box_btn: "Start with my box",
   door_budget: 'Plan my grocery budget',
   door_budget_sub: 'Tell us what you can spend. Get a shopping list and a meal plan that stretches it.',
+  door_budget_go: "Start with my budget",
   door_box: 'I have a food box',
   door_box_sub: 'Tap what’s in it. See the meals you can make.',
 
