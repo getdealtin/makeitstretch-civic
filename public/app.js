@@ -670,9 +670,8 @@ function renderResults(plan, restore = {}) {
     </section>
 
     ${plan.listInfo ? `<div class="list-nudge no-print">
-      <p>${esc(plan.listInfo.mode === 'short' ? t('list_short_note', { n: plan.listInfo.short }) : t('list_full_note', { n: plan.listInfo.full }))}</p>
-      <button type="button" class="btn btn-ghost btn-sm" id="list-switch">${esc(plan.listInfo.mode === 'short'
-        ? t('list_show_full', { n: plan.listInfo.full }) : t('list_show_short', { n: plan.listInfo.short }))}</button>
+      <p>${esc(plan.listInfo.mode === 'short' ? t('list_short_note', { n: plan.listInfo.short, total: plan.listInfo.full }) : t('list_full_note', { n: plan.listInfo.full }))}</p>
+      <button type="button" class="btn btn-ghost btn-sm" id="list-switch">${esc(t(plan.listInfo.mode === 'short' ? 'list_show_full' : 'list_show_short'))}</button>
     </div>` : ''}
     <section class="section" id="list" aria-labelledby="h-list" tabindex="-1">
       <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
