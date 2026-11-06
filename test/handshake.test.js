@@ -2,7 +2,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import express from 'express';
-import { cleanRequest, preview, CONSENT_VERSION, FIELDS } from '../public/handshake.js';
+import { cleanRequest, preview, CONSENT_VERSION, FIELDS, isHandshakeKey } from '../public/handshake.js';
 import { mountHandshake, handshakeOn } from '../server/handshake.js';
 import austin from '../cities/austin.js';
 import app from '../server.js';
@@ -15,19 +15,20 @@ const ok = (over = {}) => ({
 });
 
 test('cleanRequest: allowlisted fields only, a way to reach her, consent required', () => {
-  const { request } = cleanRequest(ok());
+  const NEEDS = austin.needs;
+  const { request } = cleanRequest(ok(), { needs: NEEDS });
   assert.deepEqual(Object.keys(request.fields), ['first_name', 'phone', 'reach_by', 'language', 'zip', 'note'], 'unknown fields (ssn) dropped');
-  assert.equal(cleanRequest(ok({ consent: { agreed: false } })).error, 'consent');
-  assert.equal(cleanRequest(ok({ consent: { version: 'old' } })).error, 'consent');
-  assert.equal(cleanRequest(ok({ fields: { phone: '' } })).error, 'contact');
-  assert.equal(cleanRequest(ok({ fields: { phone: '', email: 'a@b.org', reach_by: 'text' } })).error, 'phone');
-  assert.equal(cleanRequest(ok({ fields: { reach_by: 'email' } })).error, 'email');
-  assert.equal(cleanRequest(ok({ fields: { zip: '7870' } })).error, 'zip');
-  assert.equal(cleanRequest(ok({ fields: { phone: 'call me maybe' } })).error, 'phone');
-  assert.equal(cleanRequest(ok({ top: { target: 'https://evil' } })).error, 'target');
-  assert.equal(cleanRequest(ok({ top: { need: 'cash' } })).error, 'need');
-  assert.equal(cleanRequest(ok({ fields: { note: 'x'.repeat(900) } })).request.fields.note.length, 500);
-  assert.deepEqual(preview(cleanRequest(ok()).request.fields).map(([k]) => k), FIELDS.map(f => f.key).filter(k => k !== 'email'));
+  assert.equal(cleanRequest(ok({ consent: { agreed: false } }), { needs: NEEDS }).error, 'consent');
+  assert.equal(cleanRequest(ok({ consent: { version: 'old' } }), { needs: NEEDS }).error, 'consent');
+  assert.equal(cleanRequest(ok({ fields: { phone: '' } }), { needs: NEEDS }).error, 'contact');
+  assert.equal(cleanRequest(ok({ fields: { phone: '', email: 'a@b.org', reach_by: 'text' } }), { needs: NEEDS }).error, 'phone');
+  assert.equal(cleanRequest(ok({ fields: { reach_by: 'email' } }), { needs: NEEDS }).error, 'email');
+  assert.equal(cleanRequest(ok({ fields: { zip: '7870' } }), { needs: NEEDS }).error, 'zip');
+  assert.equal(cleanRequest(ok({ fields: { phone: 'call me maybe' } }), { needs: NEEDS }).error, 'phone');
+  assert.equal(cleanRequest(ok({ top: { target: 'https://evil' } }), { needs: NEEDS }).error, 'target');
+  assert.equal(cleanRequest(ok({ top: { need: 'cash' } }), { needs: NEEDS }).error, 'need');
+  assert.equal(cleanRequest(ok({ fields: { note: 'x'.repeat(900) } }), { needs: NEEDS }).request.fields.note.length, 500);
+  assert.deepEqual(preview(cleanRequest(ok(), { needs: NEEDS }).request.fields).map(([k]) => k), FIELDS.map(f => f.key).filter(k => k !== 'email'));
 });
 
 test('off by default: Austin ships with it off, and every route is 404', async () => {
@@ -44,7 +45,7 @@ test('off by default: Austin ships with it off, and every route is 404', async (
 
 // A city with it on, a test receiver and a test delivery channel.
 const delivered = [];
-const city = { id: 'testcity', handshake: { enabled: true, receivers: {
+const city = { id: 'testcity', needs: austin.needs, handshake: { enabled: true, receivers: {
   'resource:wfs-childcare': { name: 'Workforce Solutions Capital Area', deliver: 'test' },
   'resource:nowhere': { name: 'No channel yet', deliver: 'email' },
 } } };
@@ -73,4 +74,16 @@ test('on: receivers list has no delivery details; a request reaches only the cho
   assert.equal(delivered.length, 1, 'nothing else delivered');
   assert.equal((await post(ok())).status, 200, 'fifth request this hour');
   assert.equal((await post(ok())).status, 429, 'more than 5 an hour from one connection is refused');
+});
+
+test('cannot be switched on before its text is translated', async () => {
+  const { CITIES } = await import('../cities/index.js');
+  const en = (await import('../public/i18n/en.js')).default;
+  for (const c of Object.values(CITIES)) {
+    if (!c.handshake?.enabled) continue;
+    for (const code of (c.languages || []).filter(l => l !== 'en')) {
+      const ui = (await import(`../public/i18n/${code}.js`)).default;
+      for (const k of Object.keys(en).filter(isHandshakeKey)) assert.ok(ui[k], `${c.id} has the handshake on but ${code} lacks "${k}"`);
+    }
+  }
 });

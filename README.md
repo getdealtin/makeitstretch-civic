@@ -105,9 +105,15 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
   else?", a resident can ask one service to contact her. Matching happens on her phone from public listings; she
   picks what to share, sees exactly what will be sent and to whom, and agrees. The server checks it again, passes it
   to that one service and keeps no copy (nothing in the database or logs). Off unless a city sets
-  `handshake: { enabled: true }`; while off every route is 404. Not built yet: a delivery channel (sending answers
-  `no_delivery` until one exists) and services that agree to receive. Before turning it on: those two, the privacy
+  `handshake: { enabled: true }`; while off every route is 404. On hold (Nov 6): as designed it asks short-staffed
+  nonprofits to do the outreach, which is the wrong direction; to be rethought. Its screen text is kept out of
+  translation review while it is off (a test blocks enabling it until it is translated). Before turning it on: those two, the privacy
   page, and a security review. Local preview: `HANDSHAKE_DEMO=1 node server.js` (refused in production; sends nothing).
+- **Council districts** (`data/zip-districts.json`, `scripts/build-zip-districts.py`): how each ZIP's 2020 residents
+  split across City Council districts, from the City's district boundaries and 2020 Census block populations. The
+  City report shows people, below-SNAP plans and needs by district as estimates (grant area: Districts 1–4).
+- **Needs signal**: for each need, who asked and whether they opened a source shown for it (City/County program,
+  directory site, or 2-1-1), gaps by ZIP and district, and how many sources are listed per need.
 - Database schema: `db/schema.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
 
 ## Languages
@@ -156,7 +162,7 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
 - [x] Phase 4: anonymous activity events (strict schema), /privacy in four languages, admin Activity,
       "can't use this" in food boxes, box value, return visits, halal/kosher/diabetic/low-sodium notes
 - [x] Phase 5: City report in /admin (by Food Plan goal, people-based counts, cells under 15 hidden plus
-      secondary suppression, limits section, print/PDF + CSV), CTFB directory CSV, `?src=` source tags,
+      secondary suppression, limits section, print/PDF + CSV), directory CSV download, `?src=` source tags,
       "Don't count this browser", "Did you use this plan?" on return visits
       Report is multi-city: shared measures in `server/report.js` (METRICS); each city's card can set
       `report: { title, labels, sections: [{ goal, intro, metrics }] }` (Austin maps to its Food Plan

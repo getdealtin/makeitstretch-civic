@@ -3,7 +3,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import app from '../server.js';
 import { memoryDb } from '../server/db.js';
-import { suppress, cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK, METRICS } from '../server/report.js';
+import { suppress, cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK, METRICS, ZIP_DISTRICTS } from '../server/report.js';
 import austin from '../cities/austin.js';
 import { cleanEvent } from '../server/events.js';
 
@@ -53,11 +53,11 @@ test('no number under k appears anywhere in the report (people tables)', () => {
   }
   const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS });
   for (const s of r.sections) if (!s.goal.startsWith('Goal 9'))
-    for (const tb of s.tables) for (const [, v] of tb.rows) assert.ok(v === null || v >= K, `${tb.title}: ${v}`);
+    for (const tb of s.tables.filter(t => !t.organizations && !t.money)) for (const [, v] of tb.rows) assert.ok(v === null || v >= K, `${tb.title}: ${v}`);
   for (const [, v] of r.overview.slice(0, 4)) assert.ok(v === null || v >= K);
 });
 
-test('CSV marks hidden cells as <15; CTFB file never includes contact details', () => {
+test('CSV marks hidden cells as <15; directory download never includes contact details', () => {
   const r = cityReport([], { k: K, from: 'a', to: 'b', city: 'Austin' });
   assert.match(reportCsv(r), /"Visits","<15"/);
   const csv = directoryCsv([{ name: 'Eastside Pantry', kind: 'pantry', zip: '78702', languages: ['es', 'en'], contact_email: 'secret@x.org', contact_phone: '555', admin_note: 'private' }]);
@@ -73,7 +73,7 @@ test('another city: no framework → neutral layout; its own resource ids count 
     events.push(ev(i, 'help_clicked', { target: 'mn-snap', kind: 'resource', action: 'website' }));
   }
   const roles = rolesOf([{ id: 'mn-snap', role: 'benefits' }, { id: 'mn-foodshelf', role: 'food_help' }, { id: 'other' }]);
-  assert.deepEqual(roles, { benefits: ['mn-snap'], food_help: ['mn-foodshelf'] });
+  assert.deepEqual(roles, { benefits: ['mn-snap'], food_help: ['mn-foodshelf'], needs: {}, any_need: [] });
   const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Minneapolis', roles });
   assert.deepEqual(r.sections.map(s => s.goal), DEFAULT_FRAMEWORK.sections.map(s => s.goal));
   assert.ok(!r.sections.some(s => /Goal|Strategy/.test(s.goal)), 'no Austin Food Plan wording');
@@ -132,4 +132,45 @@ test('needs beyond food: every need has sources, they stay out of the food help 
   // each need carries its standard category (Open Eligibility) in the report and the CSV
   assert.equal(t.oe['Rent & utilities'], 'Housing > Help Pay for Housing; Housing > Help Pay for Housing > Help Pay for Utilities');
   assert.match(reportCsv(r), /"Rent & utilities","20","","Housing > Help Pay for Housing; /);
+});
+
+test('council districts: population shares, estimates by district, grant area marked', () => {
+  const z = ZIP_DISTRICTS.zips;
+  for (const [zip, v] of Object.entries(z)) {
+    const sum = Object.values(v.shares).reduce((a, b) => a + b, 0);
+    assert.ok(Math.abs(sum - 1) < 0.01, zip);
+  }
+  assert.equal(z['78741'].main, '3'); assert.equal(z['78744'].main, '2');
+  const events = [];
+  for (let i = 0; i < 40; i++) events.push(ev(i, 'page_view'), ev(i, 'plan_built', { zip: '78741', pppd: 4 }));
+  const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS });
+  const t = r.sections.flatMap(s => s.tables).find(x => x.id === 'district');
+  assert.deepEqual(t.rows.find(x => x[0].startsWith('District 3')), ['District 3 (grant area)', 39], '40 people × 96.8% in District 3');
+  assert.ok(!t.rows.some(x => x[0].startsWith('District 2')), 'a district with under half a person is left out, not shown as hidden');
+  assert.match(t.note, /Estimated/);
+});
+
+test('needs signal: opened a listed source vs opened none, gaps by ZIP, supply per need', () => {
+  const events = [];
+  for (let i = 0; i < 40; i++) {
+    events.push(ev(i, 'page_view'), ev(i, 'plan_built', { zip: '78702', pppd: 5 }), ev(i, 'need_tapped', { need: 'childcare' }));
+    if (i < 20) events.push(ev(i, 'help_clicked', { target: 'wfs-childcare', kind: 'resource', action: 'website' }));
+    else if (i < 22) events.push(ev(i, 'help_clicked', { target: 'tx-snap', kind: 'resource', action: 'website' })); // not a child care source
+  }
+  const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS });
+  const tables = r.sections.find(s => s.goal === 'Needs beyond food').tables;
+  const ft = tables.find(x => x.id === 'needs_followthrough');
+  assert.deepEqual(Object.fromEntries(ft.rows), { 'Child care & school · opened a listed source': 20, 'Child care & school · opened none': 20 });
+  assert.deepEqual(tables.find(x => x.id === 'needs_gap_by_zip').rows, [['78702 · Child care & school', 20]]);
+  const supply = Object.fromEntries(tables.find(x => x.id === 'needs_supply').rows);
+  assert.equal(supply['Child care & school'], 1);
+  assert.equal(supply['Rent & utilities'], 2);
+});
+
+test('dollars stretched: latest box per person, hidden under the threshold', () => {
+  const evs = n => { const out = []; for (let i = 0; i < n; i++) { out.push(ev(i, 'page_view'), ev(i, 'box_built', { items: ['rice'], value: 10 }), ev(i, 'box_built', { items: ['rice', 'tuna'], value: 20 + i })); } return out; };
+  const get = r => r.sections.flatMap(s => s.tables).find(t => t.id === 'box_value').rows;
+  assert.deepEqual(get(cityReport(evs(20), { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS })),
+    [['People who entered a food box', 20], ['Total estimated store value', '$590'], ['Typical (median) box', '$30']]);
+  assert.ok(get(cityReport(evs(10), { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS })).every(([, v]) => v === null));
 });

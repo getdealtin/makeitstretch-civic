@@ -140,8 +140,8 @@ function render() {
     <section class="a-section" id="directory" aria-labelledby="h-dir">
       <h2 id="h-dir">Directory <small>${d.approved.length} live</small></h2>
       <div class="actions" style="margin:8px 0 12px">${btn('+ Add a listing yourself', 'add', '')}
-        <a class="btn-xs" href="/api/admin/directory.csv?city=${encodeURIComponent(d.city)}" download>Download for CTFB (CSV)</a></div>
-      <p class="a-hint">The CTFB file has public listing details only (hours, walk-up or appointment, ID rules, languages, offers). Contact details are never included.</p>
+        <a class="btn-xs" href="/api/admin/directory.csv?city=${encodeURIComponent(d.city)}" download>Download the directory (CSV)</a></div>
+      <p class="a-hint">Public listing details only (hours, walk-up or appointment, ID rules, languages, offers), for your own outreach. Contact details are never included. Other directories can also read the listings from the open data feed at /api/hsds.</p>
       ${d.approved.length ? `<ul class="row-list">${d.approved.map(p => `
         <li><span><b>${esc(p.name)}</b><span class="sub">${esc(KIND[p.kind])} · ${esc(p.zip || '')} · confirmed ${day(p.confirmed_at)}</span></span>
           <span class="actions">${btn('Edit', 'edit', p.id)}${btn('Hide', 'hide', p.id, 'warn')}</span></li>`).join('')}</ul>`

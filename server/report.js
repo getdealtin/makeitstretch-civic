@@ -18,6 +18,24 @@
 //  • Organization counts (food sites in the directory) are not people and are not suppressed.
 
 import { NEED_TERMS, describe } from './taxonomy.js';
+import { readFileSync } from 'node:fs';
+
+// ZIP → council district shares (population-weighted; built by scripts/build-zip-districts.py).
+const ZIPD = JSON.parse(readFileSync(new URL('../data/zip-districts.json', import.meta.url), 'utf8'));
+export const ZIP_DISTRICTS = ZIPD;
+const DISTRICT_NOTE = 'Estimated: each person is spread across districts by how their ZIP code’s 2020 residents split (2020 Census blocks placed in City of Austin council districts). ZIP codes cross district lines, so these are estimates, not counts. Grant area: Districts 1–4.';
+/** Expected people per district from per-person ZIPs: [[label, n]], districts in order, then outside the city. */
+function byDistrict(sessions) {
+  const est = new Map();
+  const add = (k, v) => est.set(k, (est.get(k) || 0) + v);
+  for (const [, zip] of sessions) {
+    const z = ZIPD.zips[zip];
+    if (!z) { add('outside', 1); continue; }
+    for (const [d, sh] of Object.entries(z.shares)) add(d, sh);
+  }
+  const order = [...Array(10)].map((_, i) => String(i + 1)).concat('outside');
+  return order.filter(k => est.has(k) && Math.round(est.get(k)) > 0).map(k => [k === 'outside' ? 'Outside Austin city limits (or ZIP unknown)' : `District ${k}${+k <= 4 ? ' (grant area)' : ''}`, Math.round(est.get(k))]);
+}
 import { CANT_USE } from './events.js';
 
 import { BENCHMARKS } from '../engine/index.js';
@@ -25,8 +43,12 @@ const { tfpPerPersonDay: TFP, snapPerPersonDay: SNAP } = BENCHMARKS;
 
 /** Resource ids by role, from a city's resources: { benefits: [...], food_help: [...] }. */
 export function rolesOf(resources = []) {
-  const out = { benefits: [], food_help: [] };
-  for (const r of resources) if (r.role && out[r.role]) out[r.role].push(r.id);
+  const out = { benefits: [], food_help: [], needs: {}, any_need: [] };
+  for (const r of resources) {
+    if (r.role && out[r.role]) out[r.role].push(r.id);
+    for (const n of r.needs || []) (out.needs[n] ||= []).push(r.id);
+    if (r.phone === '211') out.any_need.push(r.id); // 2-1-1 is shown with every need
+  }
   return out;
 }
 
@@ -38,9 +60,9 @@ export const DEFAULT_FRAMEWORK = {
     { goal: 'Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'cuisine'] },
     { goal: 'Benefits and food help', intro: 'People routed toward benefits and free food. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
     { goal: 'Food that fits', intro: 'Food-box items people report they cannot use, and dietary needs.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
-    { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan: a de-identified signal for nonprofit partners.', metrics: ['needs', 'needs_by_zip'] },
+    { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan, and whether they found a source to open: a de-identified signal for nonprofit partners.', metrics: ['needs', 'needs_followthrough', 'needs_supply', 'needs_by_zip', 'needs_gap_by_zip'] },
     { goal: 'Language', intro: 'Language used.', metrics: ['language'] },
-    { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link.', metrics: ['outcome', 'returns'] },
+    { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link, and the estimated value of food boxes people planned around.', metrics: ['outcome', 'returns', 'box_value'] },
     { goal: 'Participation', intro: 'Organizations taking part through the food directory.', metrics: ['directory'] },
     { goal: 'How people found the tool', intro: 'From source tags on links and printed QR codes.', metrics: ['sources'] },
   ],
@@ -114,6 +136,28 @@ export const METRICS = {
   cant_item: c => c.table('Item', ['Food-box item', 'People'], countBy(c.cant, e => e.data.item)),
   unlisted_food: c => c.table('Foods in boxes that aren’t on our list', ['Food (as typed)', 'People'], countBy(c.boxEv, e => e.data.other || []), { note: 'What people typed in. Shows what pantries hand out that the tool can’t use yet.' }),
   needs: c => c.table('Other needs people asked about', ['Need', 'People'], lab(LABEL.need, countBy(c.events.filter(e => e.event === 'need_tapped'), e => e.data.need)), { oe: needOE, note: `Taps on a need after the plan. No one is contacted and nothing is requested. Standard categories (Open Eligibility, the taxonomy used with HSDS): ${NEED_OE_NOTE}.` }),
+  district: c => c.table('People by council district (estimated)', ['District', 'People'], byDistrict(Object.entries(c.zipOf).filter(([sid]) => c.visits.has(sid) || c.plans.has(sid) || c.boxes.has(sid))), { note: DISTRICT_NOTE }),
+  budget_band_by_district: c => c.table('Plans below the average SNAP benefit by council district (estimated)', ['District', 'People'], byDistrict([...c.shortfall].filter(sid => c.zipOf[sid]).map(sid => [sid, c.zipOf[sid]])), { note: DISTRICT_NOTE }),
+  needs_by_district: c => c.table('People who asked about other needs by council district (estimated)', ['District', 'People'], byDistrict([...new Set(c.needTaps.map(e => e.session_id))].filter(sid => c.zipOf[sid]).map(sid => [sid, c.zipOf[sid]])), { note: DISTRICT_NOTE }),
+  // Needs signal: who asked, and whether they opened any source shown for that need. "Opened none" is the
+  // closest sign of a gap the tool can see without contacting anyone.
+  needs_followthrough: c => c.table('Other needs: did people open a source?', ['Need · result', 'People'], countBy(c.needTaps, e => `${LABEL.need[e.data.need] || e.data.need} · ${c.openedFor(e.session_id, e.data.need) ? 'opened a listed source' : 'opened none'}`), { oe: needOE, note: 'A source counts if it was shown for that need: a City or County program, a directory site offering it, or 2-1-1. One person asking about two needs who opens 2-1-1 counts as opening a source for both. “Opened none” may mean the listing didn’t fit, or that they will come back later.' }),
+  needs_gap_by_zip: c => c.table('Other needs with no source opened, by ZIP code', ['ZIP · need', 'People'], countBy(c.needTaps.filter(e => c.zipOf[e.session_id] && !c.openedFor(e.session_id, e.data.need)), e => `${c.zipOf[e.session_id]} · ${LABEL.need[e.data.need] || e.data.need}`), { oe: needOE }),
+  // "Dollars stretched" (FACE application, Q7): what the food in people's boxes would cost at the tool's
+  // grocery prices, so money a family doesn't have to spend. Each person's latest box counts once.
+  box_value: c => {
+    const last = new Map();
+    for (const e of c.boxEv) if (e.data.value > 0) last.set(e.session_id, e.data.value);
+    const vals = [...last.values()].sort((a, b) => a - b);
+    const ok = vals.length >= c.k;
+    const usd = v => '$' + Math.round(v).toLocaleString('en-US');
+    return { title: 'Dollars stretched: estimated store value of food boxes', head: ['Measure', 'Value'], money: true, rows: [
+      ['People who entered a food box', ok ? vals.length : null],
+      ['Total estimated store value', ok ? usd(vals.reduce((a, b) => a + b, 0)) : null],
+      ['Typical (median) box', ok ? usd(vals[Math.floor(vals.length / 2)]) : null],
+    ], note: 'What the box’s foods would cost at the tool’s grocery prices (BLS South-region averages where available, otherwise built-in estimates), one package per item listed. An estimate of money a household doesn’t have to spend, not a measured saving. Hidden when fewer people than the report’s threshold entered a box.' };
+  },
+  needs_supply: c => ({ title: 'Listed help for each need', head: ['Need', 'Sources shown'], rows: Object.entries(LABEL.need).map(([n, l]) => [l, (c.roles.needs?.[n] || []).length + c.providers.filter(p => (p.offers || []).includes(n)).length]), note: 'City and County programs plus approved directory sites that offer it (2-1-1 is shown with every need and not counted). Organizations, not people: not suppressed.', organizations: true }),
   needs_by_zip: c => c.table('Other needs by ZIP code', ['ZIP · need', 'People'], countBy(c.withZip.filter(e => e.event === 'need_tapped'), e => `${e.zip} · ${LABEL.need[e.data.need] || e.data.need}`), { oe: needOE }),
   retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of Travis County (USDA, as of ${longDate(c.retail.as_of)})`, head: ['', 'Stores'], rows: [
     [`Focus area (${c.retail.focus.zips} ZIP codes): convenience stores`, c.retail.focus.convenience],
@@ -137,7 +181,7 @@ export const METRICS = {
   language: c => c.table('Language used', ['Language', 'People'], countBy(c.views, e => e.lang).map(([code, v]) => [langName(code), v]), { total: c.visits.size }),
   outcome: c => c.table('“Did you use this plan?”', ['Answer', 'People'], lab(LABEL.answer, countBy(c.outcome, e => e.data.answer))),
   returns: c => c.table('Return visits', ['How', 'People'], lab({ saved: 'Reopened a saved plan', link: 'Opened a shared link' }, countBy(c.events.filter(e => e.event === 'plan_reopened'), e => e.data.source))),
-  directory: c => ({ title: 'Food sites in the directory', head: ['Type', 'Organizations'], rows: Object.entries(c.providers.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {})), note: 'Organizations, not people: not suppressed.' }),
+  directory: c => ({ title: 'Food sites in the directory', head: ['Type', 'Organizations'], rows: Object.entries(c.providers.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {})), note: 'Organizations, not people: not suppressed.', organizations: true }),
   sources: c => c.table('Visits by source', ['Source', 'People'], countBy(c.views, e => e.data?.src || 'direct'), { total: c.visits.size }),
 };
 
@@ -171,9 +215,14 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
   const routedBenefits = routed(roles.benefits || []), routedFood = routed(roles.food_help || []);
 
   const cant = events.filter(e => e.event === 'cant_use');
+  const needTaps = events.filter(e => e.event === 'need_tapped');
+  const offers = Object.fromEntries(providers.map(p => [String(p.id), p.offers || []]));
+  const openedFor = (sid, need) => helps.some(h => h.session_id === sid && (
+    (h.data.kind === 'resource' && ((roles.needs?.[need] || []).includes(h.data.target) || (roles.any_need || []).includes(h.data.target)))
+    || (h.data.kind === 'site' && (offers[h.data.target] || []).includes(need))));
   const ctx = {
-    events, views, visits, planEv, bandOf, bandShort, retail, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
-    roles: { benefits: roles.benefits || [], food_help: roles.food_help || [] },
+    k, events, needTaps, openedFor, views, visits, planEv, bandOf, bandShort, retail, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
+    roles: { benefits: roles.benefits || [], food_help: roles.food_help || [], needs: roles.needs || {}, any_need: roles.any_need || [] },
     labels: { ...DEFAULT_FRAMEWORK.labels, ...(framework.labels || {}) },
     routedBenefits, routedFood,
     shortfallBenefits: [...shortfall].filter(s => routedBenefits.has(s)).length,
@@ -227,7 +276,7 @@ export function reportCsv(r) {
   return lines.join('\n') + '\n';
 }
 
-/** CTFB handoff: public listing details of approved food sites (never contact details). */
+/** Directory download: public listing details of approved food sites (never contact details). */
 export function directoryCsv(providers) {
   const cols = ['name', 'kind', 'address', 'city', 'zip', 'hours', 'access', 'id_required', 'languages', 'offers', 'phone', 'website', 'confirmed_at'];
   const esc = v => `"${String(Array.isArray(v) ? v.join('; ') : v ?? '').replace(/"/g, '""')}"`;

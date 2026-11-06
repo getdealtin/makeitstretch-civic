@@ -793,7 +793,7 @@ function openAsk(card, target, org, need, btn) {
   f.onsubmit = async e => {
     e.preventDefault();
     const err = f.querySelector(".error");
-    const { request, error } = cleanRequest(read());
+    const { request, error } = cleanRequest(read(), { needs: city.needs || [] });
     if (error) { err.textContent = t('hs_err_' + (['contact', 'phone', 'email', 'consent', 'zip'].includes(error) ? error : 'server')); return; }
     const go = f.querySelector('[type=submit]'); go.disabled = true;
     try {

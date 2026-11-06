@@ -45,7 +45,7 @@ export function mountHandshake(app, { delivery = DELIVERY } = {}) {
 
   r.post('/request', express.json({ limit: '4kb' }), async (req, res) => {
     if (limited(req.ip)) return res.status(429).json({ ok: false, error: 'rate' });
-    const { request, error } = cleanRequest(req.body);
+    const { request, error } = cleanRequest(req.body, { needs: req.city.needs || [] });
     if (error) return res.status(400).json({ ok: false, error });
     const to = receiversFor(req.city)[request.target];
     if (!to) return res.status(400).json({ ok: false, error: 'target' });

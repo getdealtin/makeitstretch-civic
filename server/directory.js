@@ -262,7 +262,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
     res.json({ ok: true, invite: inv, link: inviteLink(city, req, inv.token) });
   });
 
-  // ── City report (Phase 5) and CTFB handoff ──
+  // ── City report (Phase 5) and directory download ──
   const reportFor = async req => {
     const city = cityOf(req);
     const day = s => (/^\d{4}-\d{2}-\d{2}$/.test(s || '') ? s : null);

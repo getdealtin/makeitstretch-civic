@@ -20,7 +20,8 @@ export const FIELDS = [
   { key: 'zip', pattern: /^\d{5}$/ },
   { key: 'note', max: 500 },
 ];
-export const NEEDS = ['rent', 'health', 'childcare', 'jobs'];
+/** Screen text used only by the handshake. Kept out of translation review while it is off; translate before enabling. */
+export const isHandshakeKey = k => k.startsWith('hs_') || k === 'needs_hint_hs';
 
 const clean = (v, max) => {
   if (v == null) return '';
@@ -29,12 +30,13 @@ const clean = (v, max) => {
 
 /**
  * Untrusted request → { request } or { error }. A request is { target, need, fields, consent }.
+ * needs: the city's own list of needs (city.needs), so there is one list, in the city config.
  * Unknown fields are dropped, empty ones left out, and there must be a way to reach her.
  */
-export function cleanRequest(b = {}) {
+export function cleanRequest(b = {}, { needs = [] } = {}) {
   const target = clean(b.target, 80);
   if (!/^(resource|site):[A-Za-z0-9-]{1,64}$/.test(target)) return { error: 'target' };
-  const need = NEEDS.includes(b.need) ? b.need : null;
+  const need = needs.includes(b.need) ? b.need : null;
   if (!need) return { error: 'need' };
   const fields = {};
   for (const f of FIELDS) {
