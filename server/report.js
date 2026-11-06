@@ -229,7 +229,7 @@ export function reportCsv(r) {
 
 /** CTFB handoff: public listing details of approved food sites (never contact details). */
 export function directoryCsv(providers) {
-  const cols = ['name', 'kind', 'address', 'zip', 'hours', 'access', 'id_required', 'languages', 'offers', 'phone', 'website', 'confirmed_at'];
+  const cols = ['name', 'kind', 'address', 'city', 'zip', 'hours', 'access', 'id_required', 'languages', 'offers', 'phone', 'website', 'confirmed_at'];
   const esc = v => `"${String(Array.isArray(v) ? v.join('; ') : v ?? '').replace(/"/g, '""')}"`;
   return [cols.join(','), ...providers.map(p => cols.map(c => esc(p[c])).join(','))].join('\n') + '\n';
 }

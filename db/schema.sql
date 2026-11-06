@@ -28,6 +28,7 @@ create table if not exists public.providers (
   name          text not null check (char_length(name) between 1 and 200),
   kind          text not null check (kind in ('pantry', 'fridge', 'meals', 'mutual_aid', 'other')),
   address       text check (char_length(address) <= 300),
+  city          text check (char_length(city) <= 100),   -- added Nov 2026 (alter table … add column if not exists)
   zip           text check (zip ~ '^\d{5}$'),
   phone         text check (char_length(phone) <= 40),
   website       text check (char_length(website) <= 300),

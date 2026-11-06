@@ -39,6 +39,7 @@ export function cleanProvider(b, { partial = false } = {}) {
   set('name', str(b.name, 200));
   set('kind', KINDS.includes(b.kind) ? b.kind : null);
   set('address', str(b.address, 300));
+  set('city', str(b.city, 100));
   set('zip', /^\d{5}$/.test(String(b.zip || '').trim()) ? String(b.zip).trim() : null);
   set('phone', str(b.phone, 40));
   let web = str(b.website, 300);
@@ -66,6 +67,7 @@ export function cleanProvider(b, { partial = false } = {}) {
     if (!out.name) return { error: 'name' };
     if (!out.kind) return { error: 'kind' };
     if (!out.zip) return { error: 'zip' };
+    if (out.address && !out.city) return { error: 'city' }; // HSDS addresses need a city; never guessed
     if (!out.contact_email && !out.contact_phone) return { error: 'contact' };
   } else {
     if ('name' in out && !out.name) return { error: 'name' };

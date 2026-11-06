@@ -99,8 +99,8 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
   `/taxonomy_terms`), so 2-1-1, food banks and other HSDS systems can take them without retyping. Public fields
   only, never contact details. Categories use Open Eligibility (`server/taxonomy.js`, data built by
   `scripts/build-open-eligibility.py`), which also labels the needs in the City report and its CSV
-  (`open_eligibility` column). Output was checked against HSDS's own schema files. Providers don't give a city, and
-  HSDS addresses require one, so street and ZIP go in the location description.
+  (`open_eligibility` column). Output was checked against HSDS's own schema files. Sign-ups give a city with any street address
+  (required then), so locations carry a full HSDS address.
 - Database schema: `db/schema.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
 
 ## Languages

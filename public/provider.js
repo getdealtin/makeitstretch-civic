@@ -83,7 +83,11 @@ function render() {
 
         <label class="fl" for="f-address">${esc(t('pf_address'))}</label>
         <p class="fh" id="h-address">${esc(t('pf_address_hint'))}</p>
-        <input class="fi" id="f-address" name="address" maxlength="300" aria-describedby="h-address" value="${v('address')}" autocomplete="street-address">
+        <input class="fi" id="f-address" name="address" maxlength="300" aria-describedby="h-address" value="${v('address')}" autocomplete="address-line1">
+
+        <label class="fl" for="f-city">${esc(t('pf_city'))}</label>
+        <p class="fh" id="h-city">${esc(t('pf_city_hint'))}</p>
+        <input class="fi" id="f-city" name="city" maxlength="100" aria-describedby="h-city" value="${v('city')}" autocomplete="address-level2">
 
         <label class="fl" for="f-zip">${esc(t('pf_zip'))}${req}</label>
         <input class="fi fi-sm" id="f-zip" name="zip" inputmode="numeric" maxlength="5" required value="${v('zip')}" autocomplete="postal-code">
@@ -138,6 +142,7 @@ function render() {
     const fail = (key, focusSel) => { err.textContent = t(key); f.querySelector(focusSel)?.focus(); };
     if (!draft.name?.trim()) return fail('pf_err_name', '#f-name');
     if (!draft.kind) return fail('pf_err_kind', '[name=kind]');
+    if (draft.address?.trim() && !draft.city?.trim()) return fail('pf_err_city', '#f-city');
     if (!/^\d{5}$/.test((draft.zip || '').trim())) return fail('pf_err_zip', '#f-zip');
     if (!draft.contact_email?.trim() && !draft.contact_phone?.trim()) return fail('pf_err_contact', '#f-cemail');
     go.disabled = true; go.textContent = t('pf_sending');
@@ -148,7 +153,7 @@ function render() {
       });
       const j = await r.json().catch(() => ({}));
       if (j.ok) { sent = true; draft = {}; return renderThanks(); }
-      const map = { name: ['pf_err_name', '#f-name'], kind: ['pf_err_kind', '[name=kind]'], zip: ['pf_err_zip', '#f-zip'], contact: ['pf_err_contact', '#f-cemail'], rate: ['pf_err_rate'] };
+      const map = { name: ['pf_err_name', '#f-name'], kind: ['pf_err_kind', '[name=kind]'], zip: ['pf_err_zip', '#f-zip'], city: ['pf_err_city', '#f-city'], contact: ['pf_err_contact', '#f-cemail'], rate: ['pf_err_rate'] };
       const [k, sel] = map[j.error] || ['pf_err_server'];
       fail(k, sel);
     } catch { fail('pf_err_server'); }

@@ -19,7 +19,7 @@ const post = (path, body, headers = {}) => fetch(base + path, {
 });
 const get = path => fetch(base + path, { headers: { cookie } });
 const site = (over = {}) => ({
-  name: 'Eastside Community Pantry', kind: 'pantry', address: '123 E 12th St', zip: '78702',
+  name: 'Eastside Community Pantry', kind: 'pantry', address: '123 E 12th St', city: 'Austin', zip: '78702',
   hours: 'Tue & Thu 4–7pm', access: 'walkup', id_required: 'no', languages: ['en', 'es'], offers: ['groceries', 'produce'],
   contact_name: 'Ana', contact_email: 'ana@example.org', ...over,
 });
@@ -106,6 +106,8 @@ test('form validation: required fields, cleaned values, honeypot, cities kept ap
   assert.equal(cleanProvider({ ...site(), zip: '7870' }).error, 'zip');
   assert.equal(cleanProvider({ ...site(), contact_email: '', contact_phone: '' }).error, 'contact');
   assert.equal(cleanProvider({ ...site(), kind: 'casino' }).error, 'kind');
+  assert.equal(cleanProvider({ ...site(), city: '' }).error, 'city', 'a street address needs its city');
+  assert.ok(cleanProvider({ ...site(), address: '', city: '' }).row, 'delivery-only sites give no address or city');
   const { row } = cleanProvider({ ...site(), website: 'pantry.org', languages: ['es', 'klingon'], offers: ['produce', 'x'], name: '  A\u0000B  ' });
   assert.equal(row.website, 'https://pantry.org/');
   assert.deepEqual(row.languages, ['es']);

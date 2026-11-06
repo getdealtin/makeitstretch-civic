@@ -720,7 +720,7 @@ function wireNeeds() {
     const orgs = siteCache.filter(p => (p.offers || []).includes(need)).slice(0, 4);
     panel.innerHTML = [...sources.map(helpCard), ...orgs.map(p => `<article class="help-card site-card">
         <span class="site-kind">${esc(t('kind_' + p.kind))}</span><h3>${esc(p.name)}</h3>
-        ${[p.address, p.zip].filter(Boolean).length ? `<p class="site-where">${esc([p.address, p.zip].filter(Boolean).join(', '))}</p>` : ''}
+        ${[p.address, p.city, p.zip].filter(Boolean).length ? `<p class="site-where">${esc([p.address, p.city, p.zip].filter(Boolean).join(', '))}</p>` : ''}
         ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
         <div class="help-actions">
           ${p.phone ? `<a href="tel:${esc(p.phone)}" data-track="site" data-target="${esc(p.id)}" data-action="call">${esc(t('call', { phone: p.phone }))}</a>` : ''}
@@ -743,7 +743,7 @@ async function loadSites(zip) {
   const month = iso => new Date(iso).toLocaleDateString(document.documentElement.lang || 'en', { month: 'long', year: 'numeric' });
   const shown = sites.slice(0, 6);
   box.querySelector('#sites-list').innerHTML = shown.map(p => {
-    const where = [p.address, p.zip].filter(Boolean).join(', ');
+    const where = [p.address, p.city, p.zip].filter(Boolean).join(', ');
     const facts = [
       p.access ? t('access_' + p.access) : '',
       p.id_required === true ? t('id_yes') : p.id_required === false ? t('id_no') : '',

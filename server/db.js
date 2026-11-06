@@ -7,7 +7,7 @@
 import crypto from 'node:crypto';
 
 export const PUBLIC_FIELDS = [
-  'id', 'name', 'kind', 'address', 'zip', 'phone', 'website', 'hours',
+  'id', 'name', 'kind', 'address', 'city', 'zip', 'phone', 'website', 'hours',
   'access', 'id_required', 'languages', 'offers', 'description', 'confirmed_at',
 ];
 export const EDITABLE_FIELDS = [

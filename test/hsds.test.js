@@ -10,7 +10,7 @@ import austin from '../cities/austin.js';
 
 const provider = {
   id: '0b8f1c2e-1111-4a2b-9c3d-123456789abc', status: 'approved', name: 'Test Pantry', kind: 'pantry',
-  address: '1234 E 7th St', zip: '78702', phone: '512-555-0100', website: 'https://example.org/', hours: 'Tue 5-7 PM',
+  address: '1234 E 7th St', city: 'Austin', zip: '78702', phone: '512-555-0100', website: 'https://example.org/', hours: 'Tue 5-7 PM',
   access: 'walkup', id_required: true, languages: ['en', 'es', 'other'], offers: ['groceries', 'produce', 'baby'],
   description: 'Free groceries.', confirmed_at: '2026-10-01T15:00:00Z',
   contact_name: 'Private Person', contact_email: 'private@example.org', contact_phone: '512-000-0000', admin_note: 'internal',
@@ -42,7 +42,11 @@ test('dataset: required HSDS fields, stable ids, never private contact details',
   assert.equal(p.application_process, 'Walk up, no appointment');
   assert.deepEqual(p.languages.map(l => l.code), ['en', 'es']);
   assert.deepEqual(p.attributes.map(a => a.taxonomy_term.code), ['1130', '1155']);
-  assert.equal(d.locations[0].description, 'Street address: 1234 E 7th St, ZIP 78702');
+  assert.deepEqual(Object.entries(d.locations[0].addresses[0]).filter(([k]) => !k.endsWith('id')),
+    [['address_1', '1234 E 7th St'], ['city', 'Austin'], ['state_province', 'TX'], ['postal_code', '78702'], ['country', 'US'], ['address_type', 'physical']]);
+  const old = buildDataset(austin, [{ ...provider, city: null }]);
+  assert.equal(old.locations[0].description, 'Street address: 1234 E 7th St, ZIP 78702', 'no city is guessed');
+  assert.equal(old.locations[0].addresses, undefined);
   assert.equal(buildDataset(austin, [provider]).services[0].id, d.services[0].id, 'ids are stable');
   assert.equal(uuid5('x'), uuid5('x')); assert.match(uuid5('x'), UUID);
 });

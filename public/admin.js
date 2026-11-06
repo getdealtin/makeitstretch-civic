@@ -63,7 +63,7 @@ function renderLogin(failed) {
 const details = (p, { showPrivate = true } = {}) => `
   <dl class="kv">
     <dt>Type</dt><dd>${esc(KIND[p.kind] || p.kind)}</dd>
-    <dt>Address</dt><dd>${esc([p.address, p.zip].filter(Boolean).join(', ') || '—')}</dd>
+    <dt>Address</dt><dd>${esc([p.address, p.city, p.zip].filter(Boolean).join(', ') || '—')}</dd>
     <dt>Hours</dt><dd>${esc(p.hours || '—')}</dd>
     <dt>How to get food</dt><dd>${esc(ACCESS[p.access] || '—')}${p.id_required === true ? ' · ID required' : p.id_required === false ? ' · No ID needed' : ''}</dd>
     <dt>Offers</dt><dd>${esc((p.offers || []).map(o => OFFER[o]).join(', ') || '—')}</dd>
@@ -363,6 +363,7 @@ function openEdit(p) {
       <div><label>Type ${sel('kind', KIND, p?.kind)}</label></div>
       <div><label>Zip<input name="zip" value="${v('zip')}" inputmode="numeric" maxlength="5"></label></div>
       <div class="wide"><label>Address<input name="address" value="${v('address')}" maxlength="300"></label></div>
+      <div><label>City<input name="city" value="${v('city')}" maxlength="100"></label></div>
       <div class="wide"><label>Hours<input name="hours" value="${v('hours')}" maxlength="500"></label></div>
       <div><label>How to get food ${sel('access', ACCESS, p?.access)}</label></div>
       <div><label>ID required ${sel('id_required', { yes: 'Yes', no: 'No' }, p?.id_required === true ? 'yes' : p?.id_required === false ? 'no' : '')}</label></div>

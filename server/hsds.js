@@ -8,9 +8,9 @@
 //   • Approved directory listings, public fields only (the same fields the site shows). Contact
 //     names, emails and phones given for admin use never leave the admin API.
 //   • Categories as Open Eligibility terms (server/taxonomy.js).
-//   • Addresses: providers give a street address and ZIP but not a city, and HSDS's address
-//     object requires a city, so the street and ZIP go in the location's description rather than
-//     guessing the city.
+//   • Addresses: a full HSDS address (street, city, state, ZIP). The sign-up form asks for the city
+//     whenever a street is given; a listing without one keeps street and ZIP in the location's
+//     description rather than a guessed city.
 import crypto from 'node:crypto';
 import express from 'express';
 import { PUBLIC_FIELDS } from './db.js';
@@ -100,9 +100,14 @@ export function buildDataset(city, providers = []) {
     }));
     if (p.address) {
       const locId = uuid5(`${city.id}:location:${p.id}`);
+      // A full HSDS address needs a city. Sign-ups since Nov 2026 give one; older listings without it keep
+      // street and ZIP in the description instead of a guessed city.
+      const full = p.city && p.zip && city.region;
       locations.push(clean({
         id: locId, location_type: 'physical', organization_id: org.id, name: p.name,
-        description: `Street address: ${p.address}${p.zip ? `, ZIP ${p.zip}` : ''}`,
+        description: full ? null : `Street address: ${p.address}${p.zip ? `, ZIP ${p.zip}` : ''}`,
+        addresses: full ? [{ id: uuid5(`${city.id}:address:${p.id}`), location_id: locId, address_1: p.address, city: p.city,
+          state_province: city.region, postal_code: p.zip, country: 'US', address_type: 'physical' }] : [],
       }));
       sals.push({ id: uuid5(`${city.id}:sal:${p.id}`), service_id: id, location_id: locId });
     }
