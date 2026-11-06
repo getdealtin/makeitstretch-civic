@@ -101,14 +101,12 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
   `scripts/build-open-eligibility.py`), which also labels the needs in the City report and its CSV
   (`open_eligibility` column). Output was checked against HSDS's own schema files. Sign-ups give a city with any street address
   (required then), so locations carry a full HSDS address.
-- **Consent handshake (built, OFF)** (`public/handshake.js`, `server/handshake.js`): from "Need help with anything
-  else?", a resident can ask one service to contact her. Matching happens on her phone from public listings; she
-  picks what to share, sees exactly what will be sent and to whom, and agrees. The server checks it again, passes it
-  to that one service and keeps no copy (nothing in the database or logs). Off unless a city sets
-  `handshake: { enabled: true }`; while off every route is 404. On hold (Nov 6): as designed it asks short-staffed
-  nonprofits to do the outreach, which is the wrong direction; to be rethought. Its screen text is kept out of
-  translation review while it is off (a test blocks enabling it until it is translated). Before turning it on: those two, the privacy
-  page, and a security review. Local preview: `HANDSHAKE_DEMO=1 node server.js` (refused in production; sends nothing).
+- **"Fill it out once"** (`public/summary.js`): under "Need help with anything else?", a resident writes a short
+  summary of what she needs and how to reach her, then shows, copies, shares, texts, emails or prints it to any
+  service herself, so staff don't have to ask again and nobody has to call her first. Everything is optional; labels
+  carry English beside her language for staff. It is never sent to the server: it stays on her device only if she
+  ticks "keep it", and she can delete it. Only counts are recorded (`summary_made`, `summary_shared` by method). The
+  earlier server-relay handshake was removed on Nov 6 (it put the outreach on short-staffed nonprofits).
 - **Council districts** (`data/zip-districts.json`, `scripts/build-zip-districts.py`): how each ZIP's 2020 residents
   split across City Council districts, from the City's district boundaries and 2020 Census block populations. The
   City report shows people, below-SNAP plans and needs by district as estimates (grant area: Districts 1–4).

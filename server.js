@@ -18,7 +18,6 @@ import { resolveCity, publicConfig, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
 import { mountDirectory } from './server/directory.js';
 import { mountHsds } from './server/hsds.js';
-import { mountHandshake, handshakeOn } from './server/handshake.js';
 import { mountEvents, AVOID } from './server/events.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -59,7 +58,7 @@ app.get('/theme.css', (req, res) => {
   );
 });
 
-app.get('/api/config', (req, res) => res.json({ ...publicConfig(req.city), handshake: handshakeOn(req.city) }));
+app.get('/api/config', (req, res) => res.json(publicConfig(req.city)));
 
 // ── Prices ──────────────────────────────────────────────────────
 // BLS average prices exist per Census region. Cached 24h. City local_prices
@@ -191,7 +190,6 @@ let db = makeDb();
 app.locals.setDb = d => { db = d; };
 mountDirectory(app, { getDb: () => db });
 mountHsds(app, { getProviders: city => db.listProviders(city, ['approved']) });
-mountHandshake(app);
 mountEvents(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
 // ── Cities that are live, and share links / QR codes for partners (landing + /share) ──

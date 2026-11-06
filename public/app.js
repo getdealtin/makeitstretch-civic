@@ -5,7 +5,7 @@
 
 import en from './i18n/en.js';
 import { ART } from './art.js';
-import { cleanRequest, preview as hsPreview, CONSENT_VERSION } from './handshake.js';
+import { cleanSummary, summaryRows, summaryText, STORE_KEY as SUM_KEY, LANG_CHOICES, LANG_NAMES } from './summary.js';
 import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
@@ -692,7 +692,7 @@ async function loadShop(zip, { quiet = false } = {}) {
 // directory that offer it (nearest first), and 2-1-1. Taps are counted anonymously; nobody is contacted.
 const FOOD_OFFERS = ['groceries', 'produce', 'meals'];
 let siteCache = [];
-const helpCard = r => `<article class="help-card" data-hs="resource:${esc(r.id)}">
+const helpCard = r => `<article class="help-card">
   <h3>${esc(resText(r, 'name'))}</h3><p>${esc(resText(r, 'description'))}</p>
   <div class="help-actions">
     ${r.phone ? `<a href="tel:${esc(r.phone)}" data-track="resource" data-target="${esc(r.id)}" data-action="call">${esc(t('call', { phone: r.phone }))}</a>` : ''}
@@ -702,9 +702,10 @@ function needsSection() {
   if (!(city.needs || []).length) return '';
   return `<section class="section needs no-print" id="needs" aria-labelledby="h-needs">
     <div class="section-head"><h2 id="h-needs">${esc(t('needs_title'))}</h2></div>
-    <p class="hint">${esc(t(city.handshake ? 'needs_hint_hs' : 'needs_hint'))}</p>
+    <p class="hint">${esc(t('needs_hint'))}</p>
     <div class="chips">${city.needs.map(n => `<button type="button" class="chip" data-need="${n}" aria-pressed="false" aria-controls="need-panel">${esc(t('need_' + n))}</button>`).join('')}</div>
     <div id="need-panel" class="help-list" aria-live="polite" hidden></div>
+    <div class="sum-box" id="sum-box"></div>
   </section>`;
 }
 function wireNeeds() {
@@ -719,7 +720,7 @@ function wireNeeds() {
     const sources = (city.resources || []).filter(r => (r.needs || []).includes(need));
     const two11 = (city.resources || []).find(r => r.id === '211-texas');
     const orgs = siteCache.filter(p => (p.offers || []).includes(need)).slice(0, 4);
-    panel.innerHTML = [...sources.map(helpCard), ...orgs.map(p => `<article class="help-card site-card" data-hs="site:${esc(p.id)}">
+    panel.innerHTML = [...sources.map(helpCard), ...orgs.map(p => `<article class="help-card site-card">
         <span class="site-kind">${esc(t('kind_' + p.kind))}</span><h3>${esc(p.name)}</h3>
         ${[p.address, p.city, p.zip].filter(Boolean).length ? `<p class="site-where">${esc([p.address, p.city, p.zip].filter(Boolean).join(', '))}</p>` : ''}
         ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
@@ -728,83 +729,120 @@ function wireNeeds() {
           ${p.website ? `<a href="${esc(p.website)}" target="_blank" rel="noopener" data-track="site" data-target="${esc(p.id)}" data-action="website">${esc(t('visit'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
         </div></article>`), two11 ? helpCard(two11) : ''].join('');
     panel.hidden = false;
-    if (city.handshake) addAskButtons(panel, need);
   }));
+  renderSummaryBox();
 }
 
-// ── Consent handshake (off unless the city turns it on; see public/handshake.js) ──
-// Matching already happened on this phone (the panel above). Here she can ask one service that
-// accepts requests to contact her, choosing what to share and seeing exactly what will be sent.
-let receivers = null;
-async function addAskButtons(panel, need) {
-  if (!receivers) {
-    try { receivers = new Map((await (await fetch('/api/handshake/receivers' + qs)).json()).map(x => [x.target, x.name])); }
-    catch { receivers = new Map(); }
+// ── "Fill it out once" (public/summary.js) ──
+// She writes a short summary once and shares it herself, so staff don't have to ask again. It never goes
+// to our server; it stays on this device only if she ticks "keep it". Counts carry none of its contents.
+let sumDraft = null; // this visit only, unless she chose to keep it
+const sumLoad = () => { try { return JSON.parse(localStorage.getItem(SUM_KEY) || 'null'); } catch { return null; } };
+const sumSave = s => { try { localStorage.setItem(SUM_KEY, JSON.stringify(s)); } catch { /* storage off: it lasts this visit */ } };
+const sumForget = () => { try { localStorage.removeItem(SUM_KEY); } catch { /* nothing kept */ } };
+const tappedNeeds = () => [...app.querySelectorAll('[data-need][aria-pressed="true"]')].map(b => b.dataset.need);
+const sumDate = () => new Date().toLocaleDateString(document.documentElement.lang || 'en', { year: 'numeric', month: 'long', day: 'numeric' });
+
+function renderSummaryBox(focus) {
+  const box = app.querySelector('#sum-box');
+  if (!box) return;
+  const kept = sumLoad(), s = sumDraft || kept;
+  if (!s) {
+    box.innerHTML = `<h3 id="sum-h" tabindex="-1">${esc(t('sum_title'))}</h3><p>${esc(t('sum_intro'))}</p>
+      <p class="muted">${esc(t('sum_private'))}</p>
+      <button type="button" class="btn btn-primary" id="sum-make">${esc(t('sum_make'))}</button>`;
+    box.querySelector('#sum-make').onclick = () => renderSummaryForm();
+  } else {
+    const rows = summaryRows(s, { t, en, lang });
+    box.innerHTML = `<h3 id="sum-h" tabindex="-1">${esc(t('sum_ready'))}</h3>
+      <dl class="sum-card">${rows.map(([l, v]) => `<dt>${esc(l)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
+      <p class="muted">${esc(t('sum_show_hint'))}</p>
+      <div class="sum-actions">
+        <button type="button" class="btn btn-primary btn-sm" data-sum="copy">${esc(t('sum_copy'))}</button>
+        ${navigator.share ? `<button type="button" class="btn btn-ghost btn-sm" data-sum="share">${esc(t('sum_share'))}</button>` : ''}
+        <a class="btn btn-ghost btn-sm" data-sum="text" href="sms:?&body=${encodeURIComponent(summaryText(s, { t, en, lang, date: sumDate() }))}">${esc(t('sum_text'))}</a>
+        <a class="btn btn-ghost btn-sm" data-sum="email" href="mailto:?subject=${encodeURIComponent(t('sum_text_title'))}&body=${encodeURIComponent(summaryText(s, { t, en, lang, date: sumDate() }))}">${esc(t('sum_email'))}</a>
+        <button type="button" class="btn btn-ghost btn-sm" data-sum="print">${esc(t('sum_print'))}</button>
+      </div>
+      <p class="sum-status" role="status"></p>
+      <p class="muted">${esc(t(kept ? 'sum_kept' : 'sum_not_kept'))}</p>
+      <div class="sum-actions"><button type="button" class="btn-link" id="sum-edit">${esc(t('sum_edit'))}</button>
+        <button type="button" class="btn-link" id="sum-delete">${esc(t('sum_delete'))}</button></div>`;
+    const status = box.querySelector('.sum-status');
+    const text = () => summaryText(s, { t, en, lang, date: sumDate() });
+    box.querySelectorAll('[data-sum]').forEach(el => el.addEventListener('click', async e => {
+      const how = el.dataset.sum;
+      if (how === 'copy') {
+        try { await navigator.clipboard.writeText(text()); status.textContent = t('sum_copied'); }
+        catch { status.textContent = t('sum_copy_failed'); }
+      } else if (how === 'share') {
+        try { await navigator.share({ title: t('sum_text_title'), text: text() }); } catch { return; } // she cancelled
+      } else if (how === 'print') {
+        e.preventDefault();
+        const sheet = document.createElement('pre');
+        sheet.id = 'sum-print-sheet'; sheet.textContent = text();
+        document.body.append(sheet); document.body.classList.add('print-summary');
+        window.addEventListener('afterprint', () => { sheet.remove(); document.body.classList.remove('print-summary'); }, { once: true });
+        window.print();
+      }
+      track('summary_shared', { method: how });
+    }));
+    box.querySelector('#sum-edit').onclick = () => renderSummaryForm(s);
+    box.querySelector('#sum-delete').onclick = () => { sumDraft = null; sumForget(); renderSummaryBox(true); box.querySelector('p')?.insertAdjacentHTML('beforebegin', `<p class="sum-status" role="status">${esc(t('sum_deleted'))}</p>`); };
   }
-  panel.querySelectorAll('[data-hs]').forEach(card => {
-    const name = receivers.get(card.dataset.hs);
-    if (!name || card.querySelector('.hs-ask')) return;
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'btn-link hs-ask'; b.textContent = t('hs_ask');
-    b.setAttribute('aria-expanded', 'false');
-    b.onclick = () => openAsk(card, card.dataset.hs, name, need, b);
-    card.querySelector('.help-actions')?.append(b);
-  });
+  if (focus) box.querySelector('#sum-h')?.focus();
 }
-const HS_LANG = { en: 'English', es: 'Español', vi: 'Tiếng Việt', 'zh-Hans': '中文' };
-function openAsk(card, target, org, need, btn) {
-  card.parentElement.querySelector('.hs-form')?.remove();
-  document.querySelectorAll('.hs-ask[aria-expanded="true"]').forEach(x => x.setAttribute('aria-expanded', 'false'));
-  btn.setAttribute('aria-expanded', 'true');
-  const id = 'hs-' + Math.random().toString(36).slice(2, 8);
-  const f = document.createElement('form');
-  f.className = 'hs-form'; f.noValidate = true; f.setAttribute('aria-labelledby', id);
-  f.innerHTML = `<h3 id="${id}" tabindex="-1">${esc(t('hs_title', { org }))}</h3>
-    <p>${esc(t('hs_intro', { org }))}</p>
-    <label class="fl" for="${id}-fn">${esc(t('hs_first_name'))}</label><input class="fi" id="${id}-fn" name="first_name" maxlength="60" autocomplete="given-name">
-    <label class="fl" for="${id}-ph">${esc(t('hs_phone'))}</label><input class="fi" id="${id}-ph" name="phone" type="tel" maxlength="30" autocomplete="tel">
-    <label class="fl" for="${id}-em">${esc(t('hs_email'))}</label><input class="fi" id="${id}-em" name="email" type="email" maxlength="200" autocomplete="email">
-    <fieldset class="group"><legend class="fl">${esc(t('hs_reach_by'))}</legend><div class="choices">
-      ${['call', 'text', 'email'].map(v => `<label class="choice"><input type="radio" name="reach_by" value="${v}"> ${esc(t('hs_reach_' + v))}</label>`).join('')}</div></fieldset>
-    <label class="fl" for="${id}-zip">${esc(t('hs_zip'))}</label><input class="fi fi-sm" id="${id}-zip" name="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code">
-    <label class="fl" for="${id}-note">${esc(t('hs_note'))}</label><p class="fh" id="${id}-nh">${esc(t('hs_note_hint'))}</p>
-    <textarea class="fi" id="${id}-note" name="note" maxlength="500" rows="3" aria-describedby="${id}-nh"></textarea>
-    <h4>${esc(t('hs_preview', { org }))}</h4><dl class="hs-preview" aria-live="polite"></dl>
-    <label class="hs-consent"><input type="checkbox" name="agree"> ${esc(t('hs_consent', { org }))}</label>
+
+function renderSummaryForm(prev) {
+  const box = app.querySelector('#sum-box');
+  const v = prev || { needs: tappedNeeds(), zip: answers.zip || siteZip || '', household: answers.people ? String(answers.people) : '', language: LANG_CHOICES.includes(lang) ? lang : 'other' };
+  const kept = !!sumLoad();
+  const field = (k, label, attrs = '', cls = 'fi') => `<label class="fl" for="sum-${k}">${esc(t(label))}</label>
+    <input class="${cls}" id="sum-${k}" name="${k}" value="${esc(v[k] || '')}" ${attrs}>`;
+  box.innerHTML = `<form class="sum-form" novalidate aria-labelledby="sum-h">
+    <h3 id="sum-h" tabindex="-1">${esc(t('sum_title'))}</h3>
+    <p>${esc(t('sum_form_intro'))}</p>
+    <fieldset class="group"><legend class="fl">${esc(t('sum_needs'))}</legend><div class="choices">
+      ${city.needs.map(n => `<label class="choice"><input type="checkbox" name="needs" value="${n}" ${(v.needs || []).includes(n) ? 'checked' : ''}> ${esc(t('need_' + n))}</label>`).join('')}</div></fieldset>
+    ${field('first_name', 'sum_first_name', 'maxlength="60" autocomplete="given-name"')}
+    ${field('phone', 'sum_phone', 'type="tel" maxlength="30" autocomplete="tel"')}
+    ${field('email', 'sum_email', 'type="email" maxlength="200" autocomplete="email"')}
+    <fieldset class="group"><legend class="fl">${esc(t('sum_reach_by'))}</legend><div class="choices">
+      ${['call', 'text', 'email'].map(x => `<label class="choice"><input type="radio" name="reach_by" value="${x}" ${v.reach_by === x ? 'checked' : ''}> ${esc(t('sum_reach_' + x))}</label>`).join('')}</div></fieldset>
+    <label class="fl" for="sum-language">${esc(t('sum_language'))}</label>
+    <select class="fi fi-sm" id="sum-language" name="language">${LANG_CHOICES.map(x => `<option value="${x}" ${v.language === x ? 'selected' : ''}>${esc(x === 'other' ? t('sum_lang_other') : LANG_NAMES[x])}</option>`).join('')}</select>
+    ${field('zip', 'sum_zip', 'inputmode="numeric" maxlength="5" autocomplete="postal-code"', 'fi fi-sm')}
+    ${field('household', 'sum_household', 'inputmode="numeric" maxlength="2"', 'fi fi-sm')}
+    <label class="fl" for="sum-note">${esc(t('sum_note'))}</label><p class="fh" id="sum-note-h">${esc(t('sum_note_hint'))}</p>
+    <textarea class="fi" id="sum-note" name="note" maxlength="500" rows="3" aria-describedby="sum-note-h">${esc(v.note || '')}</textarea>
+    <label class="sum-keep"><input type="checkbox" name="keep" ${kept ? 'checked' : ''} aria-describedby="sum-keep-h"> ${esc(t('sum_keep'))}</label>
+    <p class="fh" id="sum-keep-h">${esc(t('sum_keep_hint'))}</p>
     <p class="error" role="alert"></p>
-    <div class="hs-buttons"><button type="submit" class="btn btn-primary">${esc(t('hs_send'))}</button>
-      <button type="button" class="btn-link hs-cancel">${esc(t('hs_cancel'))}</button></div>`;
-  card.after(f);
-  const read = () => {
-    const v = k => f.elements[k]?.value || '';
-    return { target, need, consent: { version: CONSENT_VERSION, agreed: f.elements.agree.checked },
-      fields: { first_name: v('first_name'), phone: v('phone'), email: v('email'), reach_by: f.querySelector('[name=reach_by]:checked')?.value || '',
-        language: lang, zip: v('zip'), note: v('note') } };
-  };
-  const show = () => {
-    const r = read();
-    const rows = [['hs_f_need', t('need_' + need)], ...hsPreview(Object.fromEntries(Object.entries(r.fields).filter(([, x]) => String(x).trim())))
-      .map(([k, x]) => ['hs_f_' + k, k === 'reach_by' ? t('hs_reach_' + x) : k === 'language' ? (HS_LANG[x] || x) : x])];
-    f.querySelector('.hs-preview').innerHTML = rows.map(([k, x]) => `<dt>${esc(t(k))}</dt><dd>${esc(x)}</dd>`).join('');
-  };
-  f.addEventListener('input', show); show();
-  const close = () => { f.remove(); btn.setAttribute('aria-expanded', 'false'); btn.focus(); };
-  f.querySelector('.hs-cancel').onclick = close;
-  f.onsubmit = async e => {
+    <div class="sum-actions"><button type="submit" class="btn btn-primary">${esc(t('sum_save'))}</button>
+      <button type="button" class="btn-link" id="sum-cancel">${esc(t('sum_cancel'))}</button></div>
+  </form>`;
+  const f = box.querySelector('form');
+  f.querySelector('#sum-cancel').onclick = () => renderSummaryBox(true);
+  f.onsubmit = e => {
     e.preventDefault();
-    const err = f.querySelector(".error");
-    const { request, error } = cleanRequest(read(), { needs: city.needs || [] });
-    if (error) { err.textContent = t('hs_err_' + (['contact', 'phone', 'email', 'consent', 'zip'].includes(error) ? error : 'server')); return; }
-    const go = f.querySelector('[type=submit]'); go.disabled = true;
-    try {
-      const res = await fetch('/api/handshake/request' + qs, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) });
-      const j = await res.json().catch(() => ({}));
-      if (!j.ok) throw new Error(j.error);
-      f.innerHTML = `<p class="hs-done" tabindex="-1">${esc(t('hs_sent', { org }))}</p>`;
-      f.querySelector('.hs-done').focus();
-    } catch { err.textContent = t('hs_err_server'); go.disabled = false; }
+    const val = k => f.elements[k]?.value || '';
+    const { summary, error } = cleanSummary({
+      needs: [...f.querySelectorAll('[name=needs]:checked')].map(x => x.value), first_name: val('first_name'), phone: val('phone'),
+      email: val('email'), reach_by: f.querySelector('[name=reach_by]:checked')?.value || '', language: val('language'),
+      zip: val('zip'), household: val('household'), note: val('note'),
+    }, { needs: city.needs || [] });
+    if (error) {
+      const err = f.querySelector('.error');
+      err.textContent = t('sum_err_' + (['phone', 'email', 'zip', 'household', 'empty'].includes(error) ? error : 'empty'));
+      f.querySelector(`[name=${error === 'empty' ? 'needs' : error}]`)?.focus();
+      return;
+    }
+    sumDraft = summary;
+    if (f.elements.keep.checked) sumSave(summary); else sumForget();
+    track('summary_made', { needs: (summary.needs || []).length, fields: Object.keys(summary).length, kept: f.elements.keep.checked ? 'yes' : 'no' });
+    renderSummaryBox(true);
   };
-  f.querySelector('h3').focus();
+  f.querySelector('#sum-h').focus();
 }
 
 async function loadSites(zip) {

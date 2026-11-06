@@ -489,14 +489,21 @@ html { scroll-padding-bottom: 110px; }
   .panel, .panel[hidden] { display: block !important; }
 }
 
-/* Consent handshake (off unless the city turns it on) */
-.btn-link.hs-ask { min-height: 44px; padding: 0 4px; }
-.hs-form { background: var(--paper, #fff); border: 2px solid var(--green); border-radius: 14px; padding: 18px 20px; display: grid; gap: 6px; }
-.hs-form h3:focus { outline: none; }
-.hs-form h4 { margin: 12px 0 0; font-size: 16px; }
-.hs-preview { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0; padding: 12px 14px; background: var(--tint); border-radius: 10px; font-size: 15px; }
-.hs-preview dt { font-weight: 600; } .hs-preview dd { margin: 0; overflow-wrap: anywhere; }
-.hs-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 16px; margin-top: 8px; }
-.hs-consent input { width: 22px; height: 22px; flex: none; margin-top: 2px; }
-.hs-buttons { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-.hs-done { font-size: 17px; margin: 0; }
+/* "Fill it out once" summary (public/summary.js) */
+.sum-box { margin-top: 24px; background: var(--tint); border-radius: 14px; padding: 18px 20px; display: grid; gap: 8px; justify-items: start; }
+.sum-box > * { margin: 0; max-width: 100%; }
+.sum-box h3:focus, .sum-form h3:focus { outline: none; }
+.sum-form { display: grid; gap: 4px; width: 100%; }
+.sum-card { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; width: 100%; background: var(--page); border: 2px solid var(--rule); border-radius: 12px; padding: 14px 16px; font-size: 17px; }
+.sum-card dt { font-weight: 600; } .sum-card dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+@media (max-width: 480px) { .sum-card { grid-template-columns: 1fr; } .sum-card dd { margin-bottom: 6px; } }
+.sum-actions { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.sum-actions .btn-sm { text-decoration: none; }
+.sum-keep { display: flex; gap: 10px; align-items: flex-start; font-size: 16px; margin-top: 12px; }
+.sum-keep input { width: 22px; height: 22px; flex: none; margin-top: 2px; }
+.sum-status:empty { display: none; }
+#sum-print-sheet { display: none; }
+@media print {
+  body.print-summary > *:not(#sum-print-sheet) { display: none !important; }
+  body.print-summary #sum-print-sheet { display: block; white-space: pre-wrap; font: 14pt/1.5 var(--font-body); margin: 0; }
+}

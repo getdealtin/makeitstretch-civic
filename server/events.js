@@ -51,6 +51,9 @@ export const SCHEMA = {
   plan_outcome: { answer: oneOf(['yes', 'some', 'no']), kind: oneOf(['plan', 'box']) },
   need_tapped: { need: oneOf(['rent', 'health', 'childcare', 'jobs']) },
   list_switched: { to: oneOf(['short', 'full']), short: int(0, 200), full: int(0, 200) },
+  // "Fill it out once": counts only, never the summary's contents.
+  summary_made: { needs: int(0, 10), fields: int(0, 10), kept: oneOf(['yes', 'no']) },
+  summary_shared: { method: oneOf(['copy', 'share', 'text', 'email', 'print']) },
 };
 
 /** Untrusted request body → { event, session_id, lang, data } or null. */

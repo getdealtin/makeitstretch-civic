@@ -11,7 +11,8 @@ create table if not exists public.events (
   event       text not null check (event in (
                 'page_view', 'step_completed', 'plan_built', 'box_built', 'recipe_opened',
                 'meal_swapped', 'help_clicked', 'zip_added_later', 'plan_kept', 'language_changed',
-                'cant_use', 'plan_reopened', 'plan_outcome', 'list_switched', 'need_tapped')),
+                'cant_use', 'plan_reopened', 'plan_outcome', 'list_switched', 'need_tapped',
+                'summary_made', 'summary_shared')),  -- summary events added Nov 6, 2026 (applied as a migration)
   lang        text not null default 'en' check (lang ~ '^[a-z]{2}(-[A-Za-z]{2,4})?$'),
   data        jsonb not null default '{}'::jsonb check (pg_column_size(data) < 2000),
   created_at  timestamptz not null default now()

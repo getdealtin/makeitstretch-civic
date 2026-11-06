@@ -1,7 +1,7 @@
 // Política de privacidad. DRAFT translation, pending native-speaker review.
 export default {
   title: 'Política de privacidad',
-  updated: 'Vigente desde el 5 de noviembre de 2026',
+  updated: 'Vigente desde el 6 de noviembre de 2026',
   intro: 'Make It Stretch es una herramienta gratuita que ayuda a planear las compras de comida con un presupuesto limitado y a encontrar comida gratis cerca. No se necesita una cuenta. Esta política describe la información que recopilamos, cómo la usamos y las opciones que usted tiene.',
   sections: [
     { h: 'Quiénes somos', p: ['Make It Stretch es operada por Margin Ventures LLC (“nosotros”). Es un servicio independiente, no un servicio oficial de la Ciudad de Austin.'] },
@@ -10,7 +10,7 @@ export default {
       'Recopilamos información sobre cómo se usa la herramienta, de una forma que no lo identifica. Esto incluye las respuestas que da (como el presupuesto, el número de personas en su hogar, el código postal, las preferencias de comida y las necesidades de dieta), los planes y sugerencias de comidas creados para usted y cómo los usa (como las recetas que ve, los recursos de ayuda que elige y los productos de una caja de comida que nos indica que no puede usar).',
       'Como en la mayoría de los sitios web, nuestros servidores reciben información técnica, como su dirección IP, cuando se conecta. Solo la usamos para operar el servicio y protegerlo contra abusos, y no la guardamos junto con la información de uso.',
     ] },
-    { h: 'Información guardada en su aparato', p: ['Cierta información se queda en su aparato y no se nos envía, como los planes que decide guardar y su preferencia de idioma. Puede borrar los planes guardados en cualquier momento desde la pantalla de inicio.'] },
+    { h: 'Información guardada en su aparato', p: ['Cierta información se queda en su aparato y no se nos envía, como los planes que decide guardar y su preferencia de idioma. Puede borrar los planes guardados en cualquier momento desde la pantalla de inicio.', 'Si escribe un resumen de “Llénelo una sola vez” para compartir con servicios, nunca se nos envía. Usted decide si lo muestra, copia, manda por mensaje o por correo, o lo imprime, y a quién. Solo se queda en su aparato si usted decide guardarlo, y puede borrarlo en cualquier momento. Solo contamos que se hizo o se compartió un resumen, nunca lo que dice.'] },
     { h: 'Cómo usamos la información', list: [
       'Para ofrecer, mantener y mejorar la herramienta.',
       'Para entender las necesidades de comida de la comunidad y compartir estadísticas agregadas con la Ciudad de Austin y organizaciones de ayuda alimentaria.',
@@ -19,7 +19,7 @@ export default {
     { h: 'Sus opciones', p: ['La mayoría de las preguntas son opcionales, incluido su código postal y la pregunta sobre la comida que no puede usar. Puede usar la herramienta sin guardar nada en su aparato.'] },
     { h: 'Cómo compartimos la información', p: ['No vendemos información. Solo la compartimos en los siguientes casos:'], list: [
       'Estadísticas agregadas: Compartimos estadísticas agregadas que no identifican a nadie con la Ciudad de Austin y organizaciones de ayuda alimentaria.',
-      'Lugares de comida: Podemos compartir los datos públicos de los lugares de comida de nuestro directorio con organizaciones de ayuda alimentaria.',
+      'Lugares de comida: Publicamos los datos públicos de los lugares de comida de nuestro directorio en el sitio y en un archivo de datos abierto que otros directorios y organizaciones de ayuda alimentaria pueden usar. Nunca se incluyen datos de contacto.',
       'Proveedores de servicios: Usamos terceros de confianza para alojar la herramienta y guardar información por nosotros. Deben seguir nuestras instrucciones y mantener la información confidencial.',
       'Requisitos legales: Podemos divulgar información cuando la ley lo exija o para proteger la seguridad de las personas que usan la herramienta.',
     ] },

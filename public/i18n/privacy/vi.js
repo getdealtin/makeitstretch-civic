@@ -1,7 +1,7 @@
 // Chính sách quyền riêng tư. DRAFT translation, pending native-speaker review.
 export default {
   title: 'Chính sách quyền riêng tư',
-  updated: 'Có hiệu lực từ ngày 5 tháng 11 năm 2026',
+  updated: 'Có hiệu lực từ ngày 6 tháng 11 năm 2026',
   intro: 'Make It Stretch là công cụ miễn phí giúp mọi người lên kế hoạch đi chợ với ngân sách hạn chế và tìm thực phẩm miễn phí gần nhà. Không cần tài khoản. Chính sách này mô tả thông tin chúng tôi thu thập, cách chúng tôi sử dụng, và các lựa chọn của bạn.',
   sections: [
     { h: 'Chúng tôi là ai', p: ['Make It Stretch do Margin Ventures LLC (“chúng tôi”) vận hành. Đây là dịch vụ độc lập, không phải dịch vụ chính thức của Thành phố Austin.'] },
@@ -10,7 +10,7 @@ export default {
       'Chúng tôi thu thập thông tin về cách công cụ được sử dụng, ở dạng không nhận dạng được bạn. Bao gồm các câu trả lời bạn cung cấp (như ngân sách, số người trong nhà, mã bưu điện, sở thích món ăn và nhu cầu ăn kiêng), các kế hoạch và gợi ý món ăn được tạo cho bạn, và cách bạn sử dụng chúng (như công thức bạn xem, nguồn trợ giúp bạn chọn, và những món trong thùng thực phẩm mà bạn cho biết không dùng được).',
       'Giống hầu hết các trang web, máy chủ của chúng tôi nhận thông tin kỹ thuật, như địa chỉ IP, khi bạn kết nối. Chúng tôi chỉ dùng thông tin này để vận hành dịch vụ và bảo vệ khỏi lạm dụng, và không lưu cùng với thông tin sử dụng.',
     ] },
-    { h: 'Thông tin lưu trên thiết bị của bạn', p: ['Một số thông tin ở lại trên thiết bị của bạn và không gửi cho chúng tôi, như các kế hoạch bạn chọn lưu và ngôn ngữ bạn chọn. Bạn có thể xóa kế hoạch đã lưu bất cứ lúc nào từ màn hình bắt đầu.'] },
+    { h: 'Thông tin lưu trên thiết bị của bạn', p: ['Một số thông tin ở lại trên thiết bị của bạn và không gửi cho chúng tôi, như các kế hoạch bạn chọn lưu và ngôn ngữ bạn chọn. Bạn có thể xóa kế hoạch đã lưu bất cứ lúc nào từ màn hình bắt đầu.', 'Nếu bạn viết bản tóm tắt “Điền một lần thôi” để chia sẻ với các dịch vụ, bản đó không bao giờ được gửi cho chúng tôi. Bạn chọn đưa cho xem, sao chép, nhắn tin, gửi email hay in, và gửi cho ai. Bản tóm tắt chỉ ở lại trên thiết bị nếu bạn chọn lưu, và bạn có thể xóa bất cứ lúc nào. Chúng tôi chỉ đếm việc một bản tóm tắt được tạo hoặc chia sẻ, không bao giờ biết nội dung.'] },
     { h: 'Cách chúng tôi sử dụng thông tin', list: [
       'Để cung cấp, duy trì và cải thiện công cụ.',
       'Để hiểu nhu cầu thực phẩm trong cộng đồng và chia sẻ số liệu thống kê tổng hợp với Thành phố Austin và các đối tác hỗ trợ thực phẩm.',
@@ -19,7 +19,7 @@ export default {
     { h: 'Lựa chọn của bạn', p: ['Hầu hết các câu hỏi đều không bắt buộc, kể cả mã bưu điện và câu hỏi về món bạn không dùng được. Bạn có thể dùng công cụ mà không lưu gì trên thiết bị.'] },
     { h: 'Cách chúng tôi chia sẻ thông tin', p: ['Chúng tôi không bán thông tin. Chúng tôi chỉ chia sẻ thông tin trong các trường hợp sau:'], list: [
       'Số liệu thống kê tổng hợp: Chúng tôi chia sẻ số liệu thống kê tổng hợp không nhận dạng ai với Thành phố Austin và các đối tác hỗ trợ thực phẩm.',
-      'Thông tin nơi phát thực phẩm: Chúng tôi có thể chia sẻ thông tin công khai của các nơi phát thực phẩm trong danh bạ với các đối tác hỗ trợ thực phẩm.',
+      'Thông tin nơi phát thực phẩm: Chúng tôi đăng thông tin công khai của các nơi phát thực phẩm trong danh bạ trên trang này và trong một nguồn dữ liệu mở mà các danh bạ khác và đối tác hỗ trợ thực phẩm có thể dùng. Không bao giờ kèm thông tin liên lạc.',
       'Nhà cung cấp dịch vụ: Chúng tôi dùng các bên thứ ba đáng tin cậy để lưu trữ công cụ và thông tin thay mặt chúng tôi. Họ phải làm theo hướng dẫn của chúng tôi và giữ bí mật thông tin.',
       'Yêu cầu pháp lý: Chúng tôi có thể tiết lộ thông tin khi luật pháp yêu cầu hoặc để bảo vệ an toàn của người dùng công cụ.',
     ] },

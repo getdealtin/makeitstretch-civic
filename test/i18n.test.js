@@ -1,6 +1,5 @@
 // Translations: every language has every phrase, with the same {placeholders},
 // and every food / ingredient word / recipe is covered.
-import { isHandshakeKey } from '../public/handshake.js';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
@@ -16,7 +15,6 @@ for (const code of LANGS) {
   test(`${code}: every screen phrase is translated, placeholders intact`, async () => {
     const ui = (await import(`../public/i18n/${code}.js`)).default;
     for (const [k, v] of Object.entries(en)) {
-      if (isHandshakeKey(k)) { assert.ok(!(k in ui), `${code} "${k}": handshake text stays out of review while it is off`); continue; }
       assert.ok(typeof ui[k] === 'string' && ui[k].trim(), `${code} missing "${k}"`);
       assert.deepEqual(holes(ui[k]), holes(v), `${code} "${k}" placeholders`);
       if (v.includes('$')) assert.ok(ui[k].includes('$'), `${code} "${k}" lost its $ sign`);

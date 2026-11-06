@@ -60,7 +60,7 @@ export const DEFAULT_FRAMEWORK = {
     { goal: 'Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'cuisine'] },
     { goal: 'Benefits and food help', intro: 'People routed toward benefits and free food. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
     { goal: 'Food that fits', intro: 'Food-box items people report they cannot use, and dietary needs.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
-    { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan, and whether they found a source to open: a de-identified signal for nonprofit partners.', metrics: ['needs', 'needs_followthrough', 'needs_supply', 'needs_by_zip', 'needs_gap_by_zip'] },
+    { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan, and whether they found a source to open: a de-identified signal for nonprofit partners.', metrics: ['needs', 'needs_followthrough', 'needs_supply', 'summaries', 'needs_by_zip', 'needs_gap_by_zip'] },
     { goal: 'Language', intro: 'Language used.', metrics: ['language'] },
     { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link, and the estimated value of food boxes people planned around.', metrics: ['outcome', 'returns', 'box_value'] },
     { goal: 'Participation', intro: 'Organizations taking part through the food directory.', metrics: ['directory'] },
@@ -157,6 +157,12 @@ export const METRICS = {
       ['Typical (median) box', ok ? usd(vals[Math.floor(vals.length / 2)]) : null],
     ], note: 'What the box’s foods would cost at the tool’s grocery prices (BLS South-region averages where available, otherwise built-in estimates), one package per item listed. An estimate of money a household doesn’t have to spend, not a measured saving. Hidden when fewer people than the report’s threshold entered a box.' };
   },
+  // "Fill it out once": people who wrote a summary to carry to services themselves, and how they shared it.
+  // Counts only; the summary's contents never reach the server.
+  summaries: c => c.table('“Fill it out once” summaries', ['Measure', 'People'], [
+    ...countBy(c.events.filter(e => e.event === 'summary_made'), () => 'Made a summary'),
+    ...countBy(c.events.filter(e => e.event === 'summary_shared'), e => `Shared it: ${{ copy: 'copied', share: 'phone share menu', text: 'text message', email: 'email', print: 'printed' }[e.data.method] || e.data.method}`),
+  ], { note: 'A resident writes what she needs once and shows or sends it to services herself, so staff don’t have to ask again. These are counts of people; what they wrote never reaches Make It Stretch.' }),
   needs_supply: c => ({ title: 'Listed help for each need', head: ['Need', 'Sources shown'], rows: Object.entries(LABEL.need).map(([n, l]) => [l, (c.roles.needs?.[n] || []).length + c.providers.filter(p => (p.offers || []).includes(n)).length]), note: 'City and County programs plus approved directory sites that offer it (2-1-1 is shown with every need and not counted). Organizations, not people: not suppressed.', organizations: true }),
   needs_by_zip: c => c.table('Other needs by ZIP code', ['ZIP · need', 'People'], countBy(c.withZip.filter(e => e.event === 'need_tapped'), e => `${e.zip} · ${LABEL.need[e.data.need] || e.data.need}`), { oe: needOE }),
   retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of Travis County (USDA, as of ${longDate(c.retail.as_of)})`, head: ['', 'Stores'], rows: [

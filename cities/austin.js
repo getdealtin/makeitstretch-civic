@@ -74,11 +74,6 @@ export default {
   // sustainablefoodcenter.org/farmers-markets-support/sfc-farmers-markets (checked Nov 6, 2026):
   // SFC markets accept SNAP and WIC, double them up to $30 a week (Double Up Food Bucks Texas),
   // and run Saturdays 9 AM–1 PM. Add a note only from a verified source.
-  // Consent handshake (public/handshake.js, server/handshake.js): residents ask a service to contact
-  // them. Built and tested, but OFF. Before enabling: a delivery channel, services that agree to
-  // receive (receivers: { 'resource:<id>' | 'site:<uuid>': { name, deliver } }), the privacy page,
-  // and a security review.
-  handshake: { enabled: false, receivers: {} },
   store_notes_checked: '2026-11-06',
   wic_finder_url: 'https://find.texaswic.org/', // official Texas WIC store finder (checked Nov 6, 2026)
   store_notes: {
@@ -101,7 +96,7 @@ export default {
       { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'district', 'budget_band', 'budget_band_by_zip', 'budget_band_by_district', 'store', 'store_by_zip', 'retail_mix', 'retail_by_zip', 'food_access', 'food_access_by_zip', 'cuisine'] },
       { goal: 'Strategy 6.6 · Benefits navigation', intro: 'People routed toward SNAP and WIC. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
       { goal: 'Goal 4 · Preparedness (strategy 4.2)', intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
-      { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan (rent and utilities, health care, child care, jobs and transportation). Taps on a need, not requests: no one is contacted. A de-identified signal for nonprofit partners: what people ask about, whether they found a source to open, and where.', metrics: ['needs', 'needs_followthrough', 'needs_supply', 'needs_by_zip', 'needs_gap_by_zip', 'needs_by_district'] },
+      { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan (rent and utilities, health care, child care, jobs and transportation). Taps on a need, not requests: no one is contacted. A de-identified signal for nonprofit partners: what people ask about, whether they found a source to open, and where.', metrics: ['needs', 'needs_followthrough', 'needs_supply', 'summaries', 'needs_by_zip', 'needs_gap_by_zip', 'needs_by_district'] },
       { goal: 'Strategy 6.7 · Language and technology barriers', intro: 'Language used, and whether people kept plans to use later.', metrics: ['language'] },
       { goal: 'Outcomes', intro: 'Asked when someone returns to a saved plan or link, and the estimated value of food boxes people planned around (the application’s “dollars stretched”).', metrics: ['outcome', 'returns', 'box_value'] },
       { goal: 'Goal 9 · Empower (participation)', intro: 'Organizations taking part through the food directory.', metrics: ['directory'] },
