@@ -178,8 +178,7 @@ app.post('/api/plan', async (req, res) => {
 });
 
 // ── Ops ─────────────────────────────────────────────────────────
-// Event logging is deliberately absent until Phase 4 (privacy + schema reset):
-// no Austin data is collected before the policy matches the schema.
+// Anonymous usage events live in server/events.js (strict schema, matching the privacy policy).
 app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, recipes: RECIPES.length, bls: !!BLS_KEY, db: db.kind, admin: !!process.env.ADMIN_KEY }));
 app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
