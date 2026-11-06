@@ -101,7 +101,7 @@ export default {
       description: 'Enter your zip to find free groceries near you: pantries, mobile distributions, and meal sites.',
       url: 'https://www.centraltexasfoodbank.org/find-food-now',
       kind: 'food', audience: 'residents', event: 'foodbank_clicked',
-      verified: '2026-11-04 web search; confirm URL before launch',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: '211-texas',
@@ -110,7 +110,7 @@ export default {
       description: 'Call 2-1-1 to find food help and other services near you, including help with benefits like SNAP.',
       phone: '211', url: 'https://www.211texas.org',
       kind: 'phone', audience: 'residents', event: 'resource_clicked',
-      verified: '2026-11-04 web search; confirm menu options before launch',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'tx-snap',
@@ -119,7 +119,7 @@ export default {
       description: 'Monthly money for groceries on a Lone Star Card. You can apply online.',
       url: 'https://www.yourtexasbenefits.com',
       kind: 'benefits', audience: 'residents', event: 'snap_screener_clicked',
-      verified: '2026-11-04 web search',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'tx-wic',
@@ -128,7 +128,7 @@ export default {
       description: 'Free food and nutrition help for pregnant people, new parents, and kids under 5. You can get WIC and SNAP at the same time.',
       url: 'https://texaswic.org',
       kind: 'benefits', audience: 'residents', event: 'wic_clicked',
-      verified: 'not yet verified',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'keep-austin-fed',
@@ -136,7 +136,7 @@ export default {
       description: 'Rescues surplus food and delivers it free to Austin charities that feed people. For organizations, not individuals.',
       url: 'https://www.keepaustinfed.org',
       kind: 'org', audience: 'organizations', event: 'resource_clicked',
-      verified: '2026-11-04 web search: partner-recipient program for charities',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     // ── "Need help with anything else?" (after the plan): sources per need. Official pages,
     //    checked Nov 6, 2026 by web search. Phone numbers left out: sources disagreed.
@@ -146,7 +146,7 @@ export default {
       description: "Discounts on City of Austin utility bills for households with low or fixed incomes.",
       url: 'https://coautilities.com/wps/wcm/connect/occ/coa/util/support/customer-assistance/utility-bill-discounts',
       kind: 'service', audience: 'needs', event: 'resource_clicked',
-      verified: '2026-11-06 web search: official page',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'tc-family-support', needs: ["rent"],
@@ -154,7 +154,7 @@ export default {
       description: "Help with rent and utility bills, plus social workers who can connect you to other services.",
       url: 'https://www.traviscountytx.gov/health-human-services/divisions/family-support-services',
       kind: 'service', audience: 'needs', event: 'resource_clicked',
-      verified: '2026-11-06 web search: official page',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'communitycare', needs: ["health"],
@@ -162,15 +162,15 @@ export default {
       description: "Nonprofit health centers in Travis County: primary care, dental, pharmacy and behavioral health, including for people without insurance.",
       url: 'https://communitycaretx.org',
       kind: 'service', audience: 'needs', event: 'resource_clicked',
-      verified: '2026-11-06 web search: official page',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'central-health-map', needs: ["health"],
       name: "Central Health: Medical Access Program (MAP)",
       description: "Health coverage for eligible Travis County residents.",
-      url: 'https://www.centralhealth.net',
+      url: 'https://www.centralhealth.net/map/',
       kind: 'service', audience: 'needs', event: 'resource_clicked',
-      verified: '2026-11-06 web search: official page',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'wfs-childcare', needs: ["childcare"],
@@ -178,7 +178,7 @@ export default {
       description: "Help paying for child care for Travis County families who meet income guidelines and are working, looking for work, or in school or training.",
       url: 'https://wfscapitalarea.com/childcare/for-parents/applying/',
       kind: 'service', audience: 'needs', event: 'resource_clicked',
-      verified: '2026-11-06 web search: official page',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'wfs-jobs', needs: ["jobs"],
@@ -186,15 +186,15 @@ export default {
       description: "Free help finding work, and job training.",
       url: 'https://www.wfscapitalarea.com/',
       kind: 'service', audience: 'needs', event: 'resource_clicked',
-      verified: '2026-11-06 web search: official page',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
     {
       id: 'capmetro-fares', needs: ["jobs"],
       name: "CapMetro reduced fares",
       description: "Lower bus and train fares, including Equifare for people with low incomes.",
-      url: 'https://capmetro.org/fares',
+      url: 'https://www.capmetro.org/fare/general-fares-overview/fares',
       kind: 'service', audience: 'needs', event: 'resource_clicked',
-      verified: '2026-11-06 web search: official page',
+      verified: '2026-11-06 link opened (200) and page title checked',
     },
   ],
 
