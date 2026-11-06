@@ -102,6 +102,11 @@ export default {
   plan_nav: 'Your plan',
 
   sec_list: 'Shopping list',
+  list_short_note: "Showing a shorter list: {n} items for the same budget.",
+  list_show_full: "Want the full list? ({n} items)",
+  list_full_note: "Showing the full list: {n} items.",
+  list_show_short: "Back to the shorter list ({n} items)",
+  list_meals_updated: "Your shopping list and meal plan were updated.",
   sec_plan: 'Meal plan',
   sec_help: 'Free food & help near you',
   sec_help_orgs: 'For organizations',

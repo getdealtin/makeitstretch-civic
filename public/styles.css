@@ -449,3 +449,7 @@ html { scroll-padding-bottom: 110px; }
 .other-list button { min-width: 40px; min-height: 40px; border: 0; background: none; cursor: pointer; border-radius: 50%; font-size: 15px; color: var(--text-muted); }
 .other-list button:hover { background: var(--cream); color: var(--text); }
 .box-other-note { background: var(--tint-light); border-left: 4px solid var(--green); border-radius: 10px; padding: 12px 14px; font-size: 16px; }
+
+/* Shorter list nudge */
+.list-nudge { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; background: var(--tint-light); border: 1.5px solid var(--rule); border-radius: 14px; padding: 12px 14px; margin: 18px 0 0; }
+.list-nudge p { margin: 0; flex: 1 1 220px; font-size: 16px; }

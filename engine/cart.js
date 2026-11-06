@@ -38,6 +38,7 @@ export const FLOOR_IDS = ['rice', 'drybeans', 'oil', 'oats'];
 
 /** Calories per person per day the plan must reach before fullness is optimized. */
 export const FLOOR_KCAL = 2000;
+const SEASONINGS = new Set(['garlic', 'onions']);
 const LEGUMES = new Set(['drybeans', 'blackbeans', 'kidneybean', 'chickpeas', 'lentils', 'splitpeas']);
 /** How many top staples the scale-up spreads across. */
 const SPREAD = 4;
@@ -157,7 +158,8 @@ export function buildCart(input, prices) {
     const groupCap = cat => (input.maxItems ? Math.max(1, Math.round(input.maxItems * (USDA_WEIGHTS[cat] || 0))) : Infinity);
     for (const f of sorted) {
       if (cart.find(c => c.id === f.id)) continue;
-      if (cart.filter(c => c.cat === f.cat).length >= groupCap(f.cat)) continue;
+      // Garlic and onions are seasonings: they never use up a vegetable spot, so carrots or cabbage still fit.
+      if (!SEASONINGS.has(f.id) && cart.filter(c => c.cat === f.cat && !SEASONINGS.has(c.id)).length >= groupCap(f.cat)) continue;
       // Under a cap, beans, lentils and peas take at most half the protein spots, so eggs, meat or fish fit too.
       if (input.maxItems && LEGUMES.has(f.id) && cart.filter(c => LEGUMES.has(c.id)).length >= Math.ceil(groupCap('protein') / 2)) continue;
       const limit = categoryBudgets[f.cat] || 0;

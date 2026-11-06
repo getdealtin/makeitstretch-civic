@@ -53,7 +53,7 @@ test('saved plans: storage that refuses to save is reported, not hidden', () => 
   assert.equal(addSaved(st, 'k', { kind: 'plan', hash: '#p=x' }), null);
 });
 
-const answers = { budget: 120, days: 14, people: 3, zip: '78702', leftover: 'yes', store: 'corner', cuisine: ['latin'], avoid: ['dairy'], have: ['rice'] };
+const answers = { budget: 120, days: 14, people: 3, zip: '78702', leftover: 'yes', store: 'corner', cuisine: ['latin'], avoid: ['dairy'], have: ['rice'], list: 'short' };
 
 test('a plan link round-trips exactly, with swaps and checkmarks', () => {
   const h = planHash(packPlan(answers, { swaps: ['0-1-dinner', '1-0-lunch'], checked: ['rice', 'onions'] }));
@@ -63,6 +63,12 @@ test('a plan link round-trips exactly, with swaps and checkmarks', () => {
   assert.deepEqual(back.state.answers, answers);
   assert.deepEqual(back.state.swaps, ['0-1-dinner', '1-0-lunch']);
   assert.deepEqual(back.state.checked, ['rice', 'onions']);
+});
+
+test('the shorter/full list choice travels with the link; old links open the full list', () => {
+  assert.equal(readHash(planHash(packPlan({ ...answers, list: 'full' }))).state.answers.list, 'full');
+  const { list, ...old } = answers; // a link made before the choice existed
+  assert.equal(readHash(planHash(packPlan(old))).state.answers.list, 'full');
 });
 
 test('links stay short enough to text', () => {

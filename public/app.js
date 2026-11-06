@@ -83,6 +83,7 @@ const regionFor = zip => (city?.price_region ? null : zipToInfo(zip || '')?.regi
 const fresh = () => ({
   budget: null, days: null, people: null, zip: null,
   leftover: 'sometimes', store: 'full', cuisine: [], avoid: [], have: [],
+  list: 'short', // long lists start shorter; 'full' after "Show the full list"
 });
 let answers = fresh();
 let box = { items: [], avoid: [], other: [] };
@@ -103,13 +104,21 @@ const engineInput = a => ({
   stores: a.store && a.store !== 'full' ? [a.store] : [], leftover: a.leftover,
 });
 
+const LIST_CAP = 25;
+
 /** Run the whole budget engine in the browser. */
 async function computePlan(a) {
   const [recipes, priced] = await Promise.all([getRecipes(), getPrices(regionFor(a.zip))]);
   const input = engineInput(a);
-  const result = buildCart(input, priced.prices);
+  // Lists over LIST_CAP items start shorter (same budget, fewer foods in larger amounts);
+  // "Show the full list" switches. Shorter or full, the person chooses; nothing is taken away.
+  const full = buildCart(input, priced.prices);
+  const short = full.cart.length > LIST_CAP ? buildCart({ ...input, maxItems: LIST_CAP }, priced.prices) : null;
+  const useShort = !!short && a.list !== 'full';
+  const result = useShort ? short : full;
   const bySlot = matchRecipes(recipes, { ingredients: result.cart.map(i => i.id), cuisine: input.cuisine, avoid: input.avoid });
-  return { input, result, weeks: planWeeks(bySlot, input), shopping: groupShoppingList(result.cart), priced };
+  const listInfo = short ? { mode: useShort ? 'short' : 'full', short: short.cart.length, full: full.cart.length } : null;
+  return { input, result, weeks: planWeeks(bySlot, input), shopping: groupShoppingList(result.cart), priced, listInfo };
 }
 
 // ── Boot ────────────────────────────────────────────────────────
@@ -660,6 +669,11 @@ function renderResults(plan, restore = {}) {
       </nav>
     </section>
 
+    ${plan.listInfo ? `<div class="list-nudge no-print">
+      <p>${esc(plan.listInfo.mode === 'short' ? t('list_short_note', { n: plan.listInfo.short }) : t('list_full_note', { n: plan.listInfo.full }))}</p>
+      <button type="button" class="btn btn-ghost btn-sm" id="list-switch">${esc(plan.listInfo.mode === 'short'
+        ? t('list_show_full', { n: plan.listInfo.full }) : t('list_show_short', { n: plan.listInfo.short }))}</button>
+    </div>` : ''}
     <section class="section" id="list" aria-labelledby="h-list" tabindex="-1">
       <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
         <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
@@ -785,6 +799,17 @@ function renderResults(plan, restore = {}) {
     try { await img.decode(); } catch { /* print anyway */ }
     window.print();
   };
+  app.querySelector('#list-switch')?.addEventListener('click', () => {
+    const to = plan.listInfo.mode === 'short' ? 'full' : 'short';
+    track('list_switched', { to, short: plan.listInfo.short, full: plan.listInfo.full });
+    answers.list = to;
+    const keepChecked = [...app.querySelectorAll('.row input:checked')].map(x => x.dataset.item);
+    showResults({ checked: keepChecked, switched: true });
+  });
+  if (restore.switched) {
+    app.querySelector('#announce').textContent = t('list_meals_updated');
+    app.querySelector('#list-switch')?.focus();
+  }
   app.querySelector('#print').onclick = doPrint;
   app.querySelector('#packet-print')?.addEventListener('click', doPrint);
   app.querySelector('#packet-again')?.addEventListener('click', renderPacket);

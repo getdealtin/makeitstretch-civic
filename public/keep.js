@@ -40,6 +40,7 @@ export function packPlan(a, { swaps = [], checked = [] } = {}) {
     v: 1, t: 'p', b: a.budget, d: a.days, p: a.people, z: a.zip || undefined,
     l: a.leftover, s: a.store, c: a.cuisine, a: a.avoid, h: a.have,
     w: swaps.length ? swaps : undefined, k: checked.length ? checked : undefined,
+    f: a.list === 'short' ? 's' : undefined,
   };
 }
 
@@ -53,6 +54,7 @@ export function unpackPlan(o) {
       budget, days, people, zip: /^\d{5}$/.test(o.z || '') ? o.z : null,
       leftover: one(o.l, 'leftover', 'sometimes'), store: one(o.s, 'store', 'full'),
       cuisine: pick(o.c, 'cuisine'), avoid: pick(o.a, 'avoid'), have: pick(o.h, 'have'),
+      list: o.f === 's' ? 'short' : 'full',
     },
     swaps: (Array.isArray(o.w) ? o.w : []).filter(k => /^\d{1,2}-\d-(breakfast|lunch|dinner)$/.test(k)),
     checked: (Array.isArray(o.k) ? o.k : []).filter(k => /^[a-z]{2,20}$/.test(k)),

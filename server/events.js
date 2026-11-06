@@ -48,6 +48,7 @@ export const SCHEMA = {
   cant_use: { item: oneOf(BOX_ITEMS), reason: oneOf(REASONS) },
   plan_reopened: { source: oneOf(['saved', 'link']), kind: oneOf(['plan', 'box']) },
   plan_outcome: { answer: oneOf(['yes', 'some', 'no']), kind: oneOf(['plan', 'box']) },
+  list_switched: { to: oneOf(['short', 'full']), short: int(0, 200), full: int(0, 200) },
 };
 
 /** Untrusted request body → { event, session_id, lang, data } or null. */
