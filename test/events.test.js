@@ -115,3 +115,11 @@ test('need taps: only the four needs are kept', async () => {
   assert.deepEqual(ce({ event: 'need_tapped', session_id: 'abc123def456', data: { need: 'rent' } }).data, { need: 'rent' });
   assert.deepEqual(ce({ event: 'need_tapped', session_id: 'abc123def456', data: { need: 'call me 555-0101' } }).data, {});
 });
+
+test('every event the site sends is allowed by the database schema file', async () => {
+  const { SCHEMA } = await import('../server/events.js');
+  const { readFileSync } = await import('node:fs');
+  const sql = readFileSync(new URL('../db/phase4-events.sql', import.meta.url), 'utf8');
+  const list = sql.match(/event in \(([\s\S]*?)\)\)/)[1];
+  for (const e of Object.keys(SCHEMA)) assert.ok(list.includes(`'${e}'`), `${e} missing from db/phase4-events.sql`);
+});

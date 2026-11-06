@@ -66,12 +66,23 @@ async function budgetFlow(p, tag, cap) {
   await check(p, tag + ' step prefs'); cap.titles.push(await p.title());
   await p.click('button[type=submit]'); await p.waitForSelector('#k-save', { timeout: 20000 });
   await check(p, tag + ' results', { spacing: true }); cap.titles.push(await p.title());
+  // Plan home: open every card and check each panel on its own
+  for (const id of await p.$$eval('[data-open-panel]', b => b.map(x => x.dataset.openPanel))) {
+    await p.click(`[data-open-panel="${id}"]`); await p.waitForTimeout(300);
+    await check(p, tag + ' panel ' + id, { spacing: false });
+    await p.click('#to-home'); await p.waitForTimeout(200);
+  }
 }
 async function boxFlow(p, tag) {
   await p.goto(URL + '/'); await p.click('#door-box'); await check(p, tag + ' box');
   for (const id of ['rice', 'drybeans', 'tuna', 'oats']) { const b = await p.$(`[data-item=${id}]`); if (b) await b.click(); }
-  await p.click('#boxform button[type=submit]'); await p.waitForSelector('.cant-use', { timeout: 20000 });
+  await p.click('#boxform button[type=submit]'); await p.waitForSelector('.hub', { timeout: 20000 });
   await check(p, tag + ' box results');
+  for (const id of await p.$$eval('[data-open-panel]', b => b.map(x => x.dataset.openPanel))) {
+    await p.click(`[data-open-panel="${id}"]`); await p.waitForTimeout(300);
+    await check(p, tag + ' box panel ' + id, { spacing: false });
+    await p.click('#to-home'); await p.waitForTimeout(200);
+  }
 }
 
 (async () => {
