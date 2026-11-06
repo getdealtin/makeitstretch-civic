@@ -47,7 +47,7 @@ export default {
   // South region is the fallback. local_prices is where the Community Data Stewards'
   // quarterly shelf-price capture lands (spec §11) and it overrides BLS item by item.
   price_region: 'south',
-  price_region_label: 'U.S. South region averages (BLS)',
+  price_region_label: 'U.S. South region averages (BLS) and estimates',
   local_prices: {},
 
   // Austin's top three non-English languages (City language-access data). Each shows as
@@ -138,7 +138,7 @@ export default {
     es: {
       tagline: 'Convierta el dinero que tiene para comida en una semana de comidas de verdad.',
       disclaimer: 'Una herramienta independiente hecha para los residentes de Austin por Margin Ventures LLC. No es un sitio web oficial de la Ciudad de Austin.',
-      price_region_label: 'promedios de la región Sur de EE. UU. (BLS)',
+      price_region_label: 'promedios de la región Sur de EE. UU. (BLS) y estimaciones',
       resources: {
         'ctfb-find-food': { name: 'Central Texas Food Bank: Find Food Now (Encuentre comida)', description: 'Escriba su código postal para encontrar despensa gratis cerca de usted: despensas, repartos móviles y lugares de comida. En muchos lugares solo le piden su código postal y cuántas personas viven en su casa.' },
         '211-texas': { name: '2-1-1 Texas', description: 'Llame al 2-1-1 para recibir ayuda con comida el mismo día cerca de usted. Marque 2 para recibir ayuda con beneficios del estado como SNAP.' },
@@ -150,7 +150,7 @@ export default {
     vi: {
       tagline: 'Biến số tiền đi chợ bạn có thành một tuần ăn uống đầy đủ.',
       disclaimer: 'Một công cụ độc lập do Margin Ventures LLC xây dựng cho cư dân Austin. Đây không phải trang web chính thức của Thành phố Austin.',
-      price_region_label: 'giá trung bình khu vực miền Nam Hoa Kỳ (BLS)',
+      price_region_label: 'giá trung bình khu vực miền Nam Hoa Kỳ (BLS) và giá ước tính',
       resources: {
         'ctfb-find-food': { name: 'Central Texas Food Bank: Find Food Now (Tìm thực phẩm)', description: 'Nhập mã bưu điện để tìm thực phẩm miễn phí gần bạn: kho thực phẩm, điểm phát di động và nơi phát bữa ăn. Nhiều nơi chỉ hỏi mã bưu điện và số người trong nhà.' },
         '211-texas': { name: '2-1-1 Texas', description: 'Gọi 2-1-1 để được giúp thực phẩm ngay trong ngày ở gần bạn. Bấm số 2 để được giúp đăng ký các phúc lợi của tiểu bang như SNAP.' },
@@ -162,7 +162,7 @@ export default {
     'zh-Hans': {
       tagline: '把手头的买菜钱变成一周像样的饭菜。',
       disclaimer: '由 Margin Ventures LLC 为奥斯汀居民打造的独立工具。本网站不是奥斯汀市（City of Austin）的官方网站。',
-      price_region_label: '美国南部地区平均价格（BLS）',
+      price_region_label: '美国南部地区平均价格（BLS）及估算价格',
       resources: {
         'ctfb-find-food': { name: 'Central Texas Food Bank: Find Food Now（查找食物）', description: '输入邮政编码，查找附近的免费食物：食物发放处、流动发放点和供餐点。很多地方只问您的邮政编码和家里几口人。' },
         '211-texas': { name: '2-1-1 Texas', description: '拨打 2-1-1，获得附近当天的食物帮助。按 2 可获得申请 SNAP 等州福利的帮助。' },

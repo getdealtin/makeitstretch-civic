@@ -8,7 +8,7 @@ import { ART } from './art.js';
 import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
-  matchBox, BOX_GROUPS, foodLabel, findBoxFood, cleanFoodWord,
+  matchBox, BOX_GROUPS, foodLabel, findBoxFood, cleanFoodWord, INGREDIENT_FOODS, PANTRY_BASICS,
 } from '/engine/index.js';
 import {
   packPlan, packBox, planHash, boxHash, readHash, planText, boxText, smsHref, mailHref, store,
@@ -612,7 +612,8 @@ function renderResults(plan, restore = {}) {
   current = () => openFromHash(location.hash, openedSavedId);
   const { input, result: s, shopping, weeks, priced } = plan;
   const peopleLabel = input.people === 1 ? t('person') : t('people', { n: input.people });
-  const calNote = s.calPct >= 80 ? t('cal_ok') : s.calPct >= 60 ? t('cal_low') : t('cal_tight');
+  // 'Enough' only at 100% of the 2,000-calorie reference; 'a little under' from 80%.
+  const calNote = s.calPct >= 100 ? t('cal_ok') : s.calPct >= 80 ? t('cal_low') : t('cal_tight');
   const nItems = s.cart.length;
 
   // Which option is chosen per meal slot: key "w-d-slot" → index (0 = main pick, 1 = alternate).
@@ -759,7 +760,13 @@ function renderResults(plan, restore = {}) {
     const opts = weeks[w][d][sl];
     const ci = choice[b.dataset.key] || 0;
     if (!justSwapped) track('recipe_opened', { recipe: opts[ci].id, flow: 'plan' });
+    // A recipe qualifies by sharing one food with the list, so say plainly what isn't on it.
+    const onList = s.cart.map(i => i.id);
+    const missing = (opts[ci].ingredients || []).filter(word => !PANTRY_BASICS.has(word) &&
+      !(INGREDIENT_FOODS[word] || []).some(id => onList.includes(id)) &&
+      !onList.some(id => id.includes(word.replace(/ /g, '')) || word.includes(id)));
     openRecipe(opts[ci], opts[1 - ci] ? {
+      missing,
       justSwapped,
       alt: opts[1 - ci],
       onSwap: () => {
@@ -770,7 +777,7 @@ function renderResults(plan, restore = {}) {
         sync();
         showMeal(b, true);
       },
-    } : {});
+    } : { missing });
   };
   app.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => showMeal(b)));
 

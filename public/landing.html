@@ -57,7 +57,7 @@
       const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
       const name = c => c.region ? `${c.place}, ${c.region}` : c.place;
       document.getElementById('city-list').innerHTML = cities.map(c =>
-        `<li><a href="${esc(c.url)}"><b>${esc(name(c))}</b><span>Local prices, food sites and benefits help</span></a></li>`).join('');
+        `<li><a href="${esc(c.url)}"><b>${esc(name(c))}</b><span>Regional prices, free food help and benefits</span></a></li>`).join('');
       const cta = document.getElementById('hero-cta'), text = document.getElementById('hero-cta-text');
       if (cities.length === 1) { cta.href = cities[0].url; text.textContent = `Start in ${name(cities[0])}`; }
       else { cta.href = '#cities-title'; text.textContent = 'Find your city'; }
@@ -121,7 +121,7 @@
           <p>When every dollar counts, every choice takes work: what to buy, what it makes, whether it lasts the week. Make It Stretch does the math, so people can get to dinner.</p>
           <ul class="promises">
             <li>No account, no names, no ads</li>
-            <li>Works on any phone, in English, Spanish, Vietnamese and Chinese</li>
+            <li>Works on any smartphone or computer, in English, Spanish, Vietnamese and Chinese</li>
             <li>Cities get aggregated reports that never identify anyone</li>
           </ul>
         </div>
@@ -129,7 +129,7 @@
           <div class="band-art" aria-hidden="true" data-art="pin"></div>
           <h2 id="cities-title" class="cities-title">Where it’s live</h2>
           <ul class="city-list" id="city-list">
-            <li><a href="https://austin.makeitstretch.org/"><b>Austin, TX</b><span>Local prices, food sites, SNAP and WIC help</span></a></li>
+            <li><a href="https://austin.makeitstretch.org/"><b>Austin, TX</b><span>Regional prices, free food help, SNAP and WIC</span></a></li>
           </ul>
           <p class="city-ask">Don’t see your city? <a href="mailto:getdealtin.hq@gmail.com?subject=Make%20It%20Stretch%20in%20my%20city">Tell us where you are</a>.</p>
         </div>
@@ -153,7 +153,7 @@
         <a class="pcard" href="/share">
           <p class="kicker">Libraries and community groups</p>
           <h3>Share a link or a QR code</h3>
-          <p>Hand it out with food boxes, at the front desk, or on a flyer. It works on any phone.</p>
+          <p>Hand it out with food boxes, at the front desk, or on a flyer. It works on any smartphone.</p>
           <span class="pgo">Get your link and QR code <span aria-hidden="true">→</span></span>
         </a>
         <a class="pcard" href="mailto:getdealtin.hq@gmail.com?subject=Make%20It%20Stretch%20for%20our%20city">
