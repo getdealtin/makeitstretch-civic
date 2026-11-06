@@ -277,6 +277,9 @@ function activityHtml(a) {
         ${table(Object.entries(cu.by_group), ['Reason group', 'Reports'], k => PRETTY.group[k] || k)}
         <h4>By reason</h4>${table(cu.by_reason, ['Reason', 'Reports'])}
         <h4>By item</h4>${table(cu.by_item, ['Item', 'Reports'])}</div>
+      <div><h3>Other needs (after the plan)</h3>
+        <p class="a-hint">Taps on "Need help with anything else?". Nobody is contacted.</p>
+        ${table(Object.entries(a.needs || {}), ['Need', 'Taps'])}</div>
       <div><h3>Foods not on our list</h3>
         <p class="a-hint">Typed in on the food-box screen. Candidates for new foods and recipes.</p>
         ${table(a.unlisted || [], ['Food (as typed)', 'Boxes'])}</div>

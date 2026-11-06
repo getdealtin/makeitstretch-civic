@@ -27,5 +27,6 @@ export function publicConfig(c) {
     resources: c.resources.map(({ verified, ...r }) => r),
     i18n: c.i18n || {},
     sources: c.sources || [],
+    needs: c.needs || [],
   };
 }

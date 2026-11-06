@@ -18,7 +18,7 @@ const ZIP_CENTERS = JSON.parse(readFileSync(new URL('../data/zip-centroids.json'
 
 export const RECONFIRM_DAYS = 182; // about 6 months
 export const KINDS = ['pantry', 'fridge', 'meals', 'mutual_aid', 'other'];
-export const OFFERS = ['groceries', 'produce', 'meals', 'baby', 'hygiene', 'other'];
+export const OFFERS = ['groceries', 'produce', 'meals', 'baby', 'hygiene', 'other', 'rent', 'health', 'childcare', 'jobs'];
 export const LANGS = ['en', 'es', 'vi', 'zh', 'ar', 'other'];
 const ACCESS = ['walkup', 'appointment', 'both'];
 

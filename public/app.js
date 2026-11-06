@@ -511,7 +511,7 @@ const dayOf = name => {
   const i = DAYS_EN.indexOf(name);
   try { return i < 0 ? name : new Intl.DateTimeFormat(lang, { weekday: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + i, 12))); } catch { return name; }
 };
-const residents = () => (city.resources || []).filter(r => r.audience !== 'organizations');
+const residents = () => (city.resources || []).filter(r => r.audience !== 'organizations' && r.audience !== 'needs');
 const orgs = () => (city.resources || []).filter(r => r.audience === 'organizations');
 
 function helpSection() {
@@ -569,12 +569,60 @@ function renderSitesZip(box, zip) {
 
 /** Approved local food sites, nearest the zip first. Fills the help section after it renders.
  *  No zip yet? A small box asks for one right there, where it's useful. */
+// ── "Need help with anything else?" (after the plan; value first, nothing asked in return) ──
+// Tapping a need shows where to get that help now: verified City/County sources, nonprofits from the
+// directory that offer it (nearest first), and 2-1-1. Taps are counted anonymously; nobody is contacted.
+const FOOD_OFFERS = ['groceries', 'produce', 'meals'];
+let siteCache = [];
+const helpCard = r => `<article class="help-card">
+  <h3>${esc(resText(r, 'name'))}</h3><p>${esc(resText(r, 'description'))}</p>
+  <div class="help-actions">
+    ${r.phone ? `<a href="tel:${esc(r.phone)}" data-track="resource" data-target="${esc(r.id)}" data-action="call">${esc(t('call', { phone: r.phone }))}</a>` : ''}
+    ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener" data-track="resource" data-target="${esc(r.id)}" data-action="website">${esc(t('visit'))}<span class="sr-only"> (${esc(resText(r, 'name'))})</span></a>` : ''}
+  </div></article>`;
+function needsSection() {
+  if (!(city.needs || []).length) return '';
+  return `<section class="section needs no-print" id="needs" aria-labelledby="h-needs">
+    <div class="section-head"><h2 id="h-needs">${esc(t('needs_title'))}</h2></div>
+    <p class="hint">${esc(t('needs_hint'))}</p>
+    <div class="chips">${city.needs.map(n => `<button type="button" class="chip" data-need="${n}" aria-pressed="false" aria-controls="need-panel">${esc(t('need_' + n))}</button>`).join('')}</div>
+    <div id="need-panel" class="help-list" aria-live="polite" hidden></div>
+  </section>`;
+}
+function wireNeeds() {
+  const panel = app.querySelector('#need-panel');
+  if (!panel) return;
+  const counted = new Set();
+  app.querySelectorAll('[data-need]').forEach(b => b.addEventListener('click', () => {
+    const need = b.dataset.need, open = b.getAttribute('aria-pressed') !== 'true';
+    app.querySelectorAll('[data-need]').forEach(x => x.setAttribute('aria-pressed', open && x === b));
+    if (!open) { panel.hidden = true; return; }
+    if (!counted.has(need)) { counted.add(need); track('need_tapped', { need }); }
+    const sources = (city.resources || []).filter(r => (r.needs || []).includes(need));
+    const two11 = (city.resources || []).find(r => r.id === '211-texas');
+    const orgs = siteCache.filter(p => (p.offers || []).includes(need)).slice(0, 4);
+    panel.innerHTML = [...sources.map(helpCard), ...orgs.map(p => `<article class="help-card site-card">
+        <span class="site-kind">${esc(t('kind_' + p.kind))}</span><h3>${esc(p.name)}</h3>
+        ${[p.address, p.zip].filter(Boolean).length ? `<p class="site-where">${esc([p.address, p.zip].filter(Boolean).join(', '))}</p>` : ''}
+        ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
+        <div class="help-actions">
+          ${p.phone ? `<a href="tel:${esc(p.phone)}" data-track="site" data-target="${esc(p.id)}" data-action="call">${esc(t('call', { phone: p.phone }))}</a>` : ''}
+          ${p.website ? `<a href="${esc(p.website)}" target="_blank" rel="noopener" data-track="site" data-target="${esc(p.id)}" data-action="website">${esc(t('visit'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
+        </div></article>`), two11 ? helpCard(two11) : ''].join('');
+    panel.hidden = false;
+  }));
+}
+
 async function loadSites(zip) {
   const box = app.querySelector('#sites');
   if (!box) return;
   let sites = [];
   try { sites = await (await fetch('/api/providers' + (qs ? qs + '&' : '?') + 'zip=' + (zip || ''))).json(); } catch { return; }
-  if (!Array.isArray(sites) || !sites.length || !box.isConnected) return;
+  if (!Array.isArray(sites)) return;
+  siteCache = sites;
+  // Food sites only here; listings that offer only other help appear under "Need help with anything else?".
+  sites = sites.filter(p => p.kind !== 'other' || (p.offers || []).some(o => FOOD_OFFERS.includes(o)));
+  if (!sites.length || !box.isConnected) return;
   const month = iso => new Date(iso).toLocaleDateString(document.documentElement.lang || 'en', { month: 'long', year: 'numeric' });
   const shown = sites.slice(0, 6);
   box.querySelector('#sites-list').innerHTML = shown.map(p => {
@@ -696,6 +744,7 @@ function renderResults(plan, restore = {}) {
     ${keepBar()}
 
     ${helpSection()}
+    ${needsSection()}
 
     <div class="nav no-print">
       <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
@@ -707,6 +756,7 @@ function renderResults(plan, restore = {}) {
 
   focusTop('#res-title');
   wireJumps();
+  wireNeeds();
   loadSites(answers.zip || siteZip);
   if (logNext?.built) track('plan_built', {
     budget: input.budget, days: input.days, people: input.people, zip: answers.zip, store: answers.store,
@@ -1071,6 +1121,7 @@ async function renderBoxResults() {
     </section>
     ${keepBar()}
     ${helpSection()}
+    ${needsSection()}
     <div class="nav no-print">
       <button type="button" class="btn btn-ghost" id="edit">${esc(t('box_edit'))}</button>
       <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
@@ -1080,6 +1131,7 @@ async function renderBoxResults() {
 
   focusTop('#res-title');
   wireJumps();
+  wireNeeds();
   loadSites(siteZip);
   if (logNext?.built) track('box_built', { items: box.items, other: box.other, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue });
   else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'box' }); askOutcome('box'); }

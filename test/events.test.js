@@ -109,3 +109,9 @@ test('typed box foods: letters kept, anything that could identify someone droppe
   const e = ce({ event: 'box_built', session_id: 'abc123def456', data: { items: ['rice'], other: ['Canned Salmon', 'call 512-555-0101', 'me@x.com', 'cereal', 'cereal', 'a', 'x'.repeat(40), 'café de olla', 'ramen', 'grits', 'spam'] } });
   assert.deepEqual(e.data.other, ['canned salmon', 'cereal', 'café de olla', 'ramen', 'grits']);
 });
+
+test('need taps: only the four needs are kept', async () => {
+  const { cleanEvent: ce } = await import('../server/events.js');
+  assert.deepEqual(ce({ event: 'need_tapped', session_id: 'abc123def456', data: { need: 'rent' } }).data, { need: 'rent' });
+  assert.deepEqual(ce({ event: 'need_tapped', session_id: 'abc123def456', data: { need: 'call me 555-0101' } }).data, {});
+});

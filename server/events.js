@@ -49,6 +49,7 @@ export const SCHEMA = {
   cant_use: { item: oneOf(BOX_ITEMS), reason: oneOf(REASONS) },
   plan_reopened: { source: oneOf(['saved', 'link']), kind: oneOf(['plan', 'box']) },
   plan_outcome: { answer: oneOf(['yes', 'some', 'no']), kind: oneOf(['plan', 'box']) },
+  need_tapped: { need: oneOf(['rent', 'health', 'childcare', 'jobs']) },
   list_switched: { to: oneOf(['short', 'full']), short: int(0, 200), full: int(0, 200) },
 };
 
@@ -124,6 +125,7 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
       by_item: top(count(cant, c => c.data.item)),
     },
     unlisted: top(count(boxes, b => b.data.other || []), 30),
+    needs: count(by('need_tapped'), e => e.data.need),
     languages: count(events.filter(e => e.event === 'page_view'), e => e.lang),
     kept: count(by('plan_kept'), e => e.data.how),
     by_zip_session: Object.keys(zipOf).length,

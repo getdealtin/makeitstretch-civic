@@ -120,3 +120,13 @@ test('report and exports are admin-only; CSV downloads work when signed in', asy
   assert.match(csv.headers.get('content-type'), /text\/csv/);
   assert.match(csv.headers.get('content-disposition'), /attachment/);
 });
+
+test('needs beyond food: every need has sources, they stay out of the food help list, and the report counts people', async () => {
+  for (const need of austin.needs) assert.ok(austin.resources.some(r => (r.needs || []).includes(need)), need);
+  for (const r of austin.resources.filter(r => r.audience === 'needs')) assert.match(r.verified, /2026-11-06/, r.id);
+  const events = [];
+  for (let i = 0; i < 20; i++) { events.push(ev(i, 'page_view')); events.push(ev(i, 'need_tapped', { need: 'rent' })); events.push(ev(i, 'need_tapped', { need: 'rent' })); }
+  const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', roles: rolesOf(austin.resources), framework: austin.report });
+  const t = r.sections.find(s => s.goal === 'Needs beyond food').tables.find(x => x.id === 'needs');
+  assert.deepEqual(t.rows, [['Rent & utilities', 20]], 'people, not taps');
+});

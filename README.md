@@ -145,6 +145,9 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
       goals), otherwise the neutral DEFAULT_FRAMEWORK is used. Resources carry `role: 'benefits' | 'food_help'`.
 - [x] Home redesign (Nov 5): warm illustrated start screen (hero + two doors, how it works, green band) in all
       four languages; makeitstretch.org landing page (`public/landing.html`, served for the bare domain by host)
+- [x] Needs beyond food (Nov 6): after the plan, "Need help with anything else?" (rent & utilities, health care,
+      child care & school, jobs & getting around) shows verified City/County sources, approved directory listings
+      that offer that help, and 2-1-1. Anonymous need_tapped counts feed the City report. No contact info, no follow-up.
 - [x] Phase 6: accessibility audit (scripts/a11y-audit.cjs: every screen x 4 languages, WCAG 2.2 AA, keyboard,
       320px reflow, text spacing, titles, forced colors) and the print packet: "Print or save as PDF" on any plan
       gives shopping checklist + week of meals + every recipe + local help + QR back to the plan (~4 pages);

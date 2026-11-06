@@ -13,7 +13,7 @@ const token = (location.pathname.match(/^\/join\/([A-Za-z0-9_-]{10,64})$/) || []
 
 const KINDS = ['pantry', 'fridge', 'meals', 'mutual_aid', 'other'];
 const ACCESS = ['walkup', 'appointment', 'both'];
-const OFFERS = ['groceries', 'produce', 'meals', 'baby', 'hygiene', 'other'];
+const OFFERS = ['groceries', 'produce', 'meals', 'baby', 'hygiene', 'other', 'rent', 'health', 'childcare', 'jobs'];
 const SPOKEN = ['en', 'es', 'vi', 'zh', 'ar', 'other'];
 
 // Keeps what someone typed if they switch language mid-form.
