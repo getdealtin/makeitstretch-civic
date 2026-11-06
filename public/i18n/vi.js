@@ -116,7 +116,7 @@ export default {
   cat_grain: 'Ngũ cốc và bánh mì', cat_protein: 'Chất đạm', cat_vegetable: 'Rau củ', cat_fruit: 'Trái cây',
   cat_dairy: 'Sữa', cat_fat: 'Dầu và chất béo', cat_pantry: 'Đồ khô và gia vị',
   price_note: 'Giá: {label}. Giá ở cửa hàng của bạn có thể khác.',
-  health_note: "Calo, dinh dưỡng và giá cả chỉ là ước tính. Nếu bạn có bệnh lý hoặc dị ứng, hãy đọc nhãn thực phẩm và hỏi ý kiến bác sĩ.",
+  health_note: "Thông tin dinh dưỡng lấy từ dữ liệu của USDA. Giá cả là giá trung bình của Cục Thống kê Lao động (BLS) và giá ước tính. Nếu bạn có bệnh lý hoặc dị ứng, hãy đọc nhãn thực phẩm và hỏi ý kiến bác sĩ.",
   week_of: 'Tuần {n}/{total}',
   prev_week: 'Tuần trước', next_week: 'Tuần sau',
   meals_hint: 'Chạm vào một món để xem công thức và một món khác để đổi.',

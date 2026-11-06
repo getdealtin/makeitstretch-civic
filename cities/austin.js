@@ -104,7 +104,7 @@ export default {
       id: '211-texas',
       role: 'food_help',
       name: '2-1-1 Texas',
-      description: 'Call 2-1-1 for same-day food help near you. Press 2 for help applying for state benefits like SNAP.',
+      description: 'Call 2-1-1 to find food help and other services near you, including help with benefits like SNAP.',
       phone: '211', url: 'https://www.211texas.org',
       kind: 'phone', audience: 'residents', event: 'resource_clicked',
       verified: '2026-11-04 web search; confirm menu options before launch',
@@ -146,7 +146,7 @@ export default {
       price_region_label: 'promedios de la región Sur de EE. UU. (BLS) y estimaciones',
       resources: {
         'ctfb-find-food': { name: 'Central Texas Food Bank: Find Food Now (Encuentre comida)', description: 'Escriba su código postal para encontrar despensa gratis cerca de usted: despensas, repartos móviles y lugares de comida. En muchos lugares solo le piden su código postal y cuántas personas viven en su casa.' },
-        '211-texas': { name: '2-1-1 Texas', description: 'Llame al 2-1-1 para recibir ayuda con comida el mismo día cerca de usted. Marque 2 para recibir ayuda con beneficios del estado como SNAP.' },
+        '211-texas': { name: '2-1-1 Texas', description: 'Llame al 2-1-1 para encontrar ayuda con comida y otros servicios cerca de usted, incluida ayuda con beneficios como SNAP.' },
         'tx-snap': { name: 'SNAP (beneficios de comida): Your Texas Benefits', description: 'Dinero cada mes para comprar comida con la tarjeta Lone Star. Puede solicitarlo en línea en unos 20–30 minutos.' },
         'tx-wic': { name: 'Texas WIC', description: 'Comida gratis y ayuda con nutrición para personas embarazadas, padres de bebés y niños menores de 5 años. Puede recibir WIC y SNAP al mismo tiempo.' },
         'keep-austin-fed': { name: 'Keep Austin Fed', description: 'Rescata comida que sobra y la entrega gratis a organizaciones de Austin que dan de comer. Es para organizaciones, no para personas.' },
@@ -158,7 +158,7 @@ export default {
       price_region_label: 'giá trung bình khu vực miền Nam Hoa Kỳ (BLS) và giá ước tính',
       resources: {
         'ctfb-find-food': { name: 'Central Texas Food Bank: Find Food Now (Tìm thực phẩm)', description: 'Nhập mã bưu điện để tìm thực phẩm miễn phí gần bạn: kho thực phẩm, điểm phát di động và nơi phát bữa ăn. Nhiều nơi chỉ hỏi mã bưu điện và số người trong nhà.' },
-        '211-texas': { name: '2-1-1 Texas', description: 'Gọi 2-1-1 để được giúp thực phẩm ngay trong ngày ở gần bạn. Bấm số 2 để được giúp đăng ký các phúc lợi của tiểu bang như SNAP.' },
+        '211-texas': { name: '2-1-1 Texas', description: 'Gọi 2-1-1 để tìm trợ giúp thực phẩm và các dịch vụ khác gần bạn, kể cả trợ giúp về phúc lợi như SNAP.' },
         'tx-snap': { name: 'SNAP (phiếu thực phẩm): Your Texas Benefits', description: 'Tiền mua thực phẩm hằng tháng nạp vào thẻ Lone Star. Đăng ký trực tuyến mất khoảng 20–30 phút.' },
         'tx-wic': { name: 'Texas WIC', description: 'Thực phẩm miễn phí và hỗ trợ dinh dưỡng cho người mang thai, cha mẹ có con mới sinh và trẻ dưới 5 tuổi. Bạn có thể nhận WIC và SNAP cùng lúc.' },
         'keep-austin-fed': { name: 'Keep Austin Fed', description: 'Thu gom thực phẩm dư thừa và giao miễn phí cho các tổ chức từ thiện ở Austin. Dành cho tổ chức, không dành cho cá nhân.' },
@@ -170,7 +170,7 @@ export default {
       price_region_label: '美国南部地区平均价格（BLS）及估算价格',
       resources: {
         'ctfb-find-food': { name: 'Central Texas Food Bank: Find Food Now（查找食物）', description: '输入邮政编码，查找附近的免费食物：食物发放处、流动发放点和供餐点。很多地方只问您的邮政编码和家里几口人。' },
-        '211-texas': { name: '2-1-1 Texas', description: '拨打 2-1-1，获得附近当天的食物帮助。按 2 可获得申请 SNAP 等州福利的帮助。' },
+        '211-texas': { name: '2-1-1 Texas', description: '拨打 2-1-1，查找附近的食物帮助和其他服务，包括 SNAP 等福利方面的帮助。' },
         'tx-snap': { name: 'SNAP（食品福利）：Your Texas Benefits', description: '每月发放到 Lone Star 卡上的买菜钱。网上申请大约需要 20–30 分钟。' },
         'tx-wic': { name: 'Texas WIC', description: '为孕妇、新生儿父母和 5 岁以下儿童提供免费食物和营养帮助。WIC 和 SNAP 可以同时领取。' },
         'keep-austin-fed': { name: 'Keep Austin Fed', description: '回收多余的食物，免费送给奥斯汀的慈善机构。面向机构，不面向个人。' },

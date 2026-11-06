@@ -117,7 +117,7 @@ export default {
   cat_grain: 'Granos y pan', cat_protein: 'Proteína', cat_vegetable: 'Verduras', cat_fruit: 'Fruta',
   cat_dairy: 'Lácteos', cat_fat: 'Aceites y grasas', cat_pantry: 'Despensa',
   price_note: 'Precios: {label}. Su tienda puede tener precios distintos.',
-  health_note: "Las calorías, la nutrición y los precios son estimaciones. Si tiene una condición de salud o alergia, revise las etiquetas y consulte a su médico.",
+  health_note: "La información nutricional viene de datos del USDA. Los precios son promedios de la Oficina de Estadísticas Laborales (BLS) y estimaciones. Si tiene una condición de salud o alergia, revise las etiquetas y consulte a su médico.",
   week_of: 'Semana {n} de {total}',
   prev_week: 'Semana anterior', next_week: 'Semana siguiente',
   meals_hint: 'Toque una comida para ver la receta y otra opción para cambiarla.',
