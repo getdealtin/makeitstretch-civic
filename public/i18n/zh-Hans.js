@@ -84,7 +84,7 @@ export default {
   person: '1 人', people: '{n} 人',
   jump_list: '购物清单', jump_list_sub: '{n} 样 · ${total}',
   jump_meals: '餐食计划', jump_meals_sub_1: '1 周', jump_meals_sub: '{n} 周',
-  jump_help: '附近的免费食物', jump_help_sub: '{n} 个选择',
+  jump_help: '附近的免费食物和帮助', jump_help_sub: '{n} 个选择',
   plan_nav: '您的计划',
   sec_list: '购物清单',
   list_short_note: "{n} 种（共 {total} 种）",

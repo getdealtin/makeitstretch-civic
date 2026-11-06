@@ -84,7 +84,7 @@ export default {
   person: '1 người', people: '{n} người',
   jump_list: 'Danh sách mua sắm', jump_list_sub: '{n} món · ${total}',
   jump_meals: 'Thực đơn', jump_meals_sub_1: '1 tuần', jump_meals_sub: '{n} tuần',
-  jump_help: 'Thực phẩm miễn phí gần bạn', jump_help_sub: '{n} lựa chọn',
+  jump_help: 'Thực phẩm miễn phí và trợ giúp gần bạn', jump_help_sub: '{n} lựa chọn',
   plan_nav: 'Kế hoạch của bạn',
   sec_list: 'Danh sách mua sắm',
   list_short_note: "{n} món (trên tổng số {total})",

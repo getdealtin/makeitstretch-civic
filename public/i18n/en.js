@@ -98,7 +98,7 @@ export default {
   person: '1 person', people: '{n} people',
   jump_list: 'Shopping list', jump_list_sub: '{n} items · ${total}',
   jump_meals: 'Meal plan', jump_meals_sub_1: '1 week', jump_meals_sub: '{n} weeks',
-  jump_help: 'Free food near you', jump_help_sub: '{n} options',
+  jump_help: 'Free food & help near you', jump_help_sub: '{n} options',
   plan_nav: 'Your plan',
 
   sec_list: 'Shopping list',

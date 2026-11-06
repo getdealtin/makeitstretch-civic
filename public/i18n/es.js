@@ -85,7 +85,7 @@ export default {
   person: '1 persona', people: '{n} personas',
   jump_list: 'Lista de compras', jump_list_sub: '{n} productos · ${total}',
   jump_meals: 'Plan de comidas', jump_meals_sub_1: '1 semana', jump_meals_sub: '{n} semanas',
-  jump_help: 'Comida gratis cerca de usted', jump_help_sub: '{n} opciones',
+  jump_help: 'Comida gratis y ayuda cerca de usted', jump_help_sub: '{n} opciones',
   plan_nav: 'Su plan',
   sec_list: 'Lista de compras',
   list_short_note: "{n} productos (de {total})",
