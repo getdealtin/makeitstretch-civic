@@ -145,6 +145,12 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
       goals), otherwise the neutral DEFAULT_FRAMEWORK is used. Resources carry `role: 'benefits' | 'food_help'`.
 - [x] Home redesign (Nov 5): warm illustrated start screen (hero + two doors, how it works, green band) in all
       four languages; makeitstretch.org landing page (`public/landing.html`, served for the bare domain by host)
+- [x] Plan home + Where to shop (Nov 6): results open on a "plan home" of cards (shopping list, meals, where to shop,
+      free food & help, other help) with live summaries; each opens on its own with "Back to my plan" (phone back works,
+      ticks kept; print shows everything). Where to shop lists the nearest SNAP-authorized grocery stores and farmers
+      markets from USDA's list (data/snap-stores-travis.json, built by scripts/build-snap-stores.py; as of Dec 31, 2025),
+      with chips (Takes SNAP; WIC / Double Up / hours only where verified), directions, CapMetro trip planner, and the
+      Texas WIC store finder. City report adds food-retail findings (focus ZIPs vs rest of Travis County).
 - [x] Needs beyond food (Nov 6): after the plan, "Need help with anything else?" (rent & utilities, health care,
       child care & school, jobs & getting around) shows verified City/County sources, approved directory listings
       that offer that help, and 2-1-1. Anonymous need_tapped counts feed the City report. No contact info, no follow-up.

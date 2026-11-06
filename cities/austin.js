@@ -67,6 +67,18 @@ export default {
   // Grant geography: Council Districts 1–4, east of I-35. Used for reporting, not gating:
   // anyone can use the tool with any zip.
   focus_area: 'Council Districts 1–4 (eastern crescent)',
+  // ZIP codes used to approximate the focus area in the City report's food-retail findings.
+  // ZIP codes and council districts don't line up exactly; the report says so.
+  focus_zips: ['78702', '78721', '78723', '78724', '78741', '78744', '78725', '78617', '78719', '78752', '78753', '78758'],
+  // Verified notes for stores on USDA's SNAP list, keyed by USDA's store name. Source:
+  // sustainablefoodcenter.org/farmers-markets-support/sfc-farmers-markets (checked Nov 6, 2026):
+  // SFC markets accept SNAP and WIC, double them up to $30 a week (Double Up Food Bucks Texas),
+  // and run Saturdays 9 AM–1 PM. Add a note only from a verified source.
+  wic_finder_url: 'https://find.texaswic.org/', // official Texas WIC store finder (checked Nov 6, 2026)
+  store_notes: {
+    'SFC Farmers Market Downtown': { wic: true, double: 'up30', hours: 'sat_9_1' },
+    "Sfc Farmers' Market At Sunset Valley": { wic: true, double: 'up30', hours: 'sat_9_1' },
+  },
 
   // City report framing: the shared measures (server/report.js METRICS) grouped by the
   // Austin-Travis County Food Plan goals the FACE grant is tied to. Another city writes its own
@@ -80,7 +92,7 @@ export default {
     },
     labels: { benefits: 'SNAP or WIC', food_help: 'a food bank or 2-1-1' },
     sections: [
-      { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'cuisine'] },
+      { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'retail_mix', 'retail_by_zip', 'cuisine'] },
       { goal: 'Strategy 6.6 · Benefits navigation', intro: 'People routed toward SNAP and WIC. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
       { goal: 'Goal 4 · Preparedness (strategy 4.2)', intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
       { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan (rent and utilities, health care, child care, jobs and transportation). Taps on a need, not requests: no one is contacted. A de-identified signal for nonprofit partners.', metrics: ['needs', 'needs_by_zip'] },

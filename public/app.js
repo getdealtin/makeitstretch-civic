@@ -140,7 +140,10 @@ async function boot() {
   if (!openFromHash(location.hash, null, 'link')) (PACKET ? renderPacket() : renderIntro());
   // A different plan link opened in this same tab only changes the #part: no reload happens.
   // (Our own updates use replaceState, which doesn't fire this.)
-  window.addEventListener('hashchange', () => { if (!openFromHash(location.hash, null, 'link')) renderIntro(); });
+  window.addEventListener('hashchange', () => {
+    if (hubSkipHash) { hubSkipHash = false; return; } // our own card navigation, not a new link
+    if (!openFromHash(location.hash, null, 'link')) renderIntro();
+  });
 }
 
 async function setLang(code, { render = true } = {}) {
@@ -171,7 +174,10 @@ function renderLangSwitch(available) {
 }
 
 const saveKey = () => 'mis:saved:' + (city.id || 'default');
-const setHash = h => history.replaceState(null, '', location.pathname + qs + h);
+// liveHash: the plan as it is now (ticks, swaps). Going back from a card restores it, so nothing is lost.
+let liveHash = '';
+let hubSkipHash = false;
+const setHash = h => { liveHash = h; history.replaceState(history.state, '', location.pathname + qs + h); };
 const linkFor = h => location.origin + location.pathname + qs + h;
 
 // Which saved entry (if any) the plan on screen belongs to, so edits update that entry.
@@ -569,6 +575,117 @@ function renderSitesZip(box, zip) {
 
 /** Approved local food sites, nearest the zip first. Fills the help section after it renders.
  *  No zip yet? A small box asks for one right there, where it's useful. */
+// ── Plan home: cards that open one part of the plan at a time (Nov 2026) ──
+// Everything is visible at a glance as a card with a live summary; tapping a card opens that part
+// with a "Back to my plan" bar. The phone's back button also returns home. Printing shows all parts.
+let hubPop = null;
+window.addEventListener('popstate', e => {
+  if (!hubPop || !app.querySelector('#home')) return;
+  hubSkipHash = true; setTimeout(() => { hubSkipHash = false; }, 100);
+  history.replaceState(e.state, '', location.pathname + qs + liveHash);
+  hubPop(e.state?.panel || null);
+});
+const hubCard = c => `<button type="button" class="hub-card" data-open-panel="${c.id}">
+  <span class="hub-icon hub-${c.id}" aria-hidden="true">${c.icon}</span>
+  <span class="hub-text"><b>${esc(c.title)}</b><span class="hub-sub" id="hub-sub-${c.id}">${c.sub}</span></span>
+  <span class="hub-go" aria-hidden="true">›</span></button>`;
+function hubHtml({ cards, homeTop, homeBottom, panels, planTitle }) {
+  return `<div id="home">${homeTop}
+      <nav class="hub" aria-label="${esc(t('plan_nav'))}">${cards.map(hubCard).join('')}</nav>
+      ${homeBottom}</div>
+    <div class="back-bar no-print" id="back-bar" hidden>
+      <button type="button" class="back-btn" id="to-home">← ${esc(t('back_home'))}</button>
+      <h1 class="sr-only">${esc(planTitle)}</h1></div>
+    ${panels.map(p => `<div class="panel" data-panel="${p.id}" hidden>${p.html}</div>`).join('')}`;
+}
+function wireHub(onOpen = {}) {
+  const home = app.querySelector('#home'), bar = app.querySelector('#back-bar');
+  const show = id => {
+    app.querySelectorAll('.panel').forEach(p => { p.hidden = p.dataset.panel !== id; });
+    home.hidden = !!id; bar.hidden = !id;
+    window.scrollTo({ top: 0 });
+    if (id) {
+      const h = app.querySelector(`.panel[data-panel="${id}"] h2`);
+      if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); screenTitle(h); }
+      onOpen[id]?.();
+    } else {
+      const back = app.querySelector(`[data-open-panel="${lastPanel}"]`) || app.querySelector('#res-title');
+      back?.focus({ preventScroll: true }); screenTitle(app.querySelector('#res-title'));
+    }
+  };
+  let lastPanel = null;
+  hubPop = id => { if (app.querySelector('#home')) show(id); };
+  app.querySelectorAll('[data-open-panel]').forEach(b => b.addEventListener('click', () => {
+    lastPanel = b.dataset.openPanel;
+    history.pushState({ panel: lastPanel }, '', location.href);
+    show(lastPanel);
+  }));
+  app.querySelector('#to-home').addEventListener('click', () => (history.state?.panel ? history.back() : show(null)));
+  if (history.state?.panel) history.replaceState(null, '', location.href); // a fresh plan always opens on its home
+}
+const setHubSub = (id, html) => { const el = app.querySelector('#hub-sub-' + id); if (el) el.innerHTML = html; };
+
+// ── Where to shop: nearest stores that take SNAP (USDA list), farmers markets, bus directions ──
+const aboutMi = mi => t('about_mi', { mi: Number(mi).toFixed(1) });
+function shopPanel() {
+  return `<section class="section shop" aria-labelledby="h-shop">
+    <div class="section-head"><h2 id="h-shop">${esc(t('hub_shop'))}</h2></div>
+    <div id="shop-body"><p class="muted">${esc(t('loading_data'))}</p></div></section>`;
+}
+async function loadShop(zip, { quiet = false } = {}) {
+  const body = app.querySelector('#shop-body');
+  if (!body) return;
+  if (!/^\d{5}$/.test(zip || '')) {
+    setHubSub('shop', esc(t('hub_shop_zip')));
+    body.innerHTML = `<form class="sites-zip-form" id="shop-zip" novalidate>
+      <label for="shop-zip-input">${esc(t('shop_zip_prompt'))}</label>
+      <div class="sites-zip-row"><input id="shop-zip-input" class="fi fi-sm" inputmode="numeric" autocomplete="postal-code" maxlength="5">
+      <button type="submit" class="btn-xs-site">${esc(t('sites_zip_go'))}</button></div><p class="error" role="alert"></p></form>`;
+    body.querySelector('form').onsubmit = async e => {
+      e.preventDefault();
+      const v = body.querySelector('input').value.trim();
+      if (!/^\d{5}$/.test(v)) { body.querySelector('.error').textContent = t('sites_zip_err'); return; }
+      siteZip = v; track('zip_added_later', { zip: v });
+      await loadShop(v); loadSites(v);
+      app.querySelector('#h-shop')?.focus();
+    };
+    return;
+  }
+  let d = null;
+  try { d = await (await fetch('/api/stores' + (qs ? qs + '&' : '?') + 'zip=' + zip)).json(); } catch { /* shown below */ }
+  if (!app.querySelector('#shop-body')) return;
+  if (!d || (!d.grocery.length && !d.markets.length)) {
+    setHubSub('shop', esc(t('hub_shop_zip')));
+    body.innerHTML = `<p class="empty-note">${esc(t('shop_none'))}</p>`;
+    return;
+  }
+  const doubler = d.markets.find(m => m.double);
+  setHubSub('shop', [d.grocery[0] ? esc(t('hub_shop_near', { mi: Number(d.grocery[0].miles).toFixed(1) })) : '',
+    doubler ? esc(t('hub_shop_double', { mi: Number(doubler.miles).toFixed(1) })) : ''].filter(Boolean).join(' · '));
+  const where = st => `${st.addr}, Austin, TX ${st.zip}`;
+  const card = st => `<article class="store">
+      <h3>${esc(st.name)}</h3>
+      <p class="store-meta">${esc([st.addr, aboutMi(st.miles), st.hours ? t('hours_' + st.hours) : ''].filter(Boolean).join(' · '))}</p>
+      <div class="chips-row">
+        <span class="chip-tag">${esc(t('chip_snap'))}</span>
+        ${st.wic ? `<span class="chip-tag">${esc(t('chip_wic'))}</span>` : ''}
+        ${st.double ? `<span class="chip-tag chip-good">${esc(t('chip_double_' + st.double))}</span>` : ''}
+        ${st.membership ? `<span class="chip-tag chip-plain">${esc(t('chip_member'))}</span>` : ''}
+      </div>
+      <div class="help-actions">
+        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(st.name + ', ' + where(st))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="directions">${esc(t('directions'))}<span class="sr-only"> (${esc(st.name)})</span></a>
+        <a href="https://www.capmetro.org/ride/plan/trip-planner?destination_search=${encodeURIComponent(where(st))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="bus">${esc(t('shop_bus'))}<span class="sr-only"> (${esc(st.name)})</span></a>
+      </div></article>`;
+  const asOf = new Date(d.as_of + 'T12:00:00Z').toLocaleDateString(lang, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  body.innerHTML = `<p class="sites-sorted">${esc(t('shop_near', { zip }))}
+      <button type="button" class="btn-link" id="shop-change">${esc(t('sites_zip_change'))}</button></p>
+    ${d.grocery.length ? `<h3 class="shop-group">${esc(t('shop_grocery'))}</h3>${d.grocery.map(card).join('')}` : ''}
+    ${d.markets.length ? `<h3 class="shop-group">${esc(t('shop_markets'))}</h3>${d.markets.map(card).join('')}` : ''}
+    ${city.wic_finder_url ? `<p><a href="${esc(city.wic_finder_url)}" target="_blank" rel="noopener" data-track="store" data-target="wic-finder" data-action="wic_finder">${esc(t('shop_wic'))}</a></p>` : ''}
+    <p class="source-note">${esc(t('shop_source', { date: asOf }))}</p>`;
+  body.querySelector('#shop-change').onclick = () => { loadShop(null); body.querySelector('input')?.focus(); };
+}
+
 // ── "Need help with anything else?" (after the plan; value first, nothing asked in return) ──
 // Tapping a need shows where to get that help now: verified City/County sources, nonprofits from the
 // directory that offer it (nearest first), and 2-1-1. Taps are counted anonymously; nobody is contacted.
@@ -706,58 +823,62 @@ function renderResults(plan, restore = {}) {
       <button type="button" class="btn btn-primary btn-sm" id="packet-print">${esc(t('print'))}</button>
       <button type="button" class="btn btn-ghost btn-sm" id="packet-again">${esc(t('packet_another'))}</button></div>` : ''}
     <p class="print-block print-brand">${esc(city.name)}${city.place ? ' · ' + esc(city.place) : ''} · ${esc(location.host)}</p>
-    <section class="summary" aria-labelledby="res-title">
-      <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
-      <h1 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h1>
-      <p class="sum-big"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}</p>
-      <p class="sum-facts">${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote)}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}</p>
-      <nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
-        <a href="#list">${esc(t('jump_list'))} <span>${esc(t('jump_list_sub', { n: nItems, total: money(s.spent) }))} ↓</span></a>
-        <a href="#meals">${esc(t('jump_meals'))} <span>${esc(weeks.length === 1 ? t('jump_meals_sub_1') : t('jump_meals_sub', { n: weeks.length }))} ↓</span></a>
-        ${residents().length ? `<a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a>` : ''}
-      </nav>
-    </section>
-
-    ${plan.listInfo ? `<div class="list-nudge no-print">
-      <p>${esc(plan.listInfo.mode === 'short' ? t('list_short_note', { n: plan.listInfo.short, total: plan.listInfo.full }) : t('list_full_note', { n: plan.listInfo.full }))}</p>
-      <button type="button" class="btn btn-ghost btn-sm" id="list-switch">${esc(t(plan.listInfo.mode === 'short' ? 'list_show_full' : 'list_show_short'))}</button>
-    </div>` : ''}
-    <section class="section" id="list" aria-labelledby="h-list" tabindex="-1">
-      <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
-        <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
-      ${listHtml}
-      <div class="shop-total"><span>${esc(t('total'))}</span><span>$${money(s.spent)}</span></div>
-      <p class="price-note">${esc(t('price_note', { label: cityText('price_region_label') || priced.label }))}</p>
-      <p class="health-note">${esc(t('health_note'))}</p>
-    </section>
-
-    <section class="section" id="meals" aria-labelledby="h-plan" tabindex="-1">
-      <div class="section-head"><h2 id="h-plan">${esc(t('sec_plan'))}</h2></div>
-      ${weeks.length > 1 ? `<div class="wk no-print">
-        <button type="button" id="wk-prev" aria-label="${esc(t('prev_week'))}">‹</button>
-        <span id="wk-label" aria-live="polite">${esc(t('week_of', { n: 1, total: weeks.length }))}</span>
-        <button type="button" id="wk-next" aria-label="${esc(t('next_week'))}">›</button></div>` : ''}
-      ${weeks.map(weekPanel).join('')}
-      <p class="muted meals-hint no-print">${esc(t('meals_hint'))}</p>
-    </section>
-
-    ${keepBar()}
-
-    ${helpSection()}
-    ${needsSection()}
-
-    <div class="nav no-print">
-      <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
-      <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
-    </div>
+    ${hubHtml({
+      planTitle: t('res_title', { days: input.days }),
+      homeTop: `<section class="summary" aria-labelledby="res-title">
+        <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
+        <h1 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h1>
+        <p class="sum-big"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}</p>
+        <p class="sum-facts">${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote)}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}</p>
+      </section>`,
+      cards: [
+        { id: 'list', icon: '🛒', title: t('sec_list'), sub: `${esc(t('hub_list_sub', { n: nItems, total: money(s.spent) }))}<span class="hub-done" id="hub-done"></span>` },
+        { id: 'meals', icon: '🍽️', title: t('sec_plan'), sub: esc(t('hub_meals_sub', { days: input.days })) },
+        ...(city.has_stores ? [{ id: 'shop', icon: '📍', title: t('hub_shop'), sub: esc(t('loading_data')) }] : []),
+        ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
+        ...((city.needs || []).length ? [{ id: 'needs', icon: '💬', title: t('needs_title'), sub: esc(t('hub_needs_sub')) }] : []),
+      ],
+      homeBottom: `${keepBar()}
+        <div class="nav no-print">
+          <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
+          <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
+        </div>`,
+      panels: [
+        { id: 'list', html: `${plan.listInfo ? `<div class="list-nudge no-print">
+            <p>${esc(plan.listInfo.mode === 'short' ? t('list_short_note', { n: plan.listInfo.short, total: plan.listInfo.full }) : t('list_full_note', { n: plan.listInfo.full }))}</p>
+            <button type="button" class="btn btn-ghost btn-sm" id="list-switch">${esc(t(plan.listInfo.mode === 'short' ? 'list_show_full' : 'list_show_short'))}</button>
+          </div>` : ''}
+          <section class="section" id="list" aria-labelledby="h-list">
+            <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
+              <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
+            ${listHtml}
+            <div class="shop-total"><span>${esc(t('total'))}</span><span>$${money(s.spent)}</span></div>
+            <p class="price-note">${esc(t('price_note', { label: cityText('price_region_label') || priced.label }))}</p>
+            <p class="health-note">${esc(t('health_note'))}</p>
+          </section>` },
+        { id: 'meals', html: `<section class="section" id="meals" aria-labelledby="h-plan">
+            <div class="section-head"><h2 id="h-plan">${esc(t('sec_plan'))}</h2></div>
+            ${weeks.length > 1 ? `<div class="wk no-print">
+              <button type="button" id="wk-prev" aria-label="${esc(t('prev_week'))}">‹</button>
+              <span id="wk-label" aria-live="polite">${esc(t('week_of', { n: 1, total: weeks.length }))}</span>
+              <button type="button" id="wk-next" aria-label="${esc(t('next_week'))}">›</button></div>` : ''}
+            ${weeks.map(weekPanel).join('')}
+            <p class="muted meals-hint no-print">${esc(t('meals_hint'))}</p>
+          </section>` },
+        ...(city.has_stores ? [{ id: 'shop', html: shopPanel() }] : []),
+        { id: 'help', html: helpSection() },
+        { id: 'needs', html: needsSection() },
+      ],
+    })}
     <div class="print-block" id="print-extra"></div>
     <p class="sr-only" id="announce" aria-live="polite"></p>
     <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
 
   focusTop('#res-title');
-  wireJumps();
+  wireHub();
   wireNeeds();
   loadSites(answers.zip || siteZip);
+  if (city.has_stores) loadShop(answers.zip || siteZip);
   if (logNext?.built) track('plan_built', {
     budget: input.budget, days: input.days, people: input.people, zip: answers.zip, store: answers.store,
     cuisine: input.cuisine, avoid: input.avoid, have: input.have, leftover: input.leftover,
@@ -785,7 +906,13 @@ function renderResults(plan, restore = {}) {
       labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), link: t('full_plan_link') },
     }),
   });
-  app.querySelectorAll('.row input').forEach(x => x.addEventListener('change', sync));
+  const updateDone = () => {
+    const n = app.querySelectorAll('.row input:checked').length;
+    const el = app.querySelector('#hub-done');
+    if (el) el.textContent = n ? t('hub_checked', { n, total: nItems }) : '';
+  };
+  updateDone();
+  app.querySelectorAll('.row input').forEach(x => x.addEventListener('change', () => { sync(); updateDone(); }));
 
   // Shopping list: tips open on tap.
   app.querySelectorAll('.info').forEach(b => b.addEventListener('click', () => {
@@ -1086,53 +1213,66 @@ async function renderBoxResults() {
   const byId = new Map(matches.map(m => [String(m.recipe.id), m]));
 
   app.innerHTML = `
-    <section class="summary" aria-labelledby="res-title">
-      <p class="eyebrow">${esc(t('door_box'))}</p>
-      <h1 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h1>
-      <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length + (box.other?.length || 0) }))}</p>
-      ${boxValue > 0 ? `<p class="sum-big box-value">${esc(t('box_value', { value: money(boxValue) }))}</p>` : ''}
-      ${residents().length ? `<nav class="jump no-print" aria-label="${esc(t('plan_nav'))}">
-        <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
-    </section>
-    <section class="section">
-      <p class="health-note">${esc(t('health_note'))}</p>
-      ${box.other?.length ? `<p class="box-other-note">${esc(t('box_other_note', { items: box.other.join(t('list_sep')) }))}</p>` : ''}
-      ${matches.length ? `<ul class="box-list">${matches.map(m => `
-        <li class="box-card">
-          <span class="box-slot">${esc(t(m.recipe.slot))}</span>
-          <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
-          <p class="box-line"><b>${esc(t('box_uses'))}${esc(t('label_colon'))}</b> ${esc(m.uses.map(ing).join(t('list_sep')))}</p>
-          <p class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
-            ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</p>
-        </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
-    </section>
-    <section class="section cant-use no-print" aria-labelledby="h-cant">
-      <div class="section-head"><h2 id="h-cant">${esc(t('cu_title'))}</h2></div>
-      <p class="hint">${esc(t('cu_hint'))}</p>
-      <ul class="cu-list">${box.items.map(id => `
-        <li class="cu-row">
-          <label for="cu-${id}">${esc(fName(id))}</label>
-          <select id="cu-${id}" data-item="${id}">
-            <option value="">${esc(t('cu_none'))}</option>
-            ${Object.entries(CU_REASONS).map(([g, rs]) => `<optgroup label="${esc(t('cu_g_' + g))}">${rs.map(r => `<option value="${r}">${esc(t('cu_' + r))}</option>`).join('')}</optgroup>`).join('')}
-          </select>
-          <span class="cu-ok" aria-live="polite"></span>
-        </li>`).join('')}</ul>
-    </section>
-    ${keepBar()}
-    ${helpSection()}
-    ${needsSection()}
-    <div class="nav no-print">
-      <button type="button" class="btn btn-ghost" id="edit">${esc(t('box_edit'))}</button>
-      <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
-      <button type="button" class="btn-link" id="to-budget">${esc(t('box_to_budget'))}</button>
-    </div>
+    ${hubHtml({
+      planTitle: t('box_res_title'),
+      homeTop: `<section class="summary" aria-labelledby="res-title">
+        <p class="eyebrow">${esc(t('door_box'))}</p>
+        <h1 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h1>
+        <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length + (box.other?.length || 0) }))}</p>
+        ${boxValue > 0 ? `<p class="sum-big box-value">${esc(t('box_value', { value: money(boxValue) }))}</p>` : ''}
+      </section>`,
+      cards: [
+        { id: 'meals', icon: '🍽️', title: t('box_res_title'), sub: esc(t('hub_box_meals_sub', { n: matches.length })) },
+        { id: 'cant', icon: '📝', title: t('cu_title'), sub: esc(t('hub_cu_sub')) },
+        ...(city.has_stores ? [{ id: 'shop', icon: '📍', title: t('hub_shop'), sub: esc(t('loading_data')) }] : []),
+        ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
+        ...((city.needs || []).length ? [{ id: 'needs', icon: '💬', title: t('needs_title'), sub: esc(t('hub_needs_sub')) }] : []),
+      ],
+      homeBottom: `${keepBar()}
+        <div class="nav no-print">
+          <button type="button" class="btn btn-ghost" id="edit">${esc(t('box_edit'))}</button>
+          <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
+          <button type="button" class="btn-link" id="to-budget">${esc(t('box_to_budget'))}</button>
+        </div>`,
+      panels: [
+        { id: 'meals', html: `<section class="section" aria-labelledby="h-box-meals">
+          <div class="section-head"><h2 id="h-box-meals">${esc(t('box_res_title'))}</h2></div>
+          <p class="health-note">${esc(t('health_note'))}</p>
+          ${box.other?.length ? `<p class="box-other-note">${esc(t('box_other_note', { items: box.other.join(t('list_sep')) }))}</p>` : ''}
+          ${matches.length ? `<ul class="box-list">${matches.map(m => `
+            <li class="box-card">
+              <span class="box-slot">${esc(t(m.recipe.slot))}</span>
+              <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
+              <p class="box-line"><b>${esc(t('box_uses'))}${esc(t('label_colon'))}</b> ${esc(m.uses.map(ing).join(t('list_sep')))}</p>
+              <p class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
+                ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</p>
+            </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
+        </section>` },
+        { id: 'cant', html: `<section class="section cant-use no-print" aria-labelledby="h-cant">
+          <div class="section-head"><h2 id="h-cant">${esc(t('cu_title'))}</h2></div>
+          <p class="hint">${esc(t('cu_hint'))}</p>
+          <ul class="cu-list">${box.items.map(id => `
+            <li class="cu-row">
+              <label for="cu-${id}">${esc(fName(id))}</label>
+              <select id="cu-${id}" data-item="${id}">
+                <option value="">${esc(t('cu_none'))}</option>
+                ${Object.entries(CU_REASONS).map(([g, rs]) => `<optgroup label="${esc(t('cu_g_' + g))}">${rs.map(r => `<option value="${r}">${esc(t('cu_' + r))}</option>`).join('')}</optgroup>`).join('')}
+              </select>
+              <span class="cu-ok" aria-live="polite"></span>
+            </li>`).join('')}</ul>
+        </section>` },
+        ...(city.has_stores ? [{ id: 'shop', html: shopPanel() }] : []),
+        { id: 'help', html: helpSection() },
+        { id: 'needs', html: needsSection() },
+      ],
+    })}
     <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
 
   focusTop('#res-title');
-  wireJumps();
+  wireHub();
   wireNeeds();
   loadSites(siteZip);
+  if (city.has_stores) loadShop(siteZip);
   if (logNext?.built) track('box_built', { items: box.items, other: box.other, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue });
   else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'box' }); askOutcome('box'); }
   logNext = null;

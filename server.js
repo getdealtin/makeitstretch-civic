@@ -12,6 +12,7 @@ import {
 } from './engine/index.js';
 import QRCode from 'qrcode';
 import { seriesFor, toPackagePrices, BLS_REGION } from './server/prices.js';
+import { storesNear } from './server/stores.js';
 import { BOX_GROUPS, BOX_SYNONYMS, foodLabel } from './engine/box.js';
 import { resolveCity, publicConfig, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
@@ -194,6 +195,12 @@ const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.l
   id: c.id, place: c.place, region: c.region || '', url: `https://${c.hosts[0]}/`, sources: c.sources || [], source_labels: c.source_labels || {},
 }));
 app.get('/api/cities', (req, res) => res.json(liveCities()));
+
+// Where to shop: nearest SNAP-authorized grocery stores and farmers markets for a ZIP (USDA data).
+app.get('/api/stores', (req, res) => {
+  if (!req.city.focus_zips || !/^\d{5}$/.test(String(req.query.zip || ''))) return res.json(null);
+  res.set('Cache-Control', 'public, max-age=3600').json(storesNear(req.query.zip, { notes: req.city.store_notes || {} }));
+});
 
 // Every name a box food goes by (English, synonyms, es/vi/zh), for the "Something else?" box field.
 const BOX_WORDS = (() => {

@@ -10,6 +10,7 @@ import { PUBLIC_FIELDS, EDITABLE_FIELDS } from './db.js';
 import { CITIES } from '../cities/index.js';
 import { summarize } from './events.js';
 import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
+import { retailFindings } from './stores.js';
 import { readFileSync } from 'node:fs';
 
 // Zip → [lat, lon] at the center of each zip area (US Census ZCTAs, via the MIT-licensed
@@ -269,7 +270,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
     ]);
     const inRange = events.filter(e => e.created_at.slice(0, 10) <= to);
     const c = CITIES[city];
-    return cityReport(inRange, { k: c.k_anon_threshold || 15, providers, from, to, city: c.place || c.name || city, roles: rolesOf(c.resources), framework: c.report || DEFAULT_FRAMEWORK });
+    return cityReport(inRange, { k: c.k_anon_threshold || 15, providers, from, to, city: c.place || c.name || city, roles: rolesOf(c.resources), framework: c.report || DEFAULT_FRAMEWORK, retail: retailFindings(c.focus_zips || []) });
   };
   admin.get('/report', async (req, res) => {
     try { res.json(await reportFor(req)); } catch (e) { console.error(e.message); res.status(500).json({ ok: false }); }

@@ -456,3 +456,35 @@ html { scroll-padding-bottom: 110px; }
 
 .health-note { font-size: 14px; color: var(--text-muted); margin: 4px 0 0; }
 @media print { .health-note { font-size: 8pt; } }
+
+/* ── Plan home: cards (Nov 2026) ───────────────── */
+.hub { display: grid; gap: 12px; margin: 18px 0 8px; }
+.hub-card { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer;
+  background: var(--page); border: 2px solid var(--indigo-ink); border-radius: 18px; padding: 12px 14px; color: var(--text); }
+.hub-card:hover { background: var(--tint-light); }
+.hub-icon { flex: none; width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; font-size: 28px; background: var(--tint); }
+.hub-list, .hub-meals { background: #FBE3A4; } .hub-shop { background: #DDD8F8; } .hub-help { background: #F8DCCB; } .hub-needs, .hub-cant { background: #D8EAC4; }
+.hub-text { flex: 1; min-width: 0; }
+.hub-text b { display: block; font: 700 19px var(--font-display); color: var(--indigo-ink); line-height: 1.2; }
+.hub-sub { display: block; font-size: 15px; color: var(--text-muted); line-height: 1.35; margin-top: 2px; }
+.hub-done { display: block; font: 600 14px var(--font-label); color: var(--green-text); }
+.hub-done:empty { display: none; }
+.hub-go { font-size: 24px; color: var(--violet); }
+.back-bar { position: sticky; top: 0; z-index: 5; background: var(--page); border-bottom: 1px solid var(--rule); margin: -16px 0 12px; padding: 4px 0; }
+.back-btn { font: 600 16px var(--font-label); color: var(--violet); background: none; border: 0; cursor: pointer; min-height: 44px; padding: 0 2px; }
+.panel .section:first-child { margin-top: 0; }
+/* Where to shop */
+.store { border: 1.5px solid var(--rule); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; background: var(--page); }
+.store h3 { margin: 0 0 2px; font-size: 18px; }
+.store-meta { font: 14px var(--font-label); color: var(--text-muted); margin: 0 0 8px; }
+.chips-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+.chip-tag { font: 600 12px var(--font-label); border-radius: 999px; padding: 4px 10px; background: var(--tint); color: var(--text); }
+.chip-good { background: #E5F4E4; color: var(--green-text); }
+.chip-plain { background: transparent; border: 1px solid var(--rule); }
+.shop-group { font-size: 18px; margin: 18px 0 8px; }
+.source-note { font-size: 13px; color: var(--text-muted); margin-top: 12px; }
+@media print {
+  #home .hub, #home .keep, .back-bar { display: none !important; }
+  #home[hidden] { display: block !important; }
+  .panel, .panel[hidden] { display: block !important; }
+}

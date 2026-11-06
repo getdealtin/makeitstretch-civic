@@ -28,5 +28,7 @@ export function publicConfig(c) {
     i18n: c.i18n || {},
     sources: c.sources || [],
     needs: c.needs || [],
+    has_stores: !!c.focus_zips,
+    wic_finder_url: c.wic_finder_url || null,
   };
 }

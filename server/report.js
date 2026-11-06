@@ -105,6 +105,19 @@ export const METRICS = {
   unlisted_food: c => c.table('Foods in boxes that aren’t on our list', ['Food (as typed)', 'People'], countBy(c.boxEv, e => e.data.other || []), { note: 'What people typed in. Shows what pantries hand out that the tool can’t use yet.' }),
   needs: c => c.table('Other needs people asked about', ['Need', 'People'], lab(LABEL.need, countBy(c.events.filter(e => e.event === 'need_tapped'), e => e.data.need)), { note: 'Taps on a need after the plan. No one is contacted and nothing is requested.' }),
   needs_by_zip: c => c.table('Other needs by ZIP code', ['ZIP · need', 'People'], countBy(c.withZip.filter(e => e.event === 'need_tapped'), e => `${e.zip} · ${LABEL.need[e.data.need] || e.data.need}`)),
+  retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of Travis County (USDA, as of ${c.retail.as_of})`, head: ['', 'Stores'], rows: [
+    [`Focus area (${c.retail.focus.zips} ZIP codes): convenience stores`, c.retail.focus.convenience],
+    ['Focus area: supermarkets and large grocery stores', c.retail.focus.full],
+    ['Focus area: convenience stores for each supermarket or large grocery store', c.retail.focus.ratio],
+    [`Rest of Travis County (${c.retail.rest.zips} ZIP codes): convenience stores`, c.retail.rest.convenience],
+    ['Rest of county: supermarkets and large grocery stores', c.retail.rest.full],
+    ['Rest of county: convenience stores for each supermarket or large grocery store', c.retail.rest.ratio],
+    ['Focus area: typical distance from a ZIP code\u2019s center to the nearest supermarket or large grocery store (miles)', c.retail.focus.median_miles],
+    ['Rest of county: same distance (miles)', c.retail.rest.median_miles],
+  ], note: 'Store counts by USDA store type for stores authorized to take SNAP. Places, not people: not suppressed. Distance is the median across ZIP codes, measured from each ZIP code\u2019s center, so it is approximate.' }) : null,
+  retail_by_zip: c => c.retail ? ({ title: 'SNAP-authorized stores in each focus-area ZIP code', head: ['ZIP code', 'Stores (USDA store types)'], rows: c.retail.byZip.map(z => [z.zip,
+    `${z.full} supermarket or large grocery · ${z.other_grocery} smaller grocery · ${z.convenience} convenience · ${z.dollar_or_other} dollar or other · ${z.markets} farmers market · nearest supermarket or large grocery about ${z.nearest_full_miles} mi from the ZIP code\u2019s center`]),
+    note: 'A store counts in a ZIP code if its address is there. People also shop across ZIP lines, so read the nearest-store distance alongside the counts.' }) : null,
   diet: c => c.table('Dietary needs (plans and boxes)', ['Need', 'People'], countBy([...c.planEv, ...c.boxEv], e => e.data.avoid || [])),
   language: c => c.table('Language used', ['Language', 'People'], countBy(c.views, e => e.lang).map(([code, v]) => [langName(code), v]), { total: c.visits.size }),
   outcome: c => c.table('“Did you use this plan?”', ['Answer', 'People'], lab(LABEL.answer, countBy(c.outcome, e => e.data.answer))),
@@ -118,7 +131,7 @@ export const METRICS = {
  * @param {{k:number, providers:object[], from:string, to:string, city:string,
  *          roles?:{benefits:string[], food_help:string[]}, framework?:object}} opts
  */
-export function cityReport(events, { k = 15, providers = [], from, to, city, roles = { benefits: [], food_help: [] }, framework = DEFAULT_FRAMEWORK }) {
+export function cityReport(events, { k = 15, providers = [], from, to, city, roles = { benefits: [], food_help: [] }, framework = DEFAULT_FRAMEWORK, retail = null }) {
   const views = events.filter(e => e.event === 'page_view');
   const visits = new Set(views.map(e => e.session_id));
   const planEv = events.filter(e => e.event === 'plan_built');
@@ -144,7 +157,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
 
   const cant = events.filter(e => e.event === 'cant_use');
   const ctx = {
-    events, views, visits, planEv, bandOf, bandShort, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
+    events, views, visits, planEv, bandOf, bandShort, retail, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
     roles: { benefits: roles.benefits || [], food_help: roles.food_help || [] },
     labels: { ...DEFAULT_FRAMEWORK.labels, ...(framework.labels || {}) },
     routedBenefits, routedFood,
@@ -170,7 +183,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
     sections: framework.sections.map(sec => ({
       goal: sec.goal,
       intro: sec.intro,
-      tables: sec.metrics.filter(id => METRICS[id]).map(id => ({ id, ...METRICS[id](ctx), indicator: framework.indicators?.[id] || null })),
+      tables: sec.metrics.filter(id => METRICS[id]).map(id => [id, METRICS[id](ctx)]).filter(([, t]) => t).map(([id, t]) => ({ id, ...t, indicator: framework.indicators?.[id] || null })),
     })),
     limits: [
       `Counts are people who used the tool between ${from} and ${to}, not the population. Say “among people who used the tool.”`,
@@ -178,6 +191,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
       'Answers are self-reported and not verified. The same person visiting twice is counted twice.',
       'Link taps are not outcomes: the tool cannot see benefit applications or pantry visits.',
       'Dollar figures use U.S. South region BLS average prices for 13 foods and estimates for the rest, until local shelf prices are added.',
+      ...(retail ? [`Store findings use USDA's list of stores authorized to take SNAP (as of ${retail.as_of}) and USDA's store types. Stores that don't take SNAP aren't counted. The focus area is ${retail.focus.zips} ZIP codes chosen to approximate Council Districts 1\u20134; ZIP codes and districts don't line up exactly.`] : []),
       `Budget benchmarks: the average SNAP benefit is about $${SNAP} per person per day (FY2025), and USDA's Thrifty Food Plan costs $${TFP} per person per day (reference family of four, ${BENCHMARKS.tfpAsOf}). The average SNAP benefit is lower than the Thrifty Food Plan cost. "Below the SNAP average" describes a household's grocery budget compared with what SNAP pays on average; it says nothing about SNAP eligibility or enrollment.`,
     ],
   };

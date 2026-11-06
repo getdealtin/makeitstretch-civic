@@ -42,7 +42,7 @@ export const SCHEMA = {
   box_built: { items: listOf(BOX_ITEMS, 60), other: foodWords, avoid: listOf(AVOID), meals: int(0, 200), zip, value: num(0, 9999) },
   recipe_opened: { recipe: int(1, 100000), flow: oneOf(['plan', 'box']) },
   meal_swapped: { recipe: int(1, 100000) },
-  help_clicked: { target: slug, kind: oneOf(['resource', 'site']), action: oneOf(['call', 'directions', 'website']) },
+  help_clicked: { target: slug, kind: oneOf(['resource', 'site', 'store']), action: oneOf(['call', 'directions', 'website', 'bus', 'wic_finder']) },
   zip_added_later: { zip },
   plan_kept: { how: oneOf(['save', 'text', 'email', 'copy']), kind: oneOf(['plan', 'box']) },
   language_changed: { from: oneOf(LANGS), to: oneOf(LANGS) },
