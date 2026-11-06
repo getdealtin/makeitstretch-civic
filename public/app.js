@@ -5,6 +5,7 @@
 
 import en from './i18n/en.js';
 import { ART } from './art.js';
+import { cleanRequest, preview as hsPreview, CONSENT_VERSION } from './handshake.js';
 import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
@@ -691,7 +692,7 @@ async function loadShop(zip, { quiet = false } = {}) {
 // directory that offer it (nearest first), and 2-1-1. Taps are counted anonymously; nobody is contacted.
 const FOOD_OFFERS = ['groceries', 'produce', 'meals'];
 let siteCache = [];
-const helpCard = r => `<article class="help-card">
+const helpCard = r => `<article class="help-card" data-hs="resource:${esc(r.id)}">
   <h3>${esc(resText(r, 'name'))}</h3><p>${esc(resText(r, 'description'))}</p>
   <div class="help-actions">
     ${r.phone ? `<a href="tel:${esc(r.phone)}" data-track="resource" data-target="${esc(r.id)}" data-action="call">${esc(t('call', { phone: r.phone }))}</a>` : ''}
@@ -701,7 +702,7 @@ function needsSection() {
   if (!(city.needs || []).length) return '';
   return `<section class="section needs no-print" id="needs" aria-labelledby="h-needs">
     <div class="section-head"><h2 id="h-needs">${esc(t('needs_title'))}</h2></div>
-    <p class="hint">${esc(t('needs_hint'))}</p>
+    <p class="hint">${esc(t(city.handshake ? 'needs_hint_hs' : 'needs_hint'))}</p>
     <div class="chips">${city.needs.map(n => `<button type="button" class="chip" data-need="${n}" aria-pressed="false" aria-controls="need-panel">${esc(t('need_' + n))}</button>`).join('')}</div>
     <div id="need-panel" class="help-list" aria-live="polite" hidden></div>
   </section>`;
@@ -718,7 +719,7 @@ function wireNeeds() {
     const sources = (city.resources || []).filter(r => (r.needs || []).includes(need));
     const two11 = (city.resources || []).find(r => r.id === '211-texas');
     const orgs = siteCache.filter(p => (p.offers || []).includes(need)).slice(0, 4);
-    panel.innerHTML = [...sources.map(helpCard), ...orgs.map(p => `<article class="help-card site-card">
+    panel.innerHTML = [...sources.map(helpCard), ...orgs.map(p => `<article class="help-card site-card" data-hs="site:${esc(p.id)}">
         <span class="site-kind">${esc(t('kind_' + p.kind))}</span><h3>${esc(p.name)}</h3>
         ${[p.address, p.city, p.zip].filter(Boolean).length ? `<p class="site-where">${esc([p.address, p.city, p.zip].filter(Boolean).join(', '))}</p>` : ''}
         ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
@@ -727,7 +728,83 @@ function wireNeeds() {
           ${p.website ? `<a href="${esc(p.website)}" target="_blank" rel="noopener" data-track="site" data-target="${esc(p.id)}" data-action="website">${esc(t('visit'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
         </div></article>`), two11 ? helpCard(two11) : ''].join('');
     panel.hidden = false;
+    if (city.handshake) addAskButtons(panel, need);
   }));
+}
+
+// ── Consent handshake (off unless the city turns it on; see public/handshake.js) ──
+// Matching already happened on this phone (the panel above). Here she can ask one service that
+// accepts requests to contact her, choosing what to share and seeing exactly what will be sent.
+let receivers = null;
+async function addAskButtons(panel, need) {
+  if (!receivers) {
+    try { receivers = new Map((await (await fetch('/api/handshake/receivers' + qs)).json()).map(x => [x.target, x.name])); }
+    catch { receivers = new Map(); }
+  }
+  panel.querySelectorAll('[data-hs]').forEach(card => {
+    const name = receivers.get(card.dataset.hs);
+    if (!name || card.querySelector('.hs-ask')) return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn-link hs-ask'; b.textContent = t('hs_ask');
+    b.setAttribute('aria-expanded', 'false');
+    b.onclick = () => openAsk(card, card.dataset.hs, name, need, b);
+    card.querySelector('.help-actions')?.append(b);
+  });
+}
+const HS_LANG = { en: 'English', es: 'Español', vi: 'Tiếng Việt', 'zh-Hans': '中文' };
+function openAsk(card, target, org, need, btn) {
+  card.parentElement.querySelector('.hs-form')?.remove();
+  document.querySelectorAll('.hs-ask[aria-expanded="true"]').forEach(x => x.setAttribute('aria-expanded', 'false'));
+  btn.setAttribute('aria-expanded', 'true');
+  const id = 'hs-' + Math.random().toString(36).slice(2, 8);
+  const f = document.createElement('form');
+  f.className = 'hs-form'; f.noValidate = true; f.setAttribute('aria-labelledby', id);
+  f.innerHTML = `<h3 id="${id}" tabindex="-1">${esc(t('hs_title', { org }))}</h3>
+    <p>${esc(t('hs_intro', { org }))}</p>
+    <label class="fl" for="${id}-fn">${esc(t('hs_first_name'))}</label><input class="fi" id="${id}-fn" name="first_name" maxlength="60" autocomplete="given-name">
+    <label class="fl" for="${id}-ph">${esc(t('hs_phone'))}</label><input class="fi" id="${id}-ph" name="phone" type="tel" maxlength="30" autocomplete="tel">
+    <label class="fl" for="${id}-em">${esc(t('hs_email'))}</label><input class="fi" id="${id}-em" name="email" type="email" maxlength="200" autocomplete="email">
+    <fieldset class="group"><legend class="fl">${esc(t('hs_reach_by'))}</legend><div class="choices">
+      ${['call', 'text', 'email'].map(v => `<label class="choice"><input type="radio" name="reach_by" value="${v}"> ${esc(t('hs_reach_' + v))}</label>`).join('')}</div></fieldset>
+    <label class="fl" for="${id}-zip">${esc(t('hs_zip'))}</label><input class="fi fi-sm" id="${id}-zip" name="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code">
+    <label class="fl" for="${id}-note">${esc(t('hs_note'))}</label><p class="fh" id="${id}-nh">${esc(t('hs_note_hint'))}</p>
+    <textarea class="fi" id="${id}-note" name="note" maxlength="500" rows="3" aria-describedby="${id}-nh"></textarea>
+    <h4>${esc(t('hs_preview', { org }))}</h4><dl class="hs-preview" aria-live="polite"></dl>
+    <label class="hs-consent"><input type="checkbox" name="agree"> ${esc(t('hs_consent', { org }))}</label>
+    <p class="error" role="alert"></p>
+    <div class="hs-buttons"><button type="submit" class="btn btn-primary">${esc(t('hs_send'))}</button>
+      <button type="button" class="btn-link hs-cancel">${esc(t('hs_cancel'))}</button></div>`;
+  card.after(f);
+  const read = () => {
+    const v = k => f.elements[k]?.value || '';
+    return { target, need, consent: { version: CONSENT_VERSION, agreed: f.elements.agree.checked },
+      fields: { first_name: v('first_name'), phone: v('phone'), email: v('email'), reach_by: f.querySelector('[name=reach_by]:checked')?.value || '',
+        language: lang, zip: v('zip'), note: v('note') } };
+  };
+  const show = () => {
+    const r = read();
+    const rows = [['hs_f_need', t('need_' + need)], ...hsPreview(Object.fromEntries(Object.entries(r.fields).filter(([, x]) => String(x).trim())))
+      .map(([k, x]) => ['hs_f_' + k, k === 'reach_by' ? t('hs_reach_' + x) : k === 'language' ? (HS_LANG[x] || x) : x])];
+    f.querySelector('.hs-preview').innerHTML = rows.map(([k, x]) => `<dt>${esc(t(k))}</dt><dd>${esc(x)}</dd>`).join('');
+  };
+  f.addEventListener('input', show); show();
+  const close = () => { f.remove(); btn.setAttribute('aria-expanded', 'false'); btn.focus(); };
+  f.querySelector('.hs-cancel').onclick = close;
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const err = f.querySelector(".error");
+    const { request, error } = cleanRequest(read());
+    if (error) { err.textContent = t('hs_err_' + (['contact', 'phone', 'email', 'consent', 'zip'].includes(error) ? error : 'server')); return; }
+    const go = f.querySelector('[type=submit]'); go.disabled = true;
+    try {
+      const res = await fetch('/api/handshake/request' + qs, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) });
+      const j = await res.json().catch(() => ({}));
+      if (!j.ok) throw new Error(j.error);
+      f.innerHTML = `<p class="hs-done" tabindex="-1">${esc(t('hs_sent', { org }))}</p>`;
+      f.querySelector('.hs-done').focus();
+    } catch { err.textContent = t('hs_err_server'); go.disabled = false; }
+  };
+  f.querySelector('h3').focus();
 }
 
 async function loadSites(zip) {

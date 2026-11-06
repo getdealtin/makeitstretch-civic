@@ -101,6 +101,13 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
   `scripts/build-open-eligibility.py`), which also labels the needs in the City report and its CSV
   (`open_eligibility` column). Output was checked against HSDS's own schema files. Sign-ups give a city with any street address
   (required then), so locations carry a full HSDS address.
+- **Consent handshake (built, OFF)** (`public/handshake.js`, `server/handshake.js`): from "Need help with anything
+  else?", a resident can ask one service to contact her. Matching happens on her phone from public listings; she
+  picks what to share, sees exactly what will be sent and to whom, and agrees. The server checks it again, passes it
+  to that one service and keeps no copy (nothing in the database or logs). Off unless a city sets
+  `handshake: { enabled: true }`; while off every route is 404. Not built yet: a delivery channel (sending answers
+  `no_delivery` until one exists) and services that agree to receive. Before turning it on: those two, the privacy
+  page, and a security review. Local preview: `HANDSHAKE_DEMO=1 node server.js` (refused in production; sends nothing).
 - Database schema: `db/schema.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
 
 ## Languages
