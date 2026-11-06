@@ -71,9 +71,13 @@ export default {
   // `report` block, or leaves it out to get the neutral default layout.
   report: {
     title: 'Food access report',
+    // The two new, de-identified indicators returned to the City (FACE application), flagged in place.
+    indicators: {
+      routed: 'City indicator 1: people routed to benefits navigation (Food Plan strategy 6.6)',
+      cant_group: 'City indicator 2: food-box food people can’t use, by reason (Food Plan Goal 4)',
+    },
     labels: { benefits: 'SNAP or WIC', food_help: 'a food bank or 2-1-1' },
     sections: [
-      { goal: 'Indicators for the City', intro: 'The two new, de-identified indicators this tool returns to the City (Food Plan strategy 6.6 and Goal 4). Details follow in the sections below.', metrics: ['routed', 'cant_group'] },
       { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'cuisine'] },
       { goal: 'Strategy 6.6 · Benefits navigation', intro: 'People routed toward SNAP and WIC. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
       { goal: 'Goal 4 · Preparedness (strategy 4.2)', intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },

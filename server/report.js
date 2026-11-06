@@ -166,7 +166,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
     sections: framework.sections.map(sec => ({
       goal: sec.goal,
       intro: sec.intro,
-      tables: sec.metrics.filter(id => METRICS[id]).map(id => ({ id, ...METRICS[id](ctx) })),
+      tables: sec.metrics.filter(id => METRICS[id]).map(id => ({ id, ...METRICS[id](ctx), indicator: framework.indicators?.[id] || null })),
     })),
     limits: [
       `Counts are people who used the tool between ${from} and ${to}, not the population. Say “among people who used the tool.”`,
@@ -182,9 +182,10 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
 /** The report as CSV rows (hidden cells written as "<k"). */
 export function reportCsv(r) {
   const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const lines = [['section', 'table', 'label', 'value'].join(',')];
-  for (const [label, v] of r.overview) lines.push([esc('Overview'), esc(''), esc(label), esc(v ?? `<${r.k}`)].join(','));
-  for (const s of r.sections) for (const t of s.tables) for (const [label, v] of t.rows) lines.push([esc(s.goal), esc(t.title), esc(label), esc(v ?? `<${r.k}`)].join(','));
+  // city_indicator names the row's City indicator, if any, so the City can filter for it.
+  const lines = [['section', 'table', 'label', 'value', 'city_indicator'].join(',')];
+  for (const [label, v] of r.overview) lines.push([esc('Overview'), esc(''), esc(label), esc(v ?? `<${r.k}`), esc('')].join(','));
+  for (const s of r.sections) for (const t of s.tables) for (const [label, v] of t.rows) lines.push([esc(s.goal), esc(t.title), esc(label), esc(v ?? `<${r.k}`), esc(t.indicator || '')].join(','));
   return lines.join('\n') + '\n';
 }
 

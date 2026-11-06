@@ -84,7 +84,12 @@ test('another city: no framework → neutral layout; its own resource ids count 
 test('every metric a city framework lists exists in the shared library', () => {
   for (const fw of [DEFAULT_FRAMEWORK, austin.report]) for (const s of fw.sections) for (const id of s.metrics) assert.ok(METRICS[id], id);
   // Austin's grant layout is unchanged
-  assert.deepEqual(austin.report.sections.map(s => s.goal).slice(0, 4), ['Indicators for the City', 'Goal 6 · Access', 'Strategy 6.6 · Benefits navigation', 'Goal 4 · Preparedness (strategy 4.2)']);
+  assert.deepEqual(austin.report.sections.map(s => s.goal).slice(0, 3), ['Goal 6 · Access', 'Strategy 6.6 · Benefits navigation', 'Goal 4 · Preparedness (strategy 4.2)']);
+  // the two City indicators are flagged inside their own sections, and the CSV says which rows they are
+  const r = cityReport([], { k: 15, from: 'a', to: 'b', city: 'Austin', roles: rolesOf(austin.resources), framework: austin.report });
+  const flagged = r.sections.flatMap(s => s.tables.filter(t => t.indicator).map(t => [s.goal, t.id]));
+  assert.deepEqual(flagged, [['Strategy 6.6 · Benefits navigation', 'routed'], ['Goal 4 · Preparedness (strategy 4.2)', 'cant_group']]);
+  assert.match(reportCsv(r).split('\n')[0], /city_indicator$/);
 });
 
 test('outcome answers and source tags validate', () => {

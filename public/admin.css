@@ -70,3 +70,6 @@ a.btn-xs { display: inline-flex; align-items: center; text-decoration: none; }
   .rep-section { break-inside: avoid-page; }
   .rep-grid { grid-template-columns: 1fr 1fr; }
 }
+
+.rep-table.is-indicator { border-left: 4px solid var(--violet); padding-left: 12px; }
+.rep-indicator { font: 600 12px var(--font-label); letter-spacing: .04em; color: var(--violet); margin: 0 0 4px; text-transform: uppercase; }
