@@ -9,5 +9,8 @@ export { NUTRITION } from './nutrition.js';
 export { SATIETY, satietyOf } from './satiety.js';
 export { matchBox, BOX_GROUPS, INGREDIENT_FOODS, PANTRY_BASICS, foodLabel, BOX_SYNONYMS, findBoxFood, cleanFoodWord } from './box.js';
 
-// Benchmarks used in the plan summary and city reports (spec §8).
-export const BENCHMARKS = { tfpPerPersonDay: 5.36, snapPerPersonDay: 6.22 };
+// Benchmarks used in city reports (spec §8). Update when USDA publishes new figures.
+//   Thrifty Food Plan: USDA FNA "Official USDA Thrifty Food Plan: U.S. Average, September 2026"
+//     (issued Oct 2026): reference family of four $236.30 a week → $8.44 per person per day.
+//   SNAP: average benefit about $189 per person per month in FY2025 → about $6.22 per person per day.
+export const BENCHMARKS = { tfpPerPersonDay: 8.44, snapPerPersonDay: 6.22, tfpAsOf: 'September 2026' };

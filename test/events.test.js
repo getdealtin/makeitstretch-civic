@@ -65,7 +65,7 @@ test('summary: visits, drop-off, budget pressure, shortfall routing, can\'t-use 
   assert.equal(a.boxes, 1);
   assert.equal(a.budget_total, 240);
   assert.equal(a.box_value_total, 9.5);
-  assert.deepEqual(a.pressure, { under_tfp: 1, tfp_to_snap: 0, over_snap: 1 });
+  assert.deepEqual(a.pressure, { under_snap: 1, snap_to_tfp: 0, over_tfp: 1 });
   assert.deepEqual(a.shortfall, { sessions: 1, routed_benefits: 1, routed_food: 0 });
   assert.equal(a.cant_use.reports, 2);
   assert.equal(a.cant_use.box_items, 4);

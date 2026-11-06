@@ -19,7 +19,8 @@
 
 import { CANT_USE } from './events.js';
 
-const TFP = 5.36, SNAP = 6.22;
+import { BENCHMARKS } from '../engine/index.js';
+const { tfpPerPersonDay: TFP, snapPerPersonDay: SNAP } = BENCHMARKS;
 
 /** Resource ids by role, from a city's resources: { benefits: [...], food_help: [...] }. */
 export function rolesOf(resources = []) {
@@ -127,7 +128,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
 
   // Budget pressure: one band per plan visit (its latest plan).
   const bandOf = {};
-  for (const p of planEv) if (p.data.pppd != null) bandOf[p.session_id] = p.data.pppd < TFP ? 'Below $5.36 (Thrifty Food Plan)' : p.data.pppd < SNAP ? '$5.36–$6.22' : '$6.22 or more (SNAP benchmark)';
+  for (const p of planEv) if (p.data.pppd != null) bandOf[p.session_id] = p.data.pppd < SNAP ? `Below $${SNAP} (average SNAP benefit)` : p.data.pppd < TFP ? `$${SNAP}–$${TFP}` : `$${TFP} or more (Thrifty Food Plan cost, ${BENCHMARKS.tfpAsOf})`;
   const bandRows = countBy(planEv.filter(p => bandOf[p.session_id]), p => bandOf[p.session_id]);
   const shortfall = new Set(planEv.filter(p => p.data.pppd != null && p.data.pppd < SNAP).map(p => p.session_id));
   const helps = events.filter(e => e.event === 'help_clicked');

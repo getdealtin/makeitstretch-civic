@@ -4,6 +4,7 @@
 // session_id is a random per-visit token from browser memory (gone when the tab closes).
 
 import { BOX_GROUPS, cleanFoodWord } from '../engine/box.js';
+import { BENCHMARKS } from '../engine/index.js';
 
 const BOX_ITEMS = BOX_GROUPS.flatMap(g => g.items);
 export const AVOID = ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'];
@@ -67,7 +68,7 @@ export function cleanEvent(b) {
 }
 
 // ── Totals for the admin Activity section (operator's private view: nothing hidden) ──
-const TFP = 5.36, SNAP = 6.22;
+const { tfpPerPersonDay: TFP, snapPerPersonDay: SNAP } = BENCHMARKS;
 
 /** @param {{benefits:string[], food_help:string[]}} roles  resource ids by role (from the city's resources) */
 export function summarize(events, roles = { benefits: [], food_help: [] }) {
@@ -104,9 +105,10 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
     budget_total: +plans.reduce((s, p) => s + (p.data.budget || 0), 0).toFixed(2),
     box_value_total: +boxes.reduce((s, b) => s + (b.data.value || 0), 0).toFixed(2),
     pressure: {
-      under_tfp: plans.filter(p => p.data.pppd != null && p.data.pppd < TFP).length,
-      tfp_to_snap: plans.filter(p => p.data.pppd >= TFP && p.data.pppd < SNAP).length,
-      over_snap: plans.filter(p => p.data.pppd >= SNAP).length,
+      // The average SNAP benefit is below the Thrifty Food Plan cost, so bands run SNAP → TFP.
+      under_snap: plans.filter(p => p.data.pppd != null && p.data.pppd < SNAP).length,
+      snap_to_tfp: plans.filter(p => p.data.pppd >= SNAP && p.data.pppd < TFP).length,
+      over_tfp: plans.filter(p => p.data.pppd >= TFP).length,
     },
     shortfall: { sessions: shortfall.size, routed_benefits: routedTo(roles.benefits || []), routed_food: routedTo(roles.food_help || []) },
     store_by_zip: top(count(plans, p => `${p.data.zip || 'none'} · ${p.data.store || 'full'}`), 30),

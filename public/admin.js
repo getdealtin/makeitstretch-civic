@@ -261,9 +261,9 @@ function activityHtml(a) {
       <div><h3>Visits per day</h3>${table(a.per_day, ['Day', 'Visits'])}</div>
       <div><h3>Where people stop</h3>${table(steps, ['Question finished', 'Visits'], k => PRETTY.step[k] || k)}</div>
       <div><h3>Budget pressure</h3>${table([
-        ['Under $5.36/person/day (below Thrifty Food Plan)', a.pressure.under_tfp],
-        ['$5.36–$6.22 (between TFP and SNAP)', a.pressure.tfp_to_snap],
-        ['$6.22 or more (at or above SNAP)', a.pressure.over_snap]], ['Per person per day', 'Plans'])}</div>
+        ['Under $6.22/person/day (below the average SNAP benefit)', a.pressure.under_snap],
+        ['$6.22–$8.44 (between SNAP and the Thrifty Food Plan)', a.pressure.snap_to_tfp],
+        ['$8.44 or more (at or above the Thrifty Food Plan, Sept 2026)', a.pressure.over_tfp]], ['Per person per day', 'Plans'])}</div>
       <div><h3>Shortfall routing</h3>${table([
         ['Plans below the SNAP benchmark', a.shortfall.sessions],
         ['…then tapped SNAP or WIC', a.shortfall.routed_benefits],
