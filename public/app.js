@@ -5,7 +5,6 @@
 
 import en from './i18n/en.js';
 import { ART } from './art.js';
-import { cleanSummary, summaryRows, summaryText, STORE_KEY as SUM_KEY, LANG_CHOICES, LANG_NAMES } from './summary.js';
 import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
@@ -705,7 +704,6 @@ function needsSection() {
     <p class="hint">${esc(t('needs_hint'))}</p>
     <div class="chips">${city.needs.map(n => `<button type="button" class="chip" data-need="${n}" aria-pressed="false" aria-controls="need-panel">${esc(t('need_' + n))}</button>`).join('')}</div>
     <div id="need-panel" class="help-list" aria-live="polite" hidden></div>
-    <div class="sum-box" id="sum-box"></div>
   </section>`;
 }
 function wireNeeds() {
@@ -730,119 +728,6 @@ function wireNeeds() {
         </div></article>`), two11 ? helpCard(two11) : ''].join('');
     panel.hidden = false;
   }));
-  renderSummaryBox();
-}
-
-// ── "Fill it out once" (public/summary.js) ──
-// She writes a short summary once and shares it herself, so staff don't have to ask again. It never goes
-// to our server; it stays on this device only if she ticks "keep it". Counts carry none of its contents.
-let sumDraft = null; // this visit only, unless she chose to keep it
-const sumLoad = () => { try { return JSON.parse(localStorage.getItem(SUM_KEY) || 'null'); } catch { return null; } };
-const sumSave = s => { try { localStorage.setItem(SUM_KEY, JSON.stringify(s)); } catch { /* storage off: it lasts this visit */ } };
-const sumForget = () => { try { localStorage.removeItem(SUM_KEY); } catch { /* nothing kept */ } };
-const tappedNeeds = () => [...app.querySelectorAll('[data-need][aria-pressed="true"]')].map(b => b.dataset.need);
-const sumDate = () => new Date().toLocaleDateString(document.documentElement.lang || 'en', { year: 'numeric', month: 'long', day: 'numeric' });
-
-function renderSummaryBox(focus) {
-  const box = app.querySelector('#sum-box');
-  if (!box) return;
-  const kept = sumLoad(), s = sumDraft || kept;
-  if (!s) {
-    box.innerHTML = `<h3 id="sum-h" tabindex="-1">${esc(t('sum_title'))}</h3><p>${esc(t('sum_intro'))}</p>
-      <p class="muted">${esc(t('sum_private'))}</p>
-      <button type="button" class="btn btn-primary" id="sum-make">${esc(t('sum_make'))}</button>`;
-    box.querySelector('#sum-make').onclick = () => renderSummaryForm();
-  } else {
-    const rows = summaryRows(s, { t, en, lang });
-    box.innerHTML = `<h3 id="sum-h" tabindex="-1">${esc(t('sum_ready'))}</h3>
-      <dl class="sum-card">${rows.map(([l, v]) => `<dt>${esc(l)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
-      <p class="muted">${esc(t('sum_show_hint'))}</p>
-      <div class="sum-actions">
-        <button type="button" class="btn btn-primary btn-sm" data-sum="copy">${esc(t('sum_copy'))}</button>
-        ${navigator.share ? `<button type="button" class="btn btn-ghost btn-sm" data-sum="share">${esc(t('sum_share'))}</button>` : ''}
-        <a class="btn btn-ghost btn-sm" data-sum="text" href="sms:?&body=${encodeURIComponent(summaryText(s, { t, en, lang, date: sumDate() }))}">${esc(t('sum_text'))}</a>
-        <a class="btn btn-ghost btn-sm" data-sum="email" href="mailto:?subject=${encodeURIComponent(t('sum_text_title'))}&body=${encodeURIComponent(summaryText(s, { t, en, lang, date: sumDate() }))}">${esc(t('sum_email'))}</a>
-        <button type="button" class="btn btn-ghost btn-sm" data-sum="print">${esc(t('sum_print'))}</button>
-      </div>
-      <p class="sum-status" role="status"></p>
-      <p class="muted">${esc(t(kept ? 'sum_kept' : 'sum_not_kept'))}</p>
-      <div class="sum-actions"><button type="button" class="btn-link" id="sum-edit">${esc(t('sum_edit'))}</button>
-        <button type="button" class="btn-link" id="sum-delete">${esc(t('sum_delete'))}</button></div>`;
-    const status = box.querySelector('.sum-status');
-    const text = () => summaryText(s, { t, en, lang, date: sumDate() });
-    box.querySelectorAll('[data-sum]').forEach(el => el.addEventListener('click', async e => {
-      const how = el.dataset.sum;
-      if (how === 'copy') {
-        try { await navigator.clipboard.writeText(text()); status.textContent = t('sum_copied'); }
-        catch { status.textContent = t('sum_copy_failed'); }
-      } else if (how === 'share') {
-        try { await navigator.share({ title: t('sum_text_title'), text: text() }); } catch { return; } // she cancelled
-      } else if (how === 'print') {
-        e.preventDefault();
-        const sheet = document.createElement('pre');
-        sheet.id = 'sum-print-sheet'; sheet.textContent = text();
-        document.body.append(sheet); document.body.classList.add('print-summary');
-        window.addEventListener('afterprint', () => { sheet.remove(); document.body.classList.remove('print-summary'); }, { once: true });
-        window.print();
-      }
-      track('summary_shared', { method: how });
-    }));
-    box.querySelector('#sum-edit').onclick = () => renderSummaryForm(s);
-    box.querySelector('#sum-delete').onclick = () => { sumDraft = null; sumForget(); renderSummaryBox(true); box.querySelector('p')?.insertAdjacentHTML('beforebegin', `<p class="sum-status" role="status">${esc(t('sum_deleted'))}</p>`); };
-  }
-  if (focus) box.querySelector('#sum-h')?.focus();
-}
-
-function renderSummaryForm(prev) {
-  const box = app.querySelector('#sum-box');
-  const v = prev || { needs: tappedNeeds(), zip: answers.zip || siteZip || '', household: answers.people ? String(answers.people) : '', language: LANG_CHOICES.includes(lang) ? lang : 'other' };
-  const kept = !!sumLoad();
-  const field = (k, label, attrs = '', cls = 'fi') => `<label class="fl" for="sum-${k}">${esc(t(label))}</label>
-    <input class="${cls}" id="sum-${k}" name="${k}" value="${esc(v[k] || '')}" ${attrs}>`;
-  box.innerHTML = `<form class="sum-form" novalidate aria-labelledby="sum-h">
-    <h3 id="sum-h" tabindex="-1">${esc(t('sum_title'))}</h3>
-    <p>${esc(t('sum_form_intro'))}</p>
-    <fieldset class="group"><legend class="fl">${esc(t('sum_needs'))}</legend><div class="choices">
-      ${city.needs.map(n => `<label class="choice"><input type="checkbox" name="needs" value="${n}" ${(v.needs || []).includes(n) ? 'checked' : ''}> ${esc(t('need_' + n))}</label>`).join('')}</div></fieldset>
-    ${field('first_name', 'sum_first_name', 'maxlength="60" autocomplete="given-name"')}
-    ${field('phone', 'sum_phone', 'type="tel" maxlength="30" autocomplete="tel"')}
-    ${field('email', 'sum_email', 'type="email" maxlength="200" autocomplete="email"')}
-    <fieldset class="group"><legend class="fl">${esc(t('sum_reach_by'))}</legend><div class="choices">
-      ${['call', 'text', 'email'].map(x => `<label class="choice"><input type="radio" name="reach_by" value="${x}" ${v.reach_by === x ? 'checked' : ''}> ${esc(t('sum_reach_' + x))}</label>`).join('')}</div></fieldset>
-    <label class="fl" for="sum-language">${esc(t('sum_language'))}</label>
-    <select class="fi fi-sm" id="sum-language" name="language">${LANG_CHOICES.map(x => `<option value="${x}" ${v.language === x ? 'selected' : ''}>${esc(x === 'other' ? t('sum_lang_other') : LANG_NAMES[x])}</option>`).join('')}</select>
-    ${field('zip', 'sum_zip', 'inputmode="numeric" maxlength="5" autocomplete="postal-code"', 'fi fi-sm')}
-    ${field('household', 'sum_household', 'inputmode="numeric" maxlength="2"', 'fi fi-sm')}
-    <label class="fl" for="sum-note">${esc(t('sum_note'))}</label><p class="fh" id="sum-note-h">${esc(t('sum_note_hint'))}</p>
-    <textarea class="fi" id="sum-note" name="note" maxlength="500" rows="3" aria-describedby="sum-note-h">${esc(v.note || '')}</textarea>
-    <label class="sum-keep"><input type="checkbox" name="keep" ${kept ? 'checked' : ''} aria-describedby="sum-keep-h"> ${esc(t('sum_keep'))}</label>
-    <p class="fh" id="sum-keep-h">${esc(t('sum_keep_hint'))}</p>
-    <p class="error" role="alert"></p>
-    <div class="sum-actions"><button type="submit" class="btn btn-primary">${esc(t('sum_save'))}</button>
-      <button type="button" class="btn-link" id="sum-cancel">${esc(t('sum_cancel'))}</button></div>
-  </form>`;
-  const f = box.querySelector('form');
-  f.querySelector('#sum-cancel').onclick = () => renderSummaryBox(true);
-  f.onsubmit = e => {
-    e.preventDefault();
-    const val = k => f.elements[k]?.value || '';
-    const { summary, error } = cleanSummary({
-      needs: [...f.querySelectorAll('[name=needs]:checked')].map(x => x.value), first_name: val('first_name'), phone: val('phone'),
-      email: val('email'), reach_by: f.querySelector('[name=reach_by]:checked')?.value || '', language: val('language'),
-      zip: val('zip'), household: val('household'), note: val('note'),
-    }, { needs: city.needs || [] });
-    if (error) {
-      const err = f.querySelector('.error');
-      err.textContent = t('sum_err_' + (['phone', 'email', 'zip', 'household', 'empty'].includes(error) ? error : 'empty'));
-      f.querySelector(`[name=${error === 'empty' ? 'needs' : error}]`)?.focus();
-      return;
-    }
-    sumDraft = summary;
-    if (f.elements.keep.checked) sumSave(summary); else sumForget();
-    track('summary_made', { needs: (summary.needs || []).length, fields: Object.keys(summary).length, kept: f.elements.keep.checked ? 'yes' : 'no' });
-    renderSummaryBox(true);
-  };
-  f.querySelector('#sum-h').focus();
 }
 
 async function loadSites(zip) {

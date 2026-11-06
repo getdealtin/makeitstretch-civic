@@ -11,7 +11,7 @@ export default {
       'We collect information about how the tool is used, in a form that does not identify you. This includes the answers you provide (such as budget, household size, ZIP code, food preferences and dietary needs), the plans and meal suggestions created for you, and how you interact with them (such as recipes you view, help resources you select, and food-box items you tell us you cannot use).',
       'As with most websites, our servers receive technical information, such as your IP address, when you connect. We use it only to operate the service and protect it from abuse, and we do not store it with usage information.',
     ] },
-    { h: 'Information stored on your device', p: ['Some information stays on your device and is not sent to us, including plans you choose to save and your language preference. You can delete saved plans at any time from the start screen.', 'If you write a “Fill it out once” summary to share with services, it is never sent to us. You choose whether to show, copy, text, email or print it, and to whom. It stays on your device only if you choose to keep it, and you can delete it at any time. We count only that a summary was made or shared, never what it says.'] },
+    { h: 'Information stored on your device', p: ['Some information stays on your device and is not sent to us, including plans you choose to save and your language preference. You can delete saved plans at any time from the start screen.'] },
     { h: 'How we use information', list: [
       'To provide, maintain and improve the tool.',
       'To understand food needs in the community and share aggregated statistics with the City of Austin and food assistance partners.',
