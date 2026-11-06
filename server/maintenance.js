@@ -30,7 +30,8 @@ export function maintenanceFor(city, now = new Date()) {
     how: 'Ask Claude: “check for a new Food Access Research Atlas” (scripts/build-food-access.py).' });
   const links = (city.resources || []).map(r => firstDate(r.verified)).filter(Boolean).sort();
   if (links.length) items.push({ id: 'links', title: 'Help listings and links', last: links[0], due: addMonths(links[0], 12),
-    what: 'The help listings on the site (food banks, benefits, 2-1-1, other help): links work and descriptions are still true.',
+    what: (() => { const n = city.resources.filter(r => r.audience === 'needs').length;
+      return `All ${city.resources.length} help listings: links work and descriptions are still true. Includes food banks, benefits and 2-1-1${n ? `, and the ${n} listings under “Need help with anything else?” (rent and utilities, health care, child care, jobs and transportation)` : ''}.`; })(),
     how: 'Ask Claude: “check every help link” (cities/austin.js, the verified date on each listing).' });
   if (city.store_notes_checked) items.push({ id: 'notes', title: 'Farmers market notes (WIC, Double Up, hours)', last: city.store_notes_checked, due: addMonths(city.store_notes_checked, 12),
     what: 'The “Takes WIC”, “Doubles SNAP & WIC” and hours shown for SFC markets.',
