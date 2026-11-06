@@ -12,6 +12,8 @@ const DATA = JSON.parse(readFileSync(new URL('../data/snap-stores-travis.json', 
 const ZIP_CENTERS = JSON.parse(readFileSync(new URL('../data/zip-centroids.json', import.meta.url), 'utf8'));
 export const STORES = DATA.stores;
 export const STORES_AS_OF = DATA.as_of;
+// USDA Food Access Research Atlas: low-income and low-access tracts (built by scripts/build-food-access.py).
+export const FOOD_ACCESS = JSON.parse(readFileSync(new URL('../data/food-access-travis.json', import.meta.url), 'utf8'));
 
 const rad = d => (d * Math.PI) / 180;
 export function miles(p, q) {
@@ -71,5 +73,5 @@ export function retailFindings(focusZips = []) {
       other_grocery: here.filter(s => s.group === 'grocery' && !s.full).length, markets: here.filter(s => s.group === 'market').length,
       dollar_or_other: here.filter(s => s.group === 'other').length, nearest_full_miles: near === null ? null : +near.toFixed(1) };
   });
-  return { as_of: STORES_AS_OF, focus: { ...f, ratio: ratio(f), zips: focusZips.length }, rest: { ...r, ratio: ratio(r), zips: rest.length }, byZip };
+  return { as_of: STORES_AS_OF, focus: { ...f, ratio: ratio(f), zips: focusZips.length }, rest: { ...r, ratio: ratio(r), zips: rest.length }, byZip, access: FOOD_ACCESS };
 }

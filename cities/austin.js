@@ -92,7 +92,7 @@ export default {
     },
     labels: { benefits: 'SNAP or WIC', food_help: 'a food bank or 2-1-1' },
     sections: [
-      { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'retail_mix', 'retail_by_zip', 'cuisine'] },
+      { goal: 'Goal 6 · Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'retail_mix', 'retail_by_zip', 'food_access', 'food_access_by_zip', 'cuisine'] },
       { goal: 'Strategy 6.6 · Benefits navigation', intro: 'People routed toward SNAP and WIC. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
       { goal: 'Goal 4 · Preparedness (strategy 4.2)', intro: 'Food-box items recipients report they cannot use, and dietary needs. A recipient-reported proxy for the Food Plan’s culturally relevant and medically necessary food indicators, not a measure of food in storage.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
       { goal: 'Needs beyond food', intro: 'What else people asked about after getting their plan (rent and utilities, health care, child care, jobs and transportation). Taps on a need, not requests: no one is contacted. A de-identified signal for nonprofit partners.', metrics: ['needs', 'needs_by_zip'] },

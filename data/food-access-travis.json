@@ -1,0 +1,83 @@
+{
+ "source": "USDA ERS Food Access Research Atlas",
+ "measure": "Low income and low access at 1 mile (urban) / 10 miles (rural)",
+ "focus_zips": [
+  "78702",
+  "78721",
+  "78723",
+  "78724",
+  "78741",
+  "78744",
+  "78725",
+  "78617",
+  "78719",
+  "78752",
+  "78753",
+  "78758"
+ ],
+ "editions": {
+  "2015": {
+   "name": "2015 Food Access Research Atlas (archived)",
+   "counts_distance_to": "supermarkets",
+   "tracts": 218,
+   "lila": 33,
+   "lila_focus": 27,
+   "lila_by_focus_zip": {
+    "78702": 3,
+    "78721": 3,
+    "78723": 1,
+    "78724": 3,
+    "78741": 2,
+    "78744": 5,
+    "78725": 1,
+    "78617": 2,
+    "78719": 0,
+    "78752": 1,
+    "78753": 4,
+    "78758": 2
+   }
+  },
+  "2019": {
+   "name": "2019 Large Retailer Access Map",
+   "counts_distance_to": "supermarkets",
+   "tracts": 217,
+   "lila": 25,
+   "lila_focus": 16,
+   "lila_by_focus_zip": {
+    "78702": 0,
+    "78721": 3,
+    "78723": 1,
+    "78724": 2,
+    "78741": 2,
+    "78744": 3,
+    "78725": 1,
+    "78617": 2,
+    "78719": 0,
+    "78752": 0,
+    "78753": 0,
+    "78758": 2
+   }
+  },
+  "2025": {
+   "name": "2025 SNAP-authorized Retailer Access Map",
+   "counts_distance_to": "any SNAP-authorized store except farmers markets (convenience stores count)",
+   "tracts": 290,
+   "lila": 6,
+   "lila_focus": 2,
+   "lila_by_focus_zip": {
+    "78702": 0,
+    "78721": 0,
+    "78723": 0,
+    "78724": 2,
+    "78741": 0,
+    "78744": 0,
+    "78725": 0,
+    "78617": 0,
+    "78719": 0,
+    "78752": 0,
+    "78753": 0,
+    "78758": 0
+   }
+  }
+ }
+}

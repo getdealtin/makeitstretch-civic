@@ -36,3 +36,10 @@ test('report findings: counts by USDA store type; 78721 and 78725 have no superm
   for (const z of ['78721', '78725']) assert.equal(f.byZip.find(x => x.zip === z).full, 0, z);
   assert.equal(retailFindings([]), null);
 });
+
+test('USDA food access: the grant figure (33 tracts) is the 2015 edition; editions are labeled by what they measure', async () => {
+  const { FOOD_ACCESS } = await import('../server/stores.js');
+  assert.equal(FOOD_ACCESS.editions['2015'].lila, 33);
+  assert.match(FOOD_ACCESS.editions['2025'].counts_distance_to, /convenience/);
+  for (const y of ['2015', '2019']) assert.equal(FOOD_ACCESS.editions[y].counts_distance_to, 'supermarkets');
+});

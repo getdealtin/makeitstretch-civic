@@ -69,6 +69,7 @@ const countBy = (events, keyOf) => {
 };
 const n = (v, k) => (v < k ? null : v);
 
+const longDate = iso => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const LABEL = {
   group: { cultural: 'Culture or religion', medical: 'Health', practical: 'Other reasons' },
   reason: { halal: 'Not halal', kosher: 'Not kosher', unfamiliar: 'Not a familiar food', diabetic: 'Not OK for diabetes', low_sodium: 'Too much salt', allergy: 'Allergy', no_kitchen: 'No way to cook it', dont_know_how: 'Don’t know how to cook it', spoiled: 'Spoiled or expired' },
@@ -105,7 +106,7 @@ export const METRICS = {
   unlisted_food: c => c.table('Foods in boxes that aren’t on our list', ['Food (as typed)', 'People'], countBy(c.boxEv, e => e.data.other || []), { note: 'What people typed in. Shows what pantries hand out that the tool can’t use yet.' }),
   needs: c => c.table('Other needs people asked about', ['Need', 'People'], lab(LABEL.need, countBy(c.events.filter(e => e.event === 'need_tapped'), e => e.data.need)), { note: 'Taps on a need after the plan. No one is contacted and nothing is requested.' }),
   needs_by_zip: c => c.table('Other needs by ZIP code', ['ZIP · need', 'People'], countBy(c.withZip.filter(e => e.event === 'need_tapped'), e => `${e.zip} · ${LABEL.need[e.data.need] || e.data.need}`)),
-  retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of Travis County (USDA, as of ${c.retail.as_of})`, head: ['', 'Stores'], rows: [
+  retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of Travis County (USDA, as of ${longDate(c.retail.as_of)})`, head: ['', 'Stores'], rows: [
     [`Focus area (${c.retail.focus.zips} ZIP codes): convenience stores`, c.retail.focus.convenience],
     ['Focus area: supermarkets and large grocery stores', c.retail.focus.full],
     ['Focus area: convenience stores for each supermarket or large grocery store', c.retail.focus.ratio],
@@ -115,6 +116,11 @@ export const METRICS = {
     ['Focus area: typical distance from a ZIP code\u2019s center to the nearest supermarket or large grocery store (miles)', c.retail.focus.median_miles],
     ['Rest of county: same distance (miles)', c.retail.rest.median_miles],
   ], note: 'Store counts by USDA store type for stores authorized to take SNAP. Places, not people: not suppressed. Distance is the median across ZIP codes, measured from each ZIP code\u2019s center, so it is approximate.' }) : null,
+  food_access: c => c.retail?.access ? ({ title: 'USDA low-income and low-access census tracts in Travis County (Food Access Research Atlas)', head: ['USDA edition', 'Tracts flagged'],
+    rows: Object.values(c.retail.access.editions).map(e => [`${e.name}: distance to ${e.counts_distance_to}`, `${e.lila} of ${e.tracts} in Travis County; ${e.lila_focus} mostly in the focus-area ZIP codes`]),
+    note: 'USDA measure: low income and low access at 1 mile (cities) or 10 miles (rural). The grant\u2019s figure (26 of 33) comes from the 2015 edition. The editions are not a trend: they use different census years and stores, and the 2025 edition counts every SNAP store, including convenience stores, so it measures nearness to any SNAP store, not to a supermarket. A tract is placed in the ZIP code holding most of its population (2010 tracts) or land (2020 tracts).' }) : null,
+  food_access_by_zip: c => c.retail?.access ? ({ title: 'Low-income and low-access tracts in each focus-area ZIP code (USDA)', head: ['ZIP code', '2015 · 2019 · 2025'],
+    rows: c.retail.access.focus_zips.map(z => [z, ['2015', '2019', '2025'].map(y => c.retail.access.editions[y]?.lila_by_focus_zip[z] ?? '\u2013').join(' · ')]), note: '2015 and 2019 count distance to supermarkets; 2025 counts distance to any SNAP store.' }) : null,
   retail_by_zip: c => c.retail ? ({ title: 'SNAP-authorized stores in each focus-area ZIP code', head: ['ZIP code', 'Stores (USDA store types)'], rows: c.retail.byZip.map(z => [z.zip,
     `${z.full} supermarket or large grocery · ${z.other_grocery} smaller grocery · ${z.convenience} convenience · ${z.dollar_or_other} dollar or other · ${z.markets} farmers market · nearest supermarket or large grocery about ${z.nearest_full_miles} mi from the ZIP code\u2019s center`]),
     note: 'A store counts in a ZIP code if its address is there. People also shop across ZIP lines, so read the nearest-store distance alongside the counts.' }) : null,
@@ -191,7 +197,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
       'Answers are self-reported and not verified. The same person visiting twice is counted twice.',
       'Link taps are not outcomes: the tool cannot see benefit applications or pantry visits.',
       'Dollar figures use U.S. South region BLS average prices for 13 foods and estimates for the rest, until local shelf prices are added.',
-      ...(retail ? [`Store findings use USDA's list of stores authorized to take SNAP (as of ${retail.as_of}) and USDA's store types. Stores that don't take SNAP aren't counted. The focus area is ${retail.focus.zips} ZIP codes chosen to approximate Council Districts 1\u20134; ZIP codes and districts don't line up exactly.`] : []),
+      ...(retail ? [`Store findings use USDA's list of stores authorized to take SNAP (as of ${longDate(retail.as_of)}) and USDA's store types. Stores that don't take SNAP aren't counted. The focus area is ${retail.focus.zips} ZIP codes chosen to approximate Council Districts 1\u20134; ZIP codes and districts don't line up exactly.`] : []),
       `Budget benchmarks: the average SNAP benefit is about $${SNAP} per person per day (FY2025), and USDA's Thrifty Food Plan costs $${TFP} per person per day (reference family of four, ${BENCHMARKS.tfpAsOf}). The average SNAP benefit is lower than the Thrifty Food Plan cost. "Below the SNAP average" describes a household's grocery budget compared with what SNAP pays on average; it says nothing about SNAP eligibility or enrollment.`,
     ],
   };
