@@ -34,7 +34,7 @@ export const DEFAULT_FRAMEWORK = {
   title: 'Food access report',
   labels: { benefits: 'a benefits link', food_help: 'a food help link' },
   sections: [
-    { goal: 'Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'store', 'store_by_zip', 'cuisine'] },
+    { goal: 'Access', intro: 'Where people seek help stretching food money, how short budgets are, and where they can shop.', metrics: ['zip', 'budget_band', 'budget_band_by_zip', 'store', 'store_by_zip', 'cuisine'] },
     { goal: 'Benefits and food help', intro: 'People routed toward benefits and free food. These are link taps, not applications: the tool cannot see who applies.', metrics: ['routed', 'benefits_by_zip'] },
     { goal: 'Food that fits', intro: 'Food-box items people report they cannot use, and dietary needs.', metrics: ['cant_use', 'cant_group', 'cant_reason', 'cant_item', 'unlisted_food', 'diet'] },
     { goal: 'Language', intro: 'Language used.', metrics: ['language'] },
@@ -84,13 +84,14 @@ const lab = (map, rows) => rows.map(([k, v]) => [map[k] || k, v]);
 export const METRICS = {
   zip: c => c.table('People by ZIP code', ['ZIP code', 'People'], countBy(c.withZip, e => e.zip)),
   budget_band: c => c.table('Budget per person per day (grocery plans)', ['Band', 'People'], c.bandRows, { total: c.plans.size }),
+  budget_band_by_zip: c => c.table('Budget per person per day by ZIP code', ['ZIP · band', 'People'], countBy(c.planEv.filter(p => c.bandOf[p.session_id] && c.zipOf[p.session_id]), p => `${c.zipOf[p.session_id]} · ${c.bandShort[p.session_id]}`)),
   store: c => c.table('Where people can shop most easily', ['Store type', 'People'], lab(LABEL.store, countBy(c.planEv, p => p.data.store || 'full')), { total: c.plans.size }),
   store_by_zip: c => c.table('Store type by ZIP code', ['ZIP · store', 'People'], countBy(c.planEv.filter(p => c.zipOf[p.session_id]), p => `${c.zipOf[p.session_id]} · ${LABEL.store[p.data.store || 'full']}`)),
   cuisine: c => c.table('Food style chosen', ['Cuisine', 'People'], countBy(c.planEv, p => (p.data.cuisine?.length ? p.data.cuisine : ['no preference']))),
   routed: c => c.table('People routed to benefits', ['', 'People'], [
     [`Tapped ${c.labels.benefits}`, c.routedBenefits.size],
     [`Tapped ${c.labels.food_help}`, c.routedFood.size],
-    ['Budget below the SNAP benchmark', c.shortfall.size],
+    ['Budget below the SNAP average', c.shortfall.size],
     [`…of those, tapped ${c.labels.benefits}`, c.shortfallBenefits],
     [`…of those, tapped ${c.labels.food_help}`, c.shortfallFood],
   ]),
@@ -129,6 +130,8 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
   // Budget pressure: one band per plan visit (its latest plan).
   const bandOf = {};
   for (const p of planEv) if (p.data.pppd != null) bandOf[p.session_id] = p.data.pppd < SNAP ? `Below $${SNAP} (average SNAP benefit)` : p.data.pppd < TFP ? `$${SNAP}–$${TFP}` : `$${TFP} or more (Thrifty Food Plan cost, ${BENCHMARKS.tfpAsOf})`;
+  const bandShort = {};
+  for (const p of planEv) if (p.data.pppd != null) bandShort[p.session_id] = p.data.pppd < SNAP ? 'below SNAP average' : p.data.pppd < TFP ? 'between SNAP and Thrifty' : 'at or above Thrifty';
   const bandRows = countBy(planEv.filter(p => bandOf[p.session_id]), p => bandOf[p.session_id]);
   const shortfall = new Set(planEv.filter(p => p.data.pppd != null && p.data.pppd < SNAP).map(p => p.session_id));
   const helps = events.filter(e => e.event === 'help_clicked');
@@ -137,7 +140,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
 
   const cant = events.filter(e => e.event === 'cant_use');
   const ctx = {
-    events, views, visits, planEv, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
+    events, views, visits, planEv, bandOf, bandShort, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
     roles: { benefits: roles.benefits || [], food_help: roles.food_help || [] },
     labels: { ...DEFAULT_FRAMEWORK.labels, ...(framework.labels || {}) },
     routedBenefits, routedFood,
@@ -170,7 +173,8 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
       `Any number under ${k} people is hidden, along with any number that would reveal it.`,
       'Answers are self-reported and not verified. The same person visiting twice is counted twice.',
       'Link taps are not outcomes: the tool cannot see benefit applications or pantry visits.',
-      'Dollar figures use regional BLS average prices until local Data Steward prices are added.',
+      'Dollar figures use U.S. South region BLS average prices for 13 foods and estimates for the rest, until local shelf prices are added.',
+      `Budget benchmarks: the average SNAP benefit is about $${SNAP} per person per day (FY2025), and USDA's Thrifty Food Plan costs $${TFP} per person per day (reference family of four, ${BENCHMARKS.tfpAsOf}). The average SNAP benefit is lower than the Thrifty Food Plan cost. "Below the SNAP average" describes a household's grocery budget compared with what SNAP pays on average; it says nothing about SNAP eligibility or enrollment.`,
     ],
   };
 }

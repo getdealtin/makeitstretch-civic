@@ -453,3 +453,6 @@ html { scroll-padding-bottom: 110px; }
 /* Shorter list nudge */
 .list-nudge { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; background: var(--tint-light); border: 1.5px solid var(--rule); border-radius: 14px; padding: 12px 14px; margin: 18px 0 0; }
 .list-nudge p { margin: 0; flex: 1 1 220px; font-size: 16px; }
+
+.health-note { font-size: 14px; color: var(--text-muted); margin: 4px 0 0; }
+@media print { .health-note { font-size: 8pt; } }

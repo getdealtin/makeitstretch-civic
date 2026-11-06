@@ -116,6 +116,7 @@ export default {
   cat_grain: '谷物和面包', cat_protein: '蛋白质', cat_vegetable: '蔬菜', cat_fruit: '水果',
   cat_dairy: '乳制品', cat_fat: '油脂', cat_pantry: '干货和调料',
   price_note: '价格：{label}。您那里的商店价格可能不同。',
+  health_note: "卡路里、营养和价格均为估算。如果您有健康问题或过敏，请查看食品标签并咨询医生。",
   week_of: '第 {n} 周，共 {total} 周',
   prev_week: '上一周', next_week: '下一周',
   meals_hint: '点一道菜查看做法，还能换成另一道。',

@@ -680,6 +680,7 @@ function renderResults(plan, restore = {}) {
       ${listHtml}
       <div class="shop-total"><span>${esc(t('total'))}</span><span>$${money(s.spent)}</span></div>
       <p class="price-note">${esc(t('price_note', { label: cityText('price_region_label') || priced.label }))}</p>
+      <p class="health-note">${esc(t('health_note'))}</p>
     </section>
 
     <section class="section" id="meals" aria-labelledby="h-plan" tabindex="-1">
@@ -1044,6 +1045,7 @@ async function renderBoxResults() {
         <a href="#help" class="jump-help">${esc(t('jump_help'))} <span>${esc(t('jump_help_sub', { n: residents().length }))} ↓</span></a></nav>` : ''}
     </section>
     <section class="section">
+      <p class="health-note">${esc(t('health_note'))}</p>
       ${box.other?.length ? `<p class="box-other-note">${esc(t('box_other_note', { items: box.other.join(t('list_sep')) }))}</p>` : ''}
       ${matches.length ? `<ul class="box-list">${matches.map(m => `
         <li class="box-card">

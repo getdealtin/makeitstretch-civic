@@ -131,6 +131,7 @@ export default {
   cat_grain: 'Grains & bread', cat_protein: 'Protein', cat_vegetable: 'Vegetables', cat_fruit: 'Fruit',
   cat_dairy: 'Dairy', cat_fat: 'Oils & fats', cat_pantry: 'Pantry',
   price_note: 'Prices: {label}. Your store may be different.',
+  health_note: "Calories, nutrition and prices are estimates. If you have a health condition or allergy, check food labels and ask your doctor.",
   week_of: 'Week {n} of {total}',
   prev_week: 'Previous week', next_week: 'Next week',
   meals_hint: 'Tap a meal for the recipe and another option to swap in.',
