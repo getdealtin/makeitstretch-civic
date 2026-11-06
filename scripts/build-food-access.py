@@ -53,7 +53,7 @@ def summarize(flags):
 
 def main(d):
     z10, z20 = assign_2010(os.path.join(d, 'rel2010.txt')), assign_2020(os.path.join(d, 'rel2020.txt'))
-    out = {'source': 'USDA ERS Food Access Research Atlas', 'measure': 'Low income and low access at 1 mile (urban) / 10 miles (rural)',
+    out = {'source': 'USDA ERS Food Access Research Atlas', 'checked': '2026-11-06', 'measure': 'Low income and low access at 1 mile (urban) / 10 miles (rural)',
            'focus_zips': FOCUS, 'editions': {}}
     # 2015 (xlsx)
     import openpyxl

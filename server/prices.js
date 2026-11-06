@@ -24,6 +24,9 @@ export const BLS_ITEMS = {
   oranges:    ['711311', 2,    'Oranges, navel, per lb (4 oranges)'],
 };
 
+/** Date the series codes above were last verified (shown in /admin, Annual updates). */
+export const BLS_CHECKED = '2026-11-05';
+
 /** Census region → BLS area code (Northeast 0100, Midwest 0200, South 0300, West 0400). */
 export const BLS_REGION = { northeast: '0100', midwest: '0200', south: '0300', west: '0400', national: '0000' };
 

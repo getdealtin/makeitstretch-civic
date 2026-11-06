@@ -11,6 +11,7 @@ import { CITIES } from '../cities/index.js';
 import { summarize } from './events.js';
 import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
 import { retailFindings } from './stores.js';
+import { maintenanceFor } from './maintenance.js';
 import { readFileSync } from 'node:fs';
 
 // Zip → [lat, lon] at the center of each zip area (US Census ZCTAs, via the MIT-licensed
@@ -219,6 +220,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
         reviews,
         reconfirm_days: RECONFIRM_DAYS,
         activity: await activityFor(city, req.query.days),
+        maintenance: maintenanceFor(CITIES[city]),
       });
     } catch (e) { console.error(e.message); res.status(500).json({ ok: false, error: 'db' }); }
   });

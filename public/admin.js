@@ -98,6 +98,7 @@ function render() {
       <a class="count ${d.overdue.length ? 'alert' : ''}" href="#overdue"><b>${d.overdue.length}</b><span>Overdue to re-confirm</span></a>
       <a class="count" href="#directory"><b>${d.approved.length}</b><span>Live listings</span></a>
       <a class="count" href="#invites"><b>${usedInvites}/${d.invites.length}</b><span>Invites used</span></a>
+      ${(d.maintenance || []).some(m => m.status !== 'ok') ? `<a class="count alert" href="#updates"><b>${d.maintenance.filter(m => m.status !== 'ok').length}</b><span>Annual updates due</span></a>` : ''}
       <a class="count ${d.reviews.some(r => r.status !== 'approved') ? 'alert' : ''}" href="#translations"><b>${d.reviews.filter(r => r.status === 'approved').length}/${d.reviews.length}</b><span>Languages reviewed</span></a>
     </nav>
 
@@ -159,6 +160,17 @@ function render() {
           <span class="actions"><span class="status-pill ${r.status === 'approved' ? 'ok' : ''}">${r.status === 'approved' ? 'Reviewed' : 'Pending review'}</span>
           ${r.status === 'approved' ? `<button class="btn-xs" data-review="${esc(r.lang)}" data-to="pending">Undo</button>`
             : `<button class="btn-xs go" data-review="${esc(r.lang)}" data-to="approved">Mark reviewed…</button>`}</span></li>`).join('')}</ul>
+    </section>
+
+    <section class="a-section" id="updates" aria-labelledby="h-up">
+      <h2 id="h-up">Annual updates</h2>
+      <p class="a-hint">Facts the site depends on that go out of date. Each one shows when it was last updated and when it's next due. After an update, its date is changed in the code and the reminder resets.</p>
+      <ul class="row-list">${(d.maintenance || []).map(m => `
+        <li><span><b>${esc(m.title)}</b>
+          <span class="sub">${esc(m.what)}</span>
+          <span class="sub">Last updated or checked ${day(m.last + 'T12:00:00')} · next due ${day(m.due + 'T12:00:00')}</span>
+          <span class="sub">How: ${esc(m.how)}</span></span>
+          <span class="status-pill ${m.status === 'ok' ? 'ok' : ''}">${m.status === 'due' ? 'Due now' : m.status === 'soon' ? 'Due soon' : 'OK'}</span></li>`).join('')}</ul>
     </section>
 
     ${activityHtml(d.activity)}

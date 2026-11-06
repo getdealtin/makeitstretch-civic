@@ -90,6 +90,10 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
 - **`/admin`** (password `ADMIN_KEY`, 30-day sign-in): needs review, overdue (not re-confirmed in 6 months),
   invite links with a ready-to-send email, the directory (add/edit/hide/restore), translation sign-off, and
   activity (fills in when Phase 4 tracking is on). A city picker covers every city in one database.
+- **Annual updates** (`/admin`, `server/maintenance.js`): the facts that go out of date (USDA store list, Thrifty
+  Food Plan, SNAP average benefit, BLS series codes, Food Access Research Atlas, help links, farmers market notes),
+  each with its last-updated date, next due date and how to update it. Items due within a month show at the top
+  of `/admin`. After updating one, change its date (named in the item) and the reminder resets.
 - Database schema: `db/schema.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
 
 ## Languages

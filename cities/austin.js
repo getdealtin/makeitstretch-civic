@@ -74,6 +74,7 @@ export default {
   // sustainablefoodcenter.org/farmers-markets-support/sfc-farmers-markets (checked Nov 6, 2026):
   // SFC markets accept SNAP and WIC, double them up to $30 a week (Double Up Food Bucks Texas),
   // and run Saturdays 9 AM–1 PM. Add a note only from a verified source.
+  store_notes_checked: '2026-11-06',
   wic_finder_url: 'https://find.texaswic.org/', // official Texas WIC store finder (checked Nov 6, 2026)
   store_notes: {
     'SFC Farmers Market Downtown': { wic: true, double: 'up30', hours: 'sat_9_1' },
