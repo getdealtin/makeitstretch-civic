@@ -89,7 +89,7 @@ test('every metric a city framework lists exists in the shared library', () => {
   const r = cityReport([], { k: 15, from: 'a', to: 'b', city: 'Austin', roles: rolesOf(austin.resources), framework: austin.report });
   const flagged = r.sections.flatMap(s => s.tables.filter(t => t.indicator).map(t => [s.goal, t.id]));
   assert.deepEqual(flagged, [['Strategy 6.6 · Benefits navigation', 'routed'], ['Goal 4 · Preparedness (strategy 4.2)', 'cant_group']]);
-  assert.match(reportCsv(r).split('\n')[0], /city_indicator$/);
+  assert.match(reportCsv(r).split('\n')[0], /city_indicator,open_eligibility$/);
 });
 
 test('outcome answers and source tags validate', () => {
@@ -129,4 +129,7 @@ test('needs beyond food: every need has sources, they stay out of the food help 
   const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', roles: rolesOf(austin.resources), framework: austin.report });
   const t = r.sections.find(s => s.goal === 'Needs beyond food').tables.find(x => x.id === 'needs');
   assert.deepEqual(t.rows, [['Rent & utilities', 20]], 'people, not taps');
+  // each need carries its standard category (Open Eligibility) in the report and the CSV
+  assert.equal(t.oe['Rent & utilities'], 'Housing > Help Pay for Housing; Housing > Help Pay for Housing > Help Pay for Utilities');
+  assert.match(reportCsv(r), /"Rent & utilities","20","","Housing > Help Pay for Housing; /);
 });

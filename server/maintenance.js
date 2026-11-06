@@ -4,6 +4,8 @@
 import { BENCHMARKS } from '../engine/index.js';
 import { STORES_AS_OF, FOOD_ACCESS } from './stores.js';
 import { BLS_CHECKED } from './prices.js';
+import { HSDS_VERSION } from './hsds.js';
+import { OE } from './taxonomy.js';
 
 const addMonths = (iso, n) => { const d = new Date(iso + 'T12:00:00Z'); d.setUTCMonth(d.getUTCMonth() + n); return d.toISOString().slice(0, 10); };
 const firstDate = s => (String(s || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0] || null;
@@ -24,6 +26,9 @@ export function maintenanceFor(city, now = new Date()) {
     { id: 'bls', title: 'BLS price series check', last: BLS_CHECKED, due: addMonths(BLS_CHECKED, 12),
       what: 'Live grocery prices come from 13 BLS series. BLS sometimes stops or renumbers a series.',
       how: 'Ask Claude: “check the BLS price series” (server/prices.js). A bad series is ignored automatically meanwhile.' },
+    { id: 'hsds', title: 'Open data feed format (HSDS and Open Eligibility)', last: OE.checked, due: addMonths(OE.checked, 12),
+      what: `The open data feed at /api/hsds follows Open Referral’s HSDS ${HSDS_VERSION}, with Open Eligibility categories. Open Referral publishes new versions from time to time.`,
+      how: 'Ask Claude: “check for a new HSDS version” (server/hsds.js, server/taxonomy.js, scripts/build-open-eligibility.py).' },
   ];
   if (FOOD_ACCESS?.checked) items.push({ id: 'access', title: 'USDA food-access data (City report)', last: FOOD_ACCESS.checked, due: addMonths(FOOD_ACCESS.checked, 12),
     what: 'Low-income and low-access tracts from USDA’s Food Access Research Atlas. New editions come every few years.',

@@ -17,6 +17,7 @@
 //    smallest row is hidden too, so the hidden one can't be worked out by subtraction.
 //  • Organization counts (food sites in the directory) are not people and are not suppressed.
 
+import { NEED_TERMS, describe } from './taxonomy.js';
 import { CANT_USE } from './events.js';
 
 import { BENCHMARKS } from '../engine/index.js';
@@ -84,6 +85,14 @@ const lab = (map, rows) => rows.map(([k, v]) => [map[k] || k, v]);
  * The shared measure library. Each entry takes the computed context and returns one table.
  * Add a measure here once and any city's framework can list it by id.
  */
+// Our needs → Open Eligibility (server/taxonomy.js), so partners can read the counts in a standard vocabulary.
+const NEED_BY_LABEL = Object.fromEntries(Object.entries(LABEL.need).map(([id, l]) => [l, id]));
+const needOE = label => {
+  const id = NEED_BY_LABEL[String(label).split(' · ').pop()];
+  return id ? describe(NEED_TERMS[id]).map(t => t.path).join('; ') : '';
+};
+const NEED_OE_NOTE = Object.entries(LABEL.need).map(([id, l]) => `${l} = ${describe(NEED_TERMS[id]).map(t => t.path).join('; ')}`).join(' · ');
+
 export const METRICS = {
   zip: c => c.table('People by ZIP code', ['ZIP code', 'People'], countBy(c.withZip, e => e.zip)),
   budget_band: c => c.table('Budget per person per day (grocery plans)', ['Band', 'People'], c.bandRows, { total: c.plans.size }),
@@ -104,8 +113,8 @@ export const METRICS = {
   cant_reason: c => c.table('Reason', ['Reason', 'People'], lab(LABEL.reason, countBy(c.cant, e => e.data.reason))),
   cant_item: c => c.table('Item', ['Food-box item', 'People'], countBy(c.cant, e => e.data.item)),
   unlisted_food: c => c.table('Foods in boxes that aren’t on our list', ['Food (as typed)', 'People'], countBy(c.boxEv, e => e.data.other || []), { note: 'What people typed in. Shows what pantries hand out that the tool can’t use yet.' }),
-  needs: c => c.table('Other needs people asked about', ['Need', 'People'], lab(LABEL.need, countBy(c.events.filter(e => e.event === 'need_tapped'), e => e.data.need)), { note: 'Taps on a need after the plan. No one is contacted and nothing is requested.' }),
-  needs_by_zip: c => c.table('Other needs by ZIP code', ['ZIP · need', 'People'], countBy(c.withZip.filter(e => e.event === 'need_tapped'), e => `${e.zip} · ${LABEL.need[e.data.need] || e.data.need}`)),
+  needs: c => c.table('Other needs people asked about', ['Need', 'People'], lab(LABEL.need, countBy(c.events.filter(e => e.event === 'need_tapped'), e => e.data.need)), { oe: needOE, note: `Taps on a need after the plan. No one is contacted and nothing is requested. Standard categories (Open Eligibility, the taxonomy used with HSDS): ${NEED_OE_NOTE}.` }),
+  needs_by_zip: c => c.table('Other needs by ZIP code', ['ZIP · need', 'People'], countBy(c.withZip.filter(e => e.event === 'need_tapped'), e => `${e.zip} · ${LABEL.need[e.data.need] || e.data.need}`), { oe: needOE }),
   retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of Travis County (USDA, as of ${longDate(c.retail.as_of)})`, head: ['', 'Stores'], rows: [
     [`Focus area (${c.retail.focus.zips} ZIP codes): convenience stores`, c.retail.focus.convenience],
     ['Focus area: supermarkets and large grocery stores', c.retail.focus.full],
@@ -172,7 +181,11 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
     cant, cantSessions: new Set(cant.map(e => e.session_id)),
     groupOf: r => Object.keys(CANT_USE).find(g => CANT_USE[g].includes(r)),
     outcome: events.filter(e => e.event === 'plan_outcome'),
-    table: (title, head, rows, opts = {}) => ({ title, head, rows: suppress(rows, k, opts), note: opts.note || null }),
+    table: (title, head, rows, opts = {}) => {
+      const kept = suppress(rows, k, opts);
+      return { title, head, rows: kept, note: opts.note || null,
+        ...(opts.oe ? { oe: Object.fromEntries(kept.map(([l]) => [l, opts.oe(l)]).filter(([, v]) => v)) } : {}) };
+    },
   };
 
   return {
@@ -207,9 +220,10 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
 export function reportCsv(r) {
   const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
   // city_indicator names the row's City indicator, if any, so the City can filter for it.
-  const lines = [['section', 'table', 'label', 'value', 'city_indicator'].join(',')];
-  for (const [label, v] of r.overview) lines.push([esc('Overview'), esc(''), esc(label), esc(v ?? `<${r.k}`), esc('')].join(','));
-  for (const s of r.sections) for (const t of s.tables) for (const [label, v] of t.rows) lines.push([esc(s.goal), esc(t.title), esc(label), esc(v ?? `<${r.k}`), esc(t.indicator || '')].join(','));
+  // open_eligibility gives the standard category (Open Eligibility) for rows that have one (needs).
+  const lines = [['section', 'table', 'label', 'value', 'city_indicator', 'open_eligibility'].join(',')];
+  for (const [label, v] of r.overview) lines.push([esc('Overview'), esc(''), esc(label), esc(v ?? `<${r.k}`), esc(''), esc('')].join(','));
+  for (const s of r.sections) for (const t of s.tables) for (const [label, v] of t.rows) lines.push([esc(s.goal), esc(t.title), esc(label), esc(v ?? `<${r.k}`), esc(t.indicator || ''), esc(t.oe?.[label] || '')].join(','));
   return lines.join('\n') + '\n';
 }
 

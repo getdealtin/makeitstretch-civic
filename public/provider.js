@@ -71,6 +71,7 @@ function render() {
     <form class="pform" id="pform" novalidate>
       <h1 tabindex="-1" id="pf-title">${esc(title)}</h1>
       <p class="hint">${esc(t('pf_intro'))}</p>
+      <p class="hint">${esc(t('pf_shared'))}</p>
       ${token && !invite?.ok ? `<p class="notice">${esc(t('pf_bad_invite'))}</p>` : ''}
 
       <fieldset class="pf-sec"><legend><h2>${esc(t('pf_sec_site'))}</h2></legend>

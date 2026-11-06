@@ -236,6 +236,7 @@ export default {
   pf_title: '添加您的食物发放点',
   pf_title_invite: '把 {org} 添加到 Make It Stretch',
   pf_intro: 'Make It Stretch 帮助居民在预算紧张时规划买菜，并找到附近的免费食物。添加您的发放点完全免费。每条信息在发布前都会经过我们审核。',
+  pf_shared: '通过审核的信息是公开的：会显示在本网站上，也会放在一个开放数据源中，供 2-1-1 等其他服务目录使用。您在下方填写的联系方式不会公开。',
   pf_bad_invite: '这个邀请链接已经失效。您仍然可以使用下面的表格。',
   pf_sec_site: '关于您的发放点',
   pf_name: '发放点或机构名称',

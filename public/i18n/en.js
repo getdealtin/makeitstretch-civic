@@ -260,6 +260,7 @@ export default {
   pf_title: 'Add your food site',
   pf_title_invite: 'Add {org} to Make It Stretch',
   pf_intro: 'Make It Stretch helps residents plan groceries on a tight budget and find free food nearby. Listing your site is free. We review every listing before it goes live.',
+  pf_shared: 'Approved listings are public: on this site and in an open data feed that other directories, like 2-1-1, can use. Your contact details below stay private.',
   pf_bad_invite: 'This invite link isn’t valid anymore. You can still use the form below.',
   pf_sec_site: 'About your site',
   pf_name: 'Name of your site or organization',

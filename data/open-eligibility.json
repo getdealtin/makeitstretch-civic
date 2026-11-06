@@ -1,0 +1,1165 @@
+{
+"name": "Open Eligibility",
+"source": "https://github.com/openreferral/openeligibility",
+"commit": "a5417863b8b2aa55d833939c19e80f13c5f02008",
+"license": "CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/). A derivative of \"Human Services Taxonomy\" by Aunt Bertha, Inc.; maintained by Open Referral.",
+"checked": "2026-11-06",
+"terms": {
+"1101": {
+"name": "Emergency",
+"parent": null
+},
+"1102": {
+"name": "Food",
+"parent": null
+},
+"1103": {
+"name": "Housing",
+"parent": null
+},
+"1104": {
+"name": "Goods",
+"parent": null
+},
+"1105": {
+"name": "Transit",
+"parent": null
+},
+"1106": {
+"name": "Health",
+"parent": null
+},
+"1107": {
+"name": "Money",
+"parent": null
+},
+"1108": {
+"name": "Care",
+"parent": null
+},
+"1109": {
+"name": "Education",
+"parent": null
+},
+"1110": {
+"name": "Work",
+"parent": null
+},
+"1111": {
+"name": "Legal",
+"parent": null
+},
+"1112": {
+"name": "Disaster Response",
+"parent": "1101"
+},
+"1113": {
+"name": "Emergency Payments",
+"parent": "1101"
+},
+"1114": {
+"name": "Help Pay for Food",
+"parent": "1113"
+},
+"1115": {
+"name": "Help Pay for Healthcare",
+"parent": "1113"
+},
+"1116": {
+"name": "Help Pay for Housing",
+"parent": "1113"
+},
+"1117": {
+"name": "Help Pay for Gas",
+"parent": "1113"
+},
+"1118": {
+"name": "Help Pay for School",
+"parent": "1113"
+},
+"1119": {
+"name": "Help Pay for Utilities",
+"parent": "1113"
+},
+"1120": {
+"name": "Emergency Food",
+"parent": "1101"
+},
+"1121": {
+"name": "Emergency Shelter",
+"parent": "1101"
+},
+"1122": {
+"name": "Help Find Missing Persons",
+"parent": "1101"
+},
+"1123": {
+"name": "Immediate Safety",
+"parent": "1101"
+},
+"1124": {
+"name": "Help Escape Violence",
+"parent": "1123"
+},
+"1125": {
+"name": "Safe Housing",
+"parent": "1123"
+},
+"1126": {
+"name": "Psychiatric Emergency Services",
+"parent": "1101"
+},
+"1127": {
+"name": "Community Gardens",
+"parent": "1102"
+},
+"1128": {
+"name": "Emergency Food",
+"parent": "1102"
+},
+"1129": {
+"name": "Food Delivery",
+"parent": "1102"
+},
+"1130": {
+"name": "Food Pantry",
+"parent": "1102"
+},
+"1131": {
+"name": "Free Meals",
+"parent": "1102"
+},
+"1132": {
+"name": "Help Pay for Food",
+"parent": "1102"
+},
+"1133": {
+"name": "Food Benefits",
+"parent": "1132"
+},
+"1134": {
+"name": "Nutrition",
+"parent": "1102"
+},
+"1135": {
+"name": "Emergency Shelter",
+"parent": "1103"
+},
+"1136": {
+"name": "Help Find Housing",
+"parent": "1103"
+},
+"1137": {
+"name": "Help Pay for Housing",
+"parent": "1103"
+},
+"1138": {
+"name": "Help Pay for Utilities",
+"parent": "1137"
+},
+"1139": {
+"name": "Home & Renters Insurance",
+"parent": "1137"
+},
+"1140": {
+"name": "Housing Vouchers",
+"parent": "1137"
+},
+"1141": {
+"name": "Maintenance & Repairs",
+"parent": "1137"
+},
+"1142": {
+"name": "Housing Advice",
+"parent": "1103"
+},
+"1143": {
+"name": "Foreclosure Counseling",
+"parent": "1142"
+},
+"1144": {
+"name": "Homebuyer Education",
+"parent": "1142"
+},
+"1145": {
+"name": "Residential Housing",
+"parent": "1103"
+},
+"1146": {
+"name": "Long-Term Housing",
+"parent": "1145"
+},
+"1147": {
+"name": "Assisted Living",
+"parent": "1146"
+},
+"1148": {
+"name": "Independent Living",
+"parent": "1146"
+},
+"1149": {
+"name": "Nursing Home",
+"parent": "1146"
+},
+"1150": {
+"name": "Public Housing",
+"parent": "1146"
+},
+"1151": {
+"name": "Safe Housing",
+"parent": "1145"
+},
+"1152": {
+"name": "Short-Term Housing",
+"parent": "1145"
+},
+"1153": {
+"name": "Nursing Home",
+"parent": "1152"
+},
+"1154": {
+"name": "Sober Living",
+"parent": "1152"
+},
+"1155": {
+"name": "Baby Supplies",
+"parent": "1104"
+},
+"1156": {
+"name": "Baby Clothes",
+"parent": "1155"
+},
+"1157": {
+"name": "Diapers & Formula",
+"parent": "1155"
+},
+"1158": {
+"name": "Clothing",
+"parent": "1104"
+},
+"1159": {
+"name": "Baby Clothes",
+"parent": "1158"
+},
+"1160": {
+"name": "Clothes for School",
+"parent": "1158"
+},
+"1161": {
+"name": "Clothes for Work",
+"parent": "1158"
+},
+"1162": {
+"name": "Clothing Vouchers",
+"parent": "1158"
+},
+"1163": {
+"name": "Home Goods",
+"parent": "1104"
+},
+"1164": {
+"name": "Blankets & Fans",
+"parent": "1163"
+},
+"1165": {
+"name": "Books",
+"parent": "1163"
+},
+"1166": {
+"name": "Furniture",
+"parent": "1163"
+},
+"1167": {
+"name": "Personal Care Items",
+"parent": "1163"
+},
+"1168": {
+"name": "Supplies for Work",
+"parent": "1163"
+},
+"1169": {
+"name": "Medical Supplies",
+"parent": "1104"
+},
+"1171": {
+"name": "Toys & Gifts",
+"parent": "1104"
+},
+"1172": {
+"name": "Help Pay for Transit",
+"parent": "1105"
+},
+"1173": {
+"name": "Bus Passes",
+"parent": "1172"
+},
+"1174": {
+"name": "Help Pay for Gas",
+"parent": "1172"
+},
+"1175": {
+"name": "Transportation",
+"parent": "1105"
+},
+"1176": {
+"name": "Transportation for Healthcare",
+"parent": "1175"
+},
+"1177": {
+"name": "Transportation for School",
+"parent": "1175"
+},
+"1178": {
+"name": "Addiction & Recovery",
+"parent": "1106"
+},
+"1179": {
+"name": "12-Step",
+"parent": "1178"
+},
+"1180": {
+"name": "Detox",
+"parent": "1178"
+},
+"1181": {
+"name": "Outpatient Treatment",
+"parent": "1178"
+},
+"1182": {
+"name": "Residential Treatment",
+"parent": "1178"
+},
+"1183": {
+"name": "Sober Living",
+"parent": "1178"
+},
+"1184": {
+"name": "Dental Care",
+"parent": "1106"
+},
+"1185": {
+"name": "End-of-Life Care",
+"parent": "1106"
+},
+"1186": {
+"name": "Bereavement",
+"parent": "1185"
+},
+"1187": {
+"name": "Burial & Funeral Help",
+"parent": "1185"
+},
+"1188": {
+"name": "Hospice",
+"parent": "1185"
+},
+"1189": {
+"name": "Pain Management",
+"parent": "1185"
+},
+"1190": {
+"name": "Health Education",
+"parent": "1106"
+},
+"1191": {
+"name": "Daily Life Skills",
+"parent": "1190"
+},
+"1192": {
+"name": "Disease Management",
+"parent": "1190"
+},
+"1193": {
+"name": "Family Planning",
+"parent": "1190"
+},
+"1194": {
+"name": "Nutrition",
+"parent": "1190"
+},
+"1195": {
+"name": "Parenting Education",
+"parent": "1190"
+},
+"1196": {
+"name": "Sex Education",
+"parent": "1190"
+},
+"1197": {
+"name": "Understand Disability",
+"parent": "1190"
+},
+"1198": {
+"name": "Understand Mental Health",
+"parent": "1190"
+},
+"1199": {
+"name": "Help Pay for Healthcare",
+"parent": "1106"
+},
+"1200": {
+"name": "Disability Benefits",
+"parent": "1199"
+},
+"1201": {
+"name": "Discounted Healthcare",
+"parent": "1199"
+},
+"1202": {
+"name": "Health Insurance",
+"parent": "1199"
+},
+"1203": {
+"name": "Medical Supplies",
+"parent": "1199"
+},
+"1204": {
+"name": "Prescription Assistance",
+"parent": "1199"
+},
+"1205": {
+"name": "Transportation for Healthcare",
+"parent": "1199"
+},
+"1206": {
+"name": "Medical Care",
+"parent": "1106"
+},
+"1207": {
+"name": "Alternative Medicine",
+"parent": "1206"
+},
+"1208": {
+"name": "Assistive Technology",
+"parent": "1206"
+},
+"1209": {
+"name": "Birth Control",
+"parent": "1206"
+},
+"1210": {
+"name": "Checkup & Test",
+"parent": "1206"
+},
+"1211": {
+"name": "Disability Screening",
+"parent": "1210"
+},
+"1212": {
+"name": "Disease Screening",
+"parent": "1210"
+},
+"1213": {
+"name": "Hearing Tests",
+"parent": "1210"
+},
+"1214": {
+"name": "Mental Health Evaluation",
+"parent": "1210"
+},
+"1215": {
+"name": "Pregnancy Tests",
+"parent": "1210"
+},
+"1216": {
+"name": "Vision Tests",
+"parent": "1210"
+},
+"1217": {
+"name": "Maternity Care",
+"parent": "1206"
+},
+"1218": {
+"name": "Personal Hygiene",
+"parent": "1206"
+},
+"1219": {
+"name": "Prevent & Treat",
+"parent": "1206"
+},
+"1220": {
+"name": "Counseling",
+"parent": "1219"
+},
+"1221": {
+"name": "HIV Treatment",
+"parent": "1219"
+},
+"1222": {
+"name": "Pain Management",
+"parent": "1219"
+},
+"1223": {
+"name": "Disease Management",
+"parent": "1219"
+},
+"1224": {
+"name": "Nursing Home",
+"parent": "1219"
+},
+"1225": {
+"name": "Physical Therapy",
+"parent": "1219"
+},
+"1226": {
+"name": "Specialized Therapy",
+"parent": "1219"
+},
+"1227": {
+"name": "Vaccinations",
+"parent": "1219"
+},
+"1228": {
+"name": "In-Home Support",
+"parent": "1219"
+},
+"1229": {
+"name": "Residential Treatment",
+"parent": "1219"
+},
+"1230": {
+"name": "Outpatient Treatment",
+"parent": "1219"
+},
+"1231": {
+"name": "Psychiatric Emergency Services",
+"parent": "1206"
+},
+"1232": {
+"name": "Financial Assistance",
+"parent": "1107"
+},
+"1233": {
+"name": "Help Pay for Childcare",
+"parent": "1232"
+},
+"1234": {
+"name": "Help Pay for Food",
+"parent": "1232"
+},
+"1235": {
+"name": "Food Benefits",
+"parent": "1234"
+},
+"1236": {
+"name": "Help Pay for Healthcare",
+"parent": "1232"
+},
+"1237": {
+"name": "Disability Benefits",
+"parent": "1236"
+},
+"1238": {
+"name": "Discounted Healthcare",
+"parent": "1236"
+},
+"1239": {
+"name": "Health Insurance",
+"parent": "1236"
+},
+"1240": {
+"name": "Medical Supplies",
+"parent": "1236"
+},
+"1241": {
+"name": "Prescription Assistance",
+"parent": "1236"
+},
+"1242": {
+"name": "Transportation for Healthcare",
+"parent": "1236"
+},
+"1243": {
+"name": "Help Pay for Housing",
+"parent": "1232"
+},
+"1244": {
+"name": "Help Pay for Utilities",
+"parent": "1243"
+},
+"1245": {
+"name": "Home & Renters Insurance",
+"parent": "1243"
+},
+"1246": {
+"name": "Maintenance & Repairs",
+"parent": "1243"
+},
+"1247": {
+"name": "Help Pay for School",
+"parent": "1232"
+},
+"1248": {
+"name": "Books",
+"parent": "1247"
+},
+"1249": {
+"name": "Clothes for School",
+"parent": "1247"
+},
+"1250": {
+"name": "Financial Aid & Loans",
+"parent": "1247"
+},
+"1251": {
+"name": "Transportation for School",
+"parent": "1247"
+},
+"1252": {
+"name": "Help Pay for Transit",
+"parent": "1232"
+},
+"1253": {
+"name": "Help Pay for Gas",
+"parent": "1252"
+},
+"1254": {
+"name": "Bus Passes",
+"parent": "1252"
+},
+"1255": {
+"name": "Help Pay for Work Expenses",
+"parent": "1232"
+},
+"1256": {
+"name": "Government Benefits",
+"parent": "1107"
+},
+"1257": {
+"name": "Disability Benefits",
+"parent": "1256"
+},
+"1258": {
+"name": "Food Benefits",
+"parent": "1256"
+},
+"1259": {
+"name": "Retirement Benefits",
+"parent": "1256"
+},
+"1260": {
+"name": "Understand Government Programs",
+"parent": "1256"
+},
+"1261": {
+"name": "Unemployment Benefits",
+"parent": "1256"
+},
+"1262": {
+"name": "Financial Education",
+"parent": "1107"
+},
+"1263": {
+"name": "Credit Counseling",
+"parent": "1262"
+},
+"1264": {
+"name": "Foreclosure Counseling",
+"parent": "1262"
+},
+"1265": {
+"name": "Homebuyer Education",
+"parent": "1262"
+},
+"1266": {
+"name": "Savings Program",
+"parent": "1262"
+},
+"1267": {
+"name": "Insurance",
+"parent": "1107"
+},
+"1268": {
+"name": "Health Insurance",
+"parent": "1267"
+},
+"1269": {
+"name": "Home & Renters Insurance",
+"parent": "1267"
+},
+"1270": {
+"name": "Tax Preparation",
+"parent": "1107"
+},
+"1271": {
+"name": "Adoption & Foster Care",
+"parent": "1108"
+},
+"1272": {
+"name": "Adoption & Foster Placement",
+"parent": "1271"
+},
+"1273": {
+"name": "Adoption & Foster Parenting",
+"parent": "1271"
+},
+"1274": {
+"name": "Adoption Planning",
+"parent": "1271"
+},
+"1275": {
+"name": "Post-Adoption Support",
+"parent": "1271"
+},
+"1276": {
+"name": "Animal Welfare",
+"parent": "1108"
+},
+"1277": {
+"name": "Daytime Care",
+"parent": "1108"
+},
+"1278": {
+"name": "Adult Daycare",
+"parent": "1277"
+},
+"1279": {
+"name": "Afterschool Care",
+"parent": "1277"
+},
+"1280": {
+"name": "Childcare",
+"parent": "1277"
+},
+"1281": {
+"name": "Help Find Childcare",
+"parent": "1280"
+},
+"1282": {
+"name": "Help Pay for Childcare",
+"parent": "1280"
+},
+"1283": {
+"name": "Day Camp",
+"parent": "1277"
+},
+"1284": {
+"name": "Preschool",
+"parent": "1277"
+},
+"1285": {
+"name": "Recreation",
+"parent": "1277"
+},
+"1286": {
+"name": "Relief for Caregivers",
+"parent": "1277"
+},
+"1287": {
+"name": "End-of-Life Care",
+"parent": "1108"
+},
+"1288": {
+"name": "Bereavement",
+"parent": "1287"
+},
+"1289": {
+"name": "Burial & Funeral Help",
+"parent": "1287"
+},
+"1290": {
+"name": "Hospice",
+"parent": "1287"
+},
+"1291": {
+"name": "Pain Management",
+"parent": "1287"
+},
+"1292": {
+"name": "Navigating the System",
+"parent": "1108"
+},
+"1293": {
+"name": "Help Fill out Forms",
+"parent": "1292"
+},
+"1294": {
+"name": "Help Find Childcare",
+"parent": "1292"
+},
+"1295": {
+"name": "Help Find Housing",
+"parent": "1292"
+},
+"1296": {
+"name": "Help Find School",
+"parent": "1292"
+},
+"1297": {
+"name": "Help Find Work",
+"parent": "1292"
+},
+"1298": {
+"name": "Residential Care",
+"parent": "1108"
+},
+"1299": {
+"name": "Assisted Living",
+"parent": "1298"
+},
+"1300": {
+"name": "Residential Treatment",
+"parent": "1298"
+},
+"1301": {
+"name": "Nursing Home",
+"parent": "1298"
+},
+"1302": {
+"name": "Overnight Camp",
+"parent": "1298"
+},
+"1303": {
+"name": "Support Network",
+"parent": "1108"
+},
+"1304": {
+"name": "Counseling",
+"parent": "1303"
+},
+"1305": {
+"name": "Help Hotlines",
+"parent": "1303"
+},
+"1306": {
+"name": "Home Visiting",
+"parent": "1303"
+},
+"1307": {
+"name": "In-Home Support",
+"parent": "1303"
+},
+"1308": {
+"name": "Mentoring",
+"parent": "1303"
+},
+"1309": {
+"name": "One-on-One Support",
+"parent": "1303"
+},
+"1310": {
+"name": "Peer Support",
+"parent": "1303"
+},
+"1311": {
+"name": "Spiritual Support",
+"parent": "1303"
+},
+"1312": {
+"name": "Support Groups",
+"parent": "1303"
+},
+"1313": {
+"name": "12-Step",
+"parent": "1312"
+},
+"1314": {
+"name": "Bereavement",
+"parent": "1312"
+},
+"1315": {
+"name": "Parenting Education",
+"parent": "1312"
+},
+"1316": {
+"name": "Virtual Support",
+"parent": "1303"
+},
+"1317": {
+"name": "Help Find School",
+"parent": "1109"
+},
+"1318": {
+"name": "Help Pay for School",
+"parent": "1109"
+},
+"1319": {
+"name": "Books",
+"parent": "1318"
+},
+"1320": {
+"name": "Clothes for School",
+"parent": "1318"
+},
+"1321": {
+"name": "Financial Aid & Loans",
+"parent": "1318"
+},
+"1322": {
+"name": "Transportation for School",
+"parent": "1318"
+},
+"1323": {
+"name": "More Education",
+"parent": "1109"
+},
+"1324": {
+"name": "Alternative Education",
+"parent": "1323"
+},
+"1325": {
+"name": "Disaster Preparedness & Response",
+"parent": "1323"
+},
+"1326": {
+"name": "English as a Second Language (ESL)",
+"parent": "1323"
+},
+"1327": {
+"name": "Financial Education",
+"parent": "1323"
+},
+"1328": {
+"name": "Credit Counseling",
+"parent": "1327"
+},
+"1329": {
+"name": "Foreclosure Counseling",
+"parent": "1327"
+},
+"1330": {
+"name": "Homebuyer Education",
+"parent": "1327"
+},
+"1331": {
+"name": "Foreign Languages",
+"parent": "1323"
+},
+"1332": {
+"name": "GED/High-School Equivalency",
+"parent": "1323"
+},
+"1333": {
+"name": "Health Education",
+"parent": "1323"
+},
+"1334": {
+"name": "Disease Management",
+"parent": "1333"
+},
+"1335": {
+"name": "Family Planning",
+"parent": "1333"
+},
+"1336": {
+"name": "Nutrition Education",
+"parent": "1333"
+},
+"1337": {
+"name": "Parenting Education",
+"parent": "1333"
+},
+"1338": {
+"name": "Sex Education",
+"parent": "1333"
+},
+"1339": {
+"name": "Understand Disability",
+"parent": "1333"
+},
+"1340": {
+"name": "Understand Mental Health",
+"parent": "1333"
+},
+"1341": {
+"name": "Supported Employment",
+"parent": "1323"
+},
+"1342": {
+"name": "Special Education",
+"parent": "1323"
+},
+"1343": {
+"name": "Tutoring",
+"parent": "1323"
+},
+"1344": {
+"name": "Preschool",
+"parent": "1109"
+},
+"1345": {
+"name": "Screening & Exams",
+"parent": "1109"
+},
+"1346": {
+"name": "Citizenship & Immigration",
+"parent": "1345"
+},
+"1347": {
+"name": "GED/High-School Equivalency",
+"parent": "1345"
+},
+"1348": {
+"name": "English as a Second Language (ESL)",
+"parent": "1345"
+},
+"1349": {
+"name": "Skills & Training",
+"parent": "1109"
+},
+"1350": {
+"name": "Basic Literacy",
+"parent": "1349"
+},
+"1351": {
+"name": "Computer Class",
+"parent": "1349"
+},
+"1352": {
+"name": "Daily Life Skills",
+"parent": "1349"
+},
+"1353": {
+"name": "Interview Training",
+"parent": "1349"
+},
+"1354": {
+"name": "Resume Development",
+"parent": "1349"
+},
+"1355": {
+"name": "Skills Assessment",
+"parent": "1349"
+},
+"1356": {
+"name": "Specialized Training",
+"parent": "1349"
+},
+"1357": {
+"name": "Help Find Work",
+"parent": "1110"
+},
+"1358": {
+"name": "Job Placement",
+"parent": "1357"
+},
+"1359": {
+"name": "Supported Employment",
+"parent": "1357"
+},
+"1360": {
+"name": "Help Pay for Work Expenses",
+"parent": "1110"
+},
+"1361": {
+"name": "Clothes for Work",
+"parent": "1360"
+},
+"1362": {
+"name": "Retirement Benefits",
+"parent": "1360"
+},
+"1363": {
+"name": "Supplies for Work",
+"parent": "1360"
+},
+"1364": {
+"name": "Unemployment Benefits",
+"parent": "1360"
+},
+"1365": {
+"name": "Skills & Training",
+"parent": "1110"
+},
+"1366": {
+"name": "Basic Literacy",
+"parent": "1365"
+},
+"1367": {
+"name": "Computer Class",
+"parent": "1365"
+},
+"1368": {
+"name": "GED/High-School Equivalency",
+"parent": "1365"
+},
+"1369": {
+"name": "Interview Training",
+"parent": "1365"
+},
+"1370": {
+"name": "Resume Development",
+"parent": "1365"
+},
+"1371": {
+"name": "Skills Assessment",
+"parent": "1365"
+},
+"1372": {
+"name": "Specialized Training",
+"parent": "1365"
+},
+"1373": {
+"name": "Supported Employment",
+"parent": "1110"
+},
+"1374": {
+"name": "Workplace Rights",
+"parent": "1110"
+},
+"1375": {
+"name": "Advocacy & Legal Aid",
+"parent": "1111"
+},
+"1376": {
+"name": "Adoption & Foster Care",
+"parent": "1375"
+},
+"1377": {
+"name": "Adoption & Foster Placement",
+"parent": "1376"
+},
+"1378": {
+"name": "Adoption & Foster Parenting",
+"parent": "1376"
+},
+"1379": {
+"name": "Adoption Planning",
+"parent": "1376"
+},
+"1380": {
+"name": "Post-Adoption Support",
+"parent": "1376"
+},
+"1381": {
+"name": "Citizenship & Immigration",
+"parent": "1375"
+},
+"1382": {
+"name": "Discrimination & Civil Rights",
+"parent": "1375"
+},
+"1383": {
+"name": "Guardianship",
+"parent": "1375"
+},
+"1384": {
+"name": "Identification Recovery",
+"parent": "1375"
+},
+"1385": {
+"name": "Understand Government Programs",
+"parent": "1375"
+},
+"1386": {
+"name": "Workplace Rights",
+"parent": "1375"
+},
+"1387": {
+"name": "Mediation",
+"parent": "1111"
+},
+"1388": {
+"name": "Notary",
+"parent": "1111"
+},
+"1389": {
+"name": "Representation",
+"parent": "1111"
+},
+"1390": {
+"name": "Translation & Interpretation",
+"parent": "1111"
+}
+}
+}

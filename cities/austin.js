@@ -104,11 +104,14 @@ export default {
     ],
   },
 
-  // Local help, HSDS-lite shape so it can feed a registry later.
+  // Local help. Exported as HSDS 3.3 at /api/hsds (server/hsds.js). org = who runs it (checked on its own site);
+  // taxonomy = Open Eligibility codes (server/taxonomy.js). audience 'organizations' is left out of the export.
   // verified: how/when the entry was last checked. Re-verify before launch.
   resources: [
     {
       id: 'ctfb-find-food',
+      org: "Central Texas Food Bank",
+      taxonomy: ['1130', '1131'],
       role: 'food_help',
       name: 'Central Texas Food Bank: Find Food Now',
       description: 'Enter your zip to find free groceries near you: pantries, mobile distributions, and meal sites.',
@@ -118,6 +121,8 @@ export default {
     },
     {
       id: '211-texas',
+      org: "Texas Health and Human Services Commission",
+      taxonomy: ['1292'],
       role: 'food_help',
       name: '2-1-1 Texas',
       description: 'Call 2-1-1 to find food help and other services near you, including help with benefits like SNAP.',
@@ -127,6 +132,8 @@ export default {
     },
     {
       id: 'tx-snap',
+      org: "Texas Health and Human Services Commission",
+      taxonomy: ['1258'],
       role: 'benefits',
       name: 'SNAP (food benefits): Your Texas Benefits',
       description: 'Monthly money for groceries on a Lone Star Card. You can apply online.',
@@ -136,6 +143,8 @@ export default {
     },
     {
       id: 'tx-wic',
+      org: "Texas Health and Human Services Commission",
+      taxonomy: ['1258'],
       role: 'benefits',
       name: 'Texas WIC',
       description: 'Free food and nutrition help for pregnant people, new parents, and kids under 5. You can get WIC and SNAP at the same time.',
@@ -145,6 +154,8 @@ export default {
     },
     {
       id: 'keep-austin-fed',
+      org: "Keep Austin Fed",
+      taxonomy: [],
       name: 'Keep Austin Fed',
       description: 'Rescues surplus food and delivers it free to Austin charities that feed people. For organizations, not individuals.',
       url: 'https://www.keepaustinfed.org',
@@ -155,6 +166,8 @@ export default {
     //    checked Nov 6, 2026 by web search. Phone numbers left out: sources disagreed.
     {
       id: 'coa-utility-discounts', needs: ["rent"],
+      org: "City of Austin Utilities",
+      taxonomy: ['1138'],
       name: "City of Austin utility bill discounts",
       description: "Discounts on City of Austin utility bills for households with low or fixed incomes.",
       url: 'https://coautilities.com/wps/wcm/connect/occ/coa/util/support/customer-assistance/utility-bill-discounts',
@@ -163,6 +176,8 @@ export default {
     },
     {
       id: 'tc-family-support', needs: ["rent"],
+      org: "Travis County",
+      taxonomy: ['1137', '1138', '1292'],
       name: "Travis County Family Support Services",
       description: "Help with rent and utility bills, plus social workers who can connect you to other services.",
       url: 'https://www.traviscountytx.gov/health-human-services/divisions/family-support-services',
@@ -171,6 +186,8 @@ export default {
     },
     {
       id: 'communitycare', needs: ["health"],
+      org: "CommUnityCare Health Centers",
+      taxonomy: ['1206', '1184'],
       name: "CommUnityCare Health Centers",
       description: "Nonprofit health centers in Travis County: primary care, dental, pharmacy and behavioral health, including for people without insurance.",
       url: 'https://communitycaretx.org',
@@ -179,6 +196,8 @@ export default {
     },
     {
       id: 'central-health-map', needs: ["health"],
+      org: "Central Health",
+      taxonomy: ['1199'],
       name: "Central Health: Medical Access Program (MAP)",
       description: "Health coverage for eligible Travis County residents.",
       url: 'https://www.centralhealth.net/map/',
@@ -187,6 +206,8 @@ export default {
     },
     {
       id: 'wfs-childcare', needs: ["childcare"],
+      org: "Workforce Solutions Capital Area",
+      taxonomy: ['1282'],
       name: "Workforce Solutions Capital Area: child care scholarships",
       description: "Help paying for child care for Travis County families who meet income guidelines and are working, looking for work, or in school or training.",
       url: 'https://wfscapitalarea.com/childcare/for-parents/applying/',
@@ -195,6 +216,8 @@ export default {
     },
     {
       id: 'wfs-jobs', needs: ["jobs"],
+      org: "Workforce Solutions Capital Area",
+      taxonomy: ['1357', '1365'],
       name: "Workforce Solutions Capital Area: find a job",
       description: "Free help finding work, and job training.",
       url: 'https://www.wfscapitalarea.com/',
@@ -203,6 +226,8 @@ export default {
     },
     {
       id: 'capmetro-fares', needs: ["jobs"],
+      org: "Capital Metropolitan Transportation Authority (CapMetro)",
+      taxonomy: ['1172'],
       name: "CapMetro reduced fares",
       description: "Lower bus and train fares, including Equifare for people with low incomes.",
       url: 'https://www.capmetro.org/fare/general-fares-overview/fares',

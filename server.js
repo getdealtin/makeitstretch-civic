@@ -17,6 +17,7 @@ import { BOX_GROUPS, BOX_SYNONYMS, foodLabel } from './engine/box.js';
 import { resolveCity, publicConfig, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
 import { mountDirectory } from './server/directory.js';
+import { mountHsds } from './server/hsds.js';
 import { mountEvents, AVOID } from './server/events.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -188,6 +189,7 @@ app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOStri
 let db = makeDb();
 app.locals.setDb = d => { db = d; };
 mountDirectory(app, { getDb: () => db });
+mountHsds(app, { getProviders: city => db.listProviders(city, ['approved']) });
 mountEvents(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
 // ── Cities that are live, and share links / QR codes for partners (landing + /share) ──

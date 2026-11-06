@@ -237,6 +237,7 @@ export default {
   pf_title: 'Agregue su lugar de comida',
   pf_title_invite: 'Agregue {org} a Make It Stretch',
   pf_intro: 'Make It Stretch ayuda a los residentes a planear sus compras con poco dinero y a encontrar comida gratis cerca. Agregar su lugar es gratis. Revisamos cada registro antes de publicarlo.',
+  pf_shared: 'Los registros aprobados son públicos: en este sitio y en un archivo de datos abierto que otros directorios, como el 2-1-1, pueden usar. Sus datos de contacto de abajo se mantienen privados.',
   pf_bad_invite: 'Este enlace de invitación ya no es válido. Aún puede usar el formulario de abajo.',
   pf_sec_site: 'Sobre su lugar',
   pf_name: 'Nombre de su lugar u organización',

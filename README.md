@@ -94,6 +94,13 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
   Food Plan, SNAP average benefit, BLS series codes, Food Access Research Atlas, help links, farmers market notes),
   each with its last-updated date, next due date and how to update it. Items due within a month show at the top
   of `/admin`. After updating one, change its date (named in the item) and the reminder resets.
+- **Open data feed** (`/api/hsds`, `server/hsds.js`): the help listings and approved food sites in Open Referral's
+  HSDS 3.3.1 with the HSDS API endpoints (`/services`, `/organizations`, `/service_at_locations`, `/taxonomies`,
+  `/taxonomy_terms`), so 2-1-1, food banks and other HSDS systems can take them without retyping. Public fields
+  only, never contact details. Categories use Open Eligibility (`server/taxonomy.js`, data built by
+  `scripts/build-open-eligibility.py`), which also labels the needs in the City report and its CSV
+  (`open_eligibility` column). Output was checked against HSDS's own schema files. Providers don't give a city, and
+  HSDS addresses require one, so street and ZIP go in the location description.
 - Database schema: `db/schema.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
 
 ## Languages

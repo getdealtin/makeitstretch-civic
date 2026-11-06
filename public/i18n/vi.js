@@ -236,6 +236,7 @@ export default {
   pf_title: 'Thêm nơi cho thực phẩm của bạn',
   pf_title_invite: 'Thêm {org} vào Make It Stretch',
   pf_intro: 'Make It Stretch giúp cư dân lên kế hoạch đi chợ khi eo hẹp và tìm thực phẩm miễn phí gần nhà. Đăng thông tin hoàn toàn miễn phí. Chúng tôi xem xét từng thông tin trước khi đăng.',
+  pf_shared: 'Thông tin đã duyệt là công khai: trên trang này và trong một nguồn dữ liệu mở mà các danh bạ khác, như 2-1-1, có thể dùng. Thông tin liên lạc của quý vị ở dưới vẫn được giữ kín.',
   pf_bad_invite: 'Đường dẫn mời này không còn hiệu lực. Bạn vẫn có thể dùng biểu mẫu bên dưới.',
   pf_sec_site: 'Thông tin về nơi của bạn',
   pf_name: 'Tên nơi hoặc tổ chức của bạn',
