@@ -7,7 +7,7 @@ import { BOX_GROUPS, cleanFoodWord } from '../engine/box.js';
 import { BENCHMARKS } from '../engine/index.js';
 
 const BOX_ITEMS = BOX_GROUPS.flatMap(g => g.items);
-export const AVOID = ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'];
+export const AVOID = ['gluten', 'dairy', 'meat', 'pork', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'];
 // "Can't use this" reasons, grouped the way the Food Plan's Goal 4 indicators split them.
 export const CANT_USE = {
   cultural: ['halal', 'kosher', 'unfamiliar'],

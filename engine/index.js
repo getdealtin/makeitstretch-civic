@@ -4,6 +4,8 @@ export { ZIP_MAP, zipToInfo } from './zip-map.js';
 export { buildCart, resolvePrices, applyStoreAdjustments, summarize, USDA_WEIGHTS, CUISINE_BOOSTS, FLOOR_IDS } from './cart.js';
 export { indexRecipes, matchRecipes } from './recipes.js';
 export { planWeeks, SLOTS } from './plan.js';
+export { planMeals, rebuildList, MENU_SIZE, LIGHT } from './meals.js';
+export { LEAVE_OUT, DIETS, DIET_NOTE_KEYS, foodAllowed, recipeAllowed } from './diets.js';
 export { groupShoppingList, CATEGORY_ORDER, TIER_KEYS } from './shopping.js';
 export { NUTRITION } from './nutrition.js';
 export { SATIETY, satietyOf } from './satiety.js';

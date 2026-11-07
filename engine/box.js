@@ -5,6 +5,7 @@
 // for equivalence), this uses an explicit map from recipe ingredient words to food
 // ids, so multi-word ingredients like "canned tomatoes" and "peanut butter" match.
 
+import { recipeAllowed } from './diets.js';
 import { FOOD_DB } from './food-db.js';
 
 /** Recipe ingredient word → the food ids that satisfy it. */
@@ -104,7 +105,7 @@ export function matchBox(recipes, items, { avoid = [], limit = 12, maxMissing = 
   const have = new Set(items);
   const out = [];
   for (const r of recipes) {
-    if ((r.avoid || []).some(a => avoid.includes(a))) continue;
+    if (!recipeAllowed(r, avoid)) continue; // allergies, pork, and each diet's rules (engine/diets.js)
     const needed = (r.ingredients || []).filter(i => !PANTRY_BASICS.has(i));
     const uses = needed.filter(i => (INGREDIENT_FOODS[i] || []).some(id => have.has(id)));
     if (!uses.length) continue;

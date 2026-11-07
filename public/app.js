@@ -7,7 +7,7 @@ import en from './i18n/en.js';
 import { ART } from './art.js';
 import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
-  buildCart, matchRecipes, planWeeks, groupShoppingList, zipToInfo,
+  planMeals, rebuildList, LEAVE_OUT, DIETS, DIET_NOTE_KEYS, groupShoppingList, zipToInfo,
   matchBox, BOX_GROUPS, foodLabel, findBoxFood, cleanFoodWord, INGREDIENT_FOODS, PANTRY_BASICS,
 } from '/engine/index.js';
 import {
@@ -94,7 +94,9 @@ const PREFS = [
   { key: 'leftover', single: true, options: ['yes', 'sometimes', 'no'] },
   { key: 'store', single: true, options: ['full', 'dollar', 'corner'] },
   { key: 'cuisine', none: 'any', options: ['american', 'latin', 'asian', 'southern', 'mediterranean'] },
-  { key: 'avoid', none: 'none', options: ['gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'] },
+  // Foods to leave out and diets share answers.avoid; "None" clears only the foods, not the diets.
+  { key: 'avoid', none: 'none', options: LEAVE_OUT },
+  { key: 'avoid', legend: 'pref_diet', hint: 'diet_hint', options: DIETS },
   { key: 'have', none: 'none', options: ['rice', 'beans', 'oats', 'eggs', 'potatoes', 'bread', 'pasta', 'oil'] },
 ];
 
@@ -104,21 +106,12 @@ const engineInput = a => ({
   stores: a.store && a.store !== 'full' ? [a.store] : [], leftover: a.leftover,
 });
 
-const LIST_CAP = 25;
-
-/** Run the whole budget engine in the browser. */
+/** Run the meal planner in the browser: meals first, then the list from those meals (engine/meals.js). */
 async function computePlan(a) {
   const [recipes, priced] = await Promise.all([getRecipes(), getPrices(regionFor(a.zip))]);
   const input = engineInput(a);
-  // Lists over LIST_CAP items start shorter (same budget, fewer foods in larger amounts);
-  // "Show the full list" switches. Shorter or full, the person chooses; nothing is taken away.
-  const full = buildCart(input, priced.prices);
-  const short = full.cart.length > LIST_CAP ? buildCart({ ...input, maxItems: LIST_CAP }, priced.prices) : null;
-  const useShort = !!short && a.list !== 'full';
-  const result = useShort ? short : full;
-  const bySlot = matchRecipes(recipes, { ingredients: result.cart.map(i => i.id), cuisine: input.cuisine, avoid: input.avoid });
-  const listInfo = short ? { mode: useShort ? 'short' : 'full', short: short.cart.length, full: full.cart.length } : null;
-  return { input, result, weeks: planWeeks(bySlot, input), shopping: groupShoppingList(result.cart), priced, listInfo };
+  const r = planMeals(input, priced.prices, recipes);
+  return { input, result: r, weeks: r.weeks, shopping: groupShoppingList(r.cart), priced, state: r.state };
 }
 
 // ── Boot ────────────────────────────────────────────────────────
@@ -435,13 +428,14 @@ const STEP_VIEWS = {
     <p class="hint">${esc(t('q_prefs_hint'))}</p>
     ${PREFS.map(g => {
       const opts = [...(g.none ? [g.none] : []), ...g.options];
-      return `<fieldset class="pref-group"><legend>${esc(t('pref_' + g.key))}</legend><div class="chips">
+      return `<fieldset class="pref-group"><legend>${esc(t(g.legend || 'pref_' + g.key))}</legend>${g.hint ? `<p class="fh">${esc(t(g.hint))}</p>` : ''}<div class="chips">
         ${opts.map(v => `<button type="button" class="chip" data-pref="${g.key}" data-value="${v}" aria-pressed="${prefOn(g, v)}">${esc(t(g.key + '_' + v))}</button>`).join('')}
-      </div>${g.key === 'avoid' ? `<p class="fh avoid-note">${esc(t('avoid_note'))}</p>` : ''}</fieldset>`;
+      </div></fieldset>`;
     }).join('')}`,
 };
 
-const prefOn = (g, v) => g.single ? answers[g.key] === v : (v === g.none ? answers[g.key].length === 0 : answers[g.key].includes(v));
+const prefOn = (g, v) => g.single ? answers[g.key] === v
+  : v === g.none ? !answers[g.key].some(x => g.options.includes(x)) : answers[g.key].includes(v);
 
 function wireOptions(form, group, onPick) {
   form.querySelectorAll(`[data-group="${group}"]`).forEach(b => b.addEventListener('click', () => {
@@ -472,9 +466,9 @@ const STEP_WIRE = {
     const g = PREFS.find(p => p.key === b.dataset.pref);
     const v = b.dataset.value;
     if (g.single) answers[g.key] = v;
-    else if (v === g.none) answers[g.key] = [];
+    else if (v === g.none) answers[g.key] = answers[g.key].filter(x => !g.options.includes(x));
     else { const arr = answers[g.key]; const at = arr.indexOf(v); at >= 0 ? arr.splice(at, 1) : arr.push(v); }
-    f.querySelectorAll(`[data-pref="${g.key}"]`).forEach(x => x.setAttribute('aria-pressed', prefOn(g, x.dataset.value)));
+    f.querySelectorAll(`[data-pref="${g.key}"]`).forEach(x => x.setAttribute('aria-pressed', prefOn(PREFS.find(p => p.key === g.key && (x.dataset.value === p.none || p.options.includes(x.dataset.value))), x.dataset.value)));
     refresh();
   })),
 };
@@ -504,7 +498,8 @@ const STEP_SAVE = {
 async function showResults(restore = {}) {
   app.innerHTML = `<div class="loading" role="status"><div class="spinner" aria-hidden="true"></div>${esc(t('building'))}</div>`;
   try { renderResults(await computePlan(answers), restore); }
-  catch {
+  catch (e) {
+    console.error(e);
     app.innerHTML = `<p class="error" role="alert">${esc(t('error_plan'))}</p>
       <button class="btn btn-primary" id="retry">${esc(t('build_plan'))}</button>`;
     app.querySelector('#retry').onclick = () => showResults(restore);
@@ -775,11 +770,14 @@ async function loadSites(zip) {
 
 function renderResults(plan, restore = {}) {
   current = () => openFromHash(location.hash, openedSavedId);
-  const { input, result: s, shopping, weeks, priced } = plan;
+  const { input, weeks, priced } = plan;
+  let s = plan.result, shopping = plan.shopping;
   const peopleLabel = input.people === 1 ? t('person') : t('people', { n: input.people });
   // 'Enough' only at 100% of the 2,000-calorie reference; 'a little under' from 80%.
-  const calNote = s.calPct >= 100 ? t('cal_ok') : s.calPct >= 80 ? t('cal_low') : t('cal_tight');
-  const nItems = s.cart.length;
+  const calNote = () => (s.calPct >= 100 ? t('cal_ok') : s.calPct >= 80 ? t('cal_low') : t('cal_tight'));
+  const sumFacts = () => `${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote())}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}`;
+  const dietNotes = DIETS.filter(d => (input.avoid || []).includes(d)).map(d => DIET_NOTE_KEYS[d]);
+  let nItems = s.cart.length;
 
   // Which option is chosen per meal slot: key "w-d-slot" → index (0 = main pick, 1 = alternate).
   const choice = {};
@@ -789,9 +787,9 @@ function renderResults(plan, restore = {}) {
   }
   const checked = new Set(restore.checked || []);
   const recipes = new Map();
-  weeks.flat().forEach(d => { if (!d.leftover) ['breakfast', 'lunch', 'dinner'].forEach(sl => d[sl].forEach(r => recipes.set(String(r.id), r))); });
+  weeks.flat().forEach(d => { if (!d.leftover && !d.uncovered) ['breakfast', 'lunch', 'dinner'].forEach(sl => d[sl].forEach(r => recipes.set(String(r.id), r))); });
 
-  const listHtml = shopping.map(g => `
+  const listHtml = () => (s.have?.length ? `<p class="have-note">${esc(t('have_note', { items: s.have.map(fName).join(t('list_sep')) }))}</p>` : '') + shopping.map(g => `
     <div class="cat-head"><h3 class="shop-cat">${esc(t('cat_' + g.cat))}</h3>
       <span class="cat-sub">$${money(g.items.reduce((a, i) => a + i.subtotal, 0))}</span></div>
     <ul class="rows">${g.items.map(i => {
@@ -809,7 +807,9 @@ function renderResults(plan, restore = {}) {
   const weekPanel = (week, wi) => `
     <div class="week-panel" data-week="${wi}" ${wi === 0 ? '' : 'hidden'}>
       <p class="print-only week-print-title">${esc(t('week_of', { n: wi + 1, total: weeks.length }))}</p>
-      ${week.map((d, di) => d.leftover
+      ${week.map((d, di) => d.uncovered
+        ? `<div class="d"><div class="day-name">${esc(dayOf(d.dayName))}</div><p class="lo">${esc(t('day_uncovered'))}</p></div>`
+        : d.leftover
         ? `<div class="d"><div class="day-name">${esc(dayOf(d.dayName))}</div><p class="lo">${esc(t('leftovers'))}</p></div>`
         : `<div class="d"><div class="day-name">${esc(dayOf(d.dayName))}</div>
             ${['breakfast', 'lunch', 'dinner'].map(sl => d[sl].length ? `
@@ -829,7 +829,10 @@ function renderResults(plan, restore = {}) {
         <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
         <h1 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h1>
         <p class="sum-big"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}</p>
-        <p class="sum-facts">${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote)}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}</p>
+        <p class="sum-facts" id="sum-facts">${sumFacts()}</p>
+        ${s.coveredDays < input.days ? `<p class="cover-note">${esc(t('cover_note', { n: s.coveredDays, days: input.days }))}</p>` : ''}
+        <p class="cover-note" id="over-note" role="status"${s.overBudget > 0 ? '' : ' hidden'}>${s.overBudget > 0 ? esc(t('over_note', { amount: money(s.overBudget) })) : ''}</p>
+        ${dietNotes.length ? `<ul class="diet-notes">${dietNotes.map(k => `<li>${esc(t(k))}</li>`).join('')}</ul>` : ''}
       </section>`,
       cards: [
         { id: 'list', icon: '🛒', title: t('sec_list'), sub: `${esc(t('hub_list_sub', { n: nItems, total: money(s.spent) }))}<span class="hub-done" id="hub-done"></span>` },
@@ -844,15 +847,12 @@ function renderResults(plan, restore = {}) {
           <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
         </div>`,
       panels: [
-        { id: 'list', html: `${plan.listInfo ? `<div class="list-nudge no-print">
-            <p>${esc(plan.listInfo.mode === 'short' ? t('list_short_note', { n: plan.listInfo.short, total: plan.listInfo.full }) : t('list_full_note', { n: plan.listInfo.full }))}</p>
-            <button type="button" class="btn btn-ghost btn-sm" id="list-switch">${esc(t(plan.listInfo.mode === 'short' ? 'list_show_full' : 'list_show_short'))}</button>
-          </div>` : ''}
-          <section class="section" id="list" aria-labelledby="h-list">
+        { id: 'list', html: `<section class="section" id="list" aria-labelledby="h-list">
             <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
               <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
-            ${listHtml}
-            <div class="shop-total"><span>${esc(t('total'))}</span><span>$${money(s.spent)}</span></div>
+            <p class="list-intro">${esc(t('list_from_meals'))}</p>
+            <div id="list-rows">${listHtml()}</div>
+            <div class="shop-total"><span>${esc(t('total'))}</span><span id="list-total">$${money(s.spent)}</span></div>
             <p class="price-note">${esc(t('price_note', { label: cityText('price_region_label') || priced.label }))}</p>
             <p class="health-note">${esc(t('health_note'))}</p>
           </section>` },
@@ -903,7 +903,7 @@ function renderResults(plan, restore = {}) {
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
       shopping: shopping.map(g => ({ items: g.items.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) })),
       weeks, choice, total: s.spent, url: linkFor(currentHash()), full, titleOf: rTitle, dayOf,
-      labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), link: t('full_plan_link') },
+      labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), uncovered: t('day_uncovered'), link: t('full_plan_link') },
     }),
   });
   const updateDone = () => {
@@ -914,12 +914,37 @@ function renderResults(plan, restore = {}) {
   updateDone();
   app.querySelectorAll('.row input').forEach(x => x.addEventListener('change', () => { sync(); updateDone(); }));
 
-  // Shopping list: tips open on tap.
-  app.querySelectorAll('.info').forEach(b => b.addEventListener('click', () => {
-    const open = b.getAttribute('aria-expanded') !== 'true';
-    b.setAttribute('aria-expanded', open);
-    app.querySelector('#' + b.getAttribute('aria-controls')).hidden = !open;
-  }));
+  // Shopping list: tips open on tap; ticks update the saved copy.
+  const wireRows = () => {
+    app.querySelectorAll('#list-rows .info').forEach(b => b.addEventListener('click', () => {
+      const open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', open);
+      app.querySelector('#' + b.getAttribute('aria-controls')).hidden = !open;
+    }));
+  };
+  wireRows();
+  // A swapped meal changes what to buy: rebuild the list from the meals she chose (engine/meals.js).
+  const refreshList = () => {
+    if (!plan.state) return;
+    const kept = new Set([...app.querySelectorAll('.row input:checked')].map(x => x.dataset.item));
+    s = { ...s, ...rebuildList(plan.state, Object.keys(choice).filter(k => choice[k] === 1)) };
+    shopping = groupShoppingList(s.cart);
+    nItems = s.cart.length;
+    const rows = app.querySelector('#list-rows');
+    rows.innerHTML = listHtml();
+    rows.querySelectorAll('.row input').forEach(x => { x.checked = kept.has(x.dataset.item); x.addEventListener('change', () => { sync(); updateDone(); }); });
+    wireRows();
+    app.querySelector('#list-total').textContent = '$' + money(s.spent);
+    app.querySelector('.sum-big').innerHTML = `<b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}`;
+    app.querySelector('#sum-facts').innerHTML = sumFacts();
+    const over = app.querySelector('#over-note');
+    over.hidden = !(s.overBudget > 0);
+    over.textContent = s.overBudget > 0 ? t('over_note', { amount: money(s.overBudget) }) : '';
+    const card = app.querySelector('[data-open-panel="list"] .hub-sub');
+    if (card) card.innerHTML = `${esc(t('hub_list_sub', { n: nItems, total: money(s.spent) }))}<span class="hub-done" id="hub-done"></span>`;
+    updateDone();
+  };
+  if (Object.values(choice).some(v => v === 1)) refreshList(); // a saved plan with swaps
 
   // One week at a time.
   let wk = 0;
@@ -939,7 +964,7 @@ function renderResults(plan, restore = {}) {
     const ci = choice[b.dataset.key] || 0;
     if (!justSwapped) track('recipe_opened', { recipe: opts[ci].id, flow: 'plan' });
     // A recipe qualifies by sharing one food with the list, so say plainly what isn't on it.
-    const onList = s.cart.map(i => i.id);
+    const onList = [...s.cart.map(i => i.id), ...(s.have || [])];
     const missing = (opts[ci].ingredients || []).filter(word => !PANTRY_BASICS.has(word) &&
       !(INGREDIENT_FOODS[word] || []).some(id => onList.includes(id)) &&
       !onList.some(id => id.includes(word.replace(/ /g, '')) || word.includes(id)));
@@ -951,7 +976,8 @@ function renderResults(plan, restore = {}) {
         choice[b.dataset.key] = 1 - ci;
         track('meal_swapped', { recipe: opts[1 - ci].id });
         b.textContent = rTitle(opts[1 - ci]);
-        app.querySelector('#announce').textContent = t('swapped', { title: rTitle(opts[1 - ci]) });
+        refreshList();
+        app.querySelector('#announce').textContent = t('swapped_list', { title: rTitle(opts[1 - ci]) });
         sync();
         showMeal(b, true);
       },
@@ -962,7 +988,7 @@ function renderResults(plan, restore = {}) {
   // Paper copy: every chosen meal's recipe, plus a QR code that reopens this plan on a phone.
   const fillPrint = () => {
     const chosen = new Map();
-    weeks.forEach((w, wi) => w.forEach((d, di) => { if (!d.leftover) ['breakfast', 'lunch', 'dinner'].forEach(sl => {
+    weeks.forEach((w, wi) => w.forEach((d, di) => { if (!d.leftover && !d.uncovered) ['breakfast', 'lunch', 'dinner'].forEach(sl => {
       const r = d[sl][choice[`${wi}-${di}-${sl}`] || 0]; if (r) chosen.set(String(r.id), r);
     }); }));
     const qrHash = planHash(packPlan(answers, { swaps: Object.keys(choice).filter(k => choice[k] === 1), checked: [] }));
@@ -983,17 +1009,6 @@ function renderResults(plan, restore = {}) {
     try { await img.decode(); } catch { /* print anyway */ }
     window.print();
   };
-  app.querySelector('#list-switch')?.addEventListener('click', () => {
-    const to = plan.listInfo.mode === 'short' ? 'full' : 'short';
-    track('list_switched', { to, short: plan.listInfo.short, full: plan.listInfo.full });
-    answers.list = to;
-    const keepChecked = [...app.querySelectorAll('.row input:checked')].map(x => x.dataset.item);
-    showResults({ checked: keepChecked, switched: true });
-  });
-  if (restore.switched) {
-    app.querySelector('#announce').textContent = t('list_meals_updated');
-    app.querySelector('#list-switch')?.focus();
-  }
   app.querySelector('#print').onclick = doPrint;
   app.querySelector('#packet-print')?.addEventListener('click', doPrint);
   app.querySelector('#packet-again')?.addEventListener('click', renderPacket);
@@ -1118,9 +1133,12 @@ function renderBox() {
         <p class="sr-only" id="other-status" aria-live="polite"></p>
       </div>
       <fieldset class="pref-group"><legend>${esc(t('pref_avoid'))}</legend><div class="chips">
-        ${['none', 'gluten', 'dairy', 'meat', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'].map(v => `<button type="button" class="chip" data-avoid="${v}"
-          aria-pressed="${v === 'none' ? box.avoid.length === 0 : box.avoid.includes(v)}">${esc(t('avoid_' + v))}</button>`).join('')}
-      </div><p class="fh avoid-note">${esc(t('avoid_note'))}</p></fieldset>
+        ${['none', ...LEAVE_OUT].map(v => `<button type="button" class="chip" data-avoid="${v}"
+          aria-pressed="${v === 'none' ? !box.avoid.some(x => LEAVE_OUT.includes(x)) : box.avoid.includes(v)}">${esc(t('avoid_' + v))}</button>`).join('')}
+      </div></fieldset>
+      <fieldset class="pref-group"><legend>${esc(t('pref_diet'))}</legend><p class="fh">${esc(t('diet_hint'))}</p><div class="chips">
+        ${DIETS.map(v => `<button type="button" class="chip" data-avoid="${v}" aria-pressed="${box.avoid.includes(v)}">${esc(t('avoid_' + v))}</button>`).join('')}
+      </div></fieldset>
       <p class="error" id="err" role="alert"></p>
       <div class="nav sticky-go">
         <button type="button" class="btn btn-ghost" id="back">${esc(t('back'))}</button>
@@ -1137,10 +1155,10 @@ function renderBox() {
   }));
   f.querySelectorAll('[data-avoid]').forEach(b => b.addEventListener('click', () => {
     const v = b.dataset.avoid;
-    if (v === 'none') box.avoid = [];
+    if (v === 'none') box.avoid = box.avoid.filter(x => !LEAVE_OUT.includes(x));
     else { const at = box.avoid.indexOf(v); at >= 0 ? box.avoid.splice(at, 1) : box.avoid.push(v); }
     f.querySelectorAll('[data-avoid]').forEach(x => x.setAttribute('aria-pressed',
-      x.dataset.avoid === 'none' ? box.avoid.length === 0 : box.avoid.includes(x.dataset.avoid)));
+      x.dataset.avoid === 'none' ? !box.avoid.some(y => LEAVE_OUT.includes(y)) : box.avoid.includes(x.dataset.avoid)));
   }));
   wireOtherFood(f);
   f.querySelector('#back').onclick = renderIntro;

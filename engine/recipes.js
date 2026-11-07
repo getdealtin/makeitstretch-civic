@@ -8,13 +8,13 @@
 // through the explicit word → food map the food-box flow uses (INGREDIENT_FOODS).
 import { INGREDIENT_FOODS } from './box.js';
 
-const SIDE_DISH_BLOCKLIST = new Set([
+export const SIDE_DISH_BLOCKLIST = new Set([
   'potato salad', 'potato salad bowl', 'succotash', 'collard-style cabbage',
   'collard style cabbage', 'coleslaw', 'corn on the cob', 'cornbread',
   'skillet cornbread', 'biscuits', 'dinner rolls', 'rice paper rolls',
 ]);
 
-const NOT_BREAKFAST = new Set([
+export const NOT_BREAKFAST = new Set([
   'rice and beans', 'gallo pinto', 'bean stew', 'vegetable soup',
   'lentil dal', 'hoppin john', "hoppin' john", 'succotash',
   'potato salad', 'potato salad bowl', 'collard-style cabbage',

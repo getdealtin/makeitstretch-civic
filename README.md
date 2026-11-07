@@ -64,13 +64,32 @@ Outside production, `?city=austin` or `?city=national` on any URL switches the c
 | `ADMIN_KEY` | Password for `/admin` |
 | `PORT` | Default 3000 |
 
-## How the engine is protected
+## How the plan is built (meals first, Nov 2026)
 
-`test/legacy/reference.cjs` is a mechanical, word-for-word extraction of the math in the live tool
-(`getdealtin/make-it-stretch` @ `5c47e04`). The tests run the new engine and that reference on a
-360-case input grid and require identical carts, leftover money, calories and meal plans. Any accidental
-change to the math fails the build. When we change the math on purpose (for example, the satiety
-upgrade), we update the expected results in the same commit and say why.
+`engine/meals.js` plans meals first and builds the shopping list from them:
+
+1. **Meals.** For breakfast, lunch and dinner, a short menu of recipes (up to 3, 4 and 5) that fit the
+   foods left out, the diets followed, the cuisines chosen and what's already at home. A recipe is only used
+   if every ingredient can be priced or is in any kitchen (salt, water, cinnamon).
+2. **List.** People × meals × a standard serving of each food (servings per package in `food-db.js`;
+   onions, garlic, oil, butter and soy sauce count as part of a serving). Packages are rounded up once per
+   food, so a shared food is bought once. Every meal can be cooked from the list.
+3. **Budget.** Start from the most filling menu per dollar, add a fruit a day, top up with filling sides only
+   until about 2,000 calories per person per day, then spend what's left on better meals (more protein,
+   vegetables, fruit; no more than 2 menu meals on the same meat, fish or eggs) and on food groups (a vegetable
+   side, a second fruit, a cup of milk). Money still left is shown as left over, not spent on more of one food.
+4. **Tight budgets.** Fewer different meals first, then fewer days; the plan says how many days it covers.
+5. **Agency.** Each meal has one alternative that keeps the plan within budget. Swapping rebuilds the list
+   (`rebuildList`); if many swaps together cost more, the extras give way first, then the plan says by how much.
+
+Diets live in `engine/diets.js` and apply to both the plan and the food box: pork (also left out by halal and
+kosher), kosher keeps meat and dairy apart, low sodium leaves out salty packaged foods and soy-sauce recipes,
+less sugar leaves out dried mango and canned peaches. Each diet shows a note with the plan saying what was done
+and what to check yourself. Tests: `test/meals.test.js`.
+
+The old cart builder (`engine/cart.js`, a word-for-word port of the live tool, checked against
+`test/legacy/reference.cjs` on a 360-case grid) is no longer used for plans; it stays for its tests and for
+the shared price and store helpers.
 
 ## Adding a city
 
@@ -123,12 +142,10 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
 
 ## Known engine limits (deliberate, for later)
 
-- The budget flow's recipe matcher (kept word-for-word from the live tool) misses multi-word ingredients:
-  "canned tomatoes", "sweet potatoes", "peanut butter", "coconut milk" and "ground beef" never match the
-  cart. The food-box matcher (`engine/box.js`) already uses a correct explicit map. Fixing the budget flow is
-  a deliberate math change: update the reference and goldens in the same commit.
-- The cart buys one of almost every item in each category's budget (40+ line items). See the "fewer,
-  larger items" decision in the build spec.
+- Recipes list ingredients without amounts, so amounts use a standard serving per food. Good for a shopping
+  list; not a substitute for a recipe's own measurements.
+- Calories use one reference (2,000 per person per day) for everyone; children and adults differ.
+- Diets are rules we can apply honestly (see above), not certification or medical advice; the notes say so.
 
 ## Guardrails
 

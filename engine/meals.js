@@ -1,0 +1,314 @@
+// Meal-first planner (Nov 2026). Replaces "fill a cart by price per calorie, then find recipes".
+//
+// The old order made every list look alike, let meals need foods that weren't bought ("you'll also
+// need cornmeal"), and turned extra money into piles of one staple (9 bags of cornmeal). Now:
+//
+//   1. Pick meals: for each meal slot, a short menu of recipes that fit the household's foods to
+//      leave out, diet, cuisines and what they already have. Every ingredient must be something we
+//      can price or that's in any kitchen (salt, water, cinnamon).
+//   2. Build the list from those meals: people × meals × a standard serving of each food (the
+//      package's servings in food-db.js; onions, garlic, oil, butter and soy sauce count as part
+//      of a serving). Packages are rounded up once per food, so shared foods are bought once.
+//   3. Fit the budget: start from the cheapest menu, add a fruit a day, top up with filling sides
+//      (extra bread, rice, oats…) only until the household reaches about 2,000 calories per person
+//      per day, then spend what's left on better meals (more protein, vegetables, fruit). Money
+//      that's still left stays left: it is shown, not spent on more of one food.
+//   4. If even the cheapest meals cost more than the budget, the plan covers the days it can and
+//      says so, instead of quietly giving less food.
+//
+// Each meal also gets one alternative that keeps the plan within budget. Swapping recomputes the
+// list (rebuildList), so whatever she picks, everything she needs is on it.
+// Deterministic: same inputs, same plan. No DOM, runs on the server or in the browser.
+
+import { FOOD_DB } from './food-db.js';
+import { applyStoreAdjustments, FLOOR_KCAL } from './cart.js';
+import { INGREDIENT_FOODS, PANTRY_BASICS } from './box.js';
+import { SIDE_DISH_BLOCKLIST, NOT_BREAKFAST } from './recipes.js';
+import { foodAllowed, recipeAllowed } from './diets.js';
+
+/** Part of a standard serving these foods add to one serving of a recipe (they flavor, not fill). */
+export const LIGHT = { onions: 0.5, garlic: 0.25, oil: 0.5, oliveoil: 0.5, butter: 0.5, soy: 0.5 };
+const NOT_A_VEGETABLE_SERVING = new Set(['onions', 'garlic']);
+/** Different recipes per meal slot across the plan: enough variety, a list that stays short. */
+export const MENU_SIZE = { breakfast: 3, lunch: 4, dinner: 5 };
+const BREAKFASTY = ['oatmeal', 'oats', 'porridge', 'scramble', 'egg', 'banana', 'potato breakfast'];
+const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const SLOTS = ['breakfast', 'lunch', 'dinner'];
+/** Filling sides used to reach the calorie target, best first; each has a weekly cap per person. */
+const SIDES = [
+  { id: 'bread', perPersonWeek: 1 }, { id: 'tortillas', perPersonWeek: 1 }, { id: 'oats', perPersonWeek: 0.35 },
+  { id: 'peanutbutter', perPersonWeek: 0.25 }, { id: 'potatoes', perPersonWeek: 0.6 }, { id: 'rice', perPersonWeek: 0.6 },
+  { id: 'sweetpotatoes', perPersonWeek: 0.5 }, { id: 'bananas', perPersonWeek: 1 },
+];
+const FRUITS = ['bananas', 'apples', 'oranges'];
+const LEGUMES = new Set(['drybeans', 'blackbeans', 'kidneybean', 'chickpeas', 'lentils', 'splitpeas', 'peanutbutter']);
+const round2 = n => +n.toFixed(2);
+
+/** Who is eating and what the kitchen offers: priced foods, foods on hand, recipes prepared. */
+function setup(input, prices, recipes) {
+  const p = applyStoreAdjustments(prices, input.stores || []);
+  const avoid = input.avoid || [];
+  const have = new Set(FOOD_DB.filter(f => f.hasProp && (input.have || []).includes(f.hasProp)).map(f => f.id));
+  const foods = new Map();
+  for (const f of FOOD_DB) {
+    if (!foodAllowed(f, avoid)) continue;
+    if (!(p[f.id] > 0) && !have.has(f.id)) continue;
+    const price = p[f.id] || 0;
+    foods.set(f.id, { ...f, price, have: have.has(f.id), srvCost: have.has(f.id) ? 0 : price / f.srv, srvCal: f.cal / f.srv, srvProtein: (f.protein || 0) / f.srv });
+  }
+  // A recipe word → the food we'd use: one she has first, otherwise the cheapest per serving.
+  const resolve = word => {
+    const ids = (INGREDIENT_FOODS[word] || []).filter(id => foods.has(id));
+    if (!ids.length) return null;
+    return ids.sort((a, b) => foods.get(a).srvCost - foods.get(b).srvCost || a.localeCompare(b))[0];
+  };
+  const cuisine = (input.cuisine || []).filter(c => c && c !== 'any');
+  const prepared = [];
+  for (const r of recipes) {
+    const title = (r.title || '').toLowerCase();
+    if (SIDE_DISH_BLOCKLIST.has(title) || !recipeAllowed(r, avoid)) continue;
+    const rc = (r.cuisine || '').toLowerCase();
+    if (cuisine.length && rc !== 'any' && !cuisine.includes(rc)) continue;
+    const uses = [];
+    let ok = true;
+    for (const raw of r.ingredients || []) {
+      const word = String(raw).toLowerCase();
+      if (PANTRY_BASICS.has(word)) continue;
+      const id = resolve(word);
+      if (!id) { ok = false; break; }
+      if (!uses.find(u => u.id === id)) uses.push({ id, amt: LIGHT[id] ?? 1 });
+    }
+    if (!ok || !uses.length) continue;
+    const per = k => uses.reduce((a, u) => a + foods.get(u.id)[k] * u.amt, 0);
+    const kcal = per('srvCal'), protein = per('srvProtein'), cost = per('srvCost');
+    const veg = uses.filter(u => foods.get(u.id).cat === 'vegetable' && !NOT_A_VEGETABLE_SERVING.has(u.id)).length;
+    const fruit = uses.filter(u => foods.get(u.id).cat === 'fruit').length;
+    // Better meal = more protein, vegetables and fruit, and enough food in a serving.
+    const quality = (Math.min(protein, 25) / 25) * 2 + Math.min(veg, 2) + fruit * 0.5 + Math.min(kcal / 550, 1);
+    let slots;
+    if (r.slot === 'breakfast') slots = ['breakfast'];
+    else if (r.slot === 'lunch' || r.slot === 'dinner') slots = [r.slot === 'lunch' ? 'lunch' : 'dinner', r.slot === 'lunch' ? 'dinner' : 'lunch'];
+    else slots = BREAKFASTY.some(k => title.includes(k)) ? ['breakfast'] : ['lunch', 'dinner'];
+    if (NOT_BREAKFAST.has(title)) slots = slots.filter(s => s !== 'breakfast');
+    const mainProtein = uses.filter(u => foods.get(u.id).cat === 'protein').sort((a, b) => foods.get(b.id).srvProtein - foods.get(a.id).srvProtein)[0]?.id || null;
+    const sig = uses.map(u => u.id).sort().join(',');
+    prepared.push({ recipe: r, id: r.id, uses, kcal, protein, cost, quality, slots, mainProtein, sig });
+  }
+  return { foods, prepared };
+}
+
+/** Which days are cooked, and how many servings each cooked meal makes (leftover days eat yesterday's). */
+function schedule(days, people, leftover) {
+  const isLeftover = d => d > 0 && ((leftover === 'yes' && d % 7 % 2 === 1) || (leftover === 'sometimes' && d % 7 % 3 === 2));
+  const occ = [];
+  for (let d = 0; d < days; d++) {
+    if (isLeftover(d)) continue;
+    const extraDays = d + 1 < days && isLeftover(d + 1) ? 1 : 0;
+    for (const slot of SLOTS) occ.push({ key: `${Math.floor(d / 7)}-${d % 7}-${slot}`, day: d, slot, servings: people * (1 + extraDays) });
+  }
+  return { occ, isLeftover };
+}
+
+/** Packages to buy for a set of (recipe, servings) plus extras {foodId: food servings}. */
+function packages(kitchen, assigned, extra = {}) {
+  const need = {};
+  for (const { rec, servings } of assigned) for (const u of rec.uses) need[u.id] = (need[u.id] || 0) + u.amt * servings;
+  for (const [id, n] of Object.entries(extra)) need[id] = (need[id] || 0) + n;
+  const items = [];
+  let cost = 0;
+  for (const [id, n] of Object.entries(need)) {
+    const f = kitchen.foods.get(id);
+    if (f.have) continue;
+    const qty = Math.max(1, Math.ceil(n / f.srv - 1e-9));
+    items.push({ id, qty, servingsUsed: n });
+    cost += qty * f.price;
+  }
+  return { items, cost: round2(cost), need };
+}
+
+/** Fruit a day (if affordable) and filling sides up to the calorie target, for a set of meals. */
+function topUp(kitchen, assigned, { people, days, budget }, balance = {}) {
+  const mealKcal = assigned.reduce((a, x) => a + x.rec.kcal * x.servings, 0);
+  let extra = { ...balance };
+  let cost = packages(kitchen, assigned, extra).cost;
+  let kcal = mealKcal + Object.entries(balance).reduce((a, [id, n]) => a + kitchen.foods.get(id).srvCal * n, 0);
+  // One fruit serving per person per day, cheapest fruit first.
+  const fruit = FRUITS.map(id => kitchen.foods.get(id)).filter(Boolean).sort((a, b) => a.srvCost - b.srvCost)[0];
+  if (fruit && !balance[fruit.id]) {
+    const trial = { ...extra, [fruit.id]: people * days };
+    const c = packages(kitchen, assigned, trial).cost;
+    if (c <= budget) { extra = trial; cost = c; kcal += fruit.srvCal * people * days; }
+  }
+  // Filling sides, each capped per person per week, until about FLOOR_KCAL per person per day.
+  const target = FLOOR_KCAL * people * days;
+  for (const s of SIDES) {
+    if (kcal >= target) break;
+    const f = kitchen.foods.get(s.id);
+    if (!f) continue;
+    const capServings = Math.ceil(s.perPersonWeek * f.srv * people * Math.max(1, days / 7));
+    let add = Math.min(capServings, Math.ceil((target - kcal) / f.srvCal));
+    while (add > 0) {
+      const trial = { ...extra, [s.id]: (extra[s.id] || 0) + add };
+      const c = packages(kitchen, assigned, trial).cost;
+      if (c <= budget) { extra = trial; cost = c; kcal += f.srvCal * add; break; }
+      add = Math.floor(add / 2);
+    }
+  }
+  return { extra, cost, kcal, mealKcal, fruit: extra[fruit?.id] ? fruit.id : null };
+}
+
+/**
+ * Plan meals and the shopping list for a budget.
+ * @param {object} input  { budget, days, people, cuisine, avoid, have, stores, leftover }
+ * @param {object} prices food id → package price (resolvePrices)
+ * @param {object[]} recipes indexed recipes
+ */
+export function planMeals(input, prices, recipes) {
+  const { budget, people } = input;
+  const days = Math.max(1, input.days || 7);
+  const kitchen = setup(input, prices, recipes);
+  const pools = Object.fromEntries(SLOTS.map(sl => [sl, kitchen.prepared.filter(r => r.slots.includes(sl))
+    .sort((a, b) => a.cost / Math.max(a.kcal, 1) - b.cost / Math.max(b.kcal, 1) || b.quality - a.quality || a.id - b.id)]));
+  if (SLOTS.some(sl => !pools[sl].length)) return empty(input, days, 'no_meals');
+
+  // Build for d days; if the cheapest menu costs more than the budget, cover fewer days.
+  const attempt = (d, size = MENU_SIZE) => {
+    const { occ, isLeftover } = schedule(d, people, input.leftover);
+    const count = sl => occ.filter(o => o.slot === sl).length;
+    // Cheapest menu, no recipe in two slots.
+    const used = new Set(), menu = {};
+    for (const sl of SLOTS) {
+      menu[sl] = [];
+      for (const r of pools[sl]) {
+        if (menu[sl].length >= Math.min(size[sl], count(sl))) break;
+        // No two menu meals that are the same dish under another name (same foods).
+        if (!used.has(r.id) && !SLOTS.some(x => (menu[x] || []).some(m => m.sig === r.sig))) { menu[sl].push(r); used.add(r.id); }
+      }
+    }
+    const assign = m => occ.map((o, i) => {
+      const list = m[o.slot];
+      const idx = (occ.slice(0, i).filter(x => x.slot === o.slot).length + SLOTS.indexOf(o.slot)) % list.length;
+      return { ...o, rec: list[idx] };
+    });
+    const total = m => topUp(kitchen, assign(m), { people, days: d, budget });
+    return { occ, isLeftover, menu, assign, total, base: packages(kitchen, assign(menu)).cost };
+  };
+  // Tight budget: fewer different meals first (fewer packages to buy), then fewer days.
+  const SMALLER = [MENU_SIZE, { breakfast: 2, lunch: 2, dinner: 3 }, { breakfast: 1, lunch: 2, dinner: 2 }];
+  let d = days, plan;
+  const fit = dd => { for (const size of SMALLER) { const p = attempt(dd, size); if (p.base <= budget) return p; } return attempt(dd, SMALLER.at(-1)); };
+  plan = fit(d);
+  while (plan.base > budget && d > 1) { d -= 1; plan = fit(d); }
+  if (plan.base > budget) return empty(input, days, 'budget_too_small');
+
+  // Spend what's left on better meals: swap a menu recipe for a better one while everything fits.
+  let { menu } = plan;
+  let current = plan.total(menu);
+  const byQuality = Object.fromEntries(SLOTS.map(sl => [sl, [...pools[sl]].sort((a, b) => b.quality - a.quality || a.cost - b.cost || a.id - b.id).slice(0, 18)]));
+  const mealQuality = m => plan.assign(m).reduce((a, x) => a + x.rec.quality * x.servings, 0);
+  for (let guard = 0; guard < 60; guard++) {
+    let best = null;
+    const q0 = mealQuality(menu), inMenu = new Set(SLOTS.flatMap(sl => menu[sl].map(r => r.id)));
+    for (const sl of SLOTS) for (let i = 0; i < menu[sl].length; i++) for (const cand of byQuality[sl]) {
+      if (inMenu.has(cand.id) || cand.quality <= menu[sl][i].quality + 0.05) continue;
+      if (SLOTS.some(x => menu[x].some((m, j) => m.sig === cand.sig && !(x === sl && j === i)))) continue;
+      // Protein variety: at most 2 menu recipes built on the same meat, fish or eggs (3 for beans and lentils).
+      if (cand.mainProtein && cand.mainProtein !== menu[sl][i].mainProtein &&
+        SLOTS.flatMap(x => menu[x]).filter(r => r.mainProtein === cand.mainProtein).length >= (LEGUMES.has(cand.mainProtein) ? 3 : 2)) continue;
+      if ((cand.cost - menu[sl][i].cost) * people * d * 2 > budget - current.cost + 1) continue; // can't fit
+      const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? cand : r)) };
+      const t = plan.total(trial);
+      if (t.cost > budget || t.kcal < Math.min(current.kcal, FLOOR_KCAL * people * d)) continue;
+      const gain = (mealQuality(trial) - q0) / Math.max(t.cost - current.cost, 0.25);
+      if (!best || gain > best.gain) best = { trial, t, gain };
+    }
+    if (!best) break;
+    menu = best.trial; current = best.t;
+  }
+
+  let assigned = plan.assign(menu);
+  // Balance: with money still left, a vegetable side, a second fruit and a cup of milk a day
+  // (USDA food groups), each only if it fits. What's left after that stays left.
+  const balance = {};
+  const perDay = people * d;
+  const cheapest = ids => ids.map(id => kitchen.foods.get(id)).filter(f => f && !f.have).sort((a, b) => a.srvCost - b.srvCost)[0];
+  const veg = cheapest(['frozenvegs', 'carrots', 'cabbage', 'greenbeans', 'spinach', 'frozencorn']);
+  const fruits = FRUITS.map(id => kitchen.foods.get(id)).filter(Boolean).sort((a, b) => a.srvCost - b.srvCost);
+  const milk = kitchen.foods.get('milk');
+  for (const [f, n] of [[veg, perDay], [fruits[1] || fruits[0], perDay], [milk, perDay]]) {
+    if (!f) continue;
+    const trial = { ...balance, [f.id]: (balance[f.id] || 0) + n };
+    const t = topUp(kitchen, assigned, { people, days: d, budget }, trial);
+    if (t.cost <= budget && t.kcal >= Math.min(current.kcal, FLOOR_KCAL * people * d)) Object.assign(balance, trial);
+  }
+  // One alternative per meal that keeps the whole plan within budget.
+  const inMenu = new Set(SLOTS.flatMap(sl => menu[sl].map(r => r.id)));
+  const altFor = {};
+  for (const sl of SLOTS) for (const r of menu[sl]) {
+    const others = pools[sl].filter(c => c.id !== r.id).sort((a, b) => Number(inMenu.has(a.id)) - Number(inMenu.has(b.id)) || b.quality - a.quality || a.cost - b.cost);
+    for (const c of others) {
+      const swapped = assigned.map(x => (x.slot === sl && x.rec.id === r.id ? { ...x, rec: c } : x));
+      if (topUp(kitchen, swapped, { people, days: d, budget }, balance).cost <= budget) { altFor[`${sl}:${r.id}`] = c; break; }
+    }
+  }
+  const state = { input: { ...input, days }, kitchen, assigned, altFor, coveredDays: d, budget, balance };
+  const weeks = [];
+  for (let day = 0; day < days; day++) {
+    const w = Math.floor(day / 7);
+    (weeks[w] ||= []);
+    if (day >= d) { weeks[w].push({ dayName: DAY_NAMES[day % 7], uncovered: true, leftover: false }); continue; }
+    if (plan.isLeftover(day)) { weeks[w].push({ dayName: DAY_NAMES[day % 7], leftover: true }); continue; }
+    const entry = { dayName: DAY_NAMES[day % 7], leftover: false };
+    for (const sl of SLOTS) {
+      const a = assigned.find(x => x.day === day && x.slot === sl);
+      const alt = altFor[`${sl}:${a.rec.id}`];
+      entry[sl] = alt ? [a.rec.recipe, alt.recipe] : [a.rec.recipe];
+    }
+    weeks[w].push(entry);
+  }
+  return { ...rebuildList(state, []), weeks, state };
+}
+
+/**
+ * The list and totals for the meals she has chosen. swaps: keys "w-d-slot" where she picked the
+ * alternative. Used after every swap, so the list always matches the meals.
+ */
+export function rebuildList(state, swaps = []) {
+  const { kitchen, input, budget, coveredDays } = state;
+  const swapped = new Set(swaps);
+  const assigned = state.assigned.map(x => {
+    if (!swapped.has(x.key)) return x;
+    const alt = state.altFor[`${x.slot}:${x.rec.id}`];
+    return alt ? { ...x, rec: alt } : x;
+  });
+  // Swaps can cost more than the meals they replace: drop the extras (milk, a second fruit, the
+  // vegetable side) one at a time until it fits; if it still doesn't, say by how much.
+  let balance = { ...state.balance };
+  let t = topUp(kitchen, assigned, { people: input.people, days: coveredDays, budget }, balance);
+  for (const id of Object.keys(balance).reverse()) {
+    if (t.cost <= budget) break;
+    delete balance[id];
+    t = topUp(kitchen, assigned, { people: input.people, days: coveredDays, budget }, balance);
+  }
+  const pk = packages(kitchen, assigned, t.extra);
+  const sideIds = new Set(Object.keys(t.extra));
+  const mealIds = new Set(assigned.flatMap(x => x.rec.uses.map(u => u.id)));
+  const cart = pk.items.map(({ id, qty, servingsUsed }) => {
+    const f = kitchen.foods.get(id);
+    return { ...f, qty, servings: +servingsUsed.toFixed(2), subtotal: round2(f.price * qty), role: mealIds.has(id) ? 'meal' : balance[id] || id === t.fruit ? 'balance' : sideIds.has(id) ? 'side' : 'meal' };
+  });
+  const have = [...kitchen.foods.values()].filter(f => f.have && mealIds.has(f.id)).map(f => f.id);
+  const spent = round2(pk.cost);
+  const remaining = round2(budget - spent);
+  const totalCals = Math.round(t.kcal);
+  const cppd = Math.round(totalCals / input.people / input.days);
+  return {
+    cart, remaining, totalCals, spent, have, coveredDays, overBudget: spent > budget ? round2(spent - budget) : 0,
+    pppd: round2(spent / input.days / input.people), ppmeal: round2(spent / input.days / input.people / 3),
+    cppd, calPct: Math.round((cppd / FLOOR_KCAL) * 100),
+  };
+}
+
+function empty(input, days, reason) {
+  return { cart: [], remaining: input.budget, totalCals: 0, spent: 0, have: [], coveredDays: 0, pppd: 0, ppmeal: 0, cppd: 0, calPct: 0, weeks: [], state: null, reason };
+}

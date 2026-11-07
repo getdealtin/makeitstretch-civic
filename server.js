@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import {
-  buildCart, resolvePrices, indexRecipes, matchRecipes, planWeeks,
+  planMeals, resolvePrices, indexRecipes,
   groupShoppingList, zipToInfo, BENCHMARKS, FALLBACK_PRICES,
 } from './engine/index.js';
 import QRCode from 'qrcode';
@@ -154,9 +154,9 @@ app.post('/api/plan', async (req, res) => {
   const priced = await pricesFor(city, zipInfo?.region);
   const { region, prices } = priced;
 
-  const result = buildCart(input, prices);
-  const bySlot = matchRecipes(RECIPES, { ingredients: result.cart.map(i => i.id), cuisine: input.cuisine, avoid: input.avoid });
-  const weeks = planWeeks(bySlot, input);
+  // Meals first, then the list from those meals (engine/meals.js).
+  const result = planMeals(input, prices, RECIPES);
+  const weeks = result.weeks;
 
   const slim = r => ({ id: r.id, title: r.title, cuisine: r.cuisine, ingredients: r.ingredients, instructions: r.instructions, tags: r.tags, srv: r.srv });
   res.json({
@@ -169,7 +169,9 @@ app.post('/api/plan', async (req, res) => {
       cat: g.cat,
       items: g.items.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price, subtotal: i.subtotal, tier: i.tier, note: i.note, tip: i.tip })),
     })),
-    weeks: weeks.map(w => w.map(d => d.leftover ? d : {
+    covered_days: result.coveredDays,
+    have: result.have,
+    weeks: weeks.map(w => w.map(d => d.leftover || d.uncovered ? d : {
       dayName: d.dayName, leftover: false,
       breakfast: d.breakfast.map(slim), lunch: d.lunch.map(slim), dinner: d.dinner.map(slim),
     })),
