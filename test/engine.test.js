@@ -129,7 +129,7 @@ test('local prices override regional fallbacks (the city price seam)', () => {
   const local = resolvePrices('south', { rice: 1.11, eggs: 0, bogus: null });
   assert.equal(local.rice, 1.11);
   assert.equal(local.eggs, base.eggs, 'zero/empty overrides are ignored');
-  assert.equal(FOOD_DB.length, 58);
+  assert.equal(FOOD_DB.length, 83); // 58 core foods + 25 the NHLBI recipes need
 });
 
 test('zip lookup', () => {

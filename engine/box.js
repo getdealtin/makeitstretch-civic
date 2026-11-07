@@ -20,6 +20,14 @@ export const INGREDIENT_FOODS = {
   'peanut butter': ['peanutbutter'], 'chickpeas': ['chickpeas'], 'flour': ['flour'],
   'tuna': ['tuna'], 'coconut milk': ['coconutmilk'], 'tofu': [], 'ground beef': ['groundbeef'],
   'pork': ['porkchops'], 'applesauce': ['applesauce'],
+  // Words the NHLBI recipes use (their amounts come from the recipe, not from these).
+  'chicken breast': ['chickenbreast'], 'chicken drumsticks': ['drumsticks'], 'beef': ['sirloin', 'roundroast'],
+  'ground turkey': ['groundturkey'], 'turkey kielbasa': ['kielbasa'], 'fish': ['fish'], 'salmon': ['salmon'], 'tomatoes': ['tomatoes'],
+  'tomato sauce': ['tomatosauce'], 'bell peppers': ['bellpepper'], 'celery': ['celery'], 'brown rice': ['brownrice'], 'quinoa': ['quinoa'],
+  'masa harina': ['masaharina'], 'hominy': ['hominy'], 'evaporated milk': ['evaporatedmilk'], 'buttermilk': ['buttermilk'],
+  'cheese': ['cheese'], 'mozzarella': ['mozzarella'], 'sour cream': ['sourcream'], 'black beans': ['blackbeans'], 'green beans': ['greenbeans'],
+  'peas': ['frozenpeas'], 'corn': ['frozencorn', 'corn'], 'corn on the cob': ['cornears'], 'summer squash': ['zucchini'], 'plantains': ['plantains'],
+  'avocado': ['avocado'], 'raisins': ['raisins'], 'cornflakes': ['cornflakes'], 'bread crumbs': ['breadcrumbs'],
 };
 
 /** Assumed to be in any kitchen; never listed as "you'll also need". */

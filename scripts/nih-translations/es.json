@@ -1,0 +1,511 @@
+{
+ "_about": "DRAFT Spanish translations by Make It Stretch, pending review: the 25 new foods and the 12 recipes from Heart-Healthy Home Cooking African American Style (English only in the book). The Latino book's recipes use NHLBI's official Spanish, added by scripts/build-nih-recipes.py.",
+ "foods": {
+  "chickenbreast": {
+   "name": "Pechuga de pollo sin hueso",
+   "full": "Pechuga de pollo sin hueso (1 lb)",
+   "note": "Magra y rápida de cocinar. Córtela en tiras para que rinda más."
+  },
+  "drumsticks": {
+   "name": "Muslos de pollo (piernitas)",
+   "full": "Muslos de pollo, piernitas (2 lb)",
+   "note": "Con hueso y económicos. Unas 8 piezas."
+  },
+  "sirloin": {
+   "name": "Bistec de lomo (sirloin)",
+   "full": "Bistec de lomo, sirloin (1 lb)",
+   "note": "Córtelo fino y saltéelo con muchas verduras."
+  },
+  "roundroast": {
+   "name": "Carne de res para asar (redondo)",
+   "full": "Carne de res para asar, redondo (2 lb)",
+   "note": "Carne magra. En cubos para guisos, a fuego lento."
+  },
+  "tomatoes": {
+   "name": "Tomates frescos",
+   "full": "Tomates frescos (1 lb, unos 3)",
+   "note": "Use primero los maduros. Guárdelos fuera del refrigerador."
+  },
+  "avocado": {
+   "name": "Aguacate",
+   "full": "Aguacate (1)",
+   "note": "Está maduro cuando cede un poco al apretarlo."
+  },
+  "zucchini": {
+   "name": "Calabacita",
+   "full": "Calabacita o calabaza de verano (1 lb)",
+   "note": "Se cocina en minutos. Buena en guisos y salteados."
+  },
+  "cornears": {
+   "name": "Elotes frescos",
+   "full": "Elotes frescos (2 mazorcas)",
+   "note": "Corte los granos de la mazorca para los guisos."
+  },
+  "frozenpeas": {
+   "name": "Chícharos congelados",
+   "full": "Chícharos (arvejas) congelados (1 lb)",
+   "note": "Sin preparación. Agréguelos al final."
+  },
+  "tomatosauce": {
+   "name": "Salsa de tomate",
+   "full": "Salsa de tomate (lata de 15 oz)",
+   "note": "Una base lista para guisos y cazuelas."
+  },
+  "plantains": {
+   "name": "Plátanos maduros",
+   "full": "Plátanos maduros (unos 2)",
+   "note": "Amarillos con manchas negras: dulces y listos para cocinar."
+  },
+  "mozzarella": {
+   "name": "Queso mozzarella semidescremado",
+   "full": "Queso mozzarella semidescremado (8 oz)",
+   "note": "Con menos grasa que la mayoría de los quesos. Se derrite bien."
+  },
+  "raisins": {
+   "name": "Pasas",
+   "full": "Pasas (12 oz)",
+   "note": "Duran meses. Un poco endulza los platos salados."
+  },
+  "sourcream": {
+   "name": "Crema agria sin grasa",
+   "full": "Crema agria sin grasa (16 oz)",
+   "note": "Cremosa para burritos, frijoles y papas."
+  },
+  "salmon": {
+   "name": "Salmón",
+   "full": "Salmón (1 lb)",
+   "note": "Rico en omega-3. Se cocina en unos 10 minutos."
+  },
+  "fish": {
+   "name": "Filetes de pescado (tilapia u otro)",
+   "full": "Filetes de pescado, tilapia u otro (1 lb)",
+   "note": "Pescado blanco suave. Se hornea en 15 a 20 minutos."
+  },
+  "cornflakes": {
+   "name": "Hojuelas de maíz (cereal)",
+   "full": "Hojuelas de maíz, cereal (12 oz)",
+   "note": "Trituradas, hacen un empanizado crujiente para pollo o pescado al horno."
+  },
+  "breadcrumbs": {
+   "name": "Pan molido",
+   "full": "Pan molido (15 oz)",
+   "note": "Para rollo de carne y empanizados crujientes."
+  },
+  "kielbasa": {
+   "name": "Salchicha kielbasa de pavo",
+   "full": "Salchicha kielbasa de pavo (14 oz)",
+   "note": "Ya viene cocida. Un poco da mucho sabor."
+  },
+  "buttermilk": {
+   "name": "Suero de leche bajo en grasa",
+   "full": "Suero de leche (buttermilk) bajo en grasa (1 cuarto de galón)",
+   "note": "Para remojar pollo o pescado antes de empanizar."
+  },
+  "hominy": {
+   "name": "Maíz pozolero en lata",
+   "full": "Maíz pozolero en lata (29 oz)",
+   "note": "Ya viene cocido. Es el corazón del pozole."
+  },
+  "masaharina": {
+   "name": "Masa harina",
+   "full": "Masa harina (2 lb)",
+   "note": "Harina de maíz para pupusas, tortillas y tamales."
+  },
+  "quinoa": {
+   "name": "Quinua",
+   "full": "Quinua (12 oz)",
+   "note": "Grano integral con más proteína. Se cocina en 15 minutos."
+  },
+  "brownrice": {
+   "name": "Arroz integral",
+   "full": "Arroz integral (2 lb)",
+   "note": "Arroz de grano entero. Tarda más que el arroz blanco."
+  },
+  "groundturkey": {
+   "name": "Carne molida de pavo magra",
+   "full": "Carne molida de pavo magra (1 lb)",
+   "note": "Magra. Sirve para todo lo que haría con carne molida de res."
+  }
+ },
+ "recipes": {
+  "vegetablestew": {
+   "title": "Guiso de verduras",
+   "note": "Una gran forma nueva de usar las verduras de verano. Puede agregar sus otras verduras favoritas, como brócoli, coliflor o ejotes.",
+   "lines": [
+    "3 tazas de agua",
+    "1 cubito de caldo de verduras, bajo en sodio",
+    "2 tazas de papas blancas cortadas en tiras de 2 pulgadas",
+    "2 tazas de zanahorias, en rodajas",
+    "4 tazas de calabacita, cortada en cuadros de 1 pulgada",
+    "1 taza de calabacita, cortada en cuatro trozos",
+    "2 elotes frescos (1½ tazas)",
+    "1 cucharadita de tomillo molido",
+    "2 dientes de ajo, picados finamente",
+    "1 tallo de cebollín, picado",
+    "½ chile rojo picante pequeño, picado",
+    "1 taza de cebolla, picada en trozos grandes",
+    "1 taza de tomates, en cubitos"
+   ],
+   "steps": [
+    "Caliente el agua y el cubito de caldo en una olla grande y deje que hierva.",
+    "Agregue las papas y las zanahorias al caldo y cocine a fuego lento 5 minutos.",
+    "Corte los granos de maíz de la mazorca.",
+    "Agregue los demás ingredientes, excepto los tomates, y siga cocinando 15 minutos a fuego mediano.",
+    "Saque los cuatro trozos de calabacita y hágalos puré en la licuadora.",
+    "Regrese el puré a la olla y deje cocinar 10 minutos más.",
+    "Agregue los tomates y cocine otros 5 minutos.",
+    "Retire del fuego y deje reposar 10 minutos para que el guiso espese."
+   ],
+   "extra": [
+    {
+     "h": "Para una comida completa",
+     "t": "Para hacer de este plato una comida, sírvalo con una ensalada verde con lechuga (romana) o espinaca, pepino y otras verduras frescas. Use un aderezo ligero, como una vinagreta, o un aderezo bajo en grasa o sin grasa. Sirva con pan o panecillos integrales."
+    }
+   ]
+  },
+  "macandcheese": {
+   "title": "Macarrones con queso clásicos",
+   "note": "Esta receta demuestra que no tiene que dejar sus platos favoritos para comer de forma saludable para el corazón. Aquí tiene una versión con menos grasa de un verdadero clásico.",
+   "lines": [
+    "2 tazas de macarrones",
+    "½ taza de cebolla picada",
+    "½ taza de leche evaporada sin grasa",
+    "1 huevo mediano, batido",
+    "¼ cucharadita de pimienta negra",
+    "1 ¼ tazas (4 oz.) de queso cheddar fuerte, natural, bajo en grasa, rallado"
+   ],
+   "steps": [
+    "Cocine los macarrones según las instrucciones del paquete. (No le ponga sal al agua). Escúrralos y póngalos a un lado.",
+    "Precaliente el horno a 350 °F.",
+    "Caliente 1 cucharadita de aceite en una cacerola.",
+    "Agregue la cebolla a la cacerola y sofría unos 3 minutos.",
+    "En otro recipiente, mezcle los macarrones, la cebolla y los demás ingredientes. Mezcle bien.",
+    "Pase la mezcla a un molde para hornear.",
+    "Hornee 25 minutos o hasta que burbujee. Deje reposar 10 minutos antes de servir."
+   ],
+   "extra": []
+  },
+  "caribbeancasserole": {
+   "title": "Cazuela caribeña",
+   "note": "Este plato de inspiración tropical está suavemente condimentado para darle un sabor intenso.",
+   "lines": [
+    "1 cebolla mediana, picada",
+    "½ pimiento verde, lavado y en cubitos",
+    "1 cucharada de aceite de canola",
+    "1 lata (14½ onzas) de tomates cocidos",
+    "1 lata (15½ onzas) de frijoles negros bajos en sodio (o los frijoles que prefiera)",
+    "1 cucharadita de orégano seco",
+    "½ cucharadita de ajo en polvo",
+    "1½ tazas de arroz integral instantáneo, crudo"
+   ],
+   "steps": [
+    "Sofría la cebolla y el pimiento verde en el aceite de canola, en una olla grande, hasta que estén suaves. No deje que se doren.",
+    "Agregue los tomates y los frijoles (con el líquido de ambos), y también el orégano y el ajo en polvo. Deje que hierva.",
+    "Agregue el arroz y tape. Baje el fuego y cocine a fuego lento 5 minutos. Retire del fuego y deje reposar 5 minutos antes de servir."
+   ],
+   "extra": []
+  },
+  "ovenfriedchicken": {
+   "title": "Pollo crujiente frito al horno",
+   "note": "A los niños les encantará este pollo, y es bueno para el corazón.",
+   "lines": [
+    "½ taza de leche sin grasa o suero de leche (buttermilk)",
+    "1 cucharadita de sazonador para aves",
+    "1 taza de hojuelas de maíz, trituradas (o pan molido)",
+    "1½ cucharadas de cebolla en polvo",
+    "1½ cucharadas de ajo en polvo",
+    "2 cucharaditas de pimienta negra",
+    "2 cucharaditas de chile seco picante, triturado",
+    "1 cucharadita de jengibre molido",
+    "8 piezas de pollo, sin piel (4 pechugas, 4 muslos)",
+    "¼ cucharadita de pimentón (páprika)"
+   ],
+   "steps": [
+    "Precaliente el horno a 350 °F.",
+    "Agregue ½ cucharadita del sazonador para aves a la leche.",
+    "Mezcle la otra ½ cucharadita de sazonador y todas las demás especias, excepto el pimentón, con las hojuelas de maíz trituradas (o el pan molido), y póngalo en una bolsa de plástico.",
+    "Moje el pollo en la leche, sacúdalo para quitar el exceso de líquido y agítelo rápidamente dentro de la bolsa con el sazonador y las migas.",
+    "Refrigere 1 hora.",
+    "Saque del refrigerador y espolvoree un poco de pimentón para dar color.",
+    "Ponga el pollo sobre una rejilla y la rejilla sobre una bandeja para hornear cubierta con papel de aluminio. Deje espacio entre las piezas de pollo.",
+    "Las migas formarán una “piel” crujiente. No voltee el pollo mientras se hornea.",
+    "Hornee 40 minutos. Gire la bandeja y siga horneando de 30 a 40 minutos más, o hasta que la carne se separe fácilmente del hueso con un tenedor. Los jugos deben salir claros y la carne no debe estar rosada. Los muslos pueden necesitar menos tiempo que las pechugas."
+   ],
+   "extra": []
+  },
+  "ovenfriedfish": {
+   "title": "Pescado frito al horno para chuparse los dedos",
+   "note": "Este plato saludable para el corazón se puede hacer con muchos tipos de pescado, para disfrutarlo una y otra vez.",
+   "lines": [
+    "2 libras de filetes de pescado",
+    "1 cucharada de jugo de limón",
+    "¼ taza de suero de leche (buttermilk) sin grasa o al 1%",
+    "2 gotas de salsa picante",
+    "1 cucharadita de ajo fresco, picado finamente",
+    "¼ cucharadita de pimienta blanca molida",
+    "¼ cucharadita de sal",
+    "¼ cucharadita de cebolla en polvo",
+    "½ taza de hojuelas de maíz, trituradas, o pan molido común",
+    "1 cucharada de aceite vegetal",
+    "1 limón fresco, cortado en gajos"
+   ],
+   "steps": [
+    "Precaliente el horno a 475 °F.",
+    "Limpie y enjuague el pescado. Pase el jugo de limón por los filetes y séquelos con toallas de papel.",
+    "Mezcle la leche, la salsa picante y el ajo en un tazón.",
+    "Mezcle la pimienta blanca, la sal y la cebolla en polvo con las hojuelas de maíz o el pan molido, y extiéndalo en un plato.",
+    "Deje los filetes un momento en la mezcla de leche. Saque un filete y cúbralo por ambos lados con las hojuelas de maíz o el pan molido sazonado, y déjelo reposar un momento hasta que el empanizado se pegue por los dos lados. Repita con todos los filetes.",
+    "Ponga los filetes en un molde para hornear poco profundo, ligeramente engrasado.",
+    "Coloque el molde en la rejilla del medio. Hornee 20 minutos sin voltear.",
+    "Corte en seis porciones. Sirva con limón fresco."
+   ],
+   "extra": []
+  },
+  "curriedchicken": {
+   "title": "Pollo al curry para chuparse los dedos",
+   "note": "El nombre lo dice todo: el jengibre y el curry lo hacen irresistible.",
+   "lines": [
+    "1½ cucharaditas de curry en polvo",
+    "1 cucharadita de tomillo",
+    "1 tallo de cebollín (cebolla verde), picado",
+    "1 cucharada de chile picante, picado",
+    "½ cucharadita de pimienta de cayena molida",
+    "1 cucharadita de pimienta negra molida",
+    "8 dientes de ajo, machacados",
+    "1 cucharada de jengibre rallado",
+    "¾ cucharadita de sal",
+    "8 piezas de pollo sin piel (4 pechugas, 4 muslos)",
+    "1 cucharada de aceite de oliva",
+    "1 taza de agua",
+    "1 papa blanca mediana, en cubitos",
+    "1 cebolla grande, picada"
+   ],
+   "steps": [
+    "Lave el pollo y séquelo con toallas de papel.",
+    "En un tazón, mezcle el curry en polvo, el tomillo, el cebollín, el chile picante, la pimienta de cayena, la pimienta negra, el ajo, el jengibre y la sal.",
+    "Revuelva el pollo en la mezcla de condimentos.",
+    "Deje marinar al menos 2 horas en el refrigerador.",
+    "Caliente el aceite en un sartén a fuego mediano. Agregue el pollo y sofríalo.",
+    "Agregue el agua y deje cocinar el pollo a fuego mediano 30 minutos.",
+    "Agregue las papas en cubitos y cocine 30 minutos más.",
+    "Agregue la cebolla y cocine 15 minutos más o hasta que la carne esté tierna. Sirva caliente."
+   ],
+   "extra": []
+  },
+  "poachedsalmon": {
+   "title": "Salmón escalfado",
+   "note": "La salsa de tomate fresco le da el toque justo de sabor.",
+   "lines": [
+    "Salsa picante de tomate",
+    "2 tomates medianos, picados",
+    "2 cucharadas de cebolla amarilla picada finamente",
+    "2 cucharadas de perejil fresco picado finamente",
+    "1 cucharadita de hojuelas de chile rojo, o al gusto",
+    "¼ taza de vinagre de vino tinto",
+    "2 cucharadas de aceite de oliva",
+    "pimienta negra molida, al gusto",
+    "Salmón",
+    "4 filetes (rodajas) de salmón, de 5 onzas cada uno",
+    "3 tazas de agua",
+    "4 granos de pimienta negra",
+    "1 limón, en rodajas gruesas",
+    "3 ramitas de perejil",
+    "1 cebolla pequeña, en rodajas gruesas",
+    "2 hojas de laurel"
+   ],
+   "steps": [
+    "Para la salsa, mezcle todos los ingredientes en un tazón y póngala a un lado.",
+    "En una olla lo bastante grande para los cuatro filetes de salmón, ponga a hervir el agua y agregue los granos de pimienta, las rodajas de limón, el perejil, la cebolla y el laurel.",
+    "Baje el fuego a hervor suave, tape y deje que suelte el sabor 5 minutos. Agregue el salmón y asegúrese de que quede cubierto de agua. Agregue más agua si hace falta.",
+    "Cocine sin tapar de 10 a 12 minutos o hasta que el pescado se desmenuce fácilmente con un tenedor en la parte más gruesa (temperatura interna mínima de 145 °F). No deje que el agua hierva fuerte o el pescado se endurecerá.",
+    "Sirva cada filete de salmón con la salsa."
+   ],
+   "extra": []
+  },
+  "jerkchicken": {
+   "title": "Pollo jerk jamaiquino",
+   "note": "Las especias y los chiles de este plato lo llevarán a un sabor totalmente nuevo.",
+   "lines": [
+    "½ cucharadita de canela molida",
+    "1½ cucharaditas de pimienta de Jamaica molida",
+    "1½ cucharaditas de pimienta negra molida",
+    "1 cucharada de chile picante picado",
+    "1 cucharadita de chile seco picante",
+    "2 cucharaditas de orégano triturado",
+    "2 cucharaditas de tomillo seco",
+    "½ cucharadita de sal",
+    "6 dientes de ajo, picados finamente",
+    "1 taza de cebolla, en puré o picada finamente",
+    "¼ taza de vinagre",
+    "3 cucharadas de azúcar morena",
+    "8 piezas de pollo sin piel (4 pechugas, 4 muslos)"
+   ],
+   "steps": [
+    "Lave el pollo y séquelo con toallas de papel.",
+    "En un tazón grande, mezcle todos los ingredientes excepto el pollo.",
+    "Unte el pollo con los condimentos y déjelo marinar en el refrigerador 6 horas o más.",
+    "Precaliente el horno a 350 °F. Ponga el pollo, con espacio entre las piezas, en una bandeja para hornear antiadherente o ligeramente engrasada.",
+    "Cubra con papel de aluminio y hornee 40 minutos. Quite el papel y siga horneando de 30 a 40 minutos más, o hasta que la carne se separe fácilmente del hueso con un tenedor."
+   ],
+   "extra": []
+  },
+  "porkchops": {
+   "title": "Chuletas de cerdo al horno",
+   "note": "Estas chuletas le encantarán: quedan jugosas y sabrosas con claras de huevo, leche evaporada y una mezcla animada de hierbas.",
+   "lines": [
+    "6 chuletas de cerdo magras de centro de lomo, de ½ pulgada de grueso",
+    "1 clara de huevo (o clara de huevo líquida)",
+    "1 taza de leche evaporada sin grasa",
+    "¾ taza de hojuelas de maíz trituradas",
+    "¼ taza de pan molido",
+    "4 cucharaditas de pimentón (páprika)",
+    "2 cucharaditas de orégano",
+    "¾ cucharadita de chile en polvo",
+    "½ cucharadita de ajo en polvo",
+    "½ cucharadita de pimienta negra molida",
+    "⅛ cucharadita de pimienta de cayena",
+    "⅛ cucharadita de mostaza en polvo",
+    "½ cucharadita de sal",
+    "aceite en aerosol"
+   ],
+   "steps": [
+    "Precaliente el horno a 375 °F.",
+    "Quite la grasa a las chuletas.",
+    "Bata la clara de huevo con la leche evaporada. Ponga las chuletas en la mezcla y déjelas 5 minutos, volteándolas una vez.",
+    "Mientras tanto, mezcle las hojuelas de maíz trituradas, el pan molido, las especias y la sal.",
+    "Rocíe aceite en aerosol en un molde para hornear de 13 x 9 pulgadas.",
+    "Saque las chuletas de la mezcla de leche y cúbralas bien con la mezcla de migas.",
+    "Ponga las chuletas en el molde y hornee a 375 °F por 20 minutos. Voltéelas y hornee 15 minutos más o hasta que el cerdo esté bien cocido (temperatura interna mínima de 160 °F)."
+   ],
+   "extra": [
+    {
+     "h": "Nota:",
+     "t": "Pruebe la receta con piezas de pollo o pavo sin piel y sin hueso, o con pescado: hornee solo 20 minutos."
+    }
+   ]
+  },
+  "jambalaya": {
+   "title": "Jambalaya alegre",
+   "note": "Una jambalaya que su familia puede disfrutar. ¡Tiene mucho sabor, verduras y carnes sabrosas bajas en grasa! Una ensalada verde es una buena guarnición.",
+   "lines": [
+    "14 onzas de salchicha kielbasa de pavo baja en grasa",
+    "1 libra de pechuga de pollo sin hueso y sin piel",
+    "aceite antiadherente en aerosol",
+    "1 tallo mediano de apio, picado",
+    "2 cebollas pequeñas, picadas",
+    "4 dientes de ajo, picados",
+    "1 manojo pequeño de cebollitas verdes, picadas",
+    "1 pimiento verde mediano, picado",
+    "1 lata (14½ onzas) de tomates en cubitos sin sal añadida",
+    "1½ tazas de arroz integral crudo",
+    "4 tazas de agua",
+    "2 cubitos de caldo de pollo bajos en sodio",
+    "1 hoja de laurel",
+    "1½ cucharaditas de pimienta de cayena",
+    "3 cucharadas de perejil, picado finamente"
+   ],
+   "steps": [
+    "Lave el pollo y séquelo con toallas de papel. Corte la pechuga y la kielbasa en trozos de 1 pulgada.",
+    "Rocíe una olla mediana con aceite antiadherente en aerosol. Dore la kielbasa y el pollo a fuego mediano y sáquelos de la olla.",
+    "Ponga los 6 ingredientes siguientes en la misma olla y cocine a fuego mediano 10 minutos.",
+    "Regrese la carne cocida a la olla; agregue el arroz, el agua, los cubitos de caldo, el laurel y la pimienta de cayena. Deje que hierva. Tape, baje el fuego y cocine a fuego lento unos 50 minutos* o hasta que se evapore el agua.",
+    "Agregue el perejil y sirva caliente."
+   ],
+   "extra": [
+    {
+     "h": "",
+     "t": "*El arroz integral instantáneo se cocina en menos tiempo."
+    }
+   ]
+  },
+  "meatloaf": {
+   "title": "Rollo de carne delicioso",
+   "note": "¿Aburrido del mismo rollo de carne? Esta receta convierte lo común en algo extraordinario.",
+   "lines": [
+    "1 libra de carne de res molida extra magra",
+    "½ taza de pasta de tomate",
+    "4 tazas de cebolla picada",
+    "4 tazas de pimiento verde picado",
+    "4 tazas de pimiento rojo picado",
+    "1 taza de tomates frescos, blanqueados",
+    "2 cucharaditas de mostaza baja en sodio",
+    "4 cucharaditas de pimienta negra molida",
+    "2 cucharaditas de chile picante picado",
+    "2 dientes de ajo, picados",
+    "2 cebollines (cebollas verdes), picados",
+    "2 cucharaditas de jengibre molido",
+    "8 cucharaditas de nuez moscada molida",
+    "1 cucharadita de cáscara de naranja rallada",
+    "2 cucharaditas de tomillo triturado",
+    "4 tazas de pan molido"
+   ],
+   "steps": [
+    "Precaliente el horno a 350 °F.",
+    "Mezcle todos los ingredientes.",
+    "Póngalo en un molde para pan (de preferencia con rejilla para escurrir) y hornee tapado 50 minutos.",
+    "Destape el molde y siga horneando 12 minutos.",
+    "Corte en seis rebanadas iguales y sirva."
+   ],
+   "extra": []
+  },
+  "bbqchicken": {
+   "title": "Pollo a la barbacoa sureño picante",
+   "note": "Déjese llevar por el encanto de esta salsa barbacoa dulce al estilo del sur.",
+   "lines": [
+    "5 cucharadas de pasta de tomate",
+    "1 cucharadita de salsa de tomate (ketchup)",
+    "2 cucharaditas de miel",
+    "1 cucharadita de melaza",
+    "1 cucharadita de salsa inglesa (Worcestershire)",
+    "4 cucharaditas de vinagre blanco",
+    "¾ cucharadita de pimienta de cayena",
+    "⅛ cucharadita de pimienta negra",
+    "¼ cucharadita de cebolla en polvo",
+    "2 dientes de ajo, picados finamente",
+    "⅛ cucharadita de jengibre rallado",
+    "8 piezas de pollo sin piel (4 pechugas, 4 muslos)"
+   ],
+   "steps": [
+    "Mezcle todos los ingredientes excepto el pollo en una cacerola. Cocine a fuego lento 15 minutos.",
+    "Lave el pollo y séquelo con toallas de papel. Póngalo en una fuente grande y úntelo con la mitad de la salsa.",
+    "Cubra con plástico y deje marinar en el refrigerador 1 hora.",
+    "Ponga el pollo en una bandeja para hornear cubierta con papel de aluminio y áselo a la parrilla del horno (broil) 10 minutos por cada lado para sellar los jugos.",
+    "Saque del horno y unte las piezas de pollo con el resto de la salsa. Cubra con papel de aluminio y hornee a 350 °F por 30 minutos."
+   ],
+   "extra": []
+  }
+ },
+ "ingredients": {
+  "chicken breast": "pechuga de pollo",
+  "chicken drumsticks": "muslos de pollo",
+  "beef": "carne de res",
+  "ground turkey": "pavo molido",
+  "turkey kielbasa": "kielbasa de pavo",
+  "fish": "pescado",
+  "salmon": "salmón",
+  "tomatoes": "tomates",
+  "tomato sauce": "salsa de tomate",
+  "bell peppers": "pimientos",
+  "celery": "apio",
+  "brown rice": "arroz integral",
+  "quinoa": "quinua",
+  "masa harina": "masa harina",
+  "hominy": "maíz pozolero",
+  "evaporated milk": "leche evaporada",
+  "buttermilk": "suero de leche",
+  "cheese": "queso",
+  "mozzarella": "mozzarella",
+  "sour cream": "crema agria",
+  "black beans": "frijoles negros",
+  "green beans": "ejotes",
+  "peas": "chícharos",
+  "corn": "maíz",
+  "corn on the cob": "elote",
+  "summer squash": "calabacita",
+  "plantains": "plátanos maduros",
+  "avocado": "aguacate",
+  "raisins": "pasas",
+  "cornflakes": "hojuelas de maíz",
+  "bread crumbs": "pan molido"
+ }
+}

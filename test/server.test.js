@@ -72,7 +72,7 @@ test('/api/prices returns the city region for Austin, zip region elsewhere', asy
 
 test('/api/recipes and /engine are served for the in-browser engine', async () => {
   const r = await (await fetch(`${base}/api/recipes`)).json();
-  assert.equal(r.length, 161);
+  assert.equal(r.length, 186); // 161 seed recipes + 25 NHLBI main dishes
   assert.ok(r[0].id && r[0].ingredients);
   const js = await fetch(`${base}/engine/index.js`);
   assert.equal(js.status, 200);

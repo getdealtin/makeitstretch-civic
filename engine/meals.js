@@ -8,7 +8,8 @@
 //      can price or that's in any kitchen (salt, water, cinnamon).
 //   2. Build the list from those meals: people × meals × a standard serving of each food (the
 //      package's servings in food-db.js; onions, garlic, oil, butter and soy sauce count as part
-//      of a serving). Packages are rounded up once per food, so shared foods are bought once.
+//      of a serving). NHLBI recipes use their printed amounts instead (grams per serving, from
+//      data/nih-recipes.json). Packages are rounded up once per food, so shared foods are bought once.
 //   3. Fit the budget: start from the cheapest menu, add a fruit a day, top up with filling sides
 //      (extra bread, rice, oats…) only until the household reaches about 2,000 calories per person
 //      per day, then spend what's left on better meals (more protein, vegetables, fruit). Money
@@ -88,7 +89,14 @@ function setup(input, prices, recipes) {
     if (cuisine.length && rc !== 'any' && !cuisine.includes(rc)) continue;
     const uses = [];
     let ok = true;
-    for (const raw of r.ingredients || []) {
+    if (r.uses) {
+      // NHLBI recipes give real amounts: grams per recipe serving, in the food's standard servings.
+      for (const u of r.uses) {
+        const f = foods.get(u.id);
+        if (!f) { ok = false; break; }
+        uses.push({ id: u.id, amt: u.g / (r.srv || 1) / (f.g / f.srv) });
+      }
+    } else for (const raw of r.ingredients || []) {
       const word = String(raw).toLowerCase();
       if (PANTRY_BASICS.has(word)) continue;
       const id = resolve(word);
@@ -201,6 +209,8 @@ export function planMeals(input, prices, recipes) {
         // No two menu meals that are the same dish under another name (same foods).
         if (!used.has(r.id) && !SLOTS.some(x => (menu[x] || []).some(m => m.sig === r.sig))) { menu[sl].push(r); used.add(r.id); }
       }
+      // Very few recipes fit (strict leave-outs, few cuisines): rather than no meal, repeat one from another slot.
+      if (!menu[sl].length && count(sl)) menu[sl].push(pools[sl][0]);
     }
     const assign = m => occ.map((o, i) => {
       const list = m[o.slot];

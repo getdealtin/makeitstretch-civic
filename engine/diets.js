@@ -6,18 +6,22 @@
 //   • Diets: halal, kosher, diabetic, low sodium. Each is a rule we can apply honestly, plus a note
 //     shown with the plan saying what we did and what we can't check (certification, medical advice).
 
+import { FOOD_DB } from './food-db.js';
+
+const FOOD_BY_ID = Object.fromEntries(FOOD_DB.map(f => [f.id, f]));
+
 export const LEAVE_OUT = ['gluten', 'dairy', 'meat', 'pork', 'eggs', 'peanuts', 'fish'];
 export const DIETS = ['halal', 'kosher', 'diabetic', 'low_sodium'];
 
 const PORK_FOODS = ['porkchops'];
 const PORK_WORDS = ['pork'];
-const MEAT_FOODS = ['chicken', 'groundbeef', 'porkchops', 'cannedchili', 'cannedbroth'];
-const MEAT_WORDS = ['chicken', 'ground beef', 'pork'];
-const DAIRY_FOODS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporatedmilk'];
-const DAIRY_WORDS = ['milk', 'butter', 'cheese', 'yogurt'];
+const MEAT_FOODS = ['chicken', 'groundbeef', 'porkchops', 'cannedchili', 'cannedbroth', 'chickenbreast', 'drumsticks', 'sirloin', 'roundroast', 'groundturkey', 'kielbasa'];
+const MEAT_WORDS = ['chicken', 'ground beef', 'pork', 'beef', 'chicken breast', 'chicken drumsticks', 'ground turkey', 'turkey kielbasa', 'beef broth', 'chicken broth', 'chicken bouillon'];
+const DAIRY_FOODS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporatedmilk', 'mozzarella', 'sourcream', 'buttermilk'];
+const DAIRY_WORDS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporated milk', 'mozzarella', 'sour cream', 'buttermilk'];
 // Low sodium: packaged foods that are high in salt. Recipes with soy sauce are left out too.
-const SALTY_FOODS = ['soy', 'hotsauce', 'cannedsoups', 'cannedchili', 'cannedbroth', 'salsa'];
-const SALTY_WORDS = ['soy sauce'];
+const SALTY_FOODS = ['soy', 'hotsauce', 'cannedsoups', 'cannedchili', 'cannedbroth', 'salsa', 'kielbasa'];
+const SALTY_WORDS = ['soy sauce', 'vegetable bouillon', 'chicken bouillon', 'ketchup', 'worcestershire sauce'];
 // Diabetic: concentrated sugar (dried fruit, fruit canned in syrup).
 const SUGARY_FOODS = ['driedmango', 'cannedpeaches'];
 
@@ -36,7 +40,10 @@ export function foodAllowed(food, avoid = []) {
 /** May this recipe be suggested? */
 export function recipeAllowed(r, avoid = []) {
   const words = (r.ingredients || []).map(w => String(w).toLowerCase());
+  const ids = (r.uses || []).map(u => u.id);
   if ((r.avoid || []).some(a => avoid.includes(a))) return false;
+  if (ids.some(id => !foodAllowed(FOOD_BY_ID[id] || { id }, avoid))) return false;
+  if (avoid.includes('kosher') && ids.some(id => MEAT_FOODS.includes(id)) && ids.some(id => DAIRY_FOODS.includes(id))) return false;
   if (noPork(avoid) && words.some(w => PORK_WORDS.includes(w))) return false;
   if (avoid.includes('pork') && words.some(w => PORK_WORDS.includes(w))) return false;
   // Kosher: no meat and dairy in the same dish.

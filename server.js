@@ -27,7 +27,10 @@ const DEFAULT_CITY = process.env.DEFAULT_CITY || 'national';
 // ?city= overrides are for local testing; off in production unless explicitly allowed.
 const ALLOW_CITY_OVERRIDE = process.env.ALLOW_CITY_OVERRIDE === '1' || process.env.NODE_ENV !== 'production';
 
-const RECIPES = indexRecipes(JSON.parse(readFileSync(path.join(__dirname, 'data', 'seed-recipes.json'), 'utf8')));
+// The 161 seed recipes (ids 1–161) and the NHLBI main dishes, word for word (ids 1001+, data/nih-recipes.json).
+const NIH = JSON.parse(readFileSync(path.join(__dirname, 'data', 'nih-recipes.json'), 'utf8'));
+const RECIPES = [...indexRecipes(JSON.parse(readFileSync(path.join(__dirname, 'data', 'seed-recipes.json'), 'utf8'))),
+  ...NIH.recipes.map(({ es, key, ...r }) => r)];
 
 const app = express();
 app.disable('x-powered-by');
@@ -117,6 +120,7 @@ app.get('/api/prices', async (req, res) => {
 const RECIPES_JSON = JSON.stringify(RECIPES.map(r => ({
   id: r.id, title: r.title, slot: r.slot, cuisine: r.cuisine, ingredients: r.ingredients,
   instructions: r.instructions, tags: r.tags, avoid: r.avoid, srv: r.srv,
+  ...(r.uses ? { uses: r.uses, lines: r.lines, note: r.note, steps: r.steps, extra: r.extra, source: r.source } : {}),
 })));
 app.get('/api/recipes', (req, res) => res.type('json').set('Cache-Control', 'public, max-age=3600').send(RECIPES_JSON));
 
@@ -158,7 +162,8 @@ app.post('/api/plan', async (req, res) => {
   const result = planMeals(input, prices, RECIPES);
   const weeks = result.weeks;
 
-  const slim = r => ({ id: r.id, title: r.title, cuisine: r.cuisine, ingredients: r.ingredients, instructions: r.instructions, tags: r.tags, srv: r.srv });
+  const slim = r => ({ id: r.id, title: r.title, cuisine: r.cuisine, ingredients: r.ingredients, instructions: r.instructions, tags: r.tags, srv: r.srv,
+    ...(r.uses ? { lines: r.lines, note: r.note, steps: r.steps, extra: r.extra, source: r.source } : {}) });
   res.json({
     input,
     summary: {

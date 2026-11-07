@@ -8,7 +8,7 @@ test('annual updates: all items, sorted, with statuses', () => {
   const city = CITIES.austin;
   const items = maintenanceFor(city, new Date('2026-11-06T12:00:00Z'));
   const ids = items.map(i => i.id).sort();
-  assert.deepEqual(ids, ['access', 'bls', 'hsds', 'links', 'notes', 'snap', 'stores', 'tfp']);
+  assert.deepEqual(ids, ['access', 'bls', 'hsds', 'links', 'notes', 'recipeprices', 'snap', 'stores', 'tfp']);
   for (const i of items) {
     assert.match(i.last, /^\d{4}-\d{2}-\d{2}$/); assert.match(i.due, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(i.due > i.last); assert.ok(i.how && i.what);

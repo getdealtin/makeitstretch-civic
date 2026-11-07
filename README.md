@@ -40,7 +40,7 @@ server.js    Express: picks the city by Host. Serves /theme.css, /api/config, /a
 public/      The UI (plain HTML/CSS/ES modules, no build step)
   keep.js      save / text / email / link a plan without an account
   i18n/en.js   all UI strings (add es.js in Phase 3)
-data/        seed-recipes.json (161 recipes)
+data/        seed-recipes.json (161 recipes), nih-recipes.json (25 NHLBI main dishes, built by scripts/build-nih-recipes.py)
 test/        engine + server tests (node:test, no dependencies)
   legacy/reference.cjs  frozen word-for-word copy of the live tool's math
 ```
@@ -72,7 +72,8 @@ Outside production, `?city=austin` or `?city=national` on any URL switches the c
    foods left out, the diets followed, the cuisines chosen and what's already at home. A recipe is only used
    if every ingredient can be priced or is in any kitchen (salt, water, cinnamon).
 2. **List.** People × meals × a standard serving of each food (servings per package in `food-db.js`;
-   onions, garlic, oil, butter and soy sauce count as part of a serving). Packages are rounded up once per
+   onions, garlic, oil, butter and soy sauce count as part of a serving). The NHLBI main dishes use their
+   printed amounts instead (grams per serving). Packages are rounded up once per
    food, so a shared food is bought once. Every meal can be cooked from the list.
 3. **Budget.** Start from the most filling menu per dollar, add a fruit a day, top up with filling sides only
    until about 2,000 calories per person per day, then spend what's left on better meals (more protein,
@@ -93,6 +94,25 @@ Diets live in `engine/diets.js` and apply to both the plan and the food box: por
 kosher), kosher keeps meat and dairy apart, low sodium leaves out salty packaged foods and soy-sauce recipes,
 less sugar leaves out dried mango and canned peaches. Each diet shows a note with the plan saying what was done
 and what to check yourself. Tests: `test/meals.test.js`.
+
+### NHLBI main dishes (owner decisions Nov 7)
+
+25 main dishes from two public-domain NHLBI cookbooks: *Delicious Heart-Healthy Latino Recipes* (2024, with
+NHLBI's own Spanish) and *Heart-Healthy Home Cooking African American Style* (2021). Built by
+`scripts/build-nih-recipes.py` from the books' text (`pdftotext -raw`), which checks every ingredient line,
+note and extra word for word, in order, and takes the steps from the book itself (the books' own typos kept).
+Each recipe is credited, with no endorsement implied. Each ingredient line is a bought food with grams (USDA
+FoodData Central portions), a kitchen basic shown as "You'll also need" (spices, condiments, broth, fresh
+herbs, citrus), or salt and water. Spanish for the African American–style book, and all Vietnamese and Chinese,
+are our drafts (`scripts/nih-translations/`).
+
+The 25 foods they added (`engine/extra-foods.js`, `recipeOnly`) each record their price source: 5 live BLS
+series (chicken breast, drumsticks, sirloin, round roast, tomatoes); USDA ERS estimates (Purchase to Plate
+2017–18, Fruit and Vegetable Prices 2023) brought to Sept 2026 with the BLS CPI-U food-at-home index; four
+labeled stand-ins (generic fish for tilapia, croutons for bread crumbs, canned tomatoes for tomato sauce, cooked
+hominy for canned); quinoa and ground turkey converted from cooked prices with USDA calories (turkey marked
+approximate); masa harina and brown rice at H-E-B Austin shelf prices checked by the owner (USDA's cooked
+prices didn't hold up). `/admin → Annual updates` reminds you to refresh them. Tests: `test/nih.test.js`.
 
 The old cart builder (`engine/cart.js`, a word-for-word port of the live tool, checked against
 `test/legacy/reference.cjs` on a 360-case grid) is no longer used for plans; it stays for its tests and for
@@ -138,7 +158,7 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
 
 English, Español, Tiếng Việt and 中文 (Austin's top languages), with a switch at the top of every page.
 - `public/i18n/<code>.js`: screen text (same keys as `en.js`).
-- `public/i18n/data/<code>.json`: food names, notes, tips, ingredient words, all 161 recipes.
+- `public/i18n/data/<code>.json`: food names, notes, tips, ingredient words, all 161 recipes, the NHLBI recipes line by line (official Spanish where NHLBI publishes it).
 - `cities/<city>.js` → `i18n`: the city's own text (disclaimer, help listings).
 - Translations are **display-only**: the engine works in English, so a plan is identical in every language
   and links/saved plans work across languages.
@@ -149,7 +169,7 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
 
 ## Known engine limits (deliberate, for later)
 
-- Recipes list ingredients without amounts, so amounts use a standard serving per food. Good for a shopping
+- The 161 seed recipes list ingredients without amounts, so amounts use a standard serving per food (the NHLBI dishes use real amounts). Good for a shopping
   list; not a substitute for a recipe's own measurements.
 - Calories use one reference (2,000 per person per day) for everyone; children and adults differ.
 - Diets are rules we can apply honestly (see above), not certification or medical advice; the notes say so.

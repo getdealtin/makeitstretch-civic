@@ -5,7 +5,7 @@
 // foods are packages, so each item carries how many of BLS's units are in our package.
 // Item codes verified Nov 2026 against the series titles on FRED / data.bls.gov and current values.
 // Foods without a current BLS series (peanut butter, tuna, oats, canned goods…) keep the
-// built-in estimates in engine/food-db.js.
+// built-in estimates in engine/food-db.js (recipe foods: engine/extra-foods.js, with sources).
 
 /** food id → [BLS item code, BLS units per package, what BLS measures] */
 export const BLS_ITEMS = {
@@ -22,6 +22,12 @@ export const BLS_ITEMS = {
   potatoes:   ['712112', 5,    'Potatoes, white, per lb (5 lb bag)'],
   bananas:    ['711211', 2.2,  'Bananas, per lb (about 6 bananas)'],
   oranges:    ['711311', 2,    'Oranges, navel, per lb (4 oranges)'],
+  // Foods the NHLBI recipes need (Nov 2026; titles checked on FRED, values Sept 2026).
+  chickenbreast: ['FF1101', 1, 'Chicken breast, boneless, per lb'],
+  drumsticks: ['706212', 2,    'Chicken legs, bone-in, per lb (includes drumsticks; our pack: 2 lb)'],
+  sirloin:    ['703613', 1,    'Steak, sirloin, USDA choice, boneless, per lb'],
+  roundroast: ['703311', 2,    'Beef roasts, round, USDA choice, boneless, per lb (our roast: 2 lb)'],
+  tomatoes:   ['712311', 1,    'Tomatoes, field grown, per lb'],
 };
 
 /** Date the series codes above were last verified (shown in /admin, Annual updates). */

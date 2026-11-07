@@ -92,7 +92,7 @@ export function buildCart(input, prices) {
   const p = applyStoreAdjustments(prices, input.stores || []);
 
   const foods = FOOD_DB.filter(f => {
-    if (!p[f.id]) return false;
+    if (f.recipeOnly || !p[f.id]) return false;
     if (f.avoid.some(a => avoidItems.includes(a))) return false;
     if (f.hasProp && haveItems.includes(f.hasProp)) return false;
     return true;

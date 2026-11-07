@@ -7,7 +7,9 @@
 // so anyone can check a number at https://fdc.nal.usda.gov/fdc-app.html#/food-details/<fdc>/nutrients.
 // Split peas: SR Legacy has no raw entry, so the cooked entry is used at its cooked weight
 // (1 lb dry ≈ 1,316 g cooked).
-export const NUTRITION = {
+import { EXTRA_NUTRITION } from './extra-foods.js';
+
+const CORE_NUTRITION = {
   rice: { fdc: 168877, g: 907, kcal: 3311, protein: 64.7, fiber: 11.8 }, // Rice, white, long-grain, regular, raw, enriched
   drybeans: { fdc: 175199, g: 454, kcal: 1575, protein: 97.2, fiber: 70.4 }, // Beans, pinto, mature seeds, raw
   oats: { fdc: 173904, g: 1191, kcal: 4514, protein: 156.6, fiber: 120.3 }, // Cereals, oats, regular and quick, not fortified, dry
@@ -67,3 +69,6 @@ export const NUTRITION = {
   cannedsoups: { fdc: 171543, g: 298, kcal: 143, protein: 7.1, fiber: 2.7 }, // Soup, chicken noodle, canned, condensed
   salsa: { fdc: 174524, g: 454, kcal: 132, protein: 6.9, fiber: 8.6 }, // Sauce, salsa, ready-to-serve
 };
+
+/** Core foods plus the foods the NHLBI recipes need (engine/extra-foods.js, same sources). */
+export const NUTRITION = { ...CORE_NUTRITION, ...EXTRA_NUTRITION };

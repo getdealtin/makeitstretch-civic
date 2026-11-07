@@ -31,6 +31,29 @@ const fTip = enTip => (enTip && D.tips?.[enTip]) || enTip;
 const ing = word => D.ingredients?.[word] || word;
 const rTitle = r => D.recipes?.[r.id]?.title || r.title;
 const rSteps = r => D.recipes?.[r.id]?.instructions || r.instructions;
+// NHLBI recipes (ids 1001+) come word for word, line by line; translations line up with the English.
+const rTr = r => (Array.isArray(r.lines) && D.recipes?.[r.id]?.lines?.length === r.lines.length ? D.recipes[r.id] : null);
+const NIH_BOOK = { latino: 'nih_book_latino', aa: 'nih_book_aa' };
+/** Ingredients, steps and credit of an NHLBI recipe. chip(line) says whether to tag it "You'll also need". */
+function nihRecipeHtml(r, chip) {
+  const tr = rTr(r);
+  const line = (l, i) => esc(tr ? tr.lines[i] : l.t);
+  const note = tr ? tr.note : r.note;
+  const steps = (tr ? tr.steps : r.steps) || [];
+  const extra = (tr ? tr.extra : r.extra) || [];
+  const credit = r.source && NIH_BOOK[r.source.book] ? t('nih_credit', { book: t(NIH_BOOK[r.source.book]), page: tr?.official ? tr.page || r.source.page + 1 : r.source.page }) : '';
+  const trNote = tr ? (tr.official ? t('nih_official_es') : t('nih_our_translation')) : '';
+  return `${note ? `<p class="recipe-note">${esc(note)}</p>` : ''}
+    <h3>${esc(t('ingredients'))}</h3>
+    <ul class="nih-lines">${r.lines.map((l, i) => l.h ? `<li class="ing-head">${line(l, i)}</li>`
+      : `<li>${line(l, i)}${chip(l) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
+    <h3>${esc(t('steps'))}</h3>
+    <ol class="nih-steps">${steps.map(st => `<li>${esc(st)}</li>`).join('')}</ol>
+    ${extra.map(x => `<p>${x.h ? `<b>${esc(x.h)}</b> ` : ''}${esc(x.t)}</p>`).join('')}
+    <p class="recipe-credit">${esc(credit)}${trNote ? ` ${esc(trNote)}` : ''}</p>`;
+}
+/** Kitchen basics (spices, condiments, broth…) are tagged; salt, water and section headings are not. */
+const nihChip = missing => l => !!l.p || (!!l.f && (missing || []).some(w => (INGREDIENT_FOODS[w] || []).some(id => l.f.includes(id))));
 const cityText = key => city?.i18n?.[lang]?.[key] || city?.[key];
 const resText = (r, key) => city?.i18n?.[lang]?.resources?.[r.id]?.[key] || r[key];
 
@@ -1014,8 +1037,8 @@ function renderResults(plan, restore = {}) {
       <section class="print-recipes"><h2>${esc(t('print_recipes'))}</h2>
         ${[...chosen.values()].map(r => `<article class="print-recipe"><h3>${esc(rTitle(r))}</h3>
           ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
-          <p><b>${esc(t('ingredients'))}${esc(t('label_colon'))}</b> ${esc((r.ingredients || []).map(ing).join(t('list_sep')))}</p>
-          <p>${esc(rSteps(r))}</p></article>`).join('')}
+          ${Array.isArray(r.lines) ? nihRecipeHtml(r, nihChip([])) : `<p><b>${esc(t('ingredients'))}${esc(t('label_colon'))}</b> ${esc((r.ingredients || []).map(ing).join(t('list_sep')))}</p>
+          <p>${esc(rSteps(r))}</p>`}</article>`).join('')}
       </section>
       <section class="print-qr"><img src="/qr.svg?h=${encodeURIComponent(qrHash)}" alt="" width="120" height="120">
         <p>${esc(t('print_scan'))}</p></section>`;
@@ -1123,10 +1146,10 @@ function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
     <h2 id="recipe-title" tabindex="-1">${esc(rTitle(r))}</h2>
     ${justSwapped ? `<p class="swapped-note">${esc(t('in_your_plan'))}</p>` : ''}
     ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
-    <h3>${esc(t('ingredients'))}</h3>
+    ${Array.isArray(r.lines) ? nihRecipeHtml(r, nihChip(missing)) : `<h3>${esc(t('ingredients'))}</h3>
     <ul>${(r.ingredients || []).map(i => `<li>${esc(ing(i))}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
     <h3>${esc(t('steps'))}</h3>
-    <p>${esc(rSteps(r))}</p>
+    <p>${esc(rSteps(r))}</p>`}
     ${alt ? `<div class="alt"><p class="eyebrow">${esc(justSwapped ? t('swap_back') : t('another_option'))}</p>
       <p class="alt-title">${esc(rTitle(alt))}</p>
       <button type="button" class="btn ${justSwapped ? 'btn-ghost' : 'btn-primary'}" id="swap">${esc(justSwapped ? t('switch_back') : t('use_instead'))}</button></div>` : ''}`;

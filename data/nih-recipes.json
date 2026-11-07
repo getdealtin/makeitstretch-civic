@@ -1,0 +1,3678 @@
+{
+ "_about": "Main dishes from two NHLBI cookbooks, word for word (built by scripts/build-nih-recipes.py; do not edit by hand).",
+ "books": {
+  "latino": {
+   "title": "Delicious Heart-Healthy Latino Recipes",
+   "title_es": "Platillos latinos ¡sabrosos y saludables!",
+   "pub": "NIH Publication No. 24-HL-4049S",
+   "date": "April 2024",
+   "url": "https://www.nhlbi.nih.gov/resources/delicious-heart-healthy-latino-recipes-book-platillos-latinos-sabrosos-y-saludables"
+  },
+  "aa": {
+   "title": "Heart-Healthy Home Cooking African American Style",
+   "pub": "NIH Publication No. 21-HL-3792",
+   "date": "February 2021",
+   "url": "https://www.nhlbi.nih.gov/health-topics/all-publications-and-resources/heart-healthy-home-cooking-african-american-style"
+  }
+ },
+ "recipes": [
+  {
+   "id": 1001,
+   "key": "pupusas",
+   "title": "Salvadoran-style Stuffed Masa Cakes",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 12,
+   "ingredients": [
+    "chicken breast",
+    "oil",
+    "onions",
+    "garlic",
+    "bell peppers",
+    "tomatoes",
+    "masa harina",
+    "mozzarella"
+   ],
+   "avoid": [
+    "dairy",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "chickenbreast",
+     "g": 454
+    },
+    {
+     "id": "oil",
+     "g": 13.6
+    },
+    {
+     "id": "onions",
+     "g": 35
+    },
+    {
+     "id": "garlic",
+     "g": 3
+    },
+    {
+     "id": "bellpepper",
+     "g": 119
+    },
+    {
+     "id": "tomatoes",
+     "g": 91
+    },
+    {
+     "id": "masaharina",
+     "g": 570
+    },
+    {
+     "id": "mozzarella",
+     "g": 227
+    }
+   ],
+   "lines": [
+    {
+     "t": "1 pound ground chicken breast",
+     "f": [
+      "chickenbreast"
+     ]
+    },
+    {
+     "t": "1 tablespoon vegetable oil",
+     "f": [
+      "oil"
+     ]
+    },
+    {
+     "t": "½ small onion, finely diced",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 clove garlic, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 medium green pepper, seeded and minced",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 small tomato, finely chopped",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "½ teaspoon salt"
+    },
+    {
+     "t": "5 cups instant corn flour (masa harina)",
+     "f": [
+      "masaharina"
+     ]
+    },
+    {
+     "t": "6 cups water"
+    },
+    {
+     "t": "½ pound low-fat mozzarella cheese, grated",
+     "f": [
+      "mozzarella"
+     ]
+    }
+   ],
+   "note": "Low-fat ground chicken and cheese help reduce the saturated fat and calories in this tasty Salvadoran dish.",
+   "steps": [
+    "In a nonstick skillet over low heat, saute chicken in oil until chicken turns white. Constantly stir the chicken to make sure it is evenly cooked.",
+    "Add onion, garlic, green pepper, tomato, and salt, and mix well. Cook until chicken mixture is cooked through (internal temperature, 165°F). Remove the skillet from the stove. Put the mixture in a bowl and cool in the refrigerator.",
+    "While the chicken mixture is cooling, place the corn flour in a large mixing bowl and gradually stir in enough water to make a stiff tortilla-like dough.",
+    "When the chicken mixture has cooled, mix in the cheese.",
+    "Divide the dough into 24 portions. With your hands, roll the dough into balls. Press a hole in each ball with your thumb.",
+    "Put about a tablespoon of the chicken mixture into the hole in each ball. Fold the dough over to completely enclose it. Press the ball out with your palms to form a disk.",
+    "In a very hot iron skillet, cook the masa cakes on each side until golden brown.",
+    "Serve hot with Salvadoran Pickled Cabbage. (See page 6 for recipe.)"
+   ],
+   "extra": [],
+   "instructions": "In a nonstick skillet over low heat, saute chicken in oil until chicken turns white. Constantly stir the chicken to make sure it is evenly cooked. Add onion, garlic, green pepper, tomato, and salt, and mix well. Cook until chicken mixture is cooked through (internal temperature, 165°F). Remove the skillet from the stove. Put the mixture in a bowl and cool in the refrigerator. While the chicken mixture is cooling, place the corn flour in a large mixing bowl and gradually stir in enough water to make a stiff tortilla-like dough. When the chicken mixture has cooled, mix in the cheese. Divide the dough into 24 portions. With your hands, roll the dough into balls. Press a hole in each ball with your thumb. Put about a tablespoon of the chicken mixture into the hole in each ball. Fold the dough over to completely enclose it. Press the ball out with your palms to form a disk. In a very hot iron skillet, cook the masa cakes on each side until golden brown. Serve hot with Salvadoran Pickled Cabbage. (See page 6 for recipe.)",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 4
+   },
+   "es": {
+    "title": "Pupusas revueltas",
+    "lines": [
+     "1 libra de pechuga de pollo molida",
+     "1 cucharada de aceite vegetal",
+     "½ cebolla pequeña, picada finamente",
+     "1 diente de ajo, picado muy finamente",
+     "1 pimiento verde mediano, sin semillas y picado muy finamente",
+     "1 tomate pequeño, picado finamente",
+     "½ cucharadita de sal",
+     "5 tazas de harina de maíz instantánea (masa harina)",
+     "6 tazas de agua",
+     "½ libra de queso mozzarella bajo en grasa, rallado"
+    ],
+    "note": "El pollo molido bajo en grasa y el queso bajo en grasa ayudan a disminuir la grasa saturada y las calorías en este sabroso plato típico de El Salvador.",
+    "steps": [
+     "En un sartén en el que la comida no se pega (antiadherente), sofría el pollo en el aceite a fuego lento hasta que el pollo se vuelva de color blanco. Revuelva el pollo constantemente para que se cocine parejo.",
+     "Agregue la cebolla, pimiento verde, tomate y sal y mezcle bien. Mantenga sobre el fuego hasta que el pollo esté cocido (temperatura interna de 74°C). Retire la sartén de la estufa. Ponga la mezcla en un tazón y métalo en el refrigerador para que se enfríe.",
+     "Mientras el pollo se enfría, coloque la harina de maíz en un recipiente grande. Poco a poco agregue suficiente agua hasta obtener una masa firme pero no pegajosa, como para hacer tortillas.",
+     "Cuando ya está frío el pollo, agregue el queso rallado y mezcle bien.",
+     "Divida la masa en 24 porciones. Con sus manos, forme bolitas con la masa. Con el dedo gordo haga un hoyito en cada bolita.",
+     "Ponga una cucharada de la mezcla de pollo en el hoyito al centro de cada bolita. Junte bien la masa sobre el hoyito para cerrar la bolita. Con las palmas de las manos, aplaste suavemente la bolita de masa hasta que quede en forma de una tortita redonda.",
+     "En un comal (o en una sartén de hierro) grueso, bien caliente, cocine las pupusas, por ambos lados, hasta que se doren.",
+     "Sírvalas calientes con encurtido salvadoreño. (Para la receta, vea la página 7)."
+    ],
+    "extra": [],
+    "page": 5
+   }
+  },
+  {
+   "id": 1002,
+   "key": "pozole",
+   "title": "Mexican Beef and Hominy Stew",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 8,
+   "ingredients": [
+    "beef",
+    "olive oil",
+    "onions",
+    "garlic",
+    "canned tomatoes",
+    "hominy",
+    "pepper",
+    "cilantro",
+    "tomato paste"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "roundroast",
+     "g": 907
+    },
+    {
+     "id": "oliveoil",
+     "g": 13.5
+    },
+    {
+     "id": "onions",
+     "g": 150
+    },
+    {
+     "id": "garlic",
+     "g": 3
+    },
+    {
+     "id": "cannedtomatoes",
+     "g": 425
+    },
+    {
+     "id": "hominy",
+     "g": 822
+    }
+   ],
+   "lines": [
+    {
+     "t": "2 pounds lean beef (eye round roast), cubed",
+     "f": [
+      "roundroast"
+     ]
+    },
+    {
+     "t": "1 tablespoon olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "1 large onion, chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 clove garlic, finely chopped",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "¼ teaspoon salt"
+    },
+    {
+     "t": "⅛ teaspoon pepper",
+     "p": "pepper"
+    },
+    {
+     "t": "¼ cup cilantro",
+     "p": "cilantro"
+    },
+    {
+     "t": "1 can (15 ounces) stewed tomatoes",
+     "f": [
+      "cannedtomatoes"
+     ]
+    },
+    {
+     "t": "1⁄3 can (2 ounces) tomato paste",
+     "p": "tomato paste"
+    },
+    {
+     "t": "1 can (1 pound, 13 ounces) hominy",
+     "f": [
+      "hominy"
+     ]
+    }
+   ],
+   "note": "Only a small amount of oil is needed to saute meat.",
+   "steps": [
+    "In a large pot, heat oil. Sauté beef.",
+    "Add onion, garlic, salt, pepper, cilantro, and enough water to cover the meat. Cover pot, and cook over low heat until meat is tender.",
+    "Add tomatoes and tomato paste. Continue cooking for about 20 minutes.",
+    "Add hominy and continue cooking for another 15 minutes, stirring occasionally, over low heat. If too thick, add water for desired consistency."
+   ],
+   "extra": [
+    {
+     "h": "Variation:",
+     "t": "Skinless, boneless chicken breasts may be used instead of beef cubes."
+    }
+   ],
+   "instructions": "In a large pot, heat oil. Sauté beef. Add onion, garlic, salt, pepper, cilantro, and enough water to cover the meat. Cover pot, and cook over low heat until meat is tender. Add tomatoes and tomato paste. Continue cooking for about 20 minutes. Add hominy and continue cooking for another 15 minutes, stirring occasionally, over low heat. If too thick, add water for desired consistency.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 8
+   },
+   "es": {
+    "title": "Pozole a la mexicana",
+    "lines": [
+     "2 libras de carne de res, baja en grasa, cortada en cubos",
+     "1 cucharada de aceite de oliva",
+     "1 cebolla grande, picada",
+     "1 diente de ajo, picado finamente",
+     "¼ cucharadita de sal",
+     "⅛ cucharadita de pimienta negra",
+     "¼ taza de cilantro (culantro)",
+     "1 lata (15 onzas) de tomates cocidos",
+     "2 onzas de pasta de tomate",
+     "1 lata (1 libra y 13 onzas) de maíz blanco (mote)"
+    ],
+    "note": "Para sofreír la carne sólo se necesita una pequeña cantidad de aceite.",
+    "steps": [
+     "Caliente el aceite en una olla grande. Sofría la carne.",
+     "Agregue la cebolla, ajo, sal, pimienta negra, cilantro y agua suficiente para cubrir la carne. Cubra la olla y cocine a fuego lento hasta que la carne esté blanda.",
+     "Agregue los tomates y la pasta de tomate. Continúe cocinando alrededor de 20 minutos más.",
+     "Agregue el maíz blanco y continúe cocinando a fuego lento 15 minutos más, revolviendo ocasionalmente. Si está muy espeso, agregue agua para diluirlo."
+    ],
+    "extra": [
+     {
+      "h": "Alternativa:",
+      "t": "Se pueden utilizar pechugas de pollo deshuesadas y sin pellejo en lugar de la carne de res."
+     }
+    ],
+    "page": 9
+   }
+  },
+  {
+   "id": 1003,
+   "key": "lentilsoup",
+   "title": "Lentil Soup",
+   "slot": "lunch",
+   "cuisine": "latin",
+   "srv": 11,
+   "ingredients": [
+    "olive oil",
+    "carrots",
+    "celery",
+    "onions",
+    "garlic",
+    "lentils",
+    "canned tomatoes",
+    "oregano",
+    "basil",
+    "black pepper",
+    "vegetable broth"
+   ],
+   "avoid": [],
+   "uses": [
+    {
+     "id": "oliveoil",
+     "g": 27
+    },
+    {
+     "id": "carrots",
+     "g": 122
+    },
+    {
+     "id": "celery",
+     "g": 80
+    },
+    {
+     "id": "onions",
+     "g": 70
+    },
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "lentils",
+     "g": 384
+    },
+    {
+     "id": "cannedtomatoes",
+     "g": 411
+    }
+   ],
+   "lines": [
+    {
+     "t": "2 tablespoons olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "2 medium carrots, diced",
+     "f": [
+      "carrots"
+     ]
+    },
+    {
+     "t": "2 medium stalks celery, chopped",
+     "f": [
+      "celery"
+     ]
+    },
+    {
+     "t": "1 small yellow onion, chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "2 cloves garlic, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 teaspoon dried oregano",
+     "p": "oregano"
+    },
+    {
+     "t": "1 teaspoon dried basil",
+     "p": "basil"
+    },
+    {
+     "t": "½ teaspoon ground black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "2 cups dry lentils",
+     "f": [
+      "lentils"
+     ]
+    },
+    {
+     "t": "1 can (14½ ounces) crushed tomatoes",
+     "f": [
+      "cannedtomatoes"
+     ]
+    },
+    {
+     "t": "2 cups vegetable broth",
+     "p": "vegetable broth"
+    },
+    {
+     "t": "6½ cups water"
+    }
+   ],
+   "note": "Lentil soup makes a hearty, delicious starter or a complete meal. This soup is naturally low in fat and lower in sodium than most canned soups. Enjoy!",
+   "steps": [
+    "In a large soup pot, heat oil over medium heat. Add carrots, celery, and onions; cook and stir until the onion is tender.",
+    "Stir in garlic, oregano, basil, and ground black pepper. Cook for 2 minutes.",
+    "Stir in lentils and tomatoes, tand then add the vegettable broth and water. Cover and bring to a boil. Reduce heat and simmer for at least 1 hour or until lentils are tender.",
+    "Store leftovers in the refrigerator and reheat on the stove or in the microwave. The soup will taste better the next day!"
+   ],
+   "extra": [],
+   "instructions": "In a large soup pot, heat oil over medium heat. Add carrots, celery, and onions; cook and stir until the onion is tender. Stir in garlic, oregano, basil, and ground black pepper. Cook for 2 minutes. Stir in lentils and tomatoes, tand then add the vegettable broth and water. Cover and bring to a boil. Reduce heat and simmer for at least 1 hour or until lentils are tender. Store leftovers in the refrigerator and reheat on the stove or in the microwave. The soup will taste better the next day!",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 10
+   },
+   "es": {
+    "title": "Sopa de lentejas",
+    "lines": [
+     "2 cucharadas de aceite de oliva",
+     "2 zanahorias medianas, cortadas en cubitos",
+     "2 tallos medianos de apio, cortados finamente",
+     "1 cebolla pequeña amarilla, picada finamente",
+     "2 dientes de ajo, picados finamente (molidos)",
+     "1 cucharadita de orégano",
+     "1 cucharadita de albahaca",
+     "½ cucharadita de pimienta negra",
+     "2 tazas de lentejas",
+     "1 lata (14½ onzas) de tomates machacados",
+     "2 tazas de caldo de verduras",
+     "6½ tazas de agua"
+    ],
+    "note": "La sopa de lentejas es un plato sencillo y delicioso como entrada o plato principal. Esta sopa es más baja en grasa y en sodio que las sopas enlatadas. ¡Disfrútela!",
+    "steps": [
+     "En una cacerola grande, caliente el aceite a fuego mediano. Agregue las zanahorias, el apio y la cebolla. Cocine las verduras, removiéndolas hasta que la cebolla esté suave.",
+     "Agregue el ajo, el orégano, la albahaca y la pimienta negra. Cocine por 2 minutos más.",
+     "Agregue las lentejas, el tomate, el caldo de verduras y el agua. Cubra la olla hasta que hierva. Baje el fuego y cocine a fuego lento por 1 hora o hasta que estén blandas las lentejas.",
+     "Si sobra sopa, guárdela en el refrigerador y recaliéntela en la estufa o el microondas cuando la vuelva a servir. ¡La sopa sabe aún más deliciosa al día siguiente!"
+    ],
+    "extra": [],
+    "page": 11
+   }
+  },
+  {
+   "id": 1004,
+   "key": "chickenstew",
+   "title": "Chicken Stew",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 8,
+   "ingredients": [
+    "chicken drumsticks",
+    "garlic",
+    "onions",
+    "tomatoes",
+    "celery",
+    "potatoes",
+    "carrots",
+    "black pepper",
+    "parsley",
+    "bay leaves"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "drumsticks",
+     "g": 1040
+    },
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "onions",
+     "g": 70
+    },
+    {
+     "id": "tomatoes",
+     "g": 369
+    },
+    {
+     "id": "celery",
+     "g": 25
+    },
+    {
+     "id": "potatoes",
+     "g": 426
+    },
+    {
+     "id": "carrots",
+     "g": 100
+    }
+   ],
+   "lines": [
+    {
+     "t": "8 pieces chicken, breasts or legs",
+     "f": [
+      "drumsticks"
+     ]
+    },
+    {
+     "t": "1 cup water"
+    },
+    {
+     "t": "2 small garlic cloves, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 small onion, chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1½ teaspoons salt"
+    },
+    {
+     "t": "½ teaspoon ground black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "3 medium tomatoes, chopped",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "1 teaspoon parsley, chopped",
+     "p": "parsley"
+    },
+    {
+     "t": "¼ cup celery, finely chopped",
+     "f": [
+      "celery"
+     ]
+    },
+    {
+     "t": "2 medium potatoes, peeled and chopped",
+     "f": [
+      "potatoes"
+     ]
+    },
+    {
+     "t": "2 small carrots, chopped",
+     "f": [
+      "carrots"
+     ]
+    },
+    {
+     "t": "2 bay leaves",
+     "p": "bay leaves"
+    }
+   ],
+   "note": "This makeover recipe has great flavor and plenty of vegetables! It uses chicken breast or legs instead of fatty meats.",
+   "steps": [
+    "Remove the skin and any extra fat from the chicken, and throw it away.",
+    "In a large skillet, combine chicken, water, garlic, onion, salt (as little as possible), black pepper, tomatoes, and parsley.",
+    "Cover and cook over low heat for 25 minutes.",
+    "Add celery, potatoes, carrots, and bay leaves, and continue to cook for 15 more minutes or until chicken and vegetables are tender.",
+    "Remove bay leaves before serving."
+   ],
+   "extra": [],
+   "instructions": "Remove the skin and any extra fat from the chicken, and throw it away. In a large skillet, combine chicken, water, garlic, onion, salt (as little as possible), black pepper, tomatoes, and parsley. Cover and cook over low heat for 25 minutes. Add celery, potatoes, carrots, and bay leaves, and continue to cook for 15 more minutes or until chicken and vegetables are tender. Remove bay leaves before serving.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 12
+   },
+   "es": {
+    "title": "Guisado de pollo",
+    "lines": [
+     "8 piezas de pollo, pechugas o pierna de pollo",
+     "1 taza de agua",
+     "2 dientes de ajo pequeños, molidos",
+     "1 cebolla pequeña, picada",
+     "1½ cucharaditas de sal",
+     "½ cucharadita de pimienta negra molida",
+     "3 tomates medianos, picados",
+     "1 cucharadita de perejil, picado",
+     "¼ de taza de apio, finamente picado",
+     "2 papas medianas, peladas y picadas",
+     "2 zanahorias pequeñas, picadas",
+     "2 hojas de laurel"
+    ],
+    "note": "¡Esta receta de cambio de imagen tiene un gran sabor y muchas verduras! Utilice pechuga o muslos de pollo en lugar de carnes grasas.",
+    "steps": [
+     "Quite la piel y el exceso de grasa de pollo y tírela.",
+     "En un grande sartén, combine el pollo, el agua, el ajo, cebolla, sal (lo menos posible), pimienta negra, jitomates y perejil.",
+     "Cúbralo y concine fuego lento durante 25 minutos.",
+     "Agregue el apio, las papas, las zanahorias y las hojas de laurel y continúe cociendo durante 15 minutos más o hasta que el pollo y las verduras estén tiernos.",
+     "Quite las hojas de laurel antes de servir."
+    ],
+    "extra": [],
+    "page": 13
+   }
+  },
+  {
+   "id": 1005,
+   "key": "beefcasserole",
+   "title": "Quick Beef Casserole",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 8,
+   "ingredients": [
+    "ground beef",
+    "onions",
+    "celery",
+    "bell peppers",
+    "tomatoes",
+    "peas",
+    "carrots",
+    "rice",
+    "black pepper",
+    "paprika"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "groundbeef",
+     "g": 227
+    },
+    {
+     "id": "onions",
+     "g": 160
+    },
+    {
+     "id": "celery",
+     "g": 101
+    },
+    {
+     "id": "bellpepper",
+     "g": 149
+    },
+    {
+     "id": "tomatoes",
+     "g": 630
+    },
+    {
+     "id": "frozenpeas",
+     "g": 134
+    },
+    {
+     "id": "carrots",
+     "g": 100
+    },
+    {
+     "id": "rice",
+     "g": 185
+    }
+   ],
+   "lines": [
+    {
+     "t": "½ pound lean ground beef",
+     "f": [
+      "groundbeef"
+     ]
+    },
+    {
+     "t": "1 cup onion, chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 cup celery, chopped",
+     "f": [
+      "celery"
+     ]
+    },
+    {
+     "t": "1 cup green pepper without seeds, cubed",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "3½ cups tomatoes, diced",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "¼ teaspoon salt"
+    },
+    {
+     "t": "½ teaspoon black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "¼ teaspoon paprika",
+     "p": "paprika"
+    },
+    {
+     "t": "1 cup frozen peas",
+     "f": [
+      "frozenpeas"
+     ]
+    },
+    {
+     "t": "2 small carrots, diced",
+     "f": [
+      "carrots"
+     ]
+    },
+    {
+     "t": "1 cup uncooked rice",
+     "f": [
+      "rice"
+     ]
+    },
+    {
+     "t": "1½ cups water"
+    }
+   ],
+   "note": "Drain fat from cooked beef to lower the amount of fat and calories.",
+   "steps": [
+    "In a skillet, brown the ground beef, and drain off the fat.",
+    "Add the rest of the ingredients. Mix well.",
+    "Cook over medium heat, and cover skillet until boiling.",
+    "Reduce to low heat and simmer for 35 minutes. Serve hot."
+   ],
+   "extra": [],
+   "instructions": "In a skillet, brown the ground beef, and drain off the fat. Add the rest of the ingredients. Mix well. Cook over medium heat, and cover skillet until boiling. Reduce to low heat and simmer for 35 minutes. Serve hot.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 16
+   },
+   "es": {
+    "title": "Cázuela de carne rápida",
+    "lines": [
+     "½ libra de carne molida de res, baja en grasa",
+     "1 taza de cebolla, picada",
+     "1 taza de apio, picado",
+     "1 taza de pimiento verde, sin semillas y cortado en cuadraditos",
+     "3½ tazas de tomates, cortados en cubitos",
+     "¼ cucharadita de sal",
+     "½ cucharadita de pimienta negra",
+     "¼ cucharadita de pimentón (páprika)",
+     "1 taza de arvejas (chícharos) congelados",
+     "2 zanahorias pequeñas, cortadas en cubitos",
+     "1 taza de arroz crudo",
+     "1½ tazas de agua"
+    ],
+    "note": "Escurra la grasa que suelta la carne al cocinar para disminuir la cantidad de grasa y calorías.",
+    "steps": [
+     "Ponga la carne molida a dorar en un sartén. Cuando esté lista, escurra la grasa.",
+     "Agregue el resto de los ingredientes y mezcle bien.",
+     "Cubra la sartén y cocine a fuego mediano hasta que hierva.",
+     "Reduzca el fuego al mínimo y deje cocinar 35 minutos más. Sirva caliente."
+    ],
+    "extra": [],
+    "page": 17
+   }
+  },
+  {
+   "id": 1006,
+   "key": "stirfriedbeef",
+   "title": "Stir-fried Beef",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 6,
+   "ingredients": [
+    "beef",
+    "oil",
+    "garlic",
+    "onions",
+    "tomatoes",
+    "potatoes",
+    "vinegar",
+    "pepper"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "sirloin",
+     "g": 680
+    },
+    {
+     "id": "oil",
+     "g": 9
+    },
+    {
+     "id": "garlic",
+     "g": 3
+    },
+    {
+     "id": "onions",
+     "g": 300
+    },
+    {
+     "id": "tomatoes",
+     "g": 182
+    },
+    {
+     "id": "potatoes",
+     "g": 470
+    }
+   ],
+   "lines": [
+    {
+     "t": "1½ pounds sirloin steak",
+     "f": [
+      "sirloin"
+     ]
+    },
+    {
+     "t": "2 teaspoons vegetable oil",
+     "f": [
+      "oil"
+     ]
+    },
+    {
+     "t": "1 clove garlic, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 teaspoon vinegar",
+     "p": "vinegar"
+    },
+    {
+     "t": "⅛ teaspoon salt"
+    },
+    {
+     "t": "⅛ teaspoon pepper",
+     "p": "pepper"
+    },
+    {
+     "t": "2 large onions, sliced",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 large tomato, sliced",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "3 cups boiled potatoes, diced",
+     "f": [
+      "potatoes"
+     ]
+    }
+   ],
+   "note": "Vinegar and garlic give this easy-to-make dish its tasty zip.",
+   "steps": [
+    "Trim fat from steak, and cut steak into small, thin pieces.",
+    "In a large skillet, heat oil and sauté garlic until garlic is golden.",
+    "Add steak, vinegar, salt, and pepper. Cook for 6 minutes, stirring beef until brown.",
+    "Add onion and tomato. Cook until onion is transparent. Serve with boiled potatoes."
+   ],
+   "extra": [],
+   "instructions": "Trim fat from steak, and cut steak into small, thin pieces. In a large skillet, heat oil and sauté garlic until garlic is golden. Add steak, vinegar, salt, and pepper. Cook for 6 minutes, stirring beef until brown. Add onion and tomato. Cook until onion is transparent. Serve with boiled potatoes.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 18
+   },
+   "es": {
+    "title": "Lomo saltado",
+    "lines": [
+     "1½ libras de lomo de res",
+     "2 cucharaditas de aceite vegetal",
+     "1 diente de ajo, picado",
+     "1 cucharadita de vinagre",
+     "⅛ cucharadita de sal",
+     "⅛ cucharadita de pimienta",
+     "2 cebollas grandes, rebanadas",
+     "1 tomate grande, rebanado",
+     "3 tazas de papas hervidas, cortadas en cubitos"
+    ],
+    "note": "El vinagre y el ajo le dan un rico sabor a este plato de fácil preparación.",
+    "steps": [
+     "Quite la grasa a la carne antes de cocinarla. Corte el resto en tiras delgadas y pequeñas.",
+     "Caliente el aceite en una sartén grande y sofría el ajo hasta que esté dorado.",
+     "Agregue la carne, el vinagre, la sal y la pimienta negra. Cocine 6 minutos más, moviendo la carne hasta que esté dorada.",
+     "Agregue las cebollas y el tomate. Cocine hasta que la cebolla esté transparente. Sirva con papas hervidas."
+    ],
+    "extra": [],
+    "page": 19
+   }
+  },
+  {
+   "id": 1007,
+   "key": "pastelon",
+   "title": "Puerto Rican Yellow Plantain and Meat Casserole",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 12,
+   "ingredients": [
+    "ground beef",
+    "bell peppers",
+    "onions",
+    "plantains",
+    "olive oil",
+    "garlic",
+    "tomato sauce",
+    "eggs",
+    "green beans",
+    "mozzarella",
+    "bay leaves",
+    "cilantro",
+    "beef broth",
+    "ajicitos",
+    "annatto paste"
+   ],
+   "avoid": [
+    "dairy",
+    "eggs",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "groundbeef",
+     "g": 680
+    },
+    {
+     "id": "bellpepper",
+     "g": 238
+    },
+    {
+     "id": "onions",
+     "g": 110
+    },
+    {
+     "id": "plantains",
+     "g": 2160
+    },
+    {
+     "id": "oliveoil",
+     "g": 27
+    },
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "tomatosauce",
+     "g": 245
+    },
+    {
+     "id": "eggs",
+     "g": 250
+    },
+    {
+     "id": "greenbeans",
+     "g": 203
+    },
+    {
+     "id": "mozzarella",
+     "g": 56
+    }
+   ],
+   "lines": [
+    {
+     "t": "Meat Filling Layer",
+     "h": 1
+    },
+    {
+     "t": "1½ pounds lean ground beef",
+     "f": [
+      "groundbeef"
+     ]
+    },
+    {
+     "t": "2 medium green peppers without seeds, chopped",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 medium yellow onion, chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "3 bay leaves",
+     "p": "bay leaves"
+    },
+    {
+     "t": "Dough",
+     "h": 1
+    },
+    {
+     "t": "8 large yellow plantains, ripe and peeled",
+     "f": [
+      "plantains"
+     ]
+    },
+    {
+     "t": "10 cups water"
+    },
+    {
+     "t": "2 tablespoons olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "¼ cup cilantro, chopped",
+     "p": "cilantro"
+    },
+    {
+     "t": "1 cup low-sodium beef broth",
+     "p": "beef broth"
+    },
+    {
+     "t": "5 ajicitos (tiny chili peppers)",
+     "p": "ajicitos"
+    },
+    {
+     "t": "½ tablespoon annatto paste (achiote)",
+     "p": "annatto paste"
+    },
+    {
+     "t": "2 garlic cloves, finely chopped",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 cup tomato sauce",
+     "f": [
+      "tomatosauce"
+     ]
+    },
+    {
+     "t": "Other Layers",
+     "h": 1
+    },
+    {
+     "t": "5 egg whites, beaten",
+     "f": [
+      "eggs"
+     ]
+    },
+    {
+     "t": "1½ cups cooked green beans",
+     "f": [
+      "greenbeans"
+     ]
+    },
+    {
+     "t": "½ cup low-fat mozzarella, shredded",
+     "f": [
+      "mozzarella"
+     ]
+    }
+   ],
+   "note": "The natural sweetness of the plantains enhances the flavor of this Puerto Rican dish.",
+   "steps": [
+    "Preheat oven to 350°F.",
+    "Brown the meat in a large pot. Drain the fat, and add the remaining filling ingredients. Cook over medium heat for 5 minutes. Set aside.",
+    "Boil the peeled plantains in 10 cups of water until soft, then drain. In a large bowl, mash the plantains, and then add the olive oil. Mix well, making it into a soft dough. In a separate bowl, beat the egg whites until they are foamy.",
+    "Spread half of the plantain dough in an 11” x 14” baking pan. Add a layer of the meat filling, egg whites, and half of the green beans.",
+    "Repeat these layers, and top with a final layer of plantains and egg whites.",
+    "Sprinkle with the mozzarella cheese.",
+    "Bake for 20 minutes."
+   ],
+   "extra": [],
+   "instructions": "Preheat oven to 350°F. Brown the meat in a large pot. Drain the fat, and add the remaining filling ingredients. Cook over medium heat for 5 minutes. Set aside. Boil the peeled plantains in 10 cups of water until soft, then drain. In a large bowl, mash the plantains, and then add the olive oil. Mix well, making it into a soft dough. In a separate bowl, beat the egg whites until they are foamy. Spread half of the plantain dough in an 11” x 14” baking pan. Add a layer of the meat filling, egg whites, and half of the green beans. Repeat these layers, and top with a final layer of plantains and egg whites. Sprinkle with the mozzarella cheese. Bake for 20 minutes.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 20
+   },
+   "es": {
+    "title": "Pastelón puertorriqueño de plántanos con carne molida",
+    "lines": [
+     "Relleno de carne",
+     "1½ libras de carne de res molida, baja en grasa",
+     "2 pimientos verdes, sin semillas y picados finamente",
+     "1 cebolla mediana, picada finamente",
+     "3 hojas de laurel",
+     "Masa",
+     "8 plátanos maduros (amarillos) grandes, pelados",
+     "10 tazas de agua",
+     "2 cucharadas de aceite de oliva",
+     "¼ taza de cilantro (culantro), picado finamente",
+     "1 taza de caldo de res bajo en sal",
+     "5 ajicitos dulces (tiny chili peppers)",
+     "½ cucharadita de pasta de achiote",
+     "2 dientes de ajo, picados finamente",
+     "1 taza de salsa de tomate",
+     "Otras capas",
+     "5 claras de huevo",
+     "1½ tazas de habichuelas (vainitas) tiernas cocidas",
+     "½ taza de queso mozzarella bajo en grasa, rallado"
+    ],
+    "note": "La dulzura natural de los plátanos maduros resalta el sabor de este plato típico puertorriqueño.",
+    "steps": [
+     "Precaliente el horno a 175°C.",
+     "En una sartén grande sofría la carne molida. Escurra la grasa de la carne y agregue los demás ingredientes del relleno. Cocine sobre fuego mediano por 5 minutos más y retire del fuego.",
+     "Pele los plátanos maduros y hiérvalos en 10 tazas de agua ahasta que estén muy blandos. Retírelos de la olla escurriendo el agua. En un tazón grande, aplaste los plátanos y agregue el aceite de oliva. Mezcle bien hasta que se convierta en una masa suave. En otro recipiente, bata las claras de huevo hasta que estén espumosas.",
+     "Ponga la mitad de la mezcla de los plátanos en un molde para hornear de unos 28 x 35.5 centímetros (11 x 14 pulgadas). Agregue una capa de relleno de carne, la tercera parte de las claras de huevo batidas y la mitad de las habichuelas tiernas.",
+     "Repita estas tres capas: carne, clara de huevos y habichuelas. Agregue una última capa de masa de plátanos y ponga encima más clara de huevos batidos.",
+     "Rocíe el queso mozzarella sobre las claras de huevo.",
+     "Hornee por 20 minutos."
+    ],
+    "extra": [],
+    "page": 21
+   }
+  },
+  {
+   "id": 1008,
+   "key": "turkeymeatloaf",
+   "title": "Turkey Meatloaf",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 5,
+   "ingredients": [
+    "ground turkey",
+    "oats",
+    "eggs",
+    "onions",
+    "celery",
+    "garlic",
+    "bell peppers",
+    "ketchup"
+   ],
+   "avoid": [
+    "eggs",
+    "gluten",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "groundturkey",
+     "g": 454
+    },
+    {
+     "id": "oats",
+     "g": 40
+    },
+    {
+     "id": "eggs",
+     "g": 50
+    },
+    {
+     "id": "onions",
+     "g": 70
+    },
+    {
+     "id": "celery",
+     "g": 80
+    },
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "bellpepper",
+     "g": 60
+    }
+   ],
+   "lines": [
+    {
+     "t": "1 pound lean (7% fat) ground turkey",
+     "f": [
+      "groundturkey"
+     ]
+    },
+    {
+     "t": "½ cup regular oats, dry",
+     "f": [
+      "oats"
+     ]
+    },
+    {
+     "t": "1 large egg",
+     "f": [
+      "eggs"
+     ]
+    },
+    {
+     "t": "1 tablespoon onion, dehydrated, or 1 small onion, minced",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "¼ cup ketchup",
+     "p": "ketchup"
+    },
+    {
+     "t": "2 celery stalks, chopped",
+     "f": [
+      "celery"
+     ]
+    },
+    {
+     "t": "2 garlic cloves, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "½ green pepper, seeded and diced",
+     "f": [
+      "bellpepper"
+     ]
+    }
+   ],
+   "note": "Enjoy a healthier version of an old dinner favorite.",
+   "steps": [
+    "Preheat oven to 350°F.",
+    "Combine all ingredients, and mix well.",
+    "Bake in loaf pan for 25 minutes to an internal temperature of 165°F.",
+    "Cut into five slices and serve."
+   ],
+   "extra": [],
+   "instructions": "Preheat oven to 350°F. Combine all ingredients, and mix well. Bake in loaf pan for 25 minutes to an internal temperature of 165°F. Cut into five slices and serve.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 22
+   },
+   "es": {
+    "title": "Rollo de pavo",
+    "lines": [
+     "1 libra de carne molida de pavo con poca grasa (7% de grasa)",
+     "½ taza de avena regular, seca",
+     "1 huevo grande",
+     "1 cucharada de cebolla en polvo o 1 cebolla pequeña cortada en trocitos",
+     "¼ taza de salsa de tomate (ketchup)",
+     "2 tallos de apio, cortados finamente",
+     "2 dientes de ajo, picados finamente",
+     "½ pimiento verde, sin semilla y cortado en cuadritos"
+    ],
+    "note": "Esta es una versión más saludable de un plato favorito bien conocido.",
+    "steps": [
+     "Precaliente el horno a 175°C.",
+     "Mezcle bien todos los ingredientes.",
+     "Hornee en un molde por 25 minutos, hasta que llegue a una temperatura interna de 75°C.",
+     "Corte en cinco rebanadas y sirva."
+    ],
+    "extra": [],
+    "page": 23
+   }
+  },
+  {
+   "id": 1009,
+   "key": "chickadillo",
+   "title": "Chickadillo (Chicken Picadillo)",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 6,
+   "ingredients": [
+    "chicken breast",
+    "olive oil",
+    "onions",
+    "bell peppers",
+    "garlic",
+    "tomato sauce",
+    "raisins",
+    "chicken broth",
+    "lemon juice",
+    "cumin",
+    "bay leaves",
+    "cilantro",
+    "capers",
+    "olives"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "chickenbreast",
+     "g": 454
+    },
+    {
+     "id": "oliveoil",
+     "g": 9
+    },
+    {
+     "id": "onions",
+     "g": 150
+    },
+    {
+     "id": "bellpepper",
+     "g": 238
+    },
+    {
+     "id": "garlic",
+     "g": 9
+    },
+    {
+     "id": "tomatosauce",
+     "g": 82
+    },
+    {
+     "id": "raisins",
+     "g": 36
+    }
+   ],
+   "lines": [
+    {
+     "t": "1 pound chicken breast, boneless, skinless, cut into thin strips",
+     "f": [
+      "chickenbreast"
+     ]
+    },
+    {
+     "t": "2 teaspoons olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "1 large yellow onion, finely chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 medium green pepper, finely chopped",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 medium red pepper, finely chopped",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "3 cloves garlic, mashed",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "⅓ cup no-salt-added tomato sauce",
+     "f": [
+      "tomatosauce"
+     ]
+    },
+    {
+     "t": "⅓ cup low-sodium chicken broth",
+     "p": "chicken broth"
+    },
+    {
+     "t": "⅓ cup fresh lemon juice",
+     "p": "lemon juice"
+    },
+    {
+     "t": "⅓ cup water"
+    },
+    {
+     "t": "¼ teaspoon ground cumin",
+     "p": "cumin"
+    },
+    {
+     "t": "2 bay leaves",
+     "p": "bay leaves"
+    },
+    {
+     "t": "¼ cup golden raisins",
+     "f": [
+      "raisins"
+     ]
+    },
+    {
+     "t": "Garnishes",
+     "h": 1
+    },
+    {
+     "t": "fresh cilantro leaves",
+     "p": "cilantro"
+    },
+    {
+     "t": "1 tablespoon capers, drained",
+     "p": "capers"
+    },
+    {
+     "t": "2 tablespoons green olives, chopped",
+     "p": "olives"
+    }
+   ],
+   "note": "This is a great dish to make when you are short on time.",
+   "steps": [
+    "Heat the olive oil in a large skillet over medium heat. Add the onion, peppers, and garlic, and sauté until the vegetables are soft, about 5 minutes.",
+    "Add the chicken and stir fry for another 5 to 10 minutes, until the chicken has cooked through.",
+    "Add the tomato sauce, chicken broth, lemon juice, cumin, bay leaves, water, and raisins to the vegetables and chicken.",
+    "Cover the pan and reduce the heat. Simmer for 10 minutes or until the chicken is tender.",
+    "Remove the bay leaves, and serve with brown rice and black beans. Garnish with fresh cilantro, capers, and olives."
+   ],
+   "extra": [],
+   "instructions": "Heat the olive oil in a large skillet over medium heat. Add the onion, peppers, and garlic, and sauté until the vegetables are soft, about 5 minutes. Add the chicken and stir fry for another 5 to 10 minutes, until the chicken has cooked through. Add the tomato sauce, chicken broth, lemon juice, cumin, bay leaves, water, and raisins to the vegetables and chicken. Cover the pan and reduce the heat. Simmer for 10 minutes or until the chicken is tender. Remove the bay leaves, and serve with brown rice and black beans. Garnish with fresh cilantro, capers, and olives.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 24
+   },
+   "es": {
+    "title": "Picadillo de pollo",
+    "lines": [
+     "1 libra de pechuga de pollo, sin el pellejo, cortada en tiritas",
+     "2 cucharadas de aceite de oliva",
+     "1 cebolla amarilla grande, picada finamente",
+     "1 pimiento verde mediano, sin semilla y picado finamente",
+     "1 pimiento rojo mediano, sin semilla y picado finamente",
+     "3 dientes de ajo, picados muy finamente",
+     "⅓ taza de salsa de tomate baja en sodio",
+     "⅓ taza de caldo de pollo bajo en sodio",
+     "⅓ taza de jugo de limón fresco",
+     "⅓ taza de agua",
+     "¼ cucharadita de comino molido",
+     "2 hojas de laurel",
+     "¼ taza de pasas blancas",
+     "Para adornar",
+     "hojas de cilantro fresco",
+     "1 cucharadita de alcaparras, escurridas",
+     "2 cucharadas de aceitunas verdes, picadas"
+    ],
+    "note": "Este platillo es ideal para cuando no hay mucho tiempo para cocinar.",
+    "steps": [
+     "En una sartén grande, caliente el aceite de oliva a fuego moderado. Agregue la cebolla, los pimientos y el ajo y sofría hasta que estén suaves, alrededor de unos 5 minutos.",
+     "Agregue el pollo y sofría de 5 a 10 minutos, hasta que el pollo esté completamente cocinado.",
+     "Agregue la salsa de tomate, el caldo de pollo, el jugo de limón, el comino, las hojas de laurel, el agua y las pasas.",
+     "Cubra la sartén, baje el fuego, y cocine por 10 minutos o hasta que el pollo esté suave.",
+     "Retire las hojas de laurel y sirva con arroz integral y frijoles negros. Adorne con cilantro fresco, alcaparras y aceitunas."
+    ],
+    "extra": [],
+    "page": 25
+   }
+  },
+  {
+   "id": 1010,
+   "key": "pastelchileno",
+   "title": "Chilean Corn and Meat Pie",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 4,
+   "ingredients": [
+    "chicken breast",
+    "ground beef",
+    "bell peppers",
+    "raisins",
+    "oil",
+    "onions",
+    "corn",
+    "milk",
+    "cooking spray",
+    "black pepper",
+    "olives",
+    "paprika",
+    "cumin",
+    "basil"
+   ],
+   "avoid": [
+    "dairy",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "chickenbreast",
+     "g": 113
+    },
+    {
+     "id": "groundbeef",
+     "g": 227
+    },
+    {
+     "id": "bellpepper",
+     "g": 119
+    },
+    {
+     "id": "raisins",
+     "g": 73
+    },
+    {
+     "id": "oil",
+     "g": 7
+    },
+    {
+     "id": "onions",
+     "g": 110
+    },
+    {
+     "id": "frozencorn",
+     "g": 454
+    },
+    {
+     "id": "milk",
+     "g": 122
+    }
+   ],
+   "lines": [
+    {
+     "t": "Meat Mixture",
+     "h": 1
+    },
+    {
+     "t": "Nonstick vegetable oil spray",
+     "p": "cooking spray"
+    },
+    {
+     "t": "4 ounces boneless, skinless chicken breast",
+     "f": [
+      "chickenbreast"
+     ]
+    },
+    {
+     "t": "8 ounces extra lean (5% fat) ground beef",
+     "f": [
+      "groundbeef"
+     ]
+    },
+    {
+     "t": "1 green pepper, seeded and chopped",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "¼ teaspoon ground black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "½ cup raisins",
+     "f": [
+      "raisins"
+     ]
+    },
+    {
+     "t": "2 teaspoons olives, chopped",
+     "p": "olives"
+    },
+    {
+     "t": "Corn Topping",
+     "h": 1
+    },
+    {
+     "t": "½ tablespoon canola oil",
+     "f": [
+      "oil"
+     ]
+    },
+    {
+     "t": "⅛ teaspoon paprika",
+     "p": "paprika"
+    },
+    {
+     "t": "1 medium onion, finely chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "16 ounces corn kernels, thawed",
+     "f": [
+      "frozencorn"
+     ]
+    },
+    {
+     "t": "½ cup fat-free milk",
+     "f": [
+      "milk"
+     ]
+    },
+    {
+     "t": "1⁄4 teaspoon salt"
+    },
+    {
+     "t": "¾ teaspoon ground cumin",
+     "p": "cumin"
+    },
+    {
+     "t": "¼ teaspoon black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "1 teaspoon dried basil",
+     "p": "basil"
+    }
+   ],
+   "note": "Serve with lettuce and tomato salad for a complete meal.",
+   "steps": [
+    "Preheat oven to 400°F.",
+    "Spray skillet with vegetable oil spray; place over medium heat until hot. Cook chicken breast 4 minutes on each side. Remove from skillet, and shred the chicken with a fork. Set aside.",
+    "Put beef in same skillet; cook, stirring constantly, until no longer pink. Stir in the green pepper, black pepper, raisins, and olives. Spoon the mixture into an 8” x 8” baking dish.* Arrange the chicken on top of the mixture in the dish.",
+    "Combine oil and paprika in same skillet; place over medium heat until hot. Add onion and cook, stirring frequently, until soft and translucent, about 5 minutes. While onion is cooking, combine thawed corn, milk, cumin, salt, pepper, and basil in blender; puree.",
+    "Add pureed corn mixture to cooked onion in skillet; mix well. Continue cooking 5 minutes. Spoon the corn mixture over the meat mixture in the baking dish. Bake until bubbly and nicely browned, 35 to 40 minutes."
+   ],
+   "extra": [
+    {
+     "h": "",
+     "t": "*If you prefer, divide the mixture into four servings and bake in four small oven-proof bowls."
+    }
+   ],
+   "instructions": "Preheat oven to 400°F. Spray skillet with vegetable oil spray; place over medium heat until hot. Cook chicken breast 4 minutes on each side. Remove from skillet, and shred the chicken with a fork. Set aside. Put beef in same skillet; cook, stirring constantly, until no longer pink. Stir in the green pepper, black pepper, raisins, and olives. Spoon the mixture into an 8” x 8” baking dish.* Arrange the chicken on top of the mixture in the dish. Combine oil and paprika in same skillet; place over medium heat until hot. Add onion and cook, stirring frequently, until soft and translucent, about 5 minutes. While onion is cooking, combine thawed corn, milk, cumin, salt, pepper, and basil in blender; puree. Add pureed corn mixture to cooked onion in skillet; mix well. Continue cooking 5 minutes. Spoon the corn mixture over the meat mixture in the baking dish. Bake until bubbly and nicely browned, 35 to 40 minutes.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 26
+   },
+   "es": {
+    "title": "Pastel chileno de maíz (choclo) con carne y pollo",
+    "lines": [
+     "Relleno de carne",
+     "Aceite vegetal en aerosol",
+     "1 pechuga de pollo de 4 onzas, sin pellejo",
+     "8 onzas de carne de res molida, baja en grasa (5% de grasa)",
+     "1 pimiento verde, sin semillas y picado en cuadraditos",
+     "¼ cucharadita de pimienta negra",
+     "½ taza de pasas",
+     "2 cucharaditas de aceitunas, picadas",
+     "Puré de maíz",
+     "½ cucharadita de aceite de canola",
+     "⅛ cucharadita de pimentón (páprika)",
+     "1 cebolla mediana, picada finamente",
+     "16 onzas de granos de maíz, descongelados",
+     "½ taza de leche descremada",
+     "¼ cucharadita de sal",
+     "¾ cucharadita de comino molido",
+     "¼ cucharadita de pimienta negra",
+     "1 cucharadita de albahaca seca"
+    ],
+    "note": "Sirva el pastel con ensalada de lechuga y tomate y tendrá una comida completa.",
+    "steps": [
+     "Precaliente el horno a 204°C.",
+     "Rocíe una sartén con aceite vegetal en aerosol y caliente la sartén a fuego mediano. Cocine las pechugas del pollo por 4 minutos a cada lado. Retire el pollo del la sartén y desmenúcelo con un tenedor. Póngalo a un lado.",
+     "En la misma sartén, cocine la carne moviéndola constantemente hasta que esté completamente dorada. Agregue el pimiento verde, la pimienta negra, las pasas y las aceitunas. Vierta la mezcla de carne en un molde cuadrado para hornear* de 20 x 20 centímetros (8 x 8 pulgadas). Coloque el pollo desmenuzado sobre la mezcla de carne.",
+     "En la misma sartén, combine el aceite y el pimentón. Coloque la sartén sobre fuego mediano hasta que se caliente. Agregue la cebolla y cocínela unos 5 minutos, removiéndola frecuentemente hasta que esté suave y transparente. Mientras se cocina la cebolla, mezcle el maíz, la leche, comino, albaca, sal y pimienta en una licuadora hasta que se haga puré.",
+     "Agregue el puré de maíz a la cebolla en la sartén y mézclelo bien. Cocine por 5 minutos más. Vierta el puré de maíz sobre la mezcla de carne repartiéndolo en forma pareja sobre el molde para hornear. Hornee unos 35 a 40 minutos hasta que la superficie esté dorada."
+    ],
+    "extra": [
+     {
+      "h": "",
+      "t": "*Si prefiere, divida la mezcla en cuatro porciones y hornéelas en fuentes individuales que se puedan meter en el horno."
+     }
+    ],
+    "page": 27
+   }
+  },
+  {
+   "id": 1011,
+   "key": "tilapia",
+   "title": "Baked Tilapia With Tomatoes",
+   "slot": "dinner",
+   "cuisine": "latin",
+   "srv": 4,
+   "ingredients": [
+    "fish",
+    "tomatoes",
+    "olive oil",
+    "garlic",
+    "onions",
+    "cooking spray",
+    "thyme",
+    "olives",
+    "red pepper flakes",
+    "lime juice",
+    "parsley"
+   ],
+   "avoid": [
+    "fish",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "fish",
+     "g": 454
+    },
+    {
+     "id": "tomatoes",
+     "g": 492
+    },
+    {
+     "id": "oliveoil",
+     "g": 27
+    },
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "onions",
+     "g": 80
+    }
+   ],
+   "lines": [
+    {
+     "t": "Nonstick vegetable oil spray",
+     "p": "cooking spray"
+    },
+    {
+     "t": "4 tilapia fillets",
+     "f": [
+      "fish"
+     ]
+    },
+    {
+     "t": "4 medium tomatoes, peeled and chopped",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "2 tablespoons olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "1½ teaspoons thyme",
+     "p": "thyme"
+    },
+    {
+     "t": "¼ cup pitted black olives, diced",
+     "p": "olives"
+    },
+    {
+     "t": "¼ teaspoon red pepper flakes",
+     "p": "red pepper flakes"
+    },
+    {
+     "t": "2 cloves garlic, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "½ cup red onion, diced",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 tablespoon lime juice",
+     "p": "lime juice"
+    },
+    {
+     "t": "parsley and lemon wedges for garnish",
+     "p": "parsley"
+    }
+   ],
+   "note": "This dish is easy to prepare, low in calories, and economical.",
+   "steps": [
+    "Preheat oven to 400°F.",
+    "Spray baking dish with vegetable oil spray.",
+    "Arrange fillets in the baking dish. The dish should be large enough so the fillets do not overlap.",
+    "Mix remaining ingredients in a bowl.",
+    "Spoon the tomato mixture evenly over the fillets.",
+    "Bake uncovered 15 to 20 minutes or until the fish flakes easily with a fork.",
+    "Garnish with parsley and a lemon wedge."
+   ],
+   "extra": [],
+   "instructions": "Preheat oven to 400°F. Spray baking dish with vegetable oil spray. Arrange fillets in the baking dish. The dish should be large enough so the fillets do not overlap. Mix remaining ingredients in a bowl. Spoon the tomato mixture evenly over the fillets. Bake uncovered 15 to 20 minutes or until the fish flakes easily with a fork. Garnish with parsley and a lemon wedge.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 28
+   },
+   "es": {
+    "title": "Tilapia al horno con tomate",
+    "lines": [
+     "Aceite vegetal en aerosol",
+     "4 filetes de tilapia (tipo de pescado)",
+     "4 tomates medianos, pelados y picados",
+     "2 cucharadas de aceite de oliva",
+     "1½ cucharaditas de tomillo",
+     "¼ taza de aceitunas negras sin semilla, en pedacitos",
+     "¼ cucharadita de pimienta roja",
+     "2 dientes de ajo, picados finamente",
+     "½ taza de cebolla roja, cortada en cuadritos",
+     "1 cucharada de jugo de limón verde",
+     "perejil y rodajas de limón para adornar"
+    ],
+    "note": "Esta receta deliciosa es fácil de preparar, baja en calorías y al alcance del bolsillo.",
+    "steps": [
+     "Precaliente el horno a unos 204°C.",
+     "Engrase un recipiente para hornear con aceite vegetal en aerosol.",
+     "Coloque los filetes en el recipiente. Asegúrese que los filetes no queden unos encima de otros.",
+     "Mezcle los demás ingredientes en un tazón.",
+     "Vierta la mezcla de los tomates sobre los filetes repartiéndola en forma pareja.",
+     "Hornee sin cubrir de 15 a 20 minutos o hasta que el pescado se pueda cortar fácilmente con un tenedor.",
+     "Adorne con hojas de perejil y rodajas de limón verde."
+    ],
+    "extra": [],
+    "page": 29
+   }
+  },
+  {
+   "id": 1012,
+   "key": "veggiewrap",
+   "title": "Maria’s Veggie Wrap",
+   "slot": "lunch",
+   "cuisine": "latin",
+   "srv": 4,
+   "ingredients": [
+    "bell peppers",
+    "onions",
+    "oil",
+    "black beans",
+    "avocado",
+    "sour cream",
+    "tortillas",
+    "lime",
+    "cilantro",
+    "chili powder"
+   ],
+   "avoid": [
+    "dairy",
+    "gluten"
+   ],
+   "uses": [
+    {
+     "id": "bellpepper",
+     "g": 238
+    },
+    {
+     "id": "onions",
+     "g": 110
+    },
+    {
+     "id": "oil",
+     "g": 4.5
+    },
+    {
+     "id": "blackbeans",
+     "g": 425
+    },
+    {
+     "id": "avocado",
+     "g": 67
+    },
+    {
+     "id": "sourcream",
+     "g": 230
+    },
+    {
+     "id": "tortillas",
+     "g": 180
+    }
+   ],
+   "lines": [
+    {
+     "t": "1 medium red bell pepper, seeded and sliced",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 medium yellow pepper, seeded and sliced",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 onion, sliced",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 teaspoon canola oil",
+     "f": [
+      "oil"
+     ]
+    },
+    {
+     "t": "1 can (15 ounces) low-sodium black beans, drained and rinsed",
+     "f": [
+      "blackbeans"
+     ]
+    },
+    {
+     "t": "½ avocado, peeled and diced",
+     "f": [
+      "avocado"
+     ]
+    },
+    {
+     "t": "juice from 1 lime",
+     "p": "lime"
+    },
+    {
+     "t": "½ cup chopped fresh cilantro",
+     "p": "cilantro"
+    },
+    {
+     "t": "1 teaspoon chili powder (optional)",
+     "p": "chili powder"
+    },
+    {
+     "t": "1 cup fat-free sour cream",
+     "f": [
+      "sourcream"
+     ]
+    },
+    {
+     "t": "4 8-inch whole-wheat tortillas",
+     "f": [
+      "tortillas"
+     ]
+    }
+   ],
+   "note": "This tasty wrap is chock-full of yummy beans and vegetables and provides a great source of fiber.",
+   "steps": [
+    "In a nonstick pan, sauté the peppers and onion in the canola oil for 5 minutes over medium heat. Add beans, stir well. Reduce heat to low, simmer about 5 minutes, and then set aside.",
+    "In a small bowl, combine the avocado, lime juice, cilantro, and chili powder. Reserve half of the mixture for topping.",
+    "Add sour cream to beans and mix well.",
+    "Warm tortillas in the microwave or in a pan on the stovetop.",
+    "Fill a warmed tortilla with ¼ bean mixture and ¼ avocado mixture. Drizzle 2 tablespoons of salsa over the bean and avocado mixture.",
+    "Fold ends of the tortilla over. Roll up to make wraps. Top the veggie wraps with remaining avocado mixture. Follow this process for three other wraps."
+   ],
+   "extra": [],
+   "instructions": "In a nonstick pan, sauté the peppers and onion in the canola oil for 5 minutes over medium heat. Add beans, stir well. Reduce heat to low, simmer about 5 minutes, and then set aside. In a small bowl, combine the avocado, lime juice, cilantro, and chili powder. Reserve half of the mixture for topping. Add sour cream to beans and mix well. Warm tortillas in the microwave or in a pan on the stovetop. Fill a warmed tortilla with ¼ bean mixture and ¼ avocado mixture. Drizzle 2 tablespoons of salsa over the bean and avocado mixture. Fold ends of the tortilla over. Roll up to make wraps. Top the veggie wraps with remaining avocado mixture. Follow this process for three other wraps.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 32
+   },
+   "es": {
+    "title": "El burrito vegetariano de María",
+    "lines": [
+     "1 pimiento rojo, sin semillas y picado",
+     "1 pimiento amarillo, sin semillas y picado",
+     "1 cebolla, pelada y cortada en tajadas",
+     "1 cucharadita de aceite de canola",
+     "1 lata (15 onzas) de frijoles negros bajos en sodio, escurridos del líquido y enjuagados en agua",
+     "½ aguacate (palta), pelado y cortado en cubitos",
+     "Jugo de un limón verde",
+     "½ taza de cilantro (culantro) fresco, picado",
+     "1 cucharadita de chile en polvo (opcional)",
+     "1 taza de crema agria sin grasa",
+     "4 tortillas (de 8 pulgadas) de trigo entero"
+    ],
+    "note": "Este exquisito burrito es repleto de ricos frijoles y verduras y es una gran fuente de fibra.",
+    "steps": [
+     "En una sartén en el que la comida no se pegue, saltee los pimientos y la cebolla en el aceite de canola por 5 minutos sobre fuego mediano. Gregue los frijoles y mezcle bien. Reduzca el fuego y cocine a fuego lento por unos 5 minutos y luego retírelos.",
+     "En un tazón pequeño, mezcle el aguacate (palta), jugo de limón, cilantro y chile en polvo. Divida la mezcla en dos y ponga la mitad a un lado para al final echarla encima de los burritos rellenos.",
+     "Agregue la crema agria a los frijoles y mézclelos bien.",
+     "Caliente las tortillas en el microondas o en una sartén sobre una hornilla.",
+     "Rellene una de las tortillas caliente con ¼ de la mezcla de frijoles y ¼ de la mezcla de aguacate. Ponga 2 cucharadas de pico de gallo sobre esta mezcla.",
+     "Doble las orillas de arriba y de abajo de la tortilla encima del relleno. Enrolle el resto de la tortilla para hacer un burrito. Repita el proceso con las tres tortillas restantes."
+    ],
+    "extra": [],
+    "page": 33
+   }
+  },
+  {
+   "id": 1013,
+   "key": "quinoasalad",
+   "title": "Quinoa and Black Bean Salad",
+   "slot": "lunch",
+   "cuisine": "latin",
+   "srv": 6,
+   "ingredients": [
+    "quinoa",
+    "olive oil",
+    "black beans",
+    "tomatoes",
+    "bell peppers",
+    "lime juice",
+    "cumin",
+    "coriander",
+    "cilantro",
+    "scallions",
+    "green chilis",
+    "black pepper"
+   ],
+   "avoid": [],
+   "uses": [
+    {
+     "id": "quinoa",
+     "g": 85
+    },
+    {
+     "id": "oliveoil",
+     "g": 20
+    },
+    {
+     "id": "blackbeans",
+     "g": 425
+    },
+    {
+     "id": "tomatoes",
+     "g": 360
+    },
+    {
+     "id": "bellpepper",
+     "g": 238
+    }
+   ],
+   "lines": [
+    {
+     "t": "½ cup dry quinoa",
+     "f": [
+      "quinoa"
+     ]
+    },
+    {
+     "t": "1½ cups water"
+    },
+    {
+     "t": "1½ tablespoons olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "3 tablespoons lime juice",
+     "p": "lime juice"
+    },
+    {
+     "t": "¼ teaspoon cumin",
+     "p": "cumin"
+    },
+    {
+     "t": "¼ teaspoon ground coriander (dried cilantro seeds)",
+     "p": "coriander"
+    },
+    {
+     "t": "2 tablespoons cilantro, chopped",
+     "p": "cilantro"
+    },
+    {
+     "t": "2 medium scallions, minced",
+     "p": "scallions"
+    },
+    {
+     "t": "1 can (15 ounces) black beans, rinsed and drained",
+     "f": [
+      "blackbeans"
+     ]
+    },
+    {
+     "t": "2 cups tomato, chopped",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "1 medium red bell pepper, chopped",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 medium green bell pepper, chopped",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "2 fresh green chilis (or to taste), minced",
+     "p": "green chilis"
+    },
+    {
+     "t": "black pepper (to taste)",
+     "p": "black pepper"
+    }
+   ],
+   "note": "This delightful chilled salad could be a great main entreé or side dish.",
+   "steps": [
+    "Rinse the quinoa in cold water. Boil water in a saucepan, then add the quinoa. Return to boil, then simmer until the water is absorbed, 10 to 15 minutes. Cool for 15 minutes.",
+    "While quinoa is cooking, mix olive oil, lime juice, cumin, coriander, chopped cilantro, and scallions in a small bowl, and set aside.",
+    "Combine chopped vegetables with the black beans in a large bowl, and set aside.",
+    "Once quinoa has cooled, combine all ingredients and mix well. Cover and refrigerate until ready to serve."
+   ],
+   "extra": [],
+   "instructions": "Rinse the quinoa in cold water. Boil water in a saucepan, then add the quinoa. Return to boil, then simmer until the water is absorbed, 10 to 15 minutes. Cool for 15 minutes. While quinoa is cooking, mix olive oil, lime juice, cumin, coriander, chopped cilantro, and scallions in a small bowl, and set aside. Combine chopped vegetables with the black beans in a large bowl, and set aside. Once quinoa has cooled, combine all ingredients and mix well. Cover and refrigerate until ready to serve.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "latino",
+    "page": 34
+   },
+   "es": {
+    "title": "Ensalada de quínoa con frijoles negros",
+    "lines": [
+     "½ taza de quinua seca",
+     "1½ tazas de agua",
+     "1½ cucharadas de aceite de oliva",
+     "3 cucharadas de jugo de limón verde",
+     "¼ cucharadita de comino",
+     "¼ cucharadita de semillas secas de cilantro (coriander)",
+     "2 cucharaditas de cilantro, picado",
+     "2 cebollines pequeños, finamente picados",
+     "1 lata (15 onzas) de frijoles negros, enjuagados y sin el líquido",
+     "2 tazas de tomate, picado",
+     "1 pimiento rojo mediano, sin semillas y picado",
+     "1 pimiento verde mediano, sin semillas y picado",
+     "2 ajís (chiles) verdes (al gusto), sin semillas y picados finamente",
+     "pimienta negra, al gusto"
+    ],
+    "note": "Esta nutritiva ensalada puede servirse como plato principal o como guarnición.",
+    "steps": [
+     "Enjuague la quínoa en agua helada. En una olla, ponga a hervir el agua y luego agregue la quinua. Cuando vuelva a hervir el agua, reduzca el fuego y cocine lentamente de 10 a 15 minutos hasta que el agua se seque. Deje enfriar unos 15 minutos.",
+     "Mientras se cocina la quinua, mezcle el aceite de oliva, el jugo de limón verde, el comino, la semilla seca del cilantro (coriandro), el cilantro picado y los cebollines en un tazón y ponga a un lado.",
+     "Mezcle las verduras cortadas con los frijoles negros en un tazón grande y déjelos a un lado.",
+     "Cuando laquinua se haya enfriado, mézclela bien con los demás ingredientes. Cubra y refrigere hasta que esté listo para servir."
+    ],
+    "extra": [],
+    "page": 35
+   }
+  },
+  {
+   "id": 1014,
+   "key": "vegetablestew",
+   "title": "Vegetable Stew",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 8,
+   "ingredients": [
+    "potatoes",
+    "carrots",
+    "summer squash",
+    "corn on the cob",
+    "garlic",
+    "onions",
+    "tomatoes",
+    "vegetable bouillon",
+    "thyme",
+    "scallion",
+    "hot pepper"
+   ],
+   "avoid": [],
+   "uses": [
+    {
+     "id": "potatoes",
+     "g": 300
+    },
+    {
+     "id": "carrots",
+     "g": 244
+    },
+    {
+     "id": "zucchini",
+     "g": 565
+    },
+    {
+     "id": "cornears",
+     "g": 204
+    },
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "onions",
+     "g": 160
+    },
+    {
+     "id": "tomatoes",
+     "g": 180
+    }
+   ],
+   "lines": [
+    {
+     "t": "3 cups water"
+    },
+    {
+     "t": "1 cube vegetable bouillon, low sodium",
+     "p": "vegetable bouillon"
+    },
+    {
+     "t": "2 cups white potatoes cut in 2-inch strips",
+     "f": [
+      "potatoes"
+     ]
+    },
+    {
+     "t": "2 cups carrots, sliced",
+     "f": [
+      "carrots"
+     ]
+    },
+    {
+     "t": "4 cups summer squash, cut in 1-inch squares",
+     "f": [
+      "zucchini"
+     ]
+    },
+    {
+     "t": "1 cup summer squash, cut in four chunks",
+     "f": [
+      "zucchini"
+     ]
+    },
+    {
+     "t": "2 ears fresh corn (1½ cups)",
+     "f": [
+      "cornears"
+     ]
+    },
+    {
+     "t": "1 teaspoon thyme, ground",
+     "p": "thyme"
+    },
+    {
+     "t": "2 cloves garlic, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 stalk scallion, chopped",
+     "p": "scallion"
+    },
+    {
+     "t": "½ small hot red pepper, chopped",
+     "p": "hot pepper"
+    },
+    {
+     "t": "1 cup onion, coarsely chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "1 cup tomatoes, diced",
+     "f": [
+      "tomatoes"
+     ]
+    }
+   ],
+   "note": "Here’s a great new way to use summer vegetables. You can add your other favorite vegetables such as broccoli, cauliflower, or string beans.",
+   "steps": [
+    "Heat water and bouillon in a large pot, and bring to a boil.",
+    "Add potatoes and carrots to the broth, and simmer for 5 minutes.",
+    "Cut the corn off the cob.",
+    "Add the remaining ingredients, except for the tomatoes, and continue cooking for 15 minutes over medium heat.",
+    "Remove the four chunks of squash, and puree in a blender.",
+    "Return pureed mixture to the pot, and let it cook for 10 minutes more.",
+    "Add tomatoes, and cook for another 5 minutes.",
+    "Remove from heat, and let it sit for 10 minutes to allow stew to thicken."
+   ],
+   "extra": [
+    {
+     "h": "Make It a Meal",
+     "t": "To make this dish a meal, serve it with a green salad that includes lettuce (romaine) or spinach, cucumber, and other fresh vegetables. Use a light dressing, such as a vinaigrette, or a low-fat or fat-free dressing. Serve with whole-grain bread or rolls."
+    }
+   ],
+   "instructions": "Heat water and bouillon in a large pot, and bring to a boil. Add potatoes and carrots to the broth, and simmer for 5 minutes. Cut the corn off the cob. Add the remaining ingredients, except for the tomatoes, and continue cooking for 15 minutes over medium heat. Remove the four chunks of squash, and puree in a blender. Return pureed mixture to the pot, and let it cook for 10 minutes more. Add tomatoes, and cook for another 5 minutes. Remove from heat, and let it sit for 10 minutes to allow stew to thicken.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 9
+   }
+  },
+  {
+   "id": 1015,
+   "key": "macandcheese",
+   "title": "Classic Macaroni and Cheese",
+   "slot": "dinner",
+   "cuisine": "american",
+   "srv": 8,
+   "ingredients": [
+    "pasta",
+    "onions",
+    "evaporated milk",
+    "eggs",
+    "cheese",
+    "black pepper"
+   ],
+   "avoid": [
+    "dairy",
+    "eggs",
+    "gluten"
+   ],
+   "uses": [
+    {
+     "id": "pasta",
+     "g": 244
+    },
+    {
+     "id": "onions",
+     "g": 80
+    },
+    {
+     "id": "evaporatedmilk",
+     "g": 128
+    },
+    {
+     "id": "eggs",
+     "g": 44
+    },
+    {
+     "id": "cheese",
+     "g": 113
+    }
+   ],
+   "lines": [
+    {
+     "t": "2 cups macaroni",
+     "f": [
+      "pasta"
+     ]
+    },
+    {
+     "t": "½ cup chopped onions",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "½ cup evaporated, fat-free milk",
+     "f": [
+      "evaporatedmilk"
+     ]
+    },
+    {
+     "t": "1 medium egg, beaten",
+     "f": [
+      "eggs"
+     ]
+    },
+    {
+     "t": "¼ teaspoon black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "1 ¼ cups (4 oz.) reduced-fat, natural, sharp cheddar cheese, shredded",
+     "f": [
+      "cheese"
+     ]
+    }
+   ],
+   "note": "This recipe proves you don’t have to give up your favorite dishes to eat heart-healthy meals. Here’s a lower-fat version of a true classic.",
+   "steps": [
+    "Cook macaroni according to package directions. (Don’t add salt to the cooking water.) Drain and set aside.",
+    "Preheat oven to 350 °F.",
+    "Heat 1 teaspoon of oil in saucepan.",
+    "Add onions to saucepan and sauté for about 3 minutes.",
+    "In another bowl, combine macaroni, onions, and the remaining ingredients. Mix thoroughly.",
+    "Transfer mixture into casserole dish.",
+    "Bake for 25 minutes or until bubbly. Let stand for 10 minutes before serving."
+   ],
+   "extra": [],
+   "instructions": "Cook macaroni according to package directions. (Don’t add salt to the cooking water.) Drain and set aside. Preheat oven to 350 °F. Heat 1 teaspoon of oil in saucepan. Add onions to saucepan and sauté for about 3 minutes. In another bowl, combine macaroni, onions, and the remaining ingredients. Mix thoroughly. Transfer mixture into casserole dish. Bake for 25 minutes or until bubbly. Let stand for 10 minutes before serving.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 10
+   }
+  },
+  {
+   "id": 1016,
+   "key": "caribbeancasserole",
+   "title": "Caribbean Casserole",
+   "slot": "dinner",
+   "cuisine": "any",
+   "srv": 10,
+   "ingredients": [
+    "onions",
+    "bell peppers",
+    "oil",
+    "canned tomatoes",
+    "black beans",
+    "brown rice",
+    "oregano",
+    "garlic powder"
+   ],
+   "avoid": [],
+   "uses": [
+    {
+     "id": "onions",
+     "g": 110
+    },
+    {
+     "id": "bellpepper",
+     "g": 60
+    },
+    {
+     "id": "oil",
+     "g": 13.6
+    },
+    {
+     "id": "cannedtomatoes",
+     "g": 411
+    },
+    {
+     "id": "blackbeans",
+     "g": 425
+    },
+    {
+     "id": "brownrice",
+     "g": 129
+    }
+   ],
+   "lines": [
+    {
+     "t": "1 medium onion, chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "½ green pepper, rinsed and diced",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 tablespoon canola oil",
+     "f": [
+      "oil"
+     ]
+    },
+    {
+     "t": "1 can (14½-ounce) stewed tomatoes",
+     "f": [
+      "cannedtomatoes"
+     ]
+    },
+    {
+     "t": "1 can (15½-ounce) low sodium black beans (or beans of your choice)",
+     "f": [
+      "blackbeans"
+     ]
+    },
+    {
+     "t": "1 teaspoon dried oregano",
+     "p": "oregano"
+    },
+    {
+     "t": "½ teaspoon garlic powder",
+     "p": "garlic powder"
+    },
+    {
+     "t": "1½ cups instant brown rice, uncooked",
+     "f": [
+      "brownrice"
+     ]
+    }
+   ],
+   "note": "This tropical-inspired dish is gently spiced for a rich flavor.",
+   "steps": [
+    "Sauté onion and green pepper in canola oil, in a large pan, until tender. Do not brown.",
+    "Add tomatoes and beans (include liquid from both), as well as oregano and garlic powder. Bring to a boil.",
+    "Stir in rice and cover. Reduce heat to simmer for 5 minutes. Remove from heat and let stand for 5 minutes before serving."
+   ],
+   "extra": [],
+   "instructions": "Sauté onion and green pepper in canola oil, in a large pan, until tender. Do not brown. Add tomatoes and beans (include liquid from both), as well as oregano and garlic powder. Bring to a boil. Stir in rice and cover. Reduce heat to simmer for 5 minutes. Remove from heat and let stand for 5 minutes before serving.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 13
+   }
+  },
+  {
+   "id": 1017,
+   "key": "ovenfriedchicken",
+   "title": "Crispy Oven-Fried Chicken",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 6,
+   "ingredients": [
+    "milk",
+    "cornflakes",
+    "chicken breast",
+    "chicken drumsticks",
+    "poultry seasoning",
+    "onion powder",
+    "garlic powder",
+    "black pepper",
+    "dried hot pepper",
+    "ground ginger",
+    "paprika"
+   ],
+   "avoid": [
+    "dairy",
+    "gluten",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "milk",
+     "g": 122
+    },
+    {
+     "id": "cornflakes",
+     "g": 85
+    },
+    {
+     "id": "chickenbreast",
+     "g": 688
+    },
+    {
+     "id": "drumsticks",
+     "g": 520
+    }
+   ],
+   "lines": [
+    {
+     "t": "½ cup fat-free milk or buttermilk",
+     "f": [
+      "milk"
+     ]
+    },
+    {
+     "t": "1 teaspoon poultry seasoning",
+     "p": "poultry seasoning"
+    },
+    {
+     "t": "1 cup cornflakes, crumbled (or breadcrumbs)",
+     "f": [
+      "cornflakes"
+     ]
+    },
+    {
+     "t": "1½ tablespoons onion powder",
+     "p": "onion powder"
+    },
+    {
+     "t": "1½ tablespoons garlic powder",
+     "p": "garlic powder"
+    },
+    {
+     "t": "2 teaspoons black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "2 teaspoons dried hot pepper, crushed",
+     "p": "dried hot pepper"
+    },
+    {
+     "t": "1 teaspoon ginger, ground",
+     "p": "ground ginger"
+    },
+    {
+     "t": "8 pieces chicken, skinless (4 breasts, 4 drumsticks)",
+     "f": [
+      "chickenbreast",
+      "drumsticks"
+     ]
+    },
+    {
+     "t": "¼ teaspoon paprika",
+     "p": "paprika"
+    }
+   ],
+   "note": "Kids will love this chicken—and it’s good for the heart.",
+   "steps": [
+    "Preheat oven to 350 °F.",
+    "Add ½ teaspoon of poultry seasoning to milk.",
+    "Combine remaining ½ teaspoon of poultry seasoning and all other spices, except paprika, with corn flake crumbs (or breadcrumbs), and place in a plastic bag.",
+    "Dip chicken into milk, shake to remove excess liquid, then quickly shake chicken in the bag with seasoning and crumbs.",
+    "Refrigerate for 1 hour.",
+    "Remove from refrigerator and sprinkle lightly with paprika for color.",
+    "Place chicken on wire rack, and place rack on top of a baking pan that you have lined with foil. The chicken pieces should be spaced evenly apart.",
+    "The crumbs will form a crispy “skin.” Don’t turn the chicken during baking.",
+    "Bake 40 minutes. Rotate the pan and continue baking for an additional 30 to 40 minutes or until the meat can be easily pulled away from the bone with a fork. The juices should run clear and the meat should not be pink. The drumsticks may require less baking time than the breasts."
+   ],
+   "extra": [],
+   "instructions": "Preheat oven to 350 °F. Add ½ teaspoon of poultry seasoning to milk. Combine remaining ½ teaspoon of poultry seasoning and all other spices, except paprika, with corn flake crumbs (or breadcrumbs), and place in a plastic bag. Dip chicken into milk, shake to remove excess liquid, then quickly shake chicken in the bag with seasoning and crumbs. Refrigerate for 1 hour. Remove from refrigerator and sprinkle lightly with paprika for color. Place chicken on wire rack, and place rack on top of a baking pan that you have lined with foil. The chicken pieces should be spaced evenly apart. The crumbs will form a crispy “skin.” Don’t turn the chicken during baking. Bake 40 minutes. Rotate the pan and continue baking for an additional 30 to 40 minutes or until the meat can be easily pulled away from the bone with a fork. The juices should run clear and the meat should not be pink. The drumsticks may require less baking time than the breasts.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 16
+   }
+  },
+  {
+   "id": 1018,
+   "key": "ovenfriedfish",
+   "title": "Mouth-Watering Oven-Fried Fish",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 6,
+   "ingredients": [
+    "fish",
+    "buttermilk",
+    "garlic",
+    "cornflakes",
+    "oil",
+    "lemon juice",
+    "hot sauce",
+    "white pepper",
+    "onion powder",
+    "lemon"
+   ],
+   "avoid": [
+    "dairy",
+    "fish",
+    "gluten",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "fish",
+     "g": 907
+    },
+    {
+     "id": "buttermilk",
+     "g": 61
+    },
+    {
+     "id": "garlic",
+     "g": 3
+    },
+    {
+     "id": "cornflakes",
+     "g": 43
+    },
+    {
+     "id": "oil",
+     "g": 13.6
+    }
+   ],
+   "lines": [
+    {
+     "t": "2 pounds fish fillets",
+     "f": [
+      "fish"
+     ]
+    },
+    {
+     "t": "1 tablespoon lemon juice",
+     "p": "lemon juice"
+    },
+    {
+     "t": "¼ cup fat-free or 1% buttermilk",
+     "f": [
+      "buttermilk"
+     ]
+    },
+    {
+     "t": "2 drops hot sauce",
+     "p": "hot sauce"
+    },
+    {
+     "t": "1 teaspoon fresh garlic, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "¼ teaspoon ground white pepper",
+     "p": "white pepper"
+    },
+    {
+     "t": "¼ teaspoon salt"
+    },
+    {
+     "t": "¼ teaspoon onion powder",
+     "p": "onion powder"
+    },
+    {
+     "t": "½ cup cornflakes, crumbled, or regular bread crumbs",
+     "f": [
+      "cornflakes"
+     ]
+    },
+    {
+     "t": "1 tablespoon vegetable oil",
+     "f": [
+      "oil"
+     ]
+    },
+    {
+     "t": "1 fresh lemon, cut in wedges",
+     "p": "lemon"
+    }
+   ],
+   "note": "This heart-healthy dish can be made with many kinds of fish—to be enjoyed over and over.",
+   "steps": [
+    "Preheat oven to 475 °F.",
+    "Clean and rinse fish. Wipe fillets with lemon juice and pat dry.",
+    "Combine milk, hot sauce, and garlic in a mixing bowl.",
+    "Combine white pepper, salt, and onion powder with cornflakes or bread crumbs, and spread on a plate.",
+    "Let fillets sit briefly in milk mixture. Remove a fillet, and coat on both sides with seasoned cornflakes or bread crumbs, and let stand briefly until coating sticks to each side of fish. Repeat for all fillets.",
+    "Arrange fillets on lightly oiled shallow baking dish.",
+    "Place dish on middle rack. Bake for 20 minutes without turning.",
+    "Cut into six pieces. Serve with fresh lemon."
+   ],
+   "extra": [],
+   "instructions": "Preheat oven to 475 °F. Clean and rinse fish. Wipe fillets with lemon juice and pat dry. Combine milk, hot sauce, and garlic in a mixing bowl. Combine white pepper, salt, and onion powder with cornflakes or bread crumbs, and spread on a plate. Let fillets sit briefly in milk mixture. Remove a fillet, and coat on both sides with seasoned cornflakes or bread crumbs, and let stand briefly until coating sticks to each side of fish. Repeat for all fillets. Arrange fillets on lightly oiled shallow baking dish. Place dish on middle rack. Bake for 20 minutes without turning. Cut into six pieces. Serve with fresh lemon.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 17
+   }
+  },
+  {
+   "id": 1019,
+   "key": "curriedchicken",
+   "title": "Finger-Licking Curried Chicken",
+   "slot": "dinner",
+   "cuisine": "any",
+   "srv": 10,
+   "ingredients": [
+    "garlic",
+    "chicken breast",
+    "chicken drumsticks",
+    "olive oil",
+    "potatoes",
+    "onions",
+    "curry powder",
+    "thyme",
+    "scallion",
+    "hot pepper",
+    "cayenne pepper",
+    "black pepper",
+    "ginger"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "garlic",
+     "g": 24
+    },
+    {
+     "id": "chickenbreast",
+     "g": 688
+    },
+    {
+     "id": "drumsticks",
+     "g": 520
+    },
+    {
+     "id": "oliveoil",
+     "g": 13.5
+    },
+    {
+     "id": "potatoes",
+     "g": 213
+    },
+    {
+     "id": "onions",
+     "g": 150
+    }
+   ],
+   "lines": [
+    {
+     "t": "1½ teaspoons curry powder",
+     "p": "curry powder"
+    },
+    {
+     "t": "1 teaspoon thyme",
+     "p": "thyme"
+    },
+    {
+     "t": "1 stalk scallion (green onion), chopped",
+     "p": "scallion"
+    },
+    {
+     "t": "1 tablespoon hot pepper, chopped",
+     "p": "hot pepper"
+    },
+    {
+     "t": "½ tsp ground cayenne pepper",
+     "p": "cayenne pepper"
+    },
+    {
+     "t": "1 teaspoon ground black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "8 cloves garlic, crushed",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 tablespoon grated ginger",
+     "p": "ginger"
+    },
+    {
+     "t": "¾ teaspoon salt"
+    },
+    {
+     "t": "8 pieces skinless chicken (4 breasts, 4 drumsticks)",
+     "f": [
+      "chickenbreast",
+      "drumsticks"
+     ]
+    },
+    {
+     "t": "1 tablespoon olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "1 cup water"
+    },
+    {
+     "t": "1 medium white potato, diced",
+     "f": [
+      "potatoes"
+     ]
+    },
+    {
+     "t": "1 large onion, chopped",
+     "f": [
+      "onions"
+     ]
+    }
+   ],
+   "note": "The name tells all—ginger and curry powder make it irresistible.",
+   "steps": [
+    "Wash chicken and pat dry.",
+    "In a bowl, mix together curry powder, thyme, scallion, hot pepper, cayenne pepper, black pepper, garlic, ginger, and salt.",
+    "Toss chicken in seasoning mixture.",
+    "Marinate for at least 2 hours in the refrigerator.",
+    "Heat oil in a skillet over medium heat. Add chicken, and sauté.",
+    "Add water and allow chicken to cook over medium heat for 30 minutes.",
+    "Add diced potatoes and cook for an additional 30 minutes.",
+    "Add onions and cook for 15 minutes more or until meat is tender. Serve warm."
+   ],
+   "extra": [],
+   "instructions": "Wash chicken and pat dry. In a bowl, mix together curry powder, thyme, scallion, hot pepper, cayenne pepper, black pepper, garlic, ginger, and salt. Toss chicken in seasoning mixture. Marinate for at least 2 hours in the refrigerator. Heat oil in a skillet over medium heat. Add chicken, and sauté. Add water and allow chicken to cook over medium heat for 30 minutes. Add diced potatoes and cook for an additional 30 minutes. Add onions and cook for 15 minutes more or until meat is tender. Serve warm.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 18
+   }
+  },
+  {
+   "id": 1020,
+   "key": "poachedsalmon",
+   "title": "Poached Salmon",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 4,
+   "ingredients": [
+    "tomatoes",
+    "onions",
+    "olive oil",
+    "salmon",
+    "parsley",
+    "red pepper flakes",
+    "red wine vinegar",
+    "black pepper",
+    "black peppercorns",
+    "lemon",
+    "bay leaves"
+   ],
+   "avoid": [
+    "fish",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "tomatoes",
+     "g": 246
+    },
+    {
+     "id": "onions",
+     "g": 90
+    },
+    {
+     "id": "oliveoil",
+     "g": 27
+    },
+    {
+     "id": "salmon",
+     "g": 567
+    }
+   ],
+   "lines": [
+    {
+     "t": "Spicy Tomato Relish",
+     "h": 1
+    },
+    {
+     "t": "2 medium tomatoes, chopped",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "2 tablespoons finely chopped yellow onion",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "2 tablespoons finely chopped fresh parsley",
+     "p": "parsley"
+    },
+    {
+     "t": "1 teaspoon red pepper flakes, or to taste",
+     "p": "red pepper flakes"
+    },
+    {
+     "t": "¼ cup red wine vinegar",
+     "p": "red wine vinegar"
+    },
+    {
+     "t": "2 tablespoons olive oil",
+     "f": [
+      "oliveoil"
+     ]
+    },
+    {
+     "t": "ground black pepper, to taste",
+     "p": "black pepper"
+    },
+    {
+     "t": "Salmon",
+     "h": 1
+    },
+    {
+     "t": "4 salmon steaks, 5 ounces each",
+     "f": [
+      "salmon"
+     ]
+    },
+    {
+     "t": "3 cups water"
+    },
+    {
+     "t": "4 black peppercorns",
+     "p": "black peppercorns"
+    },
+    {
+     "t": "1 lemon, thickly sliced",
+     "p": "lemon"
+    },
+    {
+     "t": "3 parsley sprigs",
+     "p": "parsley"
+    },
+    {
+     "t": "1 small onion, thickly sliced",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "2 bay leaves",
+     "p": "bay leaves"
+    }
+   ],
+   "note": "The tomato relish adds just the right amount of flavor.",
+   "steps": [
+    "To prepare relish, combine all the ingredients in a bowl and set aside.",
+    "Using a pan large enough to hold the four salmon steaks, bring water to a boil and add peppercorns, lemon slices, parsley, onion, and bay leaf.",
+    "Lower the heat to a gentle simmer, cover, and let flavors infuse for 5 minutes. Add salmon steaks and make sure they are covered with water. Add additional water if needed.",
+    "Cook, uncovered, for 10 to 12 minutes or until fish flakes easily with a fork in the thickest part (minimum internal temperature of 145 °F). Never let water boil or fish will toughen.",
+    "Serve each salmon steak with the relish."
+   ],
+   "extra": [],
+   "instructions": "To prepare relish, combine all the ingredients in a bowl and set aside. Using a pan large enough to hold the four salmon steaks, bring water to a boil and add peppercorns, lemon slices, parsley, onion, and bay leaf. Lower the heat to a gentle simmer, cover, and let flavors infuse for 5 minutes. Add salmon steaks and make sure they are covered with water. Add additional water if needed. Cook, uncovered, for 10 to 12 minutes or until fish flakes easily with a fork in the thickest part (minimum internal temperature of 145 °F). Never let water boil or fish will toughen. Serve each salmon steak with the relish.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 19
+   }
+  },
+  {
+   "id": 1021,
+   "key": "jerkchicken",
+   "title": "Jamaican Jerk Chicken",
+   "slot": "dinner",
+   "cuisine": "any",
+   "srv": 10,
+   "ingredients": [
+    "garlic",
+    "onions",
+    "chicken breast",
+    "chicken drumsticks",
+    "cinnamon",
+    "allspice",
+    "black pepper",
+    "hot pepper",
+    "dried hot pepper",
+    "oregano",
+    "thyme",
+    "vinegar",
+    "brown sugar"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "garlic",
+     "g": 18
+    },
+    {
+     "id": "onions",
+     "g": 160
+    },
+    {
+     "id": "chickenbreast",
+     "g": 688
+    },
+    {
+     "id": "drumsticks",
+     "g": 520
+    }
+   ],
+   "lines": [
+    {
+     "t": "½ teaspoon ground cinnamon",
+     "p": "cinnamon"
+    },
+    {
+     "t": "1½ teaspoons ground allspice",
+     "p": "allspice"
+    },
+    {
+     "t": "1½ teaspoons ground black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "1 tablespoon chopped hot pepper",
+     "p": "hot pepper"
+    },
+    {
+     "t": "1 teaspoon dried hot pepper",
+     "p": "dried hot pepper"
+    },
+    {
+     "t": "2 teaspoons crushed oregano",
+     "p": "oregano"
+    },
+    {
+     "t": "2 teaspoons dried thyme",
+     "p": "thyme"
+    },
+    {
+     "t": "½ teaspoon salt"
+    },
+    {
+     "t": "6 cloves garlic, finely chopped",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 cup onion, pureed or finely chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "¼ cup vinegar",
+     "p": "vinegar"
+    },
+    {
+     "t": "3 tablespoons brown sugar",
+     "p": "brown sugar"
+    },
+    {
+     "t": "8 pieces skinless chicken (4 breasts, 4 drumsticks)",
+     "f": [
+      "chickenbreast",
+      "drumsticks"
+     ]
+    }
+   ],
+   "note": "The spices and peppers in this dish will transport you to a whole new taste.",
+   "steps": [
+    "Wash chicken and pat dry.",
+    "In a large bowl, combine all ingredients except chicken.",
+    "Rub seasonings over chicken and marinate in refrigerator for 6 hours or longer.",
+    "Preheat oven to 350°F. Space chicken evenly on a nonstick or lightly greased baking pan.",
+    "Cover with aluminum foil and bake for 40 minutes. Remove foil and continue baking for an additional 30 to 40 minutes or until the meat can easily be pulled away from the bone with a fork."
+   ],
+   "extra": [],
+   "instructions": "Wash chicken and pat dry. In a large bowl, combine all ingredients except chicken. Rub seasonings over chicken and marinate in refrigerator for 6 hours or longer. Preheat oven to 350°F. Space chicken evenly on a nonstick or lightly greased baking pan. Cover with aluminum foil and bake for 40 minutes. Remove foil and continue baking for an additional 30 to 40 minutes or until the meat can easily be pulled away from the bone with a fork.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 20
+   }
+  },
+  {
+   "id": 1022,
+   "key": "porkchops",
+   "title": "Baked Pork Chops",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 6,
+   "ingredients": [
+    "pork",
+    "eggs",
+    "evaporated milk",
+    "cornflakes",
+    "bread crumbs",
+    "paprika",
+    "oregano",
+    "chili powder",
+    "garlic powder",
+    "black pepper",
+    "cayenne pepper",
+    "dry mustard",
+    "cooking spray"
+   ],
+   "avoid": [
+    "dairy",
+    "eggs",
+    "gluten",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "porkchops",
+     "g": 726
+    },
+    {
+     "id": "eggs",
+     "g": 50
+    },
+    {
+     "id": "evaporatedmilk",
+     "g": 256
+    },
+    {
+     "id": "cornflakes",
+     "g": 64
+    },
+    {
+     "id": "breadcrumbs",
+     "g": 27
+    }
+   ],
+   "lines": [
+    {
+     "t": "6 lean center-cut pork chops, ½-inch thick",
+     "f": [
+      "porkchops"
+     ]
+    },
+    {
+     "t": "1 egg white (or substitute liquid egg white)",
+     "f": [
+      "eggs"
+     ]
+    },
+    {
+     "t": "1 cup fat-free evaporated milk",
+     "f": [
+      "evaporatedmilk"
+     ]
+    },
+    {
+     "t": "¾ cup cornflake crumbs",
+     "f": [
+      "cornflakes"
+     ]
+    },
+    {
+     "t": "¼ cup bread crumbs",
+     "f": [
+      "breadcrumbs"
+     ]
+    },
+    {
+     "t": "4 teaspoons paprika",
+     "p": "paprika"
+    },
+    {
+     "t": "2 teaspoons oregano",
+     "p": "oregano"
+    },
+    {
+     "t": "¾ teaspoon chili powder",
+     "p": "chili powder"
+    },
+    {
+     "t": "½ teaspoon garlic powder",
+     "p": "garlic powder"
+    },
+    {
+     "t": "½ teaspoon ground black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "⅛ teaspoon cayenne pepper",
+     "p": "cayenne pepper"
+    },
+    {
+     "t": "⅛ teaspoon dry mustard",
+     "p": "dry mustard"
+    },
+    {
+     "t": "½ teaspoon salt"
+    },
+    {
+     "t": "cooking spray",
+     "p": "cooking spray"
+    }
+   ],
+   "note": "You can really sink your chops into these—they’re made moist and spicy with egg whites, evaporated milk, and a lively blend of herbs.",
+   "steps": [
+    "Preheat oven to 375 °F.",
+    "Trim fat from pork chops.",
+    "Beat together egg white and evaporated milk. Place pork chops in milk mixture and let stand for 5 minutes, turning once.",
+    "Meanwhile, mix cornflake crumbs, bread crumbs, spices, and salt.",
+    "Spray cooking spray on 13 x 9-inch baking pan.",
+    "Remove pork chops from milk mixture and coat thoroughly with crumb mixture.",
+    "Place pork chops in pan and bake at 375 °F for 20 minutes. Turn pork chops and bake for an additional 15 minutes or until pork is fully cooked (to a minimum internal temperature of 160 °F)."
+   ],
+   "extra": [
+    {
+     "h": "Note:",
+     "t": "Try the recipe with skinless, boneless chicken or turkey parts, or fish—bake for just 20 minutes."
+    }
+   ],
+   "instructions": "Preheat oven to 375 °F. Trim fat from pork chops. Beat together egg white and evaporated milk. Place pork chops in milk mixture and let stand for 5 minutes, turning once. Meanwhile, mix cornflake crumbs, bread crumbs, spices, and salt. Spray cooking spray on 13 x 9-inch baking pan. Remove pork chops from milk mixture and coat thoroughly with crumb mixture. Place pork chops in pan and bake at 375 °F for 20 minutes. Turn pork chops and bake for an additional 15 minutes or until pork is fully cooked (to a minimum internal temperature of 160 °F).",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 21
+   }
+  },
+  {
+   "id": 1023,
+   "key": "jambalaya",
+   "title": "Jumpin’ Jambalaya",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 9,
+   "ingredients": [
+    "turkey kielbasa",
+    "chicken breast",
+    "celery",
+    "onions",
+    "garlic",
+    "bell peppers",
+    "canned tomatoes",
+    "brown rice",
+    "cooking spray",
+    "green onions",
+    "chicken bouillon",
+    "bay leaves",
+    "cayenne pepper",
+    "parsley"
+   ],
+   "avoid": [
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "kielbasa",
+     "g": 397
+    },
+    {
+     "id": "chickenbreast",
+     "g": 454
+    },
+    {
+     "id": "celery",
+     "g": 40
+    },
+    {
+     "id": "onions",
+     "g": 140
+    },
+    {
+     "id": "garlic",
+     "g": 12
+    },
+    {
+     "id": "bellpepper",
+     "g": 119
+    },
+    {
+     "id": "cannedtomatoes",
+     "g": 411
+    },
+    {
+     "id": "brownrice",
+     "g": 278
+    }
+   ],
+   "lines": [
+    {
+     "t": "14 ounces low-fat turkey kielbasa",
+     "f": [
+      "kielbasa"
+     ]
+    },
+    {
+     "t": "1 pound boneless, skinless chicken breast",
+     "f": [
+      "chickenbreast"
+     ]
+    },
+    {
+     "t": "nonstick cooking spray",
+     "p": "cooking spray"
+    },
+    {
+     "t": "1 medium celery stalk, chopped",
+     "f": [
+      "celery"
+     ]
+    },
+    {
+     "t": "2 small onions, chopped",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "4 cloves garlic, chopped",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "1 small bunch green onions, chopped",
+     "p": "green onions"
+    },
+    {
+     "t": "1 medium green bell pepper, chopped",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 can (14½-ounce) no-salt-added diced tomatoes",
+     "f": [
+      "cannedtomatoes"
+     ]
+    },
+    {
+     "t": "1½ cups uncooked brown rice",
+     "f": [
+      "brownrice"
+     ]
+    },
+    {
+     "t": "4 cups water"
+    },
+    {
+     "t": "2 cubes low-sodium chicken bouillon",
+     "p": "chicken bouillon"
+    },
+    {
+     "t": "1 bay leaf",
+     "p": "bay leaves"
+    },
+    {
+     "t": "1½ teaspoons cayenne pepper",
+     "p": "cayenne pepper"
+    },
+    {
+     "t": "3 tablespoons parsley, finely chopped",
+     "p": "parsley"
+    }
+   ],
+   "note": "Here is a jambalaya that your family can enjoy. It has lots of flavor, veggies, and tasty low-fat meats! Green salad is a nice side dish.",
+   "steps": [
+    "Wash chicken and pat dry. Cut the chicken breast and kielbasa into 1-inch chunks.",
+    "Spray a medium-sized pot with nonstick cooking spray. Brown the kielbasa and chicken over medium heat and remove from the pot.",
+    "Add next 6 ingredients to the same pot and cook over medium heat for 10 minutes.",
+    "Return the cooked meat to the pot; add the rice, water, bouillon, bay leaf, and cayenne pepper. Bring to a boil. Cover, reduce heat, and let simmer for about 50 minutes* or until the water is evaporated.",
+    "Stir in parsley and serve warm."
+   ],
+   "extra": [
+    {
+     "h": "",
+     "t": "*Instant brown rice will take less time to cook."
+    }
+   ],
+   "instructions": "Wash chicken and pat dry. Cut the chicken breast and kielbasa into 1-inch chunks. Spray a medium-sized pot with nonstick cooking spray. Brown the kielbasa and chicken over medium heat and remove from the pot. Add next 6 ingredients to the same pot and cook over medium heat for 10 minutes. Return the cooked meat to the pot; add the rice, water, bouillon, bay leaf, and cayenne pepper. Bring to a boil. Cover, reduce heat, and let simmer for about 50 minutes* or until the water is evaporated. Stir in parsley and serve warm.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 22
+   }
+  },
+  {
+   "id": 1024,
+   "key": "meatloaf",
+   "title": "Scrumptious Meatloaf",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 6,
+   "ingredients": [
+    "ground beef",
+    "onions",
+    "bell peppers",
+    "tomatoes",
+    "garlic",
+    "bread crumbs",
+    "tomato paste",
+    "mustard",
+    "black pepper",
+    "hot pepper",
+    "scallions",
+    "ground ginger",
+    "nutmeg",
+    "orange rind",
+    "thyme"
+   ],
+   "avoid": [
+    "gluten",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "groundbeef",
+     "g": 454
+    },
+    {
+     "id": "onions",
+     "g": 640
+    },
+    {
+     "id": "bellpepper",
+     "g": 1192
+    },
+    {
+     "id": "tomatoes",
+     "g": 180
+    },
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "breadcrumbs",
+     "g": 432
+    }
+   ],
+   "lines": [
+    {
+     "t": "1 pound extra-lean ground beef",
+     "f": [
+      "groundbeef"
+     ]
+    },
+    {
+     "t": "½ cup tomato paste",
+     "p": "tomato paste"
+    },
+    {
+     "t": "4 cups chopped onion",
+     "f": [
+      "onions"
+     ]
+    },
+    {
+     "t": "4 cups chopped green pepper",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "4 cups chopped red pepper",
+     "f": [
+      "bellpepper"
+     ]
+    },
+    {
+     "t": "1 cup fresh tomatoes, blanched",
+     "f": [
+      "tomatoes"
+     ]
+    },
+    {
+     "t": "2 teaspoons low-sodium mustard",
+     "p": "mustard"
+    },
+    {
+     "t": "4 teaspoons ground black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "2 teaspoons chopped hot pepper",
+     "p": "hot pepper"
+    },
+    {
+     "t": "2 cloves garlic, chopped",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "2 scallions (green onions), chopped",
+     "p": "scallions"
+    },
+    {
+     "t": "2 teaspoons ground ginger",
+     "p": "ground ginger"
+    },
+    {
+     "t": "8 teaspoons ground nutmeg",
+     "p": "nutmeg"
+    },
+    {
+     "t": "1 teaspoon grated orange rind",
+     "p": "orange rind"
+    },
+    {
+     "t": "2 teaspoons crushed thyme",
+     "p": "thyme"
+    },
+    {
+     "t": "4 cups bread crumbs",
+     "f": [
+      "breadcrumbs"
+     ]
+    }
+   ],
+   "note": "Got the meatloaf blahs? This recipe transforms the ordinary into the extraordinary.",
+   "steps": [
+    "Preheat oven to 350 °F.",
+    "Mix all ingredients together.",
+    "Place in a loaf pan (preferably with drip rack) and bake, covered, for 50 minutes.",
+    "Uncover pan and continue baking for 12 minutes.",
+    "Cut into six even slices and serve."
+   ],
+   "extra": [],
+   "instructions": "Preheat oven to 350 °F. Mix all ingredients together. Place in a loaf pan (preferably with drip rack) and bake, covered, for 50 minutes. Uncover pan and continue baking for 12 minutes. Cut into six even slices and serve.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 23
+   }
+  },
+  {
+   "id": 1025,
+   "key": "bbqchicken",
+   "title": "Spicy Southern Barbecued Chicken",
+   "slot": "dinner",
+   "cuisine": "southern",
+   "srv": 6,
+   "ingredients": [
+    "garlic",
+    "chicken breast",
+    "chicken drumsticks",
+    "tomato paste",
+    "ketchup",
+    "honey",
+    "molasses",
+    "worcestershire sauce",
+    "vinegar",
+    "cayenne pepper",
+    "black pepper",
+    "onion powder",
+    "ginger"
+   ],
+   "avoid": [
+    "fish",
+    "meat"
+   ],
+   "uses": [
+    {
+     "id": "garlic",
+     "g": 6
+    },
+    {
+     "id": "chickenbreast",
+     "g": 688
+    },
+    {
+     "id": "drumsticks",
+     "g": 520
+    }
+   ],
+   "lines": [
+    {
+     "t": "5 tablespoons tomato paste",
+     "p": "tomato paste"
+    },
+    {
+     "t": "1 teaspoon ketchup",
+     "p": "ketchup"
+    },
+    {
+     "t": "2 teaspoons honey",
+     "p": "honey"
+    },
+    {
+     "t": "1 teaspoon molasses",
+     "p": "molasses"
+    },
+    {
+     "t": "1 teaspoon Worcestershire sauce",
+     "p": "worcestershire sauce"
+    },
+    {
+     "t": "4 teaspoons white vinegar",
+     "p": "vinegar"
+    },
+    {
+     "t": "¾ teaspoon cayenne pepper",
+     "p": "cayenne pepper"
+    },
+    {
+     "t": "⅛ teaspoon black pepper",
+     "p": "black pepper"
+    },
+    {
+     "t": "¼ teaspoon onion powder",
+     "p": "onion powder"
+    },
+    {
+     "t": "2 cloves garlic, minced",
+     "f": [
+      "garlic"
+     ]
+    },
+    {
+     "t": "⅛ teaspoon grated ginger",
+     "p": "ginger"
+    },
+    {
+     "t": "8 pieces skinless chicken (4 breasts, 4 drumsticks)",
+     "f": [
+      "chickenbreast",
+      "drumsticks"
+     ]
+    }
+   ],
+   "note": "Let yourself fall under the spell of this Southern-style, sweet barbecue sauce.",
+   "steps": [
+    "Combine all ingredients except chicken in saucepan. Simmer for 15 minutes.",
+    "Wash chicken and pat dry. Place it on a large platter and brush with half the sauce mixture.",
+    "Cover with plastic wrap and marinate in refrigerator for 1 hour.",
+    "Place chicken on baking sheet lined with aluminum foil and broil for 10 minutes on each side to seal in juices.",
+    "Remove from broiler and brush chicken pieces with remaining sauce. Cover with aluminum foil and bake at 350 °F for 30 minutes."
+   ],
+   "extra": [],
+   "instructions": "Combine all ingredients except chicken in saucepan. Simmer for 15 minutes. Wash chicken and pat dry. Place it on a large platter and brush with half the sauce mixture. Cover with plastic wrap and marinate in refrigerator for 1 hour. Place chicken on baking sheet lined with aluminum foil and broil for 10 minutes on each side to seal in juices. Remove from broiler and brush chicken pieces with remaining sauce. Cover with aluminum foil and bake at 350 °F for 30 minutes.",
+   "tags": "nhlbi",
+   "source": {
+    "book": "aa",
+    "page": 24
+   }
+  }
+ ]
+}

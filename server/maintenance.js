@@ -3,7 +3,8 @@
 // When you update one, change its date here (or in the file named) so the reminder resets.
 import { BENCHMARKS } from '../engine/index.js';
 import { STORES_AS_OF, FOOD_ACCESS } from './stores.js';
-import { BLS_CHECKED } from './prices.js';
+import { BLS_CHECKED, BLS_ITEMS } from './prices.js';
+import { EXTRA_PRICES_AS_OF, PRICE_SOURCES } from '../engine/extra-foods.js';
 import { HSDS_VERSION } from './hsds.js';
 import { OE } from './taxonomy.js';
 
@@ -24,8 +25,12 @@ export function maintenanceFor(city, now = new Date()) {
       what: `Used in the City report (now about $${BENCHMARKS.snapPerPersonDay} per person per day, ${BENCHMARKS.snapAsOf}).`,
       how: 'Ask Claude to look up USDA’s average SNAP benefit for the latest fiscal year and update engine/index.js.' },
     { id: 'bls', title: 'BLS price series check', last: BLS_CHECKED, due: addMonths(BLS_CHECKED, 12),
-      what: 'Live grocery prices come from 13 BLS series. BLS sometimes stops or renumbers a series.',
+      what: `Live grocery prices come from ${Object.keys(BLS_ITEMS).length} BLS series. BLS sometimes stops or renumbers a series.`,
       how: 'Ask Claude: “check the BLS price series” (server/prices.js). A bad series is ignored automatically meanwhile.' },
+    { id: 'recipeprices', title: 'Recipe food prices (NHLBI main dishes)', last: EXTRA_PRICES_AS_OF, due: addMonths(EXTRA_PRICES_AS_OF, 12),
+      what: (() => { const k = Object.values(PRICE_SOURCES).map(x => x.kind); const n = t => k.filter(x => x === t).length;
+        return `Of the ${k.length} foods the NHLBI recipes added, ${n('live')} update live from BLS; ${n('estimate')} are USDA ERS estimates (Purchase to Plate 2017–18 and Fruit and Vegetable Prices 2023, brought up to date with the BLS food-at-home index); ${n('store')} are store prices you checked at H-E-B (masa harina, brown rice). USDA updates these about every two years.`; })(),
+      how: 'Ask Claude: “update the recipe food prices” (scripts/build-nih-recipes.py: newer USDA files, the latest food-at-home index, or new store prices).' },
     { id: 'hsds', title: 'Open data feed format (HSDS and Open Eligibility)', last: OE.checked, due: addMonths(OE.checked, 12),
       what: `The open data feed at /api/hsds follows Open Referral’s HSDS ${HSDS_VERSION}, with Open Eligibility categories. Open Referral publishes new versions from time to time.`,
       how: 'Ask Claude: “check for a new HSDS version” (server/hsds.js, server/taxonomy.js, scripts/build-open-eligibility.py).' },

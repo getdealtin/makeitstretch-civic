@@ -9,6 +9,7 @@ import austin from '../cities/austin.js';
 
 const LANGS = ['es', 'vi', 'zh-Hans'];
 const holes = s => [...String(s).matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort();
+const nih = JSON.parse(readFileSync(new URL('../data/nih-recipes.json', import.meta.url), 'utf8')).recipes;
 const recipes = JSON.parse(readFileSync(new URL('../data/seed-recipes.json', import.meta.url), 'utf8')).map((r, i) => ({ ...r, id: i + 1 }));
 
 for (const code of LANGS) {
@@ -34,6 +35,15 @@ for (const code of LANGS) {
     for (const r of recipes) {
       assert.ok(d.recipes?.[r.id]?.title, `${code} recipe ${r.id} title (${r.title})`);
       assert.ok(d.recipes?.[r.id]?.instructions, `${code} recipe ${r.id} steps (${r.title})`);
+    }
+     // NHLBI main dishes: every line, step and extra, in the book's order (official Spanish for the Latino book).
+    for (const r of nih) {
+      const x = d.recipes?.[r.id];
+      assert.ok(x?.title && x.note, `${code} NHLBI recipe ${r.id} (${r.title})`);
+      assert.equal(x.lines.length, r.lines.length, `${code} ${r.title} lines`);
+      assert.equal(x.steps.length, r.steps.length, `${code} ${r.title} steps`);
+      assert.equal((x.extra || []).length, r.extra.length, `${code} ${r.title} extra`);
+      if (code === 'es' && r.source.book === 'latino') assert.ok(x.official, `${r.title}: official Spanish`);
     }
   });
 

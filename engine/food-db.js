@@ -6,6 +6,7 @@
 
 import { NUTRITION } from './nutrition.js';
 import { SATIETY } from './satiety.js';
+import { EXTRA_FOODS, EXTRA_PRICES } from './extra-foods.js';
 
 const RAW_FOODS = [
   // GRAINS & STARCHES
@@ -82,19 +83,22 @@ const RAW_FOODS = [
 ];
 
 /** Every food with USDA calories, protein and fiber per package, and its satiety weight. */
-export const FOOD_DB = RAW_FOODS.map(f => {
+// Plus the foods only the NHLBI recipes use (recipeOnly; engine/extra-foods.js). g = edible grams per package.
+export const FOOD_DB = [...RAW_FOODS, ...EXTRA_FOODS].map(f => {
   const n = NUTRITION[f.id];
-  return n ? { ...f, cal: n.kcal, protein: n.protein, fiber: n.fiber, fdc: n.fdc, sat: SATIETY[f.id] } : { ...f, sat: 0.5 };
+  return n ? { ...f, cal: n.kcal, protein: n.protein, fiber: n.fiber, fdc: n.fdc, g: n.g, sat: SATIETY[f.id] } : { ...f, sat: 0.5 };
 });
 
 
-export const FALLBACK_PRICES = {
+const CORE_PRICES = {
   northeast:{rice:2.99,drybeans:1.99,oats:3.89,eggs:3.79,potatoes:4.49,bread:2.19,cabbage:1.59,onions:2.39,bananas:0.89,milk:4.39,cannedtomatoes:1.29,peanutbutter:3.19,chicken:5.89,pasta:1.49,lentils:2.29,oil:4.89,carrots:1.79,flour:3.49,frozenvegs:2.49,tuna:1.49,garlic:0.79,sweetpotatoes:3.29,applesauce:3.89,chickpeas:1.89,corn:1.09,greenbeans:1.19,sardines:1.99,cornmeal:2.49,barley:2.29,splitpeas:1.79,driedmango:3.49,tortillas:2.99,coconutmilk:1.99,groundbeef:5.99,porkchops:3.99,butter:4.99,cheese:3.49,yogurt:4.99,oliveoil:5.99,soy:1.99,hotsauce:1.99,cannedbroth:2.49,vegbroth:2.29,blackbeans:0.99,kidneybean:0.99,cannedchili:1.69,cannedsoups:1.29,salsa:2.99,cannedpeaches:1.49,oranges:2.99,apples:3.99,frozencorn:1.29,cannedpeas:0.89,spinach:1.99,bellpepper:2.99,celery:1.99,cucumber:1.49,barley:2.29,evaporatedmilk:1.49,cannedpeas:0.89},
   midwest:{rice:2.59,drybeans:1.59,oats:3.49,eggs:3.19,potatoes:3.89,bread:1.79,cabbage:1.29,onions:1.99,bananas:0.79,milk:3.79,cannedtomatoes:1.09,peanutbutter:2.99,chicken:4.99,pasta:1.19,lentils:1.89,oil:4.29,carrots:1.39,flour:2.79,frozenvegs:2.09,tuna:1.19,garlic:0.65,sweetpotatoes:2.79,applesauce:3.29,chickpeas:1.59,corn:0.89,greenbeans:0.99,sardines:1.79,cornmeal:2.09,barley:1.99,splitpeas:1.49,driedmango:2.99,tortillas:2.49,coconutmilk:1.79,groundbeef:4.99,porkchops:3.29,butter:3.99,cheese:2.99,yogurt:3.99,oliveoil:4.99,soy:1.79,hotsauce:1.79,cannedbroth:1.99,vegbroth:1.89,blackbeans:0.79,kidneybean:0.79,cannedchili:1.39,cannedsoups:0.99,salsa:2.49,cannedpeaches:1.19,oranges:2.49,apples:3.29,frozencorn:1.09,cannedpeas:0.75,spinach:1.69,bellpepper:2.49,celery:1.69,cucumber:1.19,evaporatedmilk:1.19},
   south:{rice:2.49,drybeans:1.59,oats:3.39,eggs:3.09,potatoes:3.99,bread:1.79,cabbage:1.29,onions:1.89,bananas:0.75,milk:3.89,cannedtomatoes:1.09,peanutbutter:2.99,chicken:4.89,pasta:1.19,lentils:1.89,oil:4.19,carrots:1.39,flour:2.79,frozenvegs:2.09,tuna:1.19,garlic:0.65,sweetpotatoes:2.79,applesauce:3.29,chickpeas:1.59,corn:0.89,greenbeans:0.99,sardines:1.79,cornmeal:1.99,barley:1.99,splitpeas:1.49,driedmango:2.99,tortillas:2.29,coconutmilk:1.79,groundbeef:4.89,porkchops:3.19,butter:3.89,cheese:2.89,yogurt:3.79,oliveoil:4.79,soy:1.69,hotsauce:1.69,cannedbroth:1.89,vegbroth:1.79,blackbeans:0.79,kidneybean:0.79,cannedchili:1.29,cannedsoups:0.89,salsa:2.29,cannedpeaches:1.09,oranges:2.29,apples:3.19,frozencorn:1.09,cannedpeas:0.69,spinach:1.59,bellpepper:2.29,celery:1.49,cucumber:1.09,evaporatedmilk:1.09},
   west:{rice:2.89,drybeans:2.09,oats:3.99,eggs:3.69,potatoes:4.59,bread:2.09,cabbage:1.49,onions:2.29,bananas:0.85,milk:4.19,cannedtomatoes:1.19,peanutbutter:3.09,chicken:5.99,pasta:1.49,lentils:2.39,oil:5.09,carrots:1.79,flour:3.49,frozenvegs:2.59,tuna:1.49,garlic:0.79,sweetpotatoes:3.29,applesauce:3.79,chickpeas:1.89,corn:1.09,greenbeans:1.19,sardines:1.99,cornmeal:2.49,barley:2.29,splitpeas:1.79,driedmango:3.29,tortillas:2.79,coconutmilk:1.99,groundbeef:5.89,porkchops:3.89,butter:4.79,cheese:3.29,yogurt:4.79,oliveoil:5.79,soy:1.99,hotsauce:1.99,cannedbroth:2.29,vegbroth:2.09,blackbeans:0.99,kidneybean:0.99,cannedchili:1.59,cannedsoups:1.19,salsa:2.79,cannedpeaches:1.39,oranges:2.79,apples:3.79,frozencorn:1.29,cannedpeas:0.89,spinach:1.89,bellpepper:2.79,celery:1.79,cucumber:1.29,evaporatedmilk:1.39},
   national:{rice:2.69,drybeans:1.79,oats:3.69,eggs:3.39,potatoes:4.09,bread:1.89,cabbage:1.39,onions:2.09,bananas:0.82,milk:3.99,cannedtomatoes:1.19,peanutbutter:3.09,chicken:5.39,pasta:1.29,lentils:2.09,oil:4.49,carrots:1.49,flour:2.99,frozenvegs:2.29,tuna:1.29,garlic:0.69,sweetpotatoes:2.99,applesauce:3.49,chickpeas:1.69,corn:0.99,greenbeans:1.09,sardines:1.89,cornmeal:2.19,barley:2.09,splitpeas:1.59,driedmango:3.19,tortillas:2.59,coconutmilk:1.89,groundbeef:5.19,porkchops:3.59,butter:4.39,cheese:3.09,yogurt:4.39,oliveoil:5.39,soy:1.89,hotsauce:1.79,cannedbroth:2.09,vegbroth:1.89,blackbeans:0.89,kidneybean:0.89,cannedchili:1.49,cannedsoups:1.09,salsa:2.59,cannedpeaches:1.29,oranges:2.59,apples:3.49,frozencorn:1.19,cannedpeas:0.79,spinach:1.79,bellpepper:2.59,celery:1.69,cucumber:1.19,evaporatedmilk:1.19}
 };
+/** Every region: its own estimates, plus the recipe foods' national prices (BLS updates five of them live). */
+export const FALLBACK_PRICES = Object.fromEntries(Object.entries(CORE_PRICES).map(([region, p]) => [region, { ...EXTRA_PRICES, ...p }]));
 
 export const ALL_TIPS = [
   {text:'🥚 Eat eggs and bananas first — they spoil fastest. Rice, beans, oats, and peanut butter can last weeks.',needs:['eggs','bananas']},

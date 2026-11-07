@@ -1,1 +1,1906 @@
-{"foods":{"rice":{"name":"Arroz blanco","full":"Arroz blanco (2 lb)","note":"La base de todo. Combina con cualquier cosa."},"drybeans":{"name":"Frijoles pintos secos","full":"Frijoles pintos secos (1 lb)","note":"Una de las proteínas más baratas por dólar."},"oats":{"name":"Avena en hojuelas","full":"Avena en hojuelas (42 oz)","note":"El desayuno que más rinde. Le quita el hambre por horas."},"bread":{"name":"Pan","full":"Pan (barra)","note":"Comidas rápidas, sándwiches, acompañamientos."},"pasta":{"name":"Pasta","full":"Pasta (1 lb)","note":"Comidas rápidas. Lista en 15 minutos."},"cornmeal":{"name":"Harina de maíz","full":"Harina de maíz (2 lb)","note":"Grits, polenta, pan de maíz. Básico del sur."},"flour":{"name":"Harina de trigo","full":"Harina de trigo para todo uso (5 lb)","note":"Panqueques, bolitas de masa, para espesar sopas."},"tortillas":{"name":"Tortillas","full":"Tortillas (paquete de 10)","note":"Burritos, tacos, quesadillas: más rápido que el pan."},"barley":{"name":"Cebada","full":"Cebada (1 lb)","note":"Sabor a nuez. Muy buena en sopas y guisos."},"lentils":{"name":"Lentejas secas","full":"Lentejas secas (1 lb)","note":"Se cocinan en 20 minutos, sin remojar. Mucha proteína."},"splitpeas":{"name":"Chícharos secos partidos","full":"Chícharos secos partidos (1 lb)","note":"Rinde una sopa llenadora y muy barata."},"chickpeas":{"name":"Garbanzos en lata","full":"Garbanzos en lata (15 oz)","note":"Listos para comer. En ensaladas, guisos o tostados como botana."},"eggs":{"name":"Huevos","full":"Huevos, grado A (docena)","note":"La proteína más versátil: para cualquier comida, a cualquier hora."},"chicken":{"name":"Piernas de pollo","full":"Piernas de pollo con muslo (2 lb)","note":"La carne que más rinde. Con hueso, se cocina más tiempo."},"tuna":{"name":"Atún en lata","full":"Atún en lata (5 oz)","note":"Proteína rápida con arroz o en sándwich."},"sardines":{"name":"Sardinas en lata","full":"Sardinas en lata (3.75 oz)","note":"Rico en omega-3. No hay que cocinarlo."},"peanutbutter":{"name":"Crema de cacahuate","full":"Crema de cacahuate (16 oz)","note":"Muchas calorías. Dura meses. Comida de emergencia."},"groundbeef":{"name":"Carne molida de res","full":"Carne molida de res (1 lb)","note":"Rinde para 2–3 comidas con arroz o pasta."},"porkchops":{"name":"Chuletas de cerdo","full":"Chuletas de cerdo (1 lb)","note":"Corte económico. Cocínelas a fuego lento para que queden suaves."},"potatoes":{"name":"Papas","full":"Papas (5 lb)","note":"Llenadoras, nutritivas, duran semanas."},"onions":{"name":"Cebollas","full":"Cebollas (3 lb)","note":"La base de sabor de casi cualquier comida salada."},"cabbage":{"name":"Repollo","full":"Repollo (1 cabeza)","note":"Dura 2–3 semanas en el refrigerador. Muy versátil."},"carrots":{"name":"Zanahorias","full":"Zanahorias (2 lb)","note":"Barata, nutritiva y dura semanas."},"cannedtomatoes":{"name":"Tomates en lata","full":"Tomates en lata (28 oz)","note":"Convierte el arroz con frijoles en una comida completa."},"garlic":{"name":"Ajo","full":"Ajo (1 cabeza)","note":"Casi no cuesta nada. Mejora cualquier platillo."},"sweetpotatoes":{"name":"Camotes","full":"Camotes (3 lb)","note":"Rico en vitamina A y fibra. Hornéelo entero."},"frozenvegs":{"name":"Verduras mixtas congeladas","full":"Verduras mixtas congeladas (1 lb)","note":"Casi tan nutritivas como las frescas. Sin desperdicio ni preparación."},"frozencorn":{"name":"Elote congelado","full":"Elote congelado (1 lb)","note":"Para sopas, acompañamientos y quesadillas."},"corn":{"name":"Elote en lata","full":"Elote en lata (15 oz)","note":"Acompañamiento rápido o para sopas y arroces."},"greenbeans":{"name":"Ejotes en lata","full":"Ejotes en lata (14 oz)","note":"Verdura barata y rápida. No hay que cocinarlos."},"cannedpeas":{"name":"Chícharos en lata","full":"Chícharos en lata (15 oz)","note":"Agréguelos al arroz o la pasta, o cómalos como acompañamiento."},"spinach":{"name":"Espinaca congelada","full":"Espinaca congelada (10 oz)","note":"Hierro y vitaminas baratos. Agréguela a huevos o sopas."},"bellpepper":{"name":"Pimientos morrones","full":"Pimientos morrones (3)","note":"Color y textura. Crudos o cocidos."},"celery":{"name":"Apio","full":"Apio (1 manojo)","note":"Base de sabor para sopas y guisos."},"cucumber":{"name":"Pepinos","full":"Pepinos (2)","note":"No hay que cocinarlos. Botana fresca y barata."},"bananas":{"name":"Plátanos","full":"Plátanos (unos 6)","note":"Una de las frutas más baratas. Energía rápida, sin cocinar."},"applesauce":{"name":"Puré de manzana","full":"Puré de manzana (46 oz)","note":"Dulce, llenador, no necesita refrigeración."},"apples":{"name":"Manzanas","full":"Manzanas (3 lb)","note":"Duran semanas. La mejor fruta fresca por dólar."},"oranges":{"name":"Naranjas","full":"Naranjas (4)","note":"Vitamina C. Se pelan y se comen, sin preparación."},"driedmango":{"name":"Mango deshidratado","full":"Mango deshidratado (3.5 oz)","note":"Dura mucho. Endulza la avena de forma natural."},"cannedpeaches":{"name":"Duraznos en lata","full":"Duraznos en lata (15 oz)","note":"No necesitan refrigeración. Con avena o solos."},"milk":{"name":"Leche entera","full":"Leche entera (1 galón)","note":"Agrega proteína y calorías. Buena con avena."},"butter":{"name":"Mantequilla","full":"Mantequilla (1 lb)","note":"Da mucho sabor. Un poco rinde mucho."},"cheese":{"name":"Queso rallado","full":"Queso rallado (8 oz)","note":"Convierte el arroz o los frijoles en una comida completa."},"yogurt":{"name":"Yogur","full":"Yogur (32 oz)","note":"Proteína para el desayuno. También sirve de base para salsas."},"coconutmilk":{"name":"Leche de coco","full":"Leche de coco (lata de 13.5 oz)","note":"Sin lácteos. Base cremosa para curry y arroz."},"evaporatedmilk":{"name":"Leche evaporada","full":"Leche evaporada (12 oz)","note":"Leche que no necesita refrigeración. Para sopas y postres."},"oil":{"name":"Aceite vegetal","full":"Aceite vegetal (48 oz)","note":"Indispensable. Se necesita para cocinar casi todo."},"oliveoil":{"name":"Aceite de oliva","full":"Aceite de oliva (16 oz)","note":"Más sabor que el aceite vegetal para terminar platillos."},"soy":{"name":"Salsa de soya","full":"Salsa de soya (10 oz)","note":"Transforma cualquier plato de arroz o fideos al instante."},"hotsauce":{"name":"Salsa picante","full":"Salsa picante (5 oz)","note":"Sabor casi gratis. Le da vida a cualquier platillo."},"cannedbroth":{"name":"Caldo de pollo","full":"Caldo de pollo (32 oz)","note":"Mejor que el agua para arroz y sopas."},"vegbroth":{"name":"Caldo de verduras","full":"Caldo de verduras (32 oz)","note":"Base para sopas y arroz. Vegetariano."},"blackbeans":{"name":"Frijoles negros en lata","full":"Frijoles negros en lata (15 oz)","note":"No hay que cocinarlos. Ábralos y cómalos o agréguelos al arroz."},"kidneybean":{"name":"Frijoles rojos en lata","full":"Frijoles rojos en lata (15 oz)","note":"Para chili, sopas y arroces. Listos para usar."},"cannedchili":{"name":"Chili en lata","full":"Chili en lata (15 oz)","note":"Una comida completa directo de la lata."},"cannedsoups":{"name":"Sopa en lata","full":"Sopa en lata (10.5 oz)","note":"Comida de emergencia. Con galletas saladas o pan."},"salsa":{"name":"Salsa","full":"Salsa (16 oz)","note":"Base de sabor latino. También sirve como salsa para pasta."}},"tips":{"🥚 Eat eggs and bananas first — they spoil fastest. Rice, beans, oats, and peanut butter can last weeks.":"🥚 Coma primero los huevos y los plátanos, porque se echan a perder más rápido. El arroz, los frijoles, la avena y la crema de cacahuate duran semanas.","🍚 Cook a large pot of rice and beans on day one. Reheat throughout the week — flavor improves each day.":"🍚 Cocine una olla grande de arroz y frijoles el primer día. Recaliente durante la semana: saben mejor cada día.","🧅 Onion and garlic are your best flavor investment. They cost pennies and transform any plain dish.":"🧅 La cebolla y el ajo son su mejor inversión en sabor. Cuestan centavos y transforman cualquier platillo sencillo.","💧 Save the water you cook beans or potatoes in. It's nutritious and makes an excellent soup base.":"💧 Guarde el agua donde cocinó frijoles o papas. Es nutritiva y es una excelente base para sopa.","❄️ Cook double the beans and freeze half. Saves time and energy cost later in the week.":"❄️ Cocine el doble de frijoles y congele la mitad. Ahorra tiempo y gas o luz más adelante en la semana.","🥬 Cabbage lasts 2–3 weeks in the fridge. Use everything else first — it'll still be good at the end.":"🥬 El repollo dura 2–3 semanas en el refrigerador. Use todo lo demás primero: al final seguirá bueno.","🌡️ Soak oats in water the night before. No cooking needed in the morning.":"🌡️ Remoje la avena en agua la noche anterior. En la mañana no hay que cocinarla.","🍗 Cook chicken in water and use the broth for rice or soup. One piece goes a very long way.":"🍗 Cocine el pollo en agua y use el caldo para arroz o sopa. Una pieza rinde muchísimo.","🫙 Don't run out of oil — it's how you cook almost everything. Use it sparingly and it lasts.":"🫙 Que no le falte aceite: con él se cocina casi todo. Úselo con medida y le durará.","🍅 A can of tomatoes turns plain beans or lentils from a side into a full meal.":"🍅 Una lata de tomates convierte unos frijoles o lentejas sencillos en una comida completa.","🐟 Canned tuna or sardines over rice is one of the fastest complete protein meals you can make.":"🐟 Atún o sardinas en lata con arroz es una de las comidas con proteína más rápidas que puede hacer.","🌾 Lentils cook in 20 minutes with no soaking — faster and easier than beans.":"🌾 Las lentejas se cocinan en 20 minutos sin remojar: más rápido y fácil que los frijoles.","🍠 Sweet potatoes bake whole in 45 minutes with zero prep. Put them in when you start cooking other things.":"🍠 Los camotes se hornean enteros en 45 minutos sin preparación. Métalos al horno cuando empiece a cocinar otras cosas.","🫘 Canned beans are pre-cooked — open and eat, no stove needed. Best for rushed days.":"🫘 Los frijoles en lata ya están cocidos: ábralos y cómalos, sin estufa. Ideales para los días con prisa.","🥜 Two slices of bread with peanut butter is about 350 calories in two minutes. Keep it as emergency fuel.":"🥜 Dos rebanadas de pan con crema de cacahuate son unas 350 calorías en dos minutos. Téngalo para emergencias.","🥕 Carrots and cabbage give you a lot of nutrition per dollar, and both keep for weeks.":"🥕 La zanahoria y el repollo dan mucha nutrición por dólar, y los dos duran semanas."},"ingredients":{"onions":"cebolla","oil":"aceite","olive oil":"aceite de oliva","garlic":"ajo","canned tomatoes":"tomates en lata","eggs":"huevos","beans":"frijoles","rice":"arroz","potatoes":"papas","carrots":"zanahorias","milk":"leche","soy sauce":"salsa de soya","lentils":"lentejas","chicken":"pollo","butter":"mantequilla","pasta":"pasta","bread":"pan","oats":"avena","banana":"plátano","tortillas":"tortillas","cornmeal":"harina de maíz","sweet potatoes":"camotes","cabbage":"repollo","peanut butter":"crema de cacahuate","chickpeas":"garbanzos","flour":"harina","tuna":"atún","coconut milk":"leche de coco","tofu":"tofu","ground beef":"carne molida","pork":"cerdo","applesauce":"puré de manzana","salt":"sal","water":"agua","cinnamon":"canela"},"recipes":{"1":{"title":"Huevos revueltos con pan tostado","instructions":"Bata los huevos con sal. Derrita mantequilla en un sartén a fuego medio. Agregue los huevos y revuelva suavemente hasta que apenas cuajen. Sirva sobre pan tostado."},"2":{"title":"Avena con plátano","instructions":"Ponga a hervir 2 tazas de agua. Agregue la avena y sal, y cocine 5 minutos revolviendo. Cubra con plátano en rodajas."},"3":{"title":"Pan tostado con crema de cacahuate","instructions":"Tueste el pan. Unte bastante crema de cacahuate. Cubra con rodajas de plátano."},"4":{"title":"Panqueques","instructions":"Mezcle harina, huevos, leche y una pizca de sal hasta tener una masa lisa. Caliente un sartén con mantequilla. Vierta 1/4 de taza de masa por panqueque. Cocine hasta que salgan burbujas, voltee y cocine 1 minuto más."},"5":{"title":"Huevo frito con papas ralladas doradas","instructions":"Ralle las papas y exprímalas para quitarles el agua. Fríalas en aceite hasta que estén doradas de cada lado. Fría los huevos al lado. Sazone con sal."},"6":{"title":"Atole de avena con plátano","instructions":"Cocine la avena en leche 5 minutos. Machaque el plátano y agréguelo. Espolvoree canela."},"7":{"title":"Huevos revueltos con verduras","instructions":"Corte las verduras en cubitos. Fríalas en aceite 3 minutos. Bata los huevos y viértalos sobre las verduras. Revuelva hasta que se cocinen bien."},"8":{"title":"Tortilla de papa y cebolla (frittata)","instructions":"Fría la papa y la cebolla en cubitos en aceite hasta que estén suaves. Bata los huevos y viértalos encima. Cocine a fuego bajo hasta que cuajen y termine en el gratinador del horno."},"9":{"title":"Tazón de avena con crema de cacahuate","instructions":"Cocine la avena en agua. Mezcle la crema de cacahuate mientras está caliente. Cubra con plátano."},"10":{"title":"Pan con huevo al horno","instructions":"Corte el pan en cubos y póngalo en un molde para hornear. Bata los huevos con leche y sal. Viértalo sobre el pan. Hornee a 350 °F por 25 minutos hasta que dore."},"11":{"title":"Sopa de papa","instructions":"Corte las papas y la cebolla en cubitos. Hiérvalas en agua con sal hasta que estén suaves. Machaque la mitad de las papas en la olla. Agregue leche y mantequilla y mezcle."},"12":{"title":"Sopa de frijoles con pan","instructions":"Fría la cebolla y el ajo en aceite. Agregue los frijoles y los tomates y cocine a fuego lento 15 minutos. Sirva con pan tostado para remojar."},"13":{"title":"Tazón de arroz con atún","instructions":"Cocine el arroz. Escurra y desmenuce el atún. Fría la cebolla en aceite. Mezcle el atún con el arroz y la cebolla. Sazone con sal."},"14":{"title":"Rollito de crema de cacahuate y plátano","instructions":"Unte crema de cacahuate en el pan. Ponga el plátano en una orilla. Enrolle bien apretado. Corte en pedazos."},"15":{"title":"Sopa de verduras con huevo","instructions":"Hierva las verduras en agua con sal hasta que estén suaves. Rompa los huevos directo en el caldo hirviendo a fuego lento. Cocínelos 3 minutos."},"16":{"title":"Ensalada de pasta con verduras","instructions":"Cocine la pasta, escúrrala y déjela enfriar. Corte verduras crudas en cubitos. Mezcle todo con aceite y sal."},"17":{"title":"Papa al horno con frijoles","instructions":"Unte las papas con aceite y sal. Hornee a 400 °F por 45 minutos. Ábralas a la mitad. Ponga frijoles calientes encima."},"18":{"title":"Ensalada de huevo en pan tostado","instructions":"Cueza los huevos duros, déjelos enfriar y pélelos. Píquelos con cebolla. Mezcle con aceite y sal. Sirva sobre pan tostado."},"19":{"title":"Sopa de lentejas con verduras","instructions":"Sofría la cebolla y el ajo. Agregue lentejas, zanahorias y agua hasta cubrir. Cocine a fuego lento 25 minutos hasta que las lentejas estén suaves. Sazone."},"20":{"title":"Crema de elote y frijol","instructions":"Hierva las papas y la cebolla hasta que estén suaves. Machaque la mitad. Agregue frijoles y leche. Cocine a fuego lento 10 minutos. Sazone bien."},"21":{"title":"Pollo con arroz","instructions":"Dore las piezas de pollo en aceite. Sáquelas. Fría la cebolla hasta que esté suave. Agregue el arroz y revuelva para cubrirlo. Agregue agua, el doble que de arroz. Regrese el pollo. Tape y cocine 20 minutos a fuego bajo."},"22":{"title":"Pasta con salsa de tomate","instructions":"Fría el ajo y la cebolla en aceite 3 minutos. Agregue los tomates y cocine a fuego lento 15 minutos. Cocine la pasta según el paquete. Mezcle todo."},"23":{"title":"Repollo con papa al horno","instructions":"Rebane las papas delgadas. Acomódelas en capas con repollo y cebolla en un molde con aceite. Sazone. Tape con papel aluminio. Hornee a 375 °F por 40 minutos."},"24":{"title":"Picadillo de carne molida con papa","instructions":"Dore la carne en un sartén, desmoronándola. Sáquela. Fría la papa y la cebolla en cubitos hasta que doren. Regrese la carne. Sazone y mezcle todo."},"25":{"title":"Guiso de frijoles con verduras","instructions":"Sofría la cebolla. Agregue verduras, frijoles y tomates. Cubra con agua. Cocine a fuego lento 30 minutos hasta que las verduras estén suaves."},"26":{"title":"Pasta con atún al horno","instructions":"Cocine la pasta. Haga una salsa calentando leche con cebolla. Mézclela con el atún y la pasta. Hornee a 350 °F por 20 minutos."},"27":{"title":"Sopa de lentejas","instructions":"Sofría la cebolla y el ajo. Agregue lentejas, zanahorias, tomates y agua. Cocine a fuego lento 30 minutos. Sazone bien."},"28":{"title":"Caldo de pollo con verduras","instructions":"Hierva el pollo en agua con cebolla 30 minutos. Saque el pollo y deshébrelo. Agregue las verduras al caldo. Cocine 20 minutos. Regrese el pollo."},"29":{"title":"Tazón de arroz con frijoles","instructions":"Cocine el arroz. Fría la cebolla y el ajo. Agregue los frijoles y cocine 10 minutos. Sirva los frijoles sobre el arroz."},"30":{"title":"Sopa de pasta con frijoles","instructions":"Fría el ajo y la cebolla. Agregue los tomates y los frijoles. Cocine a fuego lento 15 minutos. Agregue la pasta a la olla. Cocine hasta que la pasta esté suave. Agregue agua si queda muy espesa."},"31":{"title":"Huevos rancheros","instructions":"Fría la cebolla, el ajo y los tomates para la salsa. Fría los huevos en otro sartén. Caliente las tortillas. Sirva los huevos sobre las tortillas y cubra con la salsa."},"32":{"title":"Avena con canela","instructions":"Cocine la avena en leche 5 minutos. Agregue canela. Cubra con plátano en rodajas."},"33":{"title":"Tacos de huevo con frijoles","instructions":"Fría la cebolla. Agregue los frijoles y macháquelos un poco. Haga huevos revueltos aparte. Rellene las tortillas con frijoles y luego huevo."},"34":{"title":"Plátano frito con huevo","instructions":"Corte el plátano en rodajas gruesas. Fríalo en aceite hasta que dore. Fría los huevos al lado. Sirva juntos."},"35":{"title":"Tortilla de maíz con frijoles","instructions":"Caliente las tortillas en un sartén sin aceite. Caliente los frijoles con cebolla frita. Úntelos en las tortillas. Enrolle y coma."},"36":{"title":"Arroz con frijoles","instructions":"Cocine el arroz. Fría la cebolla y el ajo. Agregue los frijoles con su caldo. Cocine a fuego lento 15 minutos hasta que espese. Sirva los frijoles sobre el arroz."},"37":{"title":"Sopa de verduras","instructions":"Fría la cebolla y el ajo. Agregue verduras picadas y tomates. Cubra con agua. Cocine a fuego lento 25 minutos hasta que estén suaves."},"38":{"title":"Quesadillas de frijol","instructions":"Machaque los frijoles con cebolla frita. Úntelos en una tortilla. Dóblela a la mitad. Tuéstela en un sartén sin aceite hasta que esté crujiente por ambos lados."},"39":{"title":"Tacos de lentejas","instructions":"Cocine las lentejas. Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Mezcle las lentejas. Rellene las tortillas."},"40":{"title":"Burrito de papa con huevo","instructions":"Fría la papa y la cebolla en cubitos hasta que doren. Haga huevos revueltos en el mismo sartén. Mezcle todo. Enrolle en tortillas calientes."},"41":{"title":"Arroz con pollo","instructions":"Dore el pollo en aceite. Sáquelo. Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Regrese el pollo. Agregue el arroz y el agua. Tape y cocine 20 minutos a fuego bajo."},"42":{"title":"Frijoles negros guisados","instructions":"Fría la cebolla y el ajo hasta que estén suaves. Agregue los tomates y cocine 5 minutos. Agregue los frijoles con su caldo. Cocine a fuego lento 20 minutos hasta que espese. Sirva con arroz."},"43":{"title":"Caldo de res con verduras","instructions":"Dore la carne. Agregue cebolla y ajo. Cubra con agua. Agregue papas y zanahorias. Cocine a fuego lento 30 minutos. Sazone bien."},"44":{"title":"Guiso de lentejas con tomate","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue las lentejas y agua. Cocine a fuego lento 25 minutos hasta que espese. Sirva con tortillas o arroz."},"45":{"title":"Sopa de tortilla con pollo","instructions":"Fría la cebolla y el ajo. Agregue los tomates y agua. Cocine el pollo en el caldo a fuego lento 20 minutos. Deshebre el pollo. Corte las tortillas en tiras y fríalas hasta que estén crujientes. Sirva la sopa con las tiras de tortilla encima."},"46":{"title":"Frijoles pintos de olla","instructions":"Remoje los frijoles toda la noche. Escúrralos. Cúbralos con agua limpia. Agregue cebolla y ajo. Cocine a fuego lento 2 horas hasta que estén completamente suaves. Sazone bien. Sirva con arroz."},"47":{"title":"Guiso de papa con huevo","instructions":"Fría la cebolla. Agregue los tomates y cocine 5 minutos. Agregue la papa en cubos y agua. Cocine a fuego lento 15 minutos. Haga huecos en la salsa y rompa los huevos ahí. Tape y cocine 5 minutos."},"48":{"title":"Cazuela de frijoles y tortilla al horno","instructions":"Haga una salsa de tomate con cebolla y ajo. En un molde, ponga capas de tortillas en pedazos, frijoles y salsa. Repita las capas. Hornee a 350 °F por 25 minutos."},"49":{"title":"Congee (atole de arroz)","instructions":"Cocine 1 taza de arroz con 8 tazas de agua a fuego bajo por 45 minutos, revolviendo de vez en cuando. Debe quedar espeso y cremoso. Cubra con un huevo frito o pochado. Sazone con sal."},"50":{"title":"Avena salada con soya","instructions":"Cocine la avena en agua. Caliente aceite en un sartén y fría la cebolla 2 minutos. Viértala sobre la avena. Agregue salsa de soya. Cubra con un huevo frito."},"51":{"title":"Huevo frito con arroz","instructions":"Use arroz frío que le haya sobrado. Caliente aceite hasta que humee. Agregue el arroz y fríalo aplastándolo. Haga un hueco y rompa los huevos ahí. Fría hasta que cuajen las claras. Sazone con salsa de soya."},"52":{"title":"Atole de arroz con cacahuate","instructions":"Cocine el arroz con el doble de agua hasta que esté muy suave. Agregue la crema de cacahuate y revuelva hasta que se derrita. Sazone con sal. Agregue agua caliente si queda muy espeso."},"53":{"title":"Atole de avena con plátano y coco","instructions":"Cocine la avena en leche de coco y agua 5 minutos. Machaque el plátano y agréguelo. Sirva caliente."},"54":{"title":"Arroz frito con huevo","instructions":"Use arroz frío del día anterior. Caliente el aceite hasta que esté muy caliente. Fría la cebolla 1 minuto. Agregue el arroz y saltéelo 3 minutos aplastándolo. Muévalo a un lado y haga huevos revueltos. Mezcle todo. Sazone con salsa de soya."},"55":{"title":"Repollo al ajo con arroz","instructions":"Cocine el arroz. Caliente aceite y fría el ajo y la cebolla. Agregue el repollo en tiras y saltéelo a fuego alto hasta que se dore un poco. Sazone con salsa de soya. Sirva sobre el arroz."},"56":{"title":"Dal de lentejas","instructions":"Fría la cebolla hasta que dore. Agregue el ajo y cocine 1 minuto. Agregue lentejas, tomates y agua hasta cubrir. Cocine a fuego lento 20 minutos hasta que las lentejas se deshagan en la salsa. Sazone. Sirva sobre arroz."},"57":{"title":"Repollo salteado con huevo","instructions":"Caliente aceite hasta que humee. Fría el ajo 30 segundos. Agregue el repollo en tiras y fríalo 3 minutos a fuego alto. Muévalo a un lado y haga huevos revueltos. Mezcle. Sazone con salsa de soya."},"58":{"title":"Tazón de tofu con verduras","instructions":"Exprima el tofu para secarlo. Córtelo en cubos y fríalo en aceite hasta que dore. Sáquelo. Fría las verduras 3 minutos. Regrese el tofu. Agregue salsa de soya. Sirva sobre arroz."},"59":{"title":"Fideos fríos con salsa de cacahuate","instructions":"Cocine los fideos y enjuáguelos con agua fría. Mezcle crema de cacahuate, salsa de soya y ajo para la salsa. Agregue agua para aligerarla. Mezcle los fideos con la salsa y zanahoria rallada."},"60":{"title":"Verduras salteadas con arroz","instructions":"Cocine el arroz. Caliente mucho un wok o sartén. Fría el ajo y la cebolla 1 minuto. Agregue las verduras y saltéelas a fuego alto 3 minutos hasta que se doren un poco. Sazone con salsa de soya. Sirva sobre el arroz."},"61":{"title":"Khichdi (arroz con lentejas)","instructions":"Lave juntos el arroz y las lentejas. Fría la cebolla y el ajo en aceite hasta que doren. Agregue el arroz y las lentejas y revuelva. Agregue 4 tazas de agua y sal. Tape y cocine a fuego bajo 25 minutos."},"62":{"title":"Pollo con soya y ajo","instructions":"Marine el pollo en salsa de soya y ajo 30 minutos. Fríalo en aceite hasta que esté bien cocido y caramelizado. Sirva sobre arroz con cebolla frita."},"63":{"title":"Curry de lentejas con coco","instructions":"Fría la cebolla y el ajo hasta que doren. Agregue los tomates y cocine 5 minutos. Agregue las lentejas y la leche de coco. Cocine a fuego lento 20 minutos. Sazone bien. Sirva con arroz."},"64":{"title":"Sopa de fideos","instructions":"Fría la cebolla y el ajo. Agregue agua o caldo y zanahorias. Cocine a fuego lento 10 minutos. Agregue los fideos y cocínelos según el paquete. Sazone con sal. Agregue salsa de soya si tiene."},"65":{"title":"Tazón de arroz con frijoles y ajo","instructions":"Cocine el arroz. Fría ajo rebanado en aceite hasta que esté dorado y crujiente. Saque el ajo. Fría los frijoles en el mismo aceite hasta que estén un poco crujientes. Sazone con salsa de soya. Sirva sobre el arroz con el ajo crujiente encima."},"66":{"title":"Tofu salteado con repollo","instructions":"Exprima el tofu y córtelo en cubos. Fríalo en aceite hasta que dore por todos lados. Agregue repollo en tiras y ajo. Saltee 3 minutos a fuego alto. Sazone con salsa de soya. Sirva sobre arroz."},"67":{"title":"Aloo sabzi (papas al estilo indio)","instructions":"Fría la cebolla y el ajo hasta que doren. Agregue la papa en cubitos y revuelva. Agregue tomates y un poco de agua. Tape y cocine 20 minutos hasta que las papas estén suaves. Sazone bien."},"68":{"title":"Dal de camote y lentejas","instructions":"Fría la cebolla y el ajo. Agregue el camote en cubos y las lentejas. Cubra con agua. Cocine a fuego lento 20 minutos. Agregue la leche de coco. Cocine 5 minutos más. Sirva con arroz."},"69":{"title":"Grits con huevo","instructions":"Ponga a hervir 4 tazas de agua. Agregue la harina de maíz poco a poco, batiendo. Cocine a fuego bajo 20 minutos, revolviendo seguido. Agregue mantequilla y leche. Sazone. Cubra con un huevo frito o pochado."},"70":{"title":"Avena con azúcar morena","instructions":"Cocine la avena en leche 5 minutos. Agregue mantequilla. Sazone con sal. Endulce si quiere."},"71":{"title":"Picadillo de camote con huevo","instructions":"Corte el camote en cubitos. Fríalo en aceite 8 minutos hasta que esté suave. Agregue la cebolla y cocine 3 minutos más. Haga huecos y rompa los huevos ahí. Tape y cocine hasta que cuajen las claras. Sazone."},"72":{"title":"Atole de harina de maíz","instructions":"Bata la harina de maíz en leche fría. Caliente a fuego medio, revolviendo sin parar hasta que espese, unos 10 minutos. Agregue mantequilla. Sazone con sal o endulce con azúcar."},"73":{"title":"Tazón de grits con huevo","instructions":"Prepare grits cremosos con leche. Fría los huevos estrellados en aceite. Sirva los huevos sobre los grits. Sazone bien."},"74":{"title":"Sartén de repollo con papa","instructions":"Fría la papa en cubitos en aceite hasta que esté casi suave. Agregue repollo y cebolla rebanados. Cocine a fuego alto hasta que el repollo se ablande y las papas doren. Sazone bien."},"75":{"title":"Tazón de camote con frijoles","instructions":"Ase o hierva los camotes hasta que estén suaves. Fría la cebolla. Agregue los frijoles y caliéntelos. Sirva los frijoles sobre los camotes abiertos. Sazone."},"76":{"title":"Pan de maíz con frijoles","instructions":"Haga el pan de maíz: mezcle harina de maíz, huevo y leche. Vierta en un molde con aceite y hornee a 400 °F por 20 minutos. Caliente los frijoles con cebolla frita. Sirva juntos."},"77":{"title":"Guiso de cerdo con frijoles","instructions":"Dore los pedazos de cerdo. Agregue cebolla y ajo. Agregue frijoles, tomates y agua. Cocine a fuego lento 45 minutos hasta que el cerdo esté suave y los frijoles cremosos. Sazone."},"78":{"title":"Pollo con pan de maíz","instructions":"Sazone el pollo y hornéelo a 400 °F por 35 minutos. Haga la masa del pan de maíz con harina de maíz, huevo y leche. Hornéela al lado en un molde con aceite los últimos 20 minutos."},"79":{"title":"Hoppin' John (frijoles con arroz del sur)","instructions":"Remoje los frijoles toda la noche. Escúrralos. Cocínelos con cebolla y ajo hasta que estén muy suaves, unos 90 minutos. Sazone. Sirva los frijoles con su caldo sobre arroz cocido."},"80":{"title":"Bagre frito con grits","instructions":"Prepare grits cremosos con leche y mantequilla. Sazone el filete de pescado. Cúbralo con harina de maíz. Fríalo en aceite hasta que esté dorado y bien cocido. Sirva sobre los grits."},"81":{"title":"Pollo con camote al horno","instructions":"Corte el camote y el pollo en trozos. Mézclelos con aceite y sal. Extiéndalos en un molde. Hornee a 400 °F por 35 minutos hasta que el pollo esté cocido y el camote suave."},"82":{"title":"Guiso de frijoles con harina de maíz","instructions":"Fría la cebolla. Agregue tomates y frijoles. Cocine a fuego lento 15 minutos. Bata un poco de harina de maíz con agua y agréguela al guiso para espesarlo. Cocine 10 minutos más."},"83":{"title":"Pollo con arroz al horno","instructions":"Dore el pollo. Sáquelo. Cocine la cebolla en el mismo sartén. Agregue el arroz y revuelva. Agregue leche y agua. Regrese el pollo. Tape y hornee a 350 °F por 30 minutos."},"84":{"title":"Sartén de huevo con papa","instructions":"Fría las papas en cubitos en aceite hasta que doren. Agregue cebolla y ajo y cocine 3 minutos. Haga huecos en la mezcla. Rompa los huevos ahí. Tape y cocine hasta que cuajen."},"85":{"title":"Pan con aceite de oliva","instructions":"Tueste el pan. Frótelo con un diente de ajo. Rocíe bastante aceite de oliva. Sazone con sal."},"86":{"title":"Avena con puré de manzana","instructions":"Cocine la avena en agua 5 minutos. Cubra con puré de manzana y canela."},"87":{"title":"Huevos revueltos con garbanzos","instructions":"Fría la cebolla y el ajo. Agregue los garbanzos y cocine 3 minutos. Bata los huevos y viértalos encima. Revuelva suavemente hasta que apenas se cocinen. Sazone con sal."},"88":{"title":"Huevos en salsa de tomate al horno","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 10 minutos hasta que reduzcan. Sazone. Haga huecos y rompa los huevos ahí. Tape y cocine hasta que cuajen las claras."},"89":{"title":"Guiso de garbanzos con tomate","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue los garbanzos. Cocine a fuego lento 15 minutos hasta que la salsa espese. Sazone bien. Sirva con pan."},"90":{"title":"Sopa de zanahoria y lentejas","instructions":"Fría la cebolla y el ajo. Agregue zanahorias y lentejas. Cubra con agua. Cocine a fuego lento 25 minutos. Licúe la mitad de la sopa para que quede cremosa. Sazone."},"91":{"title":"Sopa de frijoles blancos con verduras","instructions":"Fría la cebolla y el ajo. Agregue verduras y tomates. Agregue frijoles y agua. Cocine a fuego lento 25 minutos. Sazone. Al servir, rocíe con aceite de oliva."},"92":{"title":"Pasta con aceite de oliva y ajo","instructions":"Cocine la pasta en agua con sal. Escúrrala y guarde 1 taza del agua de la pasta. Fría ajo rebanado en aceite de oliva hasta que dore. Mezcle la pasta con el aceite de ajo, agregando agua de la pasta para hacer una salsa."},"93":{"title":"Pasta aglio e olio","instructions":"Cocine la pasta. Rebane el ajo delgado. Fríalo muy despacio en aceite de oliva hasta que dore, sin quemarlo. Mezcle con la pasta escurrida y el agua de la pasta que guardó para hacer una salsa sedosa. Sazone bien."},"94":{"title":"Mujaddara (lentejas con arroz y cebolla)","instructions":"Cocine las lentejas en agua 20 minutos hasta que estén suaves. Cocine el arroz aparte. Fría la cebolla en bastante aceite hasta que esté muy oscura y caramelizada, unos 20 minutos. Mezcle las lentejas con el arroz. Cubra con la cebolla crujiente."},"95":{"title":"Pescado al horno con limón","instructions":"Ponga el pescado en un molde. Vierta encima tomates y ajo. Rocíe aceite de oliva. Sazone. Hornee a 375 °F por 20 minutos hasta que el pescado se deshaga fácilmente."},"96":{"title":"Garbanzos con verduras al horno","instructions":"Junte todos los ingredientes en un molde. Mézclelos con aceite. Sazone bien. Agregue un poco de agua. Tape y hornee a 375 °F por 45 minutos. Destape los últimos 15 minutos."},"97":{"title":"Guiso de lentejas con verduras","instructions":"Sofría la cebolla y el ajo. Agregue todas las verduras y las lentejas. Cubra con agua. Cocine a fuego lento 30 minutos hasta que todo esté muy suave. Sazone bien."},"98":{"title":"Frijoles con tomate al horno","instructions":"Junte frijoles, tomates, ajo rebanado y cebolla en un molde. Vierta aceite de oliva encima. Sazone. Hornee a 350 °F por 35 minutos hasta que burbujee y se dore un poco."},"99":{"title":"Pollo con tomate y ajo","instructions":"Dore el pollo en aceite. Sáquelo. Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 10 minutos. Regrese el pollo. Tape y cocine 25 minutos hasta que esté suave. Sirva con pan o arroz."},"100":{"title":"Shakshuka (huevos en salsa de tomate)","instructions":"Fría la cebolla y el ajo en aceite hasta que estén suaves. Agregue los tomates, sazone y cocine a fuego lento 10 minutos hasta que espese. Haga huecos en la salsa. Rompa los huevos en los huecos. Tape y cocine hasta que cuajen las claras pero las yemas sigan suaves. Sirva en el sartén con pan."},"101":{"title":"Avena sencilla","instructions":"Ponga a hervir 2 tazas de agua. Agregue 1 taza de avena y sal. Baje el fuego y cocine 5 minutos, revolviendo de vez en cuando. Tape y deje reposar 2 minutos. Agregue lo que tenga para acompañar."},"102":{"title":"Huevos revueltos","instructions":"Bata los huevos con sal. Caliente aceite en un sartén. Fría la cebolla 2 minutos. Vierta los huevos. Revuelva suavemente a fuego medio-bajo hasta que apenas cuajen. Agregue las verduras que tenga."},"103":{"title":"Tazón de papas para el desayuno","instructions":"Corte las papas en cubitos y fríalas hasta que estén doradas y crujientes. Agregue la cebolla y cocine hasta que esté suave. Rompa los huevos directo en el sartén. Mezcle todo. Sazone bien."},"104":{"title":"Atole de avena con plátano","instructions":"Cocine la avena en agua 5 minutos. Machaque un plátano bien maduro en la avena caliente. Revuelva bien. El plátano le da todo el dulzor que necesita."},"105":{"title":"Papas fritas con cebolla","instructions":"Corte las papas en cubos. Caliente aceite en un sartén. Agregue las papas y cocine sin mover 4 minutos hasta que doren abajo. Voltéelas. Agregue la cebolla. Cocine hasta que todo esté dorado y suave. Sazone."},"106":{"title":"Guiso de lentejas","instructions":"Fría la cebolla y el ajo. Agregue lentejas y zanahorias. Cubra con agua. Cocine a fuego lento 25 minutos. Sazone bien. Machaque algunas lentejas para que quede más espeso."},"107":{"title":"Pasta con salsa","instructions":"Cocine la pasta. Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 15 minutos. Mezcle con la pasta. Sazone."},"108":{"title":"Frijoles guisados","instructions":"Fría la cebolla y el ajo hasta que doren. Agregue los frijoles con su caldo si son de lata, o frijoles cocidos con agua. Cocine a fuego lento 15 minutos hasta que espesen. Sazone. Sirva sobre arroz o con pan."},"109":{"title":"Gallo pinto","instructions":"Use arroz frío que le haya sobrado. Fría la cebolla y el ajo hasta que estén suaves. Agregue el arroz frío y fríalo aplastándolo 2 minutos. Agregue frijoles cocidos con su caldo. Revuelva y fría todo junto hasta que se mezcle y quede un poco crujiente. Sazone."},"110":{"title":"Polenta con salsa de tomate","instructions":"Haga la salsa: fría la cebolla y el ajo, agregue los tomates y cocine a fuego lento 20 minutos. Haga la polenta: hierva 4 tazas de agua con sal, agregue 1 taza de harina de maíz poco a poco batiendo y cocine 20 minutos a fuego bajo sin dejar de revolver. Sirva la polenta con la salsa encima."},"111":{"title":"Guiso de camote","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue el camote en cubos y los frijoles. Cubra con agua. Cocine a fuego lento 20 minutos hasta que el camote esté suave. Sazone bien."},"112":{"title":"Arroz con leche","instructions":"Cocine el arroz en leche a fuego lento 20 minutos, revolviendo seguido. Agregue plátano en rodajas. Sazone con canela y una pizca de sal para equilibrar."},"113":{"title":"Tazón de frijoles con huevo","instructions":"Fría la cebolla. Agregue los frijoles y macháquelos un poco mientras se calientan. Fría los huevos aparte. Sirva los frijoles con los huevos encima. Sazone con sal."},"114":{"title":"Sopa de fideo","instructions":"Dore la pasta seca en aceite. Agregue tomates licuados con cebolla y ajo. Fría 2 minutos. Cubra con agua. Cocine a fuego lento hasta que la pasta esté suave. Sazone."},"115":{"title":"Tacos de papa","instructions":"Hierva las papas y macháquelas con sal. Fría la cebolla hasta que dore y mézclela con el puré. Rellene las tortillas y dóblelas a la mitad. Fríalas en aceite hasta que estén crujientes por ambos lados."},"116":{"title":"Tazón de frijoles con arroz","instructions":"Cocine el arroz. Fría la cebolla en aceite hasta que esté suave. Agregue los tomates y cocine 3 minutos. Agregue los frijoles con su caldo y cocine a fuego lento 10 minutos hasta que espesen. Sazone bien. Sirva los frijoles sobre el arroz. Si quiere, ponga cebolla cruda picada encima."},"117":{"title":"Caldo tlalpeño","instructions":"Cocine el pollo a fuego lento con cebolla, ajo y sal 30 minutos. Sáquelo y deshébrelo. Agregue frijoles y zanahorias al caldo. Cocine 15 minutos. Regrese el pollo. Sazone bien."},"118":{"title":"Frijoles charros","instructions":"Remoje los frijoles toda la noche. Cocínelos con cerdo, cebolla y ajo hasta que estén muy suaves, 2 horas. Agregue los tomates. Cocine a fuego lento 30 minutos más. Sazone bien. Quedan espesos y caldosos."},"119":{"title":"Arroz con frijoles negros","instructions":"Cocine el arroz. Aparte, sofría la cebolla y el ajo hasta que doren. Agregue los frijoles negros con su caldo. Cocine a fuego lento hasta que espesen. Sazone. Sirva al lado del arroz o mezclado."},"120":{"title":"Sopa de huevo estilo miso","instructions":"Hierva agua con cebolla picada y salsa de soya para hacer el caldo. Bata los huevos. Viértalos despacio en el caldo hirviendo a fuego lento mientras revuelve para formar hebras de huevo. Sazone."},"121":{"title":"Flan salado de huevo al vapor","instructions":"Bata los huevos con la misma cantidad de agua y salsa de soya. Cuélelos en un tazón. Cocínelos al vapor sobre agua hirviendo a fuego lento 12 minutos hasta que apenas cuajen. Rocíe aceite al servir."},"122":{"title":"Pollo estilo teriyaki","instructions":"Mezcle salsa de soya con ajo. Marine el pollo 30 minutos. Fríalo en aceite a fuego medio hasta que esté bien cocido, bañándolo con la marinada. Se carameliza muy bonito. Sirva sobre arroz con cebolla frita."},"123":{"title":"Congee con acompañamientos","instructions":"Ponga a hervir 8 tazas de agua con 1 taza de arroz. Cocine a fuego lento 45 minutos, revolviendo de vez en cuando. Debe quedar muy espeso y cremoso. Sazone con salsa de soya. Cubra con ajo frito."},"124":{"title":"Tortitas de arroz fritas","instructions":"Mezcle arroz cocido frío con huevos y salsa de soya. Forme tortitas. Fríalas en aceite a fuego medio hasta que estén doradas y crujientes por ambos lados. Sirva con cebolla frita."},"125":{"title":"Biscuits con gravy","instructions":"Haga los biscuits: mezcle harina y sal, integre mantequilla fría en pedacitos, agregue leche y mezcle apenas. Aplane la masa y córtela en círculos. Hornee a 450 °F por 12 minutos. Haga un gravy sencillo: fría la cebolla en aceite, agregue harina y luego leche poco a poco, batiendo. Sazone. Sirva los biscuits bañados en gravy."},"126":{"title":"Atole de grits","instructions":"Ponga a hervir 4 tazas de agua con sal. Agregue 1 taza de harina de maíz poco a poco, batiendo. Baje el fuego. Cocine 20 minutos revolviendo seguido. Agregue mantequilla. Sazone."},"127":{"title":"Avena con camote","instructions":"Cocine la avena en leche. Machaque camote asado o cocido en el microondas y agréguelo. Sazone con canela y sal. Dulce de forma natural y muy llenadora."},"128":{"title":"Frijoles rojos con arroz","instructions":"Fría la cebolla y el ajo hasta que doren. Agregue los frijoles remojados y escurridos, y agua hasta cubrir. Cocine 2 horas hasta que estén muy suaves. Sazone. Sirva sobre arroz. Machaque algunos frijoles contra la olla para una salsa cremosa."},"129":{"title":"Pollo en gravy","instructions":"Enharine y sazone el pollo. Dórelo en aceite. Sáquelo. Haga el gravy en el mismo sartén: cocine cebolla y ajo, agregue harina y luego leche poco a poco. Regrese el pollo al gravy. Cocine a fuego lento 30 minutos."},"130":{"title":"Puré de camote al horno","instructions":"Hierva los camotes y macháquelos con mantequilla y leche. Sazone. Póngalos en un molde. Si quiere, cúbralos con huevo batido para una textura de flan. Hornee a 350 °F por 25 minutos."},"131":{"title":"Fattoush (ensalada con pan tostado)","instructions":"Tueste o fría pan duro hasta que esté crujiente. Mézclelo con tomate y cebolla en cubitos. Aderece con bastante aceite y ajo. Deje que el pan se remoje un poco antes de servir."},"132":{"title":"Ful medames (habas al estilo egipcio)","instructions":"Cocine habas cocidas a fuego lento con ajo y tomates hasta que espesen mucho. Sazone bien. Rocíe con aceite de oliva. Sirva con pan. Es un desayuno típico de Egipto."},"133":{"title":"Pasta con garbanzos","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine 10 minutos. Agregue los garbanzos con un poco de agua. Cocine a fuego lento 10 minutos. Agregue la pasta directo a la olla. Cocine hasta que la pasta esté suave, agregando agua si hace falta. Debe quedar espesa, no caldosa."},"134":{"title":"Ribollita (sopa toscana de pan y frijoles)","instructions":"Sofría cebolla, ajo y zanahorias. Agregue tomates y frijoles. Cocine a fuego lento 20 minutos. Agregue pan duro en pedazos. Cocine hasta que el pan se deshaga y quede un guiso espeso. Sazone. Sabe mejor al día siguiente."},"135":{"title":"Huevos revueltos con verduras de hoja","instructions":"Sofría la cebolla y el ajo. Agregue las verduras de hoja que tenga. Bata los huevos y viértalos encima. Cocine despacio, revolviendo hasta que apenas cuajen. Sazone. Huevos revueltos al estilo mediterráneo."},"136":{"title":"Lentejas estilo dal makhani","instructions":"Cocine las lentejas hasta que estén muy suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y cocine 10 minutos. Agregue las lentejas y cocine a fuego lento 20 minutos. Al final agregue mantequilla para darle cremosidad."},"137":{"title":"Tazón estilo bibimbap","instructions":"Cocine el arroz. Aparte, sofría zanahorias y cebolla. Fría un huevo estrellado. Acomode las verduras y el huevo sobre el arroz. Rocíe salsa de soya. Mezcle todo antes de comer."},"138":{"title":"Arroz frito estilo kimchi","instructions":"Fría repollo en tiras en aceite a fuego alto hasta que se ablande y se dore un poco. Agregue arroz frío y saltéelo aplastándolo. Sazone con bastante salsa de soya. Cubra con un huevo frito."},"139":{"title":"Avena masala (salada, estilo indio)","instructions":"Fría la cebolla y las zanahorias en aceite 3 minutos. Agregue la avena. Cubra con agua. Cocine 5 minutos hasta que la avena esté suave y la mezcla espesa. Sazone con sal y la especia que tenga."},"140":{"title":"Upma (estilo indio)","instructions":"Tueste sémola o harina de maíz en un sartén sin aceite hasta que huela un poco. Fría la cebolla y las verduras. Agregue agua y deje hervir. Agregue la harina de maíz poco a poco mientras revuelve. Cocine 5 minutos. Sazone."},"141":{"title":"Curry de garbanzos","instructions":"Fría la cebolla y el ajo hasta que doren. Agregue los tomates y cocine 8 minutos aplastándolos. Agregue los garbanzos y cocine 15 minutos hasta que la salsa espese y los cubra. Sazone bien. Sirva con arroz o pan."},"142":{"title":"Dal con espinaca (palak dal)","instructions":"Cocine las lentejas hasta que estén suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y cocine 5 minutos. Viértalo sobre las lentejas. Cocine todo junto a fuego lento 10 minutos. Sazone. Agregue las verduras de hoja que tenga."},"143":{"title":"Tortilla española","instructions":"Rebane las papas delgadas. Fríalas despacio en bastante aceite con cebolla hasta que estén suaves, sin dorar, 20 minutos. Bata los huevos con sal. Mezcle las papas con los huevos. Cocine en un sartén con aceite hasta que cuaje abajo. Voltéela sobre un plato y regrésela al sartén para cocinar el otro lado."},"144":{"title":"Pisto (guiso español de tomate)","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 20 minutos hasta que espese. Sazone. Sírvalo como salsa o rompa huevos en la salsa y cocínelos hasta que cuajen."},"145":{"title":"Acquacotta (sopa italiana con pan y huevo)","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 15 minutos. Agregue agua y deje hervir. Ponga rebanadas de pan duro en los platos. Cocine huevos pochados en la sopa hirviendo a fuego lento. Viértalos sobre el pan."},"146":{"title":"Sopa de frijol de ojo negro","instructions":"Fría la cebolla y el ajo en aceite hasta que estén suaves. Agregue los tomates y cocine 5 minutos. Agregue frijoles de ojo negro y agua hasta cubrir. Cocine a fuego lento 20 minutos hasta que espese y quede cremosa. Sazone bien con sal y pimienta. Sirva con pan de maíz si tiene."},"147":{"title":"Sopa de camote","instructions":"Pele los camotes y córtelos en cubos. Hiérvalos en agua con sal y cebolla hasta que estén muy suaves, unos 20 minutos. Escúrralos. Macháquelos o licúelos hasta que queden lisos. Agregue leche y mantequilla. Caliente a fuego bajo. Sazone con sal. Dulce de forma natural y llenadora."},"148":{"title":"Caldo de pollo con verduras","instructions":"Cubra el pollo con agua en una olla. Agregue cebolla, ajo y sal. Hierva 25 minutos hasta que esté cocido. Saque el pollo y deshébrelo. Regréselo a la olla con papas y zanahorias en cubitos. Cocine a fuego lento 20 minutos hasta que las verduras estén suaves. Sazone bien."},"149":{"title":"Sopa Hoppin' John","instructions":"Fría la cebolla y el ajo en aceite hasta que doren. Agregue frijoles de ojo negro y agua hasta cubrir. Cocine a fuego lento 15 minutos. Agregue arroz cocido y suficiente agua para una sopa espesa. Sazone bien. El arroz espesa el caldo al reposar."},"150":{"title":"Papas en gravy","instructions":"Rebane las papas delgadas. Fría la cebolla en aceite hasta que esté suave. Agregue las papas y revuelva. Agregue un poco de agua, tape y cocine 15 minutos hasta que estén suaves. Mezcle harina con leche y viértala encima. Cocine hasta que se forme un gravy espeso. Sazone bien."},"151":{"title":"Tazón de frijoles con camote","instructions":"Hornee o hierva el camote hasta que esté suave. Fría la cebolla en aceite hasta que esté suave. Agregue los frijoles, caliéntelos y sazone bien. Abra el camote. Ponga los frijoles encima. Macháquelo un poco al comer para que se mezclen el camote y los frijoles."},"152":{"title":"Sopa de lentejas con tomate","instructions":"Fría la cebolla y el ajo en aceite hasta que doren. Agregue los tomates y cocine 5 minutos aplastándolos. Agregue las lentejas y agua que las cubra por 2 pulgadas. Cocine a fuego lento 25 minutos hasta que las lentejas estén suaves y empiecen a deshacerse. Sazone bien. Agregue jugo de limón si tiene."},"153":{"title":"Sopa de pan con frijoles","instructions":"Fría la cebolla y el ajo en aceite. Agregue los tomates y cocine a fuego lento 10 minutos. Agregue frijoles y agua. Cocine a fuego lento 15 minutos. Agregue pan duro en pedazos. Cocine 5 minutos más hasta que el pan absorba el caldo y lo espese. Sazone. Es al estilo ribollita."},"154":{"title":"Huevos en salsa de tomate en sartén","instructions":"Fría la cebolla y el ajo en aceite 3 minutos. Agregue los tomates, sazone y cocine a fuego lento 10 minutos hasta que espese. Haga 3–4 huecos en la salsa. Rompa un huevo en cada hueco. Tape y cocine a fuego bajo hasta que las claras cuajen pero las yemas sigan suaves, unos 5 minutos. Sirva en el sartén con pan."},"155":{"title":"Pasta e fagioli (pasta con frijoles)","instructions":"Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue los frijoles con agua. Cocine a fuego lento 10 minutos, machacando algunos frijoles para que quede cremoso. Agregue pasta pequeña directo a la olla. Cocine hasta que la pasta esté suave, agregando agua si hace falta. Debe quedar muy espesa. Sazone bien."},"156":{"title":"Ensalada de garbanzos con pan","instructions":"Tueste cubos de pan en aceite hasta que estén dorados y crujientes. Pique tomates y cebolla. Mezcle los garbanzos con los tomates, la cebolla y el ajo. Aderece con aceite y sal. Agregue el pan justo antes de comer para que siga crujiente. Es una ensalada estilo panzanella."},"157":{"title":"Caldo de pollo","instructions":"Ponga las piezas de pollo en una olla con agua. Agregue una cebolla entera, ajo y sal. Deje hervir y quite la espuma. Cocine a fuego lento 30 minutos. Agregue trozos de papa y zanahoria. Cocine 20 minutos más. Saque el pollo, deshébrelo y regréselo al caldo. Sazone. Un caldo sencillo que reconforta."},"158":{"title":"Frijoles de olla","instructions":"Remoje los frijoles toda la noche. Escúrralos y cúbralos con agua limpia, 3 pulgadas por encima. Agregue media cebolla y ajo. Cocine a fuego lento 1.5–2 horas hasta que estén muy suaves y cremosos. El caldo se pone espeso y sabroso. Sazone bien solo al final. Sirva como sopa con tortillas."},"159":{"title":"Sopa de tortilla","instructions":"Licúe los tomates con cebolla y ajo. Fría esta salsa en aceite en una olla por 5 minutos. Agregue agua para hacer un caldo. Cocine a fuego lento 15 minutos. Sazone. Corte las tortillas en tiras y fríalas en aceite hasta que estén crujientes. Sirva la sopa con las tiras crujientes encima."},"160":{"title":"Sopa estilo miso con arroz","instructions":"Caliente agua con salsa de soya para hacer el caldo. Agregue cebolla picada y cocine 5 minutos. Si usa tofu, agréguelo en cubos. Bata los huevos y viértalos despacio en el caldo hirviendo a fuego lento, revolviendo para formar hebras. Sirva sobre arroz al vapor o al lado. Sazone."},"161":{"title":"Fideos dan dan","instructions":"Cocine los fideos hasta que estén suaves. Mezcle crema de cacahuate, salsa de soya, ajo y aceite con agua caliente para hacer una salsa espesa. Ralle las zanahorias. Escurra los fideos. Mézclelos con la salsa y las zanahorias. Agregue más agua caliente si la salsa queda muy espesa. Sirva tibio o a temperatura ambiente."}},"_note":"DRAFT translation, pending review by a native speaker (see /admin -> Translations)."}
+{
+ "foods": {
+  "rice": {
+   "name": "Arroz blanco",
+   "full": "Arroz blanco (2 lb)",
+   "note": "La base de todo. Combina con cualquier cosa."
+  },
+  "drybeans": {
+   "name": "Frijoles pintos secos",
+   "full": "Frijoles pintos secos (1 lb)",
+   "note": "Una de las proteínas más baratas por dólar."
+  },
+  "oats": {
+   "name": "Avena en hojuelas",
+   "full": "Avena en hojuelas (42 oz)",
+   "note": "El desayuno que más rinde. Le quita el hambre por horas."
+  },
+  "bread": {
+   "name": "Pan",
+   "full": "Pan (barra)",
+   "note": "Comidas rápidas, sándwiches, acompañamientos."
+  },
+  "pasta": {
+   "name": "Pasta",
+   "full": "Pasta (1 lb)",
+   "note": "Comidas rápidas. Lista en 15 minutos."
+  },
+  "cornmeal": {
+   "name": "Harina de maíz",
+   "full": "Harina de maíz (2 lb)",
+   "note": "Grits, polenta, pan de maíz. Básico del sur."
+  },
+  "flour": {
+   "name": "Harina de trigo",
+   "full": "Harina de trigo para todo uso (5 lb)",
+   "note": "Panqueques, bolitas de masa, para espesar sopas."
+  },
+  "tortillas": {
+   "name": "Tortillas",
+   "full": "Tortillas (paquete de 10)",
+   "note": "Burritos, tacos, quesadillas: más rápido que el pan."
+  },
+  "barley": {
+   "name": "Cebada",
+   "full": "Cebada (1 lb)",
+   "note": "Sabor a nuez. Muy buena en sopas y guisos."
+  },
+  "lentils": {
+   "name": "Lentejas secas",
+   "full": "Lentejas secas (1 lb)",
+   "note": "Se cocinan en 20 minutos, sin remojar. Mucha proteína."
+  },
+  "splitpeas": {
+   "name": "Chícharos secos partidos",
+   "full": "Chícharos secos partidos (1 lb)",
+   "note": "Rinde una sopa llenadora y muy barata."
+  },
+  "chickpeas": {
+   "name": "Garbanzos en lata",
+   "full": "Garbanzos en lata (15 oz)",
+   "note": "Listos para comer. En ensaladas, guisos o tostados como botana."
+  },
+  "eggs": {
+   "name": "Huevos",
+   "full": "Huevos, grado A (docena)",
+   "note": "La proteína más versátil: para cualquier comida, a cualquier hora."
+  },
+  "chicken": {
+   "name": "Piernas de pollo",
+   "full": "Piernas de pollo con muslo (2 lb)",
+   "note": "La carne que más rinde. Con hueso, se cocina más tiempo."
+  },
+  "tuna": {
+   "name": "Atún en lata",
+   "full": "Atún en lata (5 oz)",
+   "note": "Proteína rápida con arroz o en sándwich."
+  },
+  "sardines": {
+   "name": "Sardinas en lata",
+   "full": "Sardinas en lata (3.75 oz)",
+   "note": "Rico en omega-3. No hay que cocinarlo."
+  },
+  "peanutbutter": {
+   "name": "Crema de cacahuate",
+   "full": "Crema de cacahuate (16 oz)",
+   "note": "Muchas calorías. Dura meses. Comida de emergencia."
+  },
+  "groundbeef": {
+   "name": "Carne molida de res",
+   "full": "Carne molida de res (1 lb)",
+   "note": "Rinde para 2–3 comidas con arroz o pasta."
+  },
+  "porkchops": {
+   "name": "Chuletas de cerdo",
+   "full": "Chuletas de cerdo (1 lb)",
+   "note": "Corte económico. Cocínelas a fuego lento para que queden suaves."
+  },
+  "potatoes": {
+   "name": "Papas",
+   "full": "Papas (5 lb)",
+   "note": "Llenadoras, nutritivas, duran semanas."
+  },
+  "onions": {
+   "name": "Cebollas",
+   "full": "Cebollas (3 lb)",
+   "note": "La base de sabor de casi cualquier comida salada."
+  },
+  "cabbage": {
+   "name": "Repollo",
+   "full": "Repollo (1 cabeza)",
+   "note": "Dura 2–3 semanas en el refrigerador. Muy versátil."
+  },
+  "carrots": {
+   "name": "Zanahorias",
+   "full": "Zanahorias (2 lb)",
+   "note": "Barata, nutritiva y dura semanas."
+  },
+  "cannedtomatoes": {
+   "name": "Tomates en lata",
+   "full": "Tomates en lata (28 oz)",
+   "note": "Convierte el arroz con frijoles en una comida completa."
+  },
+  "garlic": {
+   "name": "Ajo",
+   "full": "Ajo (1 cabeza)",
+   "note": "Casi no cuesta nada. Mejora cualquier platillo."
+  },
+  "sweetpotatoes": {
+   "name": "Camotes",
+   "full": "Camotes (3 lb)",
+   "note": "Rico en vitamina A y fibra. Hornéelo entero."
+  },
+  "frozenvegs": {
+   "name": "Verduras mixtas congeladas",
+   "full": "Verduras mixtas congeladas (1 lb)",
+   "note": "Casi tan nutritivas como las frescas. Sin desperdicio ni preparación."
+  },
+  "frozencorn": {
+   "name": "Elote congelado",
+   "full": "Elote congelado (1 lb)",
+   "note": "Para sopas, acompañamientos y quesadillas."
+  },
+  "corn": {
+   "name": "Elote en lata",
+   "full": "Elote en lata (15 oz)",
+   "note": "Acompañamiento rápido o para sopas y arroces."
+  },
+  "greenbeans": {
+   "name": "Ejotes en lata",
+   "full": "Ejotes en lata (14 oz)",
+   "note": "Verdura barata y rápida. No hay que cocinarlos."
+  },
+  "cannedpeas": {
+   "name": "Chícharos en lata",
+   "full": "Chícharos en lata (15 oz)",
+   "note": "Agréguelos al arroz o la pasta, o cómalos como acompañamiento."
+  },
+  "spinach": {
+   "name": "Espinaca congelada",
+   "full": "Espinaca congelada (10 oz)",
+   "note": "Hierro y vitaminas baratos. Agréguela a huevos o sopas."
+  },
+  "bellpepper": {
+   "name": "Pimientos morrones",
+   "full": "Pimientos morrones (3)",
+   "note": "Color y textura. Crudos o cocidos."
+  },
+  "celery": {
+   "name": "Apio",
+   "full": "Apio (1 manojo)",
+   "note": "Base de sabor para sopas y guisos."
+  },
+  "cucumber": {
+   "name": "Pepinos",
+   "full": "Pepinos (2)",
+   "note": "No hay que cocinarlos. Botana fresca y barata."
+  },
+  "bananas": {
+   "name": "Plátanos",
+   "full": "Plátanos (unos 6)",
+   "note": "Una de las frutas más baratas. Energía rápida, sin cocinar."
+  },
+  "applesauce": {
+   "name": "Puré de manzana",
+   "full": "Puré de manzana (46 oz)",
+   "note": "Dulce, llenador, no necesita refrigeración."
+  },
+  "apples": {
+   "name": "Manzanas",
+   "full": "Manzanas (3 lb)",
+   "note": "Duran semanas. La mejor fruta fresca por dólar."
+  },
+  "oranges": {
+   "name": "Naranjas",
+   "full": "Naranjas (4)",
+   "note": "Vitamina C. Se pelan y se comen, sin preparación."
+  },
+  "driedmango": {
+   "name": "Mango deshidratado",
+   "full": "Mango deshidratado (3.5 oz)",
+   "note": "Dura mucho. Endulza la avena de forma natural."
+  },
+  "cannedpeaches": {
+   "name": "Duraznos en lata",
+   "full": "Duraznos en lata (15 oz)",
+   "note": "No necesitan refrigeración. Con avena o solos."
+  },
+  "milk": {
+   "name": "Leche entera",
+   "full": "Leche entera (1 galón)",
+   "note": "Agrega proteína y calorías. Buena con avena."
+  },
+  "butter": {
+   "name": "Mantequilla",
+   "full": "Mantequilla (1 lb)",
+   "note": "Da mucho sabor. Un poco rinde mucho."
+  },
+  "cheese": {
+   "name": "Queso rallado",
+   "full": "Queso rallado (8 oz)",
+   "note": "Convierte el arroz o los frijoles en una comida completa."
+  },
+  "yogurt": {
+   "name": "Yogur",
+   "full": "Yogur (32 oz)",
+   "note": "Proteína para el desayuno. También sirve de base para salsas."
+  },
+  "coconutmilk": {
+   "name": "Leche de coco",
+   "full": "Leche de coco (lata de 13.5 oz)",
+   "note": "Sin lácteos. Base cremosa para curry y arroz."
+  },
+  "evaporatedmilk": {
+   "name": "Leche evaporada",
+   "full": "Leche evaporada (12 oz)",
+   "note": "Leche que no necesita refrigeración. Para sopas y postres."
+  },
+  "oil": {
+   "name": "Aceite vegetal",
+   "full": "Aceite vegetal (48 oz)",
+   "note": "Indispensable. Se necesita para cocinar casi todo."
+  },
+  "oliveoil": {
+   "name": "Aceite de oliva",
+   "full": "Aceite de oliva (16 oz)",
+   "note": "Más sabor que el aceite vegetal para terminar platillos."
+  },
+  "soy": {
+   "name": "Salsa de soya",
+   "full": "Salsa de soya (10 oz)",
+   "note": "Transforma cualquier plato de arroz o fideos al instante."
+  },
+  "hotsauce": {
+   "name": "Salsa picante",
+   "full": "Salsa picante (5 oz)",
+   "note": "Sabor casi gratis. Le da vida a cualquier platillo."
+  },
+  "cannedbroth": {
+   "name": "Caldo de pollo",
+   "full": "Caldo de pollo (32 oz)",
+   "note": "Mejor que el agua para arroz y sopas."
+  },
+  "vegbroth": {
+   "name": "Caldo de verduras",
+   "full": "Caldo de verduras (32 oz)",
+   "note": "Base para sopas y arroz. Vegetariano."
+  },
+  "blackbeans": {
+   "name": "Frijoles negros en lata",
+   "full": "Frijoles negros en lata (15 oz)",
+   "note": "No hay que cocinarlos. Ábralos y cómalos o agréguelos al arroz."
+  },
+  "kidneybean": {
+   "name": "Frijoles rojos en lata",
+   "full": "Frijoles rojos en lata (15 oz)",
+   "note": "Para chili, sopas y arroces. Listos para usar."
+  },
+  "cannedchili": {
+   "name": "Chili en lata",
+   "full": "Chili en lata (15 oz)",
+   "note": "Una comida completa directo de la lata."
+  },
+  "cannedsoups": {
+   "name": "Sopa en lata",
+   "full": "Sopa en lata (10.5 oz)",
+   "note": "Comida de emergencia. Con galletas saladas o pan."
+  },
+  "salsa": {
+   "name": "Salsa",
+   "full": "Salsa (16 oz)",
+   "note": "Base de sabor latino. También sirve como salsa para pasta."
+  },
+  "chickenbreast": {
+   "name": "Pechuga de pollo sin hueso",
+   "full": "Pechuga de pollo sin hueso (1 lb)",
+   "note": "Magra y rápida de cocinar. Córtela en tiras para que rinda más."
+  },
+  "drumsticks": {
+   "name": "Muslos de pollo (piernitas)",
+   "full": "Muslos de pollo, piernitas (2 lb)",
+   "note": "Con hueso y económicos. Unas 8 piezas."
+  },
+  "sirloin": {
+   "name": "Bistec de lomo (sirloin)",
+   "full": "Bistec de lomo, sirloin (1 lb)",
+   "note": "Córtelo fino y saltéelo con muchas verduras."
+  },
+  "roundroast": {
+   "name": "Carne de res para asar (redondo)",
+   "full": "Carne de res para asar, redondo (2 lb)",
+   "note": "Carne magra. En cubos para guisos, a fuego lento."
+  },
+  "tomatoes": {
+   "name": "Tomates frescos",
+   "full": "Tomates frescos (1 lb, unos 3)",
+   "note": "Use primero los maduros. Guárdelos fuera del refrigerador."
+  },
+  "avocado": {
+   "name": "Aguacate",
+   "full": "Aguacate (1)",
+   "note": "Está maduro cuando cede un poco al apretarlo."
+  },
+  "zucchini": {
+   "name": "Calabacita",
+   "full": "Calabacita o calabaza de verano (1 lb)",
+   "note": "Se cocina en minutos. Buena en guisos y salteados."
+  },
+  "cornears": {
+   "name": "Elotes frescos",
+   "full": "Elotes frescos (2 mazorcas)",
+   "note": "Corte los granos de la mazorca para los guisos."
+  },
+  "frozenpeas": {
+   "name": "Chícharos congelados",
+   "full": "Chícharos (arvejas) congelados (1 lb)",
+   "note": "Sin preparación. Agréguelos al final."
+  },
+  "tomatosauce": {
+   "name": "Salsa de tomate",
+   "full": "Salsa de tomate (lata de 15 oz)",
+   "note": "Una base lista para guisos y cazuelas."
+  },
+  "plantains": {
+   "name": "Plátanos maduros",
+   "full": "Plátanos maduros (unos 2)",
+   "note": "Amarillos con manchas negras: dulces y listos para cocinar."
+  },
+  "mozzarella": {
+   "name": "Queso mozzarella semidescremado",
+   "full": "Queso mozzarella semidescremado (8 oz)",
+   "note": "Con menos grasa que la mayoría de los quesos. Se derrite bien."
+  },
+  "raisins": {
+   "name": "Pasas",
+   "full": "Pasas (12 oz)",
+   "note": "Duran meses. Un poco endulza los platos salados."
+  },
+  "sourcream": {
+   "name": "Crema agria sin grasa",
+   "full": "Crema agria sin grasa (16 oz)",
+   "note": "Cremosa para burritos, frijoles y papas."
+  },
+  "salmon": {
+   "name": "Salmón",
+   "full": "Salmón (1 lb)",
+   "note": "Rico en omega-3. Se cocina en unos 10 minutos."
+  },
+  "fish": {
+   "name": "Filetes de pescado (tilapia u otro)",
+   "full": "Filetes de pescado, tilapia u otro (1 lb)",
+   "note": "Pescado blanco suave. Se hornea en 15 a 20 minutos."
+  },
+  "cornflakes": {
+   "name": "Hojuelas de maíz (cereal)",
+   "full": "Hojuelas de maíz, cereal (12 oz)",
+   "note": "Trituradas, hacen un empanizado crujiente para pollo o pescado al horno."
+  },
+  "breadcrumbs": {
+   "name": "Pan molido",
+   "full": "Pan molido (15 oz)",
+   "note": "Para rollo de carne y empanizados crujientes."
+  },
+  "kielbasa": {
+   "name": "Salchicha kielbasa de pavo",
+   "full": "Salchicha kielbasa de pavo (14 oz)",
+   "note": "Ya viene cocida. Un poco da mucho sabor."
+  },
+  "buttermilk": {
+   "name": "Suero de leche bajo en grasa",
+   "full": "Suero de leche (buttermilk) bajo en grasa (1 cuarto de galón)",
+   "note": "Para remojar pollo o pescado antes de empanizar."
+  },
+  "hominy": {
+   "name": "Maíz pozolero en lata",
+   "full": "Maíz pozolero en lata (29 oz)",
+   "note": "Ya viene cocido. Es el corazón del pozole."
+  },
+  "masaharina": {
+   "name": "Masa harina",
+   "full": "Masa harina (2 lb)",
+   "note": "Harina de maíz para pupusas, tortillas y tamales."
+  },
+  "quinoa": {
+   "name": "Quinua",
+   "full": "Quinua (12 oz)",
+   "note": "Grano integral con más proteína. Se cocina en 15 minutos."
+  },
+  "brownrice": {
+   "name": "Arroz integral",
+   "full": "Arroz integral (2 lb)",
+   "note": "Arroz de grano entero. Tarda más que el arroz blanco."
+  },
+  "groundturkey": {
+   "name": "Carne molida de pavo magra",
+   "full": "Carne molida de pavo magra (1 lb)",
+   "note": "Magra. Sirve para todo lo que haría con carne molida de res."
+  }
+ },
+ "tips": {
+  "🥚 Eat eggs and bananas first — they spoil fastest. Rice, beans, oats, and peanut butter can last weeks.": "🥚 Coma primero los huevos y los plátanos, porque se echan a perder más rápido. El arroz, los frijoles, la avena y la crema de cacahuate duran semanas.",
+  "🍚 Cook a large pot of rice and beans on day one. Reheat throughout the week — flavor improves each day.": "🍚 Cocine una olla grande de arroz y frijoles el primer día. Recaliente durante la semana: saben mejor cada día.",
+  "🧅 Onion and garlic are your best flavor investment. They cost pennies and transform any plain dish.": "🧅 La cebolla y el ajo son su mejor inversión en sabor. Cuestan centavos y transforman cualquier platillo sencillo.",
+  "💧 Save the water you cook beans or potatoes in. It's nutritious and makes an excellent soup base.": "💧 Guarde el agua donde cocinó frijoles o papas. Es nutritiva y es una excelente base para sopa.",
+  "❄️ Cook double the beans and freeze half. Saves time and energy cost later in the week.": "❄️ Cocine el doble de frijoles y congele la mitad. Ahorra tiempo y gas o luz más adelante en la semana.",
+  "🥬 Cabbage lasts 2–3 weeks in the fridge. Use everything else first — it'll still be good at the end.": "🥬 El repollo dura 2–3 semanas en el refrigerador. Use todo lo demás primero: al final seguirá bueno.",
+  "🌡️ Soak oats in water the night before. No cooking needed in the morning.": "🌡️ Remoje la avena en agua la noche anterior. En la mañana no hay que cocinarla.",
+  "🍗 Cook chicken in water and use the broth for rice or soup. One piece goes a very long way.": "🍗 Cocine el pollo en agua y use el caldo para arroz o sopa. Una pieza rinde muchísimo.",
+  "🫙 Don't run out of oil — it's how you cook almost everything. Use it sparingly and it lasts.": "🫙 Que no le falte aceite: con él se cocina casi todo. Úselo con medida y le durará.",
+  "🍅 A can of tomatoes turns plain beans or lentils from a side into a full meal.": "🍅 Una lata de tomates convierte unos frijoles o lentejas sencillos en una comida completa.",
+  "🐟 Canned tuna or sardines over rice is one of the fastest complete protein meals you can make.": "🐟 Atún o sardinas en lata con arroz es una de las comidas con proteína más rápidas que puede hacer.",
+  "🌾 Lentils cook in 20 minutes with no soaking — faster and easier than beans.": "🌾 Las lentejas se cocinan en 20 minutos sin remojar: más rápido y fácil que los frijoles.",
+  "🍠 Sweet potatoes bake whole in 45 minutes with zero prep. Put them in when you start cooking other things.": "🍠 Los camotes se hornean enteros en 45 minutos sin preparación. Métalos al horno cuando empiece a cocinar otras cosas.",
+  "🫘 Canned beans are pre-cooked — open and eat, no stove needed. Best for rushed days.": "🫘 Los frijoles en lata ya están cocidos: ábralos y cómalos, sin estufa. Ideales para los días con prisa.",
+  "🥜 Two slices of bread with peanut butter is about 350 calories in two minutes. Keep it as emergency fuel.": "🥜 Dos rebanadas de pan con crema de cacahuate son unas 350 calorías en dos minutos. Téngalo para emergencias.",
+  "🥕 Carrots and cabbage give you a lot of nutrition per dollar, and both keep for weeks.": "🥕 La zanahoria y el repollo dan mucha nutrición por dólar, y los dos duran semanas."
+ },
+ "ingredients": {
+  "onions": "cebolla",
+  "oil": "aceite",
+  "olive oil": "aceite de oliva",
+  "garlic": "ajo",
+  "canned tomatoes": "tomates en lata",
+  "eggs": "huevos",
+  "beans": "frijoles",
+  "rice": "arroz",
+  "potatoes": "papas",
+  "carrots": "zanahorias",
+  "milk": "leche",
+  "soy sauce": "salsa de soya",
+  "lentils": "lentejas",
+  "chicken": "pollo",
+  "butter": "mantequilla",
+  "pasta": "pasta",
+  "bread": "pan",
+  "oats": "avena",
+  "banana": "plátano",
+  "tortillas": "tortillas",
+  "cornmeal": "harina de maíz",
+  "sweet potatoes": "camotes",
+  "cabbage": "repollo",
+  "peanut butter": "crema de cacahuate",
+  "chickpeas": "garbanzos",
+  "flour": "harina",
+  "tuna": "atún",
+  "coconut milk": "leche de coco",
+  "tofu": "tofu",
+  "ground beef": "carne molida",
+  "pork": "cerdo",
+  "applesauce": "puré de manzana",
+  "salt": "sal",
+  "water": "agua",
+  "cinnamon": "canela",
+  "chicken breast": "pechuga de pollo",
+  "chicken drumsticks": "muslos de pollo",
+  "beef": "carne de res",
+  "ground turkey": "pavo molido",
+  "turkey kielbasa": "kielbasa de pavo",
+  "fish": "pescado",
+  "salmon": "salmón",
+  "tomatoes": "tomates",
+  "tomato sauce": "salsa de tomate",
+  "bell peppers": "pimientos",
+  "celery": "apio",
+  "brown rice": "arroz integral",
+  "quinoa": "quinua",
+  "masa harina": "masa harina",
+  "hominy": "maíz pozolero",
+  "evaporated milk": "leche evaporada",
+  "buttermilk": "suero de leche",
+  "cheese": "queso",
+  "mozzarella": "mozzarella",
+  "sour cream": "crema agria",
+  "black beans": "frijoles negros",
+  "green beans": "ejotes",
+  "peas": "chícharos",
+  "corn": "maíz",
+  "corn on the cob": "elote",
+  "summer squash": "calabacita",
+  "plantains": "plátanos maduros",
+  "avocado": "aguacate",
+  "raisins": "pasas",
+  "cornflakes": "hojuelas de maíz",
+  "bread crumbs": "pan molido"
+ },
+ "recipes": {
+  "1": {
+   "title": "Huevos revueltos con pan tostado",
+   "instructions": "Bata los huevos con sal. Derrita mantequilla en un sartén a fuego medio. Agregue los huevos y revuelva suavemente hasta que apenas cuajen. Sirva sobre pan tostado."
+  },
+  "2": {
+   "title": "Avena con plátano",
+   "instructions": "Ponga a hervir 2 tazas de agua. Agregue la avena y sal, y cocine 5 minutos revolviendo. Cubra con plátano en rodajas."
+  },
+  "3": {
+   "title": "Pan tostado con crema de cacahuate",
+   "instructions": "Tueste el pan. Unte bastante crema de cacahuate. Cubra con rodajas de plátano."
+  },
+  "4": {
+   "title": "Panqueques",
+   "instructions": "Mezcle harina, huevos, leche y una pizca de sal hasta tener una masa lisa. Caliente un sartén con mantequilla. Vierta 1/4 de taza de masa por panqueque. Cocine hasta que salgan burbujas, voltee y cocine 1 minuto más."
+  },
+  "5": {
+   "title": "Huevo frito con papas ralladas doradas",
+   "instructions": "Ralle las papas y exprímalas para quitarles el agua. Fríalas en aceite hasta que estén doradas de cada lado. Fría los huevos al lado. Sazone con sal."
+  },
+  "6": {
+   "title": "Atole de avena con plátano",
+   "instructions": "Cocine la avena en leche 5 minutos. Machaque el plátano y agréguelo. Espolvoree canela."
+  },
+  "7": {
+   "title": "Huevos revueltos con verduras",
+   "instructions": "Corte las verduras en cubitos. Fríalas en aceite 3 minutos. Bata los huevos y viértalos sobre las verduras. Revuelva hasta que se cocinen bien."
+  },
+  "8": {
+   "title": "Tortilla de papa y cebolla (frittata)",
+   "instructions": "Fría la papa y la cebolla en cubitos en aceite hasta que estén suaves. Bata los huevos y viértalos encima. Cocine a fuego bajo hasta que cuajen y termine en el gratinador del horno."
+  },
+  "9": {
+   "title": "Tazón de avena con crema de cacahuate",
+   "instructions": "Cocine la avena en agua. Mezcle la crema de cacahuate mientras está caliente. Cubra con plátano."
+  },
+  "10": {
+   "title": "Pan con huevo al horno",
+   "instructions": "Corte el pan en cubos y póngalo en un molde para hornear. Bata los huevos con leche y sal. Viértalo sobre el pan. Hornee a 350 °F por 25 minutos hasta que dore."
+  },
+  "11": {
+   "title": "Sopa de papa",
+   "instructions": "Corte las papas y la cebolla en cubitos. Hiérvalas en agua con sal hasta que estén suaves. Machaque la mitad de las papas en la olla. Agregue leche y mantequilla y mezcle."
+  },
+  "12": {
+   "title": "Sopa de frijoles con pan",
+   "instructions": "Fría la cebolla y el ajo en aceite. Agregue los frijoles y los tomates y cocine a fuego lento 15 minutos. Sirva con pan tostado para remojar."
+  },
+  "13": {
+   "title": "Tazón de arroz con atún",
+   "instructions": "Cocine el arroz. Escurra y desmenuce el atún. Fría la cebolla en aceite. Mezcle el atún con el arroz y la cebolla. Sazone con sal."
+  },
+  "14": {
+   "title": "Rollito de crema de cacahuate y plátano",
+   "instructions": "Unte crema de cacahuate en el pan. Ponga el plátano en una orilla. Enrolle bien apretado. Corte en pedazos."
+  },
+  "15": {
+   "title": "Sopa de verduras con huevo",
+   "instructions": "Hierva las verduras en agua con sal hasta que estén suaves. Rompa los huevos directo en el caldo hirviendo a fuego lento. Cocínelos 3 minutos."
+  },
+  "16": {
+   "title": "Ensalada de pasta con verduras",
+   "instructions": "Cocine la pasta, escúrrala y déjela enfriar. Corte verduras crudas en cubitos. Mezcle todo con aceite y sal."
+  },
+  "17": {
+   "title": "Papa al horno con frijoles",
+   "instructions": "Unte las papas con aceite y sal. Hornee a 400 °F por 45 minutos. Ábralas a la mitad. Ponga frijoles calientes encima."
+  },
+  "18": {
+   "title": "Ensalada de huevo en pan tostado",
+   "instructions": "Cueza los huevos duros, déjelos enfriar y pélelos. Píquelos con cebolla. Mezcle con aceite y sal. Sirva sobre pan tostado."
+  },
+  "19": {
+   "title": "Sopa de lentejas con verduras",
+   "instructions": "Sofría la cebolla y el ajo. Agregue lentejas, zanahorias y agua hasta cubrir. Cocine a fuego lento 25 minutos hasta que las lentejas estén suaves. Sazone."
+  },
+  "20": {
+   "title": "Crema de elote y frijol",
+   "instructions": "Hierva las papas y la cebolla hasta que estén suaves. Machaque la mitad. Agregue frijoles y leche. Cocine a fuego lento 10 minutos. Sazone bien."
+  },
+  "21": {
+   "title": "Pollo con arroz",
+   "instructions": "Dore las piezas de pollo en aceite. Sáquelas. Fría la cebolla hasta que esté suave. Agregue el arroz y revuelva para cubrirlo. Agregue agua, el doble que de arroz. Regrese el pollo. Tape y cocine 20 minutos a fuego bajo."
+  },
+  "22": {
+   "title": "Pasta con salsa de tomate",
+   "instructions": "Fría el ajo y la cebolla en aceite 3 minutos. Agregue los tomates y cocine a fuego lento 15 minutos. Cocine la pasta según el paquete. Mezcle todo."
+  },
+  "23": {
+   "title": "Repollo con papa al horno",
+   "instructions": "Rebane las papas delgadas. Acomódelas en capas con repollo y cebolla en un molde con aceite. Sazone. Tape con papel aluminio. Hornee a 375 °F por 40 minutos."
+  },
+  "24": {
+   "title": "Picadillo de carne molida con papa",
+   "instructions": "Dore la carne en un sartén, desmoronándola. Sáquela. Fría la papa y la cebolla en cubitos hasta que doren. Regrese la carne. Sazone y mezcle todo."
+  },
+  "25": {
+   "title": "Guiso de frijoles con verduras",
+   "instructions": "Sofría la cebolla. Agregue verduras, frijoles y tomates. Cubra con agua. Cocine a fuego lento 30 minutos hasta que las verduras estén suaves."
+  },
+  "26": {
+   "title": "Pasta con atún al horno",
+   "instructions": "Cocine la pasta. Haga una salsa calentando leche con cebolla. Mézclela con el atún y la pasta. Hornee a 350 °F por 20 minutos."
+  },
+  "27": {
+   "title": "Sopa de lentejas",
+   "instructions": "Sofría la cebolla y el ajo. Agregue lentejas, zanahorias, tomates y agua. Cocine a fuego lento 30 minutos. Sazone bien."
+  },
+  "28": {
+   "title": "Caldo de pollo con verduras",
+   "instructions": "Hierva el pollo en agua con cebolla 30 minutos. Saque el pollo y deshébrelo. Agregue las verduras al caldo. Cocine 20 minutos. Regrese el pollo."
+  },
+  "29": {
+   "title": "Tazón de arroz con frijoles",
+   "instructions": "Cocine el arroz. Fría la cebolla y el ajo. Agregue los frijoles y cocine 10 minutos. Sirva los frijoles sobre el arroz."
+  },
+  "30": {
+   "title": "Sopa de pasta con frijoles",
+   "instructions": "Fría el ajo y la cebolla. Agregue los tomates y los frijoles. Cocine a fuego lento 15 minutos. Agregue la pasta a la olla. Cocine hasta que la pasta esté suave. Agregue agua si queda muy espesa."
+  },
+  "31": {
+   "title": "Huevos rancheros",
+   "instructions": "Fría la cebolla, el ajo y los tomates para la salsa. Fría los huevos en otro sartén. Caliente las tortillas. Sirva los huevos sobre las tortillas y cubra con la salsa."
+  },
+  "32": {
+   "title": "Avena con canela",
+   "instructions": "Cocine la avena en leche 5 minutos. Agregue canela. Cubra con plátano en rodajas."
+  },
+  "33": {
+   "title": "Tacos de huevo con frijoles",
+   "instructions": "Fría la cebolla. Agregue los frijoles y macháquelos un poco. Haga huevos revueltos aparte. Rellene las tortillas con frijoles y luego huevo."
+  },
+  "34": {
+   "title": "Plátano frito con huevo",
+   "instructions": "Corte el plátano en rodajas gruesas. Fríalo en aceite hasta que dore. Fría los huevos al lado. Sirva juntos."
+  },
+  "35": {
+   "title": "Tortilla de maíz con frijoles",
+   "instructions": "Caliente las tortillas en un sartén sin aceite. Caliente los frijoles con cebolla frita. Úntelos en las tortillas. Enrolle y coma."
+  },
+  "36": {
+   "title": "Arroz con frijoles",
+   "instructions": "Cocine el arroz. Fría la cebolla y el ajo. Agregue los frijoles con su caldo. Cocine a fuego lento 15 minutos hasta que espese. Sirva los frijoles sobre el arroz."
+  },
+  "37": {
+   "title": "Sopa de verduras",
+   "instructions": "Fría la cebolla y el ajo. Agregue verduras picadas y tomates. Cubra con agua. Cocine a fuego lento 25 minutos hasta que estén suaves."
+  },
+  "38": {
+   "title": "Quesadillas de frijol",
+   "instructions": "Machaque los frijoles con cebolla frita. Úntelos en una tortilla. Dóblela a la mitad. Tuéstela en un sartén sin aceite hasta que esté crujiente por ambos lados."
+  },
+  "39": {
+   "title": "Tacos de lentejas",
+   "instructions": "Cocine las lentejas. Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Mezcle las lentejas. Rellene las tortillas."
+  },
+  "40": {
+   "title": "Burrito de papa con huevo",
+   "instructions": "Fría la papa y la cebolla en cubitos hasta que doren. Haga huevos revueltos en el mismo sartén. Mezcle todo. Enrolle en tortillas calientes."
+  },
+  "41": {
+   "title": "Arroz con pollo",
+   "instructions": "Dore el pollo en aceite. Sáquelo. Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Regrese el pollo. Agregue el arroz y el agua. Tape y cocine 20 minutos a fuego bajo."
+  },
+  "42": {
+   "title": "Frijoles negros guisados",
+   "instructions": "Fría la cebolla y el ajo hasta que estén suaves. Agregue los tomates y cocine 5 minutos. Agregue los frijoles con su caldo. Cocine a fuego lento 20 minutos hasta que espese. Sirva con arroz."
+  },
+  "43": {
+   "title": "Caldo de res con verduras",
+   "instructions": "Dore la carne. Agregue cebolla y ajo. Cubra con agua. Agregue papas y zanahorias. Cocine a fuego lento 30 minutos. Sazone bien."
+  },
+  "44": {
+   "title": "Guiso de lentejas con tomate",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue las lentejas y agua. Cocine a fuego lento 25 minutos hasta que espese. Sirva con tortillas o arroz."
+  },
+  "45": {
+   "title": "Sopa de tortilla con pollo",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y agua. Cocine el pollo en el caldo a fuego lento 20 minutos. Deshebre el pollo. Corte las tortillas en tiras y fríalas hasta que estén crujientes. Sirva la sopa con las tiras de tortilla encima."
+  },
+  "46": {
+   "title": "Frijoles pintos de olla",
+   "instructions": "Remoje los frijoles toda la noche. Escúrralos. Cúbralos con agua limpia. Agregue cebolla y ajo. Cocine a fuego lento 2 horas hasta que estén completamente suaves. Sazone bien. Sirva con arroz."
+  },
+  "47": {
+   "title": "Guiso de papa con huevo",
+   "instructions": "Fría la cebolla. Agregue los tomates y cocine 5 minutos. Agregue la papa en cubos y agua. Cocine a fuego lento 15 minutos. Haga huecos en la salsa y rompa los huevos ahí. Tape y cocine 5 minutos."
+  },
+  "48": {
+   "title": "Cazuela de frijoles y tortilla al horno",
+   "instructions": "Haga una salsa de tomate con cebolla y ajo. En un molde, ponga capas de tortillas en pedazos, frijoles y salsa. Repita las capas. Hornee a 350 °F por 25 minutos."
+  },
+  "49": {
+   "title": "Congee (atole de arroz)",
+   "instructions": "Cocine 1 taza de arroz con 8 tazas de agua a fuego bajo por 45 minutos, revolviendo de vez en cuando. Debe quedar espeso y cremoso. Cubra con un huevo frito o pochado. Sazone con sal."
+  },
+  "50": {
+   "title": "Avena salada con soya",
+   "instructions": "Cocine la avena en agua. Caliente aceite en un sartén y fría la cebolla 2 minutos. Viértala sobre la avena. Agregue salsa de soya. Cubra con un huevo frito."
+  },
+  "51": {
+   "title": "Huevo frito con arroz",
+   "instructions": "Use arroz frío que le haya sobrado. Caliente aceite hasta que humee. Agregue el arroz y fríalo aplastándolo. Haga un hueco y rompa los huevos ahí. Fría hasta que cuajen las claras. Sazone con salsa de soya."
+  },
+  "52": {
+   "title": "Atole de arroz con cacahuate",
+   "instructions": "Cocine el arroz con el doble de agua hasta que esté muy suave. Agregue la crema de cacahuate y revuelva hasta que se derrita. Sazone con sal. Agregue agua caliente si queda muy espeso."
+  },
+  "53": {
+   "title": "Atole de avena con plátano y coco",
+   "instructions": "Cocine la avena en leche de coco y agua 5 minutos. Machaque el plátano y agréguelo. Sirva caliente."
+  },
+  "54": {
+   "title": "Arroz frito con huevo",
+   "instructions": "Use arroz frío del día anterior. Caliente el aceite hasta que esté muy caliente. Fría la cebolla 1 minuto. Agregue el arroz y saltéelo 3 minutos aplastándolo. Muévalo a un lado y haga huevos revueltos. Mezcle todo. Sazone con salsa de soya."
+  },
+  "55": {
+   "title": "Repollo al ajo con arroz",
+   "instructions": "Cocine el arroz. Caliente aceite y fría el ajo y la cebolla. Agregue el repollo en tiras y saltéelo a fuego alto hasta que se dore un poco. Sazone con salsa de soya. Sirva sobre el arroz."
+  },
+  "56": {
+   "title": "Dal de lentejas",
+   "instructions": "Fría la cebolla hasta que dore. Agregue el ajo y cocine 1 minuto. Agregue lentejas, tomates y agua hasta cubrir. Cocine a fuego lento 20 minutos hasta que las lentejas se deshagan en la salsa. Sazone. Sirva sobre arroz."
+  },
+  "57": {
+   "title": "Repollo salteado con huevo",
+   "instructions": "Caliente aceite hasta que humee. Fría el ajo 30 segundos. Agregue el repollo en tiras y fríalo 3 minutos a fuego alto. Muévalo a un lado y haga huevos revueltos. Mezcle. Sazone con salsa de soya."
+  },
+  "58": {
+   "title": "Tazón de tofu con verduras",
+   "instructions": "Exprima el tofu para secarlo. Córtelo en cubos y fríalo en aceite hasta que dore. Sáquelo. Fría las verduras 3 minutos. Regrese el tofu. Agregue salsa de soya. Sirva sobre arroz."
+  },
+  "59": {
+   "title": "Fideos fríos con salsa de cacahuate",
+   "instructions": "Cocine los fideos y enjuáguelos con agua fría. Mezcle crema de cacahuate, salsa de soya y ajo para la salsa. Agregue agua para aligerarla. Mezcle los fideos con la salsa y zanahoria rallada."
+  },
+  "60": {
+   "title": "Verduras salteadas con arroz",
+   "instructions": "Cocine el arroz. Caliente mucho un wok o sartén. Fría el ajo y la cebolla 1 minuto. Agregue las verduras y saltéelas a fuego alto 3 minutos hasta que se doren un poco. Sazone con salsa de soya. Sirva sobre el arroz."
+  },
+  "61": {
+   "title": "Khichdi (arroz con lentejas)",
+   "instructions": "Lave juntos el arroz y las lentejas. Fría la cebolla y el ajo en aceite hasta que doren. Agregue el arroz y las lentejas y revuelva. Agregue 4 tazas de agua y sal. Tape y cocine a fuego bajo 25 minutos."
+  },
+  "62": {
+   "title": "Pollo con soya y ajo",
+   "instructions": "Marine el pollo en salsa de soya y ajo 30 minutos. Fríalo en aceite hasta que esté bien cocido y caramelizado. Sirva sobre arroz con cebolla frita."
+  },
+  "63": {
+   "title": "Curry de lentejas con coco",
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue los tomates y cocine 5 minutos. Agregue las lentejas y la leche de coco. Cocine a fuego lento 20 minutos. Sazone bien. Sirva con arroz."
+  },
+  "64": {
+   "title": "Sopa de fideos",
+   "instructions": "Fría la cebolla y el ajo. Agregue agua o caldo y zanahorias. Cocine a fuego lento 10 minutos. Agregue los fideos y cocínelos según el paquete. Sazone con sal. Agregue salsa de soya si tiene."
+  },
+  "65": {
+   "title": "Tazón de arroz con frijoles y ajo",
+   "instructions": "Cocine el arroz. Fría ajo rebanado en aceite hasta que esté dorado y crujiente. Saque el ajo. Fría los frijoles en el mismo aceite hasta que estén un poco crujientes. Sazone con salsa de soya. Sirva sobre el arroz con el ajo crujiente encima."
+  },
+  "66": {
+   "title": "Tofu salteado con repollo",
+   "instructions": "Exprima el tofu y córtelo en cubos. Fríalo en aceite hasta que dore por todos lados. Agregue repollo en tiras y ajo. Saltee 3 minutos a fuego alto. Sazone con salsa de soya. Sirva sobre arroz."
+  },
+  "67": {
+   "title": "Aloo sabzi (papas al estilo indio)",
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue la papa en cubitos y revuelva. Agregue tomates y un poco de agua. Tape y cocine 20 minutos hasta que las papas estén suaves. Sazone bien."
+  },
+  "68": {
+   "title": "Dal de camote y lentejas",
+   "instructions": "Fría la cebolla y el ajo. Agregue el camote en cubos y las lentejas. Cubra con agua. Cocine a fuego lento 20 minutos. Agregue la leche de coco. Cocine 5 minutos más. Sirva con arroz."
+  },
+  "69": {
+   "title": "Grits con huevo",
+   "instructions": "Ponga a hervir 4 tazas de agua. Agregue la harina de maíz poco a poco, batiendo. Cocine a fuego bajo 20 minutos, revolviendo seguido. Agregue mantequilla y leche. Sazone. Cubra con un huevo frito o pochado."
+  },
+  "70": {
+   "title": "Avena con azúcar morena",
+   "instructions": "Cocine la avena en leche 5 minutos. Agregue mantequilla. Sazone con sal. Endulce si quiere."
+  },
+  "71": {
+   "title": "Picadillo de camote con huevo",
+   "instructions": "Corte el camote en cubitos. Fríalo en aceite 8 minutos hasta que esté suave. Agregue la cebolla y cocine 3 minutos más. Haga huecos y rompa los huevos ahí. Tape y cocine hasta que cuajen las claras. Sazone."
+  },
+  "72": {
+   "title": "Atole de harina de maíz",
+   "instructions": "Bata la harina de maíz en leche fría. Caliente a fuego medio, revolviendo sin parar hasta que espese, unos 10 minutos. Agregue mantequilla. Sazone con sal o endulce con azúcar."
+  },
+  "73": {
+   "title": "Tazón de grits con huevo",
+   "instructions": "Prepare grits cremosos con leche. Fría los huevos estrellados en aceite. Sirva los huevos sobre los grits. Sazone bien."
+  },
+  "74": {
+   "title": "Sartén de repollo con papa",
+   "instructions": "Fría la papa en cubitos en aceite hasta que esté casi suave. Agregue repollo y cebolla rebanados. Cocine a fuego alto hasta que el repollo se ablande y las papas doren. Sazone bien."
+  },
+  "75": {
+   "title": "Tazón de camote con frijoles",
+   "instructions": "Ase o hierva los camotes hasta que estén suaves. Fría la cebolla. Agregue los frijoles y caliéntelos. Sirva los frijoles sobre los camotes abiertos. Sazone."
+  },
+  "76": {
+   "title": "Pan de maíz con frijoles",
+   "instructions": "Haga el pan de maíz: mezcle harina de maíz, huevo y leche. Vierta en un molde con aceite y hornee a 400 °F por 20 minutos. Caliente los frijoles con cebolla frita. Sirva juntos."
+  },
+  "77": {
+   "title": "Guiso de cerdo con frijoles",
+   "instructions": "Dore los pedazos de cerdo. Agregue cebolla y ajo. Agregue frijoles, tomates y agua. Cocine a fuego lento 45 minutos hasta que el cerdo esté suave y los frijoles cremosos. Sazone."
+  },
+  "78": {
+   "title": "Pollo con pan de maíz",
+   "instructions": "Sazone el pollo y hornéelo a 400 °F por 35 minutos. Haga la masa del pan de maíz con harina de maíz, huevo y leche. Hornéela al lado en un molde con aceite los últimos 20 minutos."
+  },
+  "79": {
+   "title": "Hoppin' John (frijoles con arroz del sur)",
+   "instructions": "Remoje los frijoles toda la noche. Escúrralos. Cocínelos con cebolla y ajo hasta que estén muy suaves, unos 90 minutos. Sazone. Sirva los frijoles con su caldo sobre arroz cocido."
+  },
+  "80": {
+   "title": "Bagre frito con grits",
+   "instructions": "Prepare grits cremosos con leche y mantequilla. Sazone el filete de pescado. Cúbralo con harina de maíz. Fríalo en aceite hasta que esté dorado y bien cocido. Sirva sobre los grits."
+  },
+  "81": {
+   "title": "Pollo con camote al horno",
+   "instructions": "Corte el camote y el pollo en trozos. Mézclelos con aceite y sal. Extiéndalos en un molde. Hornee a 400 °F por 35 minutos hasta que el pollo esté cocido y el camote suave."
+  },
+  "82": {
+   "title": "Guiso de frijoles con harina de maíz",
+   "instructions": "Fría la cebolla. Agregue tomates y frijoles. Cocine a fuego lento 15 minutos. Bata un poco de harina de maíz con agua y agréguela al guiso para espesarlo. Cocine 10 minutos más."
+  },
+  "83": {
+   "title": "Pollo con arroz al horno",
+   "instructions": "Dore el pollo. Sáquelo. Cocine la cebolla en el mismo sartén. Agregue el arroz y revuelva. Agregue leche y agua. Regrese el pollo. Tape y hornee a 350 °F por 30 minutos."
+  },
+  "84": {
+   "title": "Sartén de huevo con papa",
+   "instructions": "Fría las papas en cubitos en aceite hasta que doren. Agregue cebolla y ajo y cocine 3 minutos. Haga huecos en la mezcla. Rompa los huevos ahí. Tape y cocine hasta que cuajen."
+  },
+  "85": {
+   "title": "Pan con aceite de oliva",
+   "instructions": "Tueste el pan. Frótelo con un diente de ajo. Rocíe bastante aceite de oliva. Sazone con sal."
+  },
+  "86": {
+   "title": "Avena con puré de manzana",
+   "instructions": "Cocine la avena en agua 5 minutos. Cubra con puré de manzana y canela."
+  },
+  "87": {
+   "title": "Huevos revueltos con garbanzos",
+   "instructions": "Fría la cebolla y el ajo. Agregue los garbanzos y cocine 3 minutos. Bata los huevos y viértalos encima. Revuelva suavemente hasta que apenas se cocinen. Sazone con sal."
+  },
+  "88": {
+   "title": "Huevos en salsa de tomate al horno",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 10 minutos hasta que reduzcan. Sazone. Haga huecos y rompa los huevos ahí. Tape y cocine hasta que cuajen las claras."
+  },
+  "89": {
+   "title": "Guiso de garbanzos con tomate",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue los garbanzos. Cocine a fuego lento 15 minutos hasta que la salsa espese. Sazone bien. Sirva con pan."
+  },
+  "90": {
+   "title": "Sopa de zanahoria y lentejas",
+   "instructions": "Fría la cebolla y el ajo. Agregue zanahorias y lentejas. Cubra con agua. Cocine a fuego lento 25 minutos. Licúe la mitad de la sopa para que quede cremosa. Sazone."
+  },
+  "91": {
+   "title": "Sopa de frijoles blancos con verduras",
+   "instructions": "Fría la cebolla y el ajo. Agregue verduras y tomates. Agregue frijoles y agua. Cocine a fuego lento 25 minutos. Sazone. Al servir, rocíe con aceite de oliva."
+  },
+  "92": {
+   "title": "Pasta con aceite de oliva y ajo",
+   "instructions": "Cocine la pasta en agua con sal. Escúrrala y guarde 1 taza del agua de la pasta. Fría ajo rebanado en aceite de oliva hasta que dore. Mezcle la pasta con el aceite de ajo, agregando agua de la pasta para hacer una salsa."
+  },
+  "93": {
+   "title": "Pasta aglio e olio",
+   "instructions": "Cocine la pasta. Rebane el ajo delgado. Fríalo muy despacio en aceite de oliva hasta que dore, sin quemarlo. Mezcle con la pasta escurrida y el agua de la pasta que guardó para hacer una salsa sedosa. Sazone bien."
+  },
+  "94": {
+   "title": "Mujaddara (lentejas con arroz y cebolla)",
+   "instructions": "Cocine las lentejas en agua 20 minutos hasta que estén suaves. Cocine el arroz aparte. Fría la cebolla en bastante aceite hasta que esté muy oscura y caramelizada, unos 20 minutos. Mezcle las lentejas con el arroz. Cubra con la cebolla crujiente."
+  },
+  "95": {
+   "title": "Pescado al horno con limón",
+   "instructions": "Ponga el pescado en un molde. Vierta encima tomates y ajo. Rocíe aceite de oliva. Sazone. Hornee a 375 °F por 20 minutos hasta que el pescado se deshaga fácilmente."
+  },
+  "96": {
+   "title": "Garbanzos con verduras al horno",
+   "instructions": "Junte todos los ingredientes en un molde. Mézclelos con aceite. Sazone bien. Agregue un poco de agua. Tape y hornee a 375 °F por 45 minutos. Destape los últimos 15 minutos."
+  },
+  "97": {
+   "title": "Guiso de lentejas con verduras",
+   "instructions": "Sofría la cebolla y el ajo. Agregue todas las verduras y las lentejas. Cubra con agua. Cocine a fuego lento 30 minutos hasta que todo esté muy suave. Sazone bien."
+  },
+  "98": {
+   "title": "Frijoles con tomate al horno",
+   "instructions": "Junte frijoles, tomates, ajo rebanado y cebolla en un molde. Vierta aceite de oliva encima. Sazone. Hornee a 350 °F por 35 minutos hasta que burbujee y se dore un poco."
+  },
+  "99": {
+   "title": "Pollo con tomate y ajo",
+   "instructions": "Dore el pollo en aceite. Sáquelo. Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 10 minutos. Regrese el pollo. Tape y cocine 25 minutos hasta que esté suave. Sirva con pan o arroz."
+  },
+  "100": {
+   "title": "Shakshuka (huevos en salsa de tomate)",
+   "instructions": "Fría la cebolla y el ajo en aceite hasta que estén suaves. Agregue los tomates, sazone y cocine a fuego lento 10 minutos hasta que espese. Haga huecos en la salsa. Rompa los huevos en los huecos. Tape y cocine hasta que cuajen las claras pero las yemas sigan suaves. Sirva en el sartén con pan."
+  },
+  "101": {
+   "title": "Avena sencilla",
+   "instructions": "Ponga a hervir 2 tazas de agua. Agregue 1 taza de avena y sal. Baje el fuego y cocine 5 minutos, revolviendo de vez en cuando. Tape y deje reposar 2 minutos. Agregue lo que tenga para acompañar."
+  },
+  "102": {
+   "title": "Huevos revueltos",
+   "instructions": "Bata los huevos con sal. Caliente aceite en un sartén. Fría la cebolla 2 minutos. Vierta los huevos. Revuelva suavemente a fuego medio-bajo hasta que apenas cuajen. Agregue las verduras que tenga."
+  },
+  "103": {
+   "title": "Tazón de papas para el desayuno",
+   "instructions": "Corte las papas en cubitos y fríalas hasta que estén doradas y crujientes. Agregue la cebolla y cocine hasta que esté suave. Rompa los huevos directo en el sartén. Mezcle todo. Sazone bien."
+  },
+  "104": {
+   "title": "Atole de avena con plátano",
+   "instructions": "Cocine la avena en agua 5 minutos. Machaque un plátano bien maduro en la avena caliente. Revuelva bien. El plátano le da todo el dulzor que necesita."
+  },
+  "105": {
+   "title": "Papas fritas con cebolla",
+   "instructions": "Corte las papas en cubos. Caliente aceite en un sartén. Agregue las papas y cocine sin mover 4 minutos hasta que doren abajo. Voltéelas. Agregue la cebolla. Cocine hasta que todo esté dorado y suave. Sazone."
+  },
+  "106": {
+   "title": "Guiso de lentejas",
+   "instructions": "Fría la cebolla y el ajo. Agregue lentejas y zanahorias. Cubra con agua. Cocine a fuego lento 25 minutos. Sazone bien. Machaque algunas lentejas para que quede más espeso."
+  },
+  "107": {
+   "title": "Pasta con salsa",
+   "instructions": "Cocine la pasta. Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 15 minutos. Mezcle con la pasta. Sazone."
+  },
+  "108": {
+   "title": "Frijoles guisados",
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue los frijoles con su caldo si son de lata, o frijoles cocidos con agua. Cocine a fuego lento 15 minutos hasta que espesen. Sazone. Sirva sobre arroz o con pan."
+  },
+  "109": {
+   "title": "Gallo pinto",
+   "instructions": "Use arroz frío que le haya sobrado. Fría la cebolla y el ajo hasta que estén suaves. Agregue el arroz frío y fríalo aplastándolo 2 minutos. Agregue frijoles cocidos con su caldo. Revuelva y fría todo junto hasta que se mezcle y quede un poco crujiente. Sazone."
+  },
+  "110": {
+   "title": "Polenta con salsa de tomate",
+   "instructions": "Haga la salsa: fría la cebolla y el ajo, agregue los tomates y cocine a fuego lento 20 minutos. Haga la polenta: hierva 4 tazas de agua con sal, agregue 1 taza de harina de maíz poco a poco batiendo y cocine 20 minutos a fuego bajo sin dejar de revolver. Sirva la polenta con la salsa encima."
+  },
+  "111": {
+   "title": "Guiso de camote",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue el camote en cubos y los frijoles. Cubra con agua. Cocine a fuego lento 20 minutos hasta que el camote esté suave. Sazone bien."
+  },
+  "112": {
+   "title": "Arroz con leche",
+   "instructions": "Cocine el arroz en leche a fuego lento 20 minutos, revolviendo seguido. Agregue plátano en rodajas. Sazone con canela y una pizca de sal para equilibrar."
+  },
+  "113": {
+   "title": "Tazón de frijoles con huevo",
+   "instructions": "Fría la cebolla. Agregue los frijoles y macháquelos un poco mientras se calientan. Fría los huevos aparte. Sirva los frijoles con los huevos encima. Sazone con sal."
+  },
+  "114": {
+   "title": "Sopa de fideo",
+   "instructions": "Dore la pasta seca en aceite. Agregue tomates licuados con cebolla y ajo. Fría 2 minutos. Cubra con agua. Cocine a fuego lento hasta que la pasta esté suave. Sazone."
+  },
+  "115": {
+   "title": "Tacos de papa",
+   "instructions": "Hierva las papas y macháquelas con sal. Fría la cebolla hasta que dore y mézclela con el puré. Rellene las tortillas y dóblelas a la mitad. Fríalas en aceite hasta que estén crujientes por ambos lados."
+  },
+  "116": {
+   "title": "Tazón de frijoles con arroz",
+   "instructions": "Cocine el arroz. Fría la cebolla en aceite hasta que esté suave. Agregue los tomates y cocine 3 minutos. Agregue los frijoles con su caldo y cocine a fuego lento 10 minutos hasta que espesen. Sazone bien. Sirva los frijoles sobre el arroz. Si quiere, ponga cebolla cruda picada encima."
+  },
+  "117": {
+   "title": "Caldo tlalpeño",
+   "instructions": "Cocine el pollo a fuego lento con cebolla, ajo y sal 30 minutos. Sáquelo y deshébrelo. Agregue frijoles y zanahorias al caldo. Cocine 15 minutos. Regrese el pollo. Sazone bien."
+  },
+  "118": {
+   "title": "Frijoles charros",
+   "instructions": "Remoje los frijoles toda la noche. Cocínelos con cerdo, cebolla y ajo hasta que estén muy suaves, 2 horas. Agregue los tomates. Cocine a fuego lento 30 minutos más. Sazone bien. Quedan espesos y caldosos."
+  },
+  "119": {
+   "title": "Arroz con frijoles negros",
+   "instructions": "Cocine el arroz. Aparte, sofría la cebolla y el ajo hasta que doren. Agregue los frijoles negros con su caldo. Cocine a fuego lento hasta que espesen. Sazone. Sirva al lado del arroz o mezclado."
+  },
+  "120": {
+   "title": "Sopa de huevo estilo miso",
+   "instructions": "Hierva agua con cebolla picada y salsa de soya para hacer el caldo. Bata los huevos. Viértalos despacio en el caldo hirviendo a fuego lento mientras revuelve para formar hebras de huevo. Sazone."
+  },
+  "121": {
+   "title": "Flan salado de huevo al vapor",
+   "instructions": "Bata los huevos con la misma cantidad de agua y salsa de soya. Cuélelos en un tazón. Cocínelos al vapor sobre agua hirviendo a fuego lento 12 minutos hasta que apenas cuajen. Rocíe aceite al servir."
+  },
+  "122": {
+   "title": "Pollo estilo teriyaki",
+   "instructions": "Mezcle salsa de soya con ajo. Marine el pollo 30 minutos. Fríalo en aceite a fuego medio hasta que esté bien cocido, bañándolo con la marinada. Se carameliza muy bonito. Sirva sobre arroz con cebolla frita."
+  },
+  "123": {
+   "title": "Congee con acompañamientos",
+   "instructions": "Ponga a hervir 8 tazas de agua con 1 taza de arroz. Cocine a fuego lento 45 minutos, revolviendo de vez en cuando. Debe quedar muy espeso y cremoso. Sazone con salsa de soya. Cubra con ajo frito."
+  },
+  "124": {
+   "title": "Tortitas de arroz fritas",
+   "instructions": "Mezcle arroz cocido frío con huevos y salsa de soya. Forme tortitas. Fríalas en aceite a fuego medio hasta que estén doradas y crujientes por ambos lados. Sirva con cebolla frita."
+  },
+  "125": {
+   "title": "Biscuits con gravy",
+   "instructions": "Haga los biscuits: mezcle harina y sal, integre mantequilla fría en pedacitos, agregue leche y mezcle apenas. Aplane la masa y córtela en círculos. Hornee a 450 °F por 12 minutos. Haga un gravy sencillo: fría la cebolla en aceite, agregue harina y luego leche poco a poco, batiendo. Sazone. Sirva los biscuits bañados en gravy."
+  },
+  "126": {
+   "title": "Atole de grits",
+   "instructions": "Ponga a hervir 4 tazas de agua con sal. Agregue 1 taza de harina de maíz poco a poco, batiendo. Baje el fuego. Cocine 20 minutos revolviendo seguido. Agregue mantequilla. Sazone."
+  },
+  "127": {
+   "title": "Avena con camote",
+   "instructions": "Cocine la avena en leche. Machaque camote asado o cocido en el microondas y agréguelo. Sazone con canela y sal. Dulce de forma natural y muy llenadora."
+  },
+  "128": {
+   "title": "Frijoles rojos con arroz",
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue los frijoles remojados y escurridos, y agua hasta cubrir. Cocine 2 horas hasta que estén muy suaves. Sazone. Sirva sobre arroz. Machaque algunos frijoles contra la olla para una salsa cremosa."
+  },
+  "129": {
+   "title": "Pollo en gravy",
+   "instructions": "Enharine y sazone el pollo. Dórelo en aceite. Sáquelo. Haga el gravy en el mismo sartén: cocine cebolla y ajo, agregue harina y luego leche poco a poco. Regrese el pollo al gravy. Cocine a fuego lento 30 minutos."
+  },
+  "130": {
+   "title": "Puré de camote al horno",
+   "instructions": "Hierva los camotes y macháquelos con mantequilla y leche. Sazone. Póngalos en un molde. Si quiere, cúbralos con huevo batido para una textura de flan. Hornee a 350 °F por 25 minutos."
+  },
+  "131": {
+   "title": "Fattoush (ensalada con pan tostado)",
+   "instructions": "Tueste o fría pan duro hasta que esté crujiente. Mézclelo con tomate y cebolla en cubitos. Aderece con bastante aceite y ajo. Deje que el pan se remoje un poco antes de servir."
+  },
+  "132": {
+   "title": "Ful medames (habas al estilo egipcio)",
+   "instructions": "Cocine habas cocidas a fuego lento con ajo y tomates hasta que espesen mucho. Sazone bien. Rocíe con aceite de oliva. Sirva con pan. Es un desayuno típico de Egipto."
+  },
+  "133": {
+   "title": "Pasta con garbanzos",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine 10 minutos. Agregue los garbanzos con un poco de agua. Cocine a fuego lento 10 minutos. Agregue la pasta directo a la olla. Cocine hasta que la pasta esté suave, agregando agua si hace falta. Debe quedar espesa, no caldosa."
+  },
+  "134": {
+   "title": "Ribollita (sopa toscana de pan y frijoles)",
+   "instructions": "Sofría cebolla, ajo y zanahorias. Agregue tomates y frijoles. Cocine a fuego lento 20 minutos. Agregue pan duro en pedazos. Cocine hasta que el pan se deshaga y quede un guiso espeso. Sazone. Sabe mejor al día siguiente."
+  },
+  "135": {
+   "title": "Huevos revueltos con verduras de hoja",
+   "instructions": "Sofría la cebolla y el ajo. Agregue las verduras de hoja que tenga. Bata los huevos y viértalos encima. Cocine despacio, revolviendo hasta que apenas cuajen. Sazone. Huevos revueltos al estilo mediterráneo."
+  },
+  "136": {
+   "title": "Lentejas estilo dal makhani",
+   "instructions": "Cocine las lentejas hasta que estén muy suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y cocine 10 minutos. Agregue las lentejas y cocine a fuego lento 20 minutos. Al final agregue mantequilla para darle cremosidad."
+  },
+  "137": {
+   "title": "Tazón estilo bibimbap",
+   "instructions": "Cocine el arroz. Aparte, sofría zanahorias y cebolla. Fría un huevo estrellado. Acomode las verduras y el huevo sobre el arroz. Rocíe salsa de soya. Mezcle todo antes de comer."
+  },
+  "138": {
+   "title": "Arroz frito estilo kimchi",
+   "instructions": "Fría repollo en tiras en aceite a fuego alto hasta que se ablande y se dore un poco. Agregue arroz frío y saltéelo aplastándolo. Sazone con bastante salsa de soya. Cubra con un huevo frito."
+  },
+  "139": {
+   "title": "Avena masala (salada, estilo indio)",
+   "instructions": "Fría la cebolla y las zanahorias en aceite 3 minutos. Agregue la avena. Cubra con agua. Cocine 5 minutos hasta que la avena esté suave y la mezcla espesa. Sazone con sal y la especia que tenga."
+  },
+  "140": {
+   "title": "Upma (estilo indio)",
+   "instructions": "Tueste sémola o harina de maíz en un sartén sin aceite hasta que huela un poco. Fría la cebolla y las verduras. Agregue agua y deje hervir. Agregue la harina de maíz poco a poco mientras revuelve. Cocine 5 minutos. Sazone."
+  },
+  "141": {
+   "title": "Curry de garbanzos",
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue los tomates y cocine 8 minutos aplastándolos. Agregue los garbanzos y cocine 15 minutos hasta que la salsa espese y los cubra. Sazone bien. Sirva con arroz o pan."
+  },
+  "142": {
+   "title": "Dal con espinaca (palak dal)",
+   "instructions": "Cocine las lentejas hasta que estén suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y cocine 5 minutos. Viértalo sobre las lentejas. Cocine todo junto a fuego lento 10 minutos. Sazone. Agregue las verduras de hoja que tenga."
+  },
+  "143": {
+   "title": "Tortilla española",
+   "instructions": "Rebane las papas delgadas. Fríalas despacio en bastante aceite con cebolla hasta que estén suaves, sin dorar, 20 minutos. Bata los huevos con sal. Mezcle las papas con los huevos. Cocine en un sartén con aceite hasta que cuaje abajo. Voltéela sobre un plato y regrésela al sartén para cocinar el otro lado."
+  },
+  "144": {
+   "title": "Pisto (guiso español de tomate)",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 20 minutos hasta que espese. Sazone. Sírvalo como salsa o rompa huevos en la salsa y cocínelos hasta que cuajen."
+  },
+  "145": {
+   "title": "Acquacotta (sopa italiana con pan y huevo)",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 15 minutos. Agregue agua y deje hervir. Ponga rebanadas de pan duro en los platos. Cocine huevos pochados en la sopa hirviendo a fuego lento. Viértalos sobre el pan."
+  },
+  "146": {
+   "title": "Sopa de frijol de ojo negro",
+   "instructions": "Fría la cebolla y el ajo en aceite hasta que estén suaves. Agregue los tomates y cocine 5 minutos. Agregue frijoles de ojo negro y agua hasta cubrir. Cocine a fuego lento 20 minutos hasta que espese y quede cremosa. Sazone bien con sal y pimienta. Sirva con pan de maíz si tiene."
+  },
+  "147": {
+   "title": "Sopa de camote",
+   "instructions": "Pele los camotes y córtelos en cubos. Hiérvalos en agua con sal y cebolla hasta que estén muy suaves, unos 20 minutos. Escúrralos. Macháquelos o licúelos hasta que queden lisos. Agregue leche y mantequilla. Caliente a fuego bajo. Sazone con sal. Dulce de forma natural y llenadora."
+  },
+  "148": {
+   "title": "Caldo de pollo con verduras",
+   "instructions": "Cubra el pollo con agua en una olla. Agregue cebolla, ajo y sal. Hierva 25 minutos hasta que esté cocido. Saque el pollo y deshébrelo. Regréselo a la olla con papas y zanahorias en cubitos. Cocine a fuego lento 20 minutos hasta que las verduras estén suaves. Sazone bien."
+  },
+  "149": {
+   "title": "Sopa Hoppin' John",
+   "instructions": "Fría la cebolla y el ajo en aceite hasta que doren. Agregue frijoles de ojo negro y agua hasta cubrir. Cocine a fuego lento 15 minutos. Agregue arroz cocido y suficiente agua para una sopa espesa. Sazone bien. El arroz espesa el caldo al reposar."
+  },
+  "150": {
+   "title": "Papas en gravy",
+   "instructions": "Rebane las papas delgadas. Fría la cebolla en aceite hasta que esté suave. Agregue las papas y revuelva. Agregue un poco de agua, tape y cocine 15 minutos hasta que estén suaves. Mezcle harina con leche y viértala encima. Cocine hasta que se forme un gravy espeso. Sazone bien."
+  },
+  "151": {
+   "title": "Tazón de frijoles con camote",
+   "instructions": "Hornee o hierva el camote hasta que esté suave. Fría la cebolla en aceite hasta que esté suave. Agregue los frijoles, caliéntelos y sazone bien. Abra el camote. Ponga los frijoles encima. Macháquelo un poco al comer para que se mezclen el camote y los frijoles."
+  },
+  "152": {
+   "title": "Sopa de lentejas con tomate",
+   "instructions": "Fría la cebolla y el ajo en aceite hasta que doren. Agregue los tomates y cocine 5 minutos aplastándolos. Agregue las lentejas y agua que las cubra por 2 pulgadas. Cocine a fuego lento 25 minutos hasta que las lentejas estén suaves y empiecen a deshacerse. Sazone bien. Agregue jugo de limón si tiene."
+  },
+  "153": {
+   "title": "Sopa de pan con frijoles",
+   "instructions": "Fría la cebolla y el ajo en aceite. Agregue los tomates y cocine a fuego lento 10 minutos. Agregue frijoles y agua. Cocine a fuego lento 15 minutos. Agregue pan duro en pedazos. Cocine 5 minutos más hasta que el pan absorba el caldo y lo espese. Sazone. Es al estilo ribollita."
+  },
+  "154": {
+   "title": "Huevos en salsa de tomate en sartén",
+   "instructions": "Fría la cebolla y el ajo en aceite 3 minutos. Agregue los tomates, sazone y cocine a fuego lento 10 minutos hasta que espese. Haga 3–4 huecos en la salsa. Rompa un huevo en cada hueco. Tape y cocine a fuego bajo hasta que las claras cuajen pero las yemas sigan suaves, unos 5 minutos. Sirva en el sartén con pan."
+  },
+  "155": {
+   "title": "Pasta e fagioli (pasta con frijoles)",
+   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine 5 minutos. Agregue los frijoles con agua. Cocine a fuego lento 10 minutos, machacando algunos frijoles para que quede cremoso. Agregue pasta pequeña directo a la olla. Cocine hasta que la pasta esté suave, agregando agua si hace falta. Debe quedar muy espesa. Sazone bien."
+  },
+  "156": {
+   "title": "Ensalada de garbanzos con pan",
+   "instructions": "Tueste cubos de pan en aceite hasta que estén dorados y crujientes. Pique tomates y cebolla. Mezcle los garbanzos con los tomates, la cebolla y el ajo. Aderece con aceite y sal. Agregue el pan justo antes de comer para que siga crujiente. Es una ensalada estilo panzanella."
+  },
+  "157": {
+   "title": "Caldo de pollo",
+   "instructions": "Ponga las piezas de pollo en una olla con agua. Agregue una cebolla entera, ajo y sal. Deje hervir y quite la espuma. Cocine a fuego lento 30 minutos. Agregue trozos de papa y zanahoria. Cocine 20 minutos más. Saque el pollo, deshébrelo y regréselo al caldo. Sazone. Un caldo sencillo que reconforta."
+  },
+  "158": {
+   "title": "Frijoles de olla",
+   "instructions": "Remoje los frijoles toda la noche. Escúrralos y cúbralos con agua limpia, 3 pulgadas por encima. Agregue media cebolla y ajo. Cocine a fuego lento 1.5–2 horas hasta que estén muy suaves y cremosos. El caldo se pone espeso y sabroso. Sazone bien solo al final. Sirva como sopa con tortillas."
+  },
+  "159": {
+   "title": "Sopa de tortilla",
+   "instructions": "Licúe los tomates con cebolla y ajo. Fría esta salsa en aceite en una olla por 5 minutos. Agregue agua para hacer un caldo. Cocine a fuego lento 15 minutos. Sazone. Corte las tortillas en tiras y fríalas en aceite hasta que estén crujientes. Sirva la sopa con las tiras crujientes encima."
+  },
+  "160": {
+   "title": "Sopa estilo miso con arroz",
+   "instructions": "Caliente agua con salsa de soya para hacer el caldo. Agregue cebolla picada y cocine 5 minutos. Si usa tofu, agréguelo en cubos. Bata los huevos y viértalos despacio en el caldo hirviendo a fuego lento, revolviendo para formar hebras. Sirva sobre arroz al vapor o al lado. Sazone."
+  },
+  "161": {
+   "title": "Fideos dan dan",
+   "instructions": "Cocine los fideos hasta que estén suaves. Mezcle crema de cacahuate, salsa de soya, ajo y aceite con agua caliente para hacer una salsa espesa. Ralle las zanahorias. Escurra los fideos. Mézclelos con la salsa y las zanahorias. Agregue más agua caliente si la salsa queda muy espesa. Sirva tibio o a temperatura ambiente."
+  },
+  "1001": {
+   "title": "Pupusas revueltas",
+   "lines": [
+    "1 libra de pechuga de pollo molida",
+    "1 cucharada de aceite vegetal",
+    "½ cebolla pequeña, picada finamente",
+    "1 diente de ajo, picado muy finamente",
+    "1 pimiento verde mediano, sin semillas y picado muy finamente",
+    "1 tomate pequeño, picado finamente",
+    "½ cucharadita de sal",
+    "5 tazas de harina de maíz instantánea (masa harina)",
+    "6 tazas de agua",
+    "½ libra de queso mozzarella bajo en grasa, rallado"
+   ],
+   "note": "El pollo molido bajo en grasa y el queso bajo en grasa ayudan a disminuir la grasa saturada y las calorías en este sabroso plato típico de El Salvador.",
+   "steps": [
+    "En un sartén en el que la comida no se pega (antiadherente), sofría el pollo en el aceite a fuego lento hasta que el pollo se vuelva de color blanco. Revuelva el pollo constantemente para que se cocine parejo.",
+    "Agregue la cebolla, pimiento verde, tomate y sal y mezcle bien. Mantenga sobre el fuego hasta que el pollo esté cocido (temperatura interna de 74°C). Retire la sartén de la estufa. Ponga la mezcla en un tazón y métalo en el refrigerador para que se enfríe.",
+    "Mientras el pollo se enfría, coloque la harina de maíz en un recipiente grande. Poco a poco agregue suficiente agua hasta obtener una masa firme pero no pegajosa, como para hacer tortillas.",
+    "Cuando ya está frío el pollo, agregue el queso rallado y mezcle bien.",
+    "Divida la masa en 24 porciones. Con sus manos, forme bolitas con la masa. Con el dedo gordo haga un hoyito en cada bolita.",
+    "Ponga una cucharada de la mezcla de pollo en el hoyito al centro de cada bolita. Junte bien la masa sobre el hoyito para cerrar la bolita. Con las palmas de las manos, aplaste suavemente la bolita de masa hasta que quede en forma de una tortita redonda.",
+    "En un comal (o en una sartén de hierro) grueso, bien caliente, cocine las pupusas, por ambos lados, hasta que se doren.",
+    "Sírvalas calientes con encurtido salvadoreño. (Para la receta, vea la página 7)."
+   ],
+   "extra": [],
+   "instructions": "En un sartén en el que la comida no se pega (antiadherente), sofría el pollo en el aceite a fuego lento hasta que el pollo se vuelva de color blanco. Revuelva el pollo constantemente para que se cocine parejo. Agregue la cebolla, pimiento verde, tomate y sal y mezcle bien. Mantenga sobre el fuego hasta que el pollo esté cocido (temperatura interna de 74°C). Retire la sartén de la estufa. Ponga la mezcla en un tazón y métalo en el refrigerador para que se enfríe. Mientras el pollo se enfría, coloque la harina de maíz en un recipiente grande. Poco a poco agregue suficiente agua hasta obtener una masa firme pero no pegajosa, como para hacer tortillas. Cuando ya está frío el pollo, agregue el queso rallado y mezcle bien. Divida la masa en 24 porciones. Con sus manos, forme bolitas con la masa. Con el dedo gordo haga un hoyito en cada bolita. Ponga una cucharada de la mezcla de pollo en el hoyito al centro de cada bolita. Junte bien la masa sobre el hoyito para cerrar la bolita. Con las palmas de las manos, aplaste suavemente la bolita de masa hasta que quede en forma de una tortita redonda. En un comal (o en una sartén de hierro) grueso, bien caliente, cocine las pupusas, por ambos lados, hasta que se doren. Sírvalas calientes con encurtido salvadoreño. (Para la receta, vea la página 7).",
+   "official": true,
+   "page": 5
+  },
+  "1002": {
+   "title": "Pozole a la mexicana",
+   "lines": [
+    "2 libras de carne de res, baja en grasa, cortada en cubos",
+    "1 cucharada de aceite de oliva",
+    "1 cebolla grande, picada",
+    "1 diente de ajo, picado finamente",
+    "¼ cucharadita de sal",
+    "⅛ cucharadita de pimienta negra",
+    "¼ taza de cilantro (culantro)",
+    "1 lata (15 onzas) de tomates cocidos",
+    "2 onzas de pasta de tomate",
+    "1 lata (1 libra y 13 onzas) de maíz blanco (mote)"
+   ],
+   "note": "Para sofreír la carne sólo se necesita una pequeña cantidad de aceite.",
+   "steps": [
+    "Caliente el aceite en una olla grande. Sofría la carne.",
+    "Agregue la cebolla, ajo, sal, pimienta negra, cilantro y agua suficiente para cubrir la carne. Cubra la olla y cocine a fuego lento hasta que la carne esté blanda.",
+    "Agregue los tomates y la pasta de tomate. Continúe cocinando alrededor de 20 minutos más.",
+    "Agregue el maíz blanco y continúe cocinando a fuego lento 15 minutos más, revolviendo ocasionalmente. Si está muy espeso, agregue agua para diluirlo."
+   ],
+   "extra": [
+    {
+     "h": "Alternativa:",
+     "t": "Se pueden utilizar pechugas de pollo deshuesadas y sin pellejo en lugar de la carne de res."
+    }
+   ],
+   "instructions": "Caliente el aceite en una olla grande. Sofría la carne. Agregue la cebolla, ajo, sal, pimienta negra, cilantro y agua suficiente para cubrir la carne. Cubra la olla y cocine a fuego lento hasta que la carne esté blanda. Agregue los tomates y la pasta de tomate. Continúe cocinando alrededor de 20 minutos más. Agregue el maíz blanco y continúe cocinando a fuego lento 15 minutos más, revolviendo ocasionalmente. Si está muy espeso, agregue agua para diluirlo.",
+   "official": true,
+   "page": 9
+  },
+  "1003": {
+   "title": "Sopa de lentejas",
+   "lines": [
+    "2 cucharadas de aceite de oliva",
+    "2 zanahorias medianas, cortadas en cubitos",
+    "2 tallos medianos de apio, cortados finamente",
+    "1 cebolla pequeña amarilla, picada finamente",
+    "2 dientes de ajo, picados finamente (molidos)",
+    "1 cucharadita de orégano",
+    "1 cucharadita de albahaca",
+    "½ cucharadita de pimienta negra",
+    "2 tazas de lentejas",
+    "1 lata (14½ onzas) de tomates machacados",
+    "2 tazas de caldo de verduras",
+    "6½ tazas de agua"
+   ],
+   "note": "La sopa de lentejas es un plato sencillo y delicioso como entrada o plato principal. Esta sopa es más baja en grasa y en sodio que las sopas enlatadas. ¡Disfrútela!",
+   "steps": [
+    "En una cacerola grande, caliente el aceite a fuego mediano. Agregue las zanahorias, el apio y la cebolla. Cocine las verduras, removiéndolas hasta que la cebolla esté suave.",
+    "Agregue el ajo, el orégano, la albahaca y la pimienta negra. Cocine por 2 minutos más.",
+    "Agregue las lentejas, el tomate, el caldo de verduras y el agua. Cubra la olla hasta que hierva. Baje el fuego y cocine a fuego lento por 1 hora o hasta que estén blandas las lentejas.",
+    "Si sobra sopa, guárdela en el refrigerador y recaliéntela en la estufa o el microondas cuando la vuelva a servir. ¡La sopa sabe aún más deliciosa al día siguiente!"
+   ],
+   "extra": [],
+   "instructions": "En una cacerola grande, caliente el aceite a fuego mediano. Agregue las zanahorias, el apio y la cebolla. Cocine las verduras, removiéndolas hasta que la cebolla esté suave. Agregue el ajo, el orégano, la albahaca y la pimienta negra. Cocine por 2 minutos más. Agregue las lentejas, el tomate, el caldo de verduras y el agua. Cubra la olla hasta que hierva. Baje el fuego y cocine a fuego lento por 1 hora o hasta que estén blandas las lentejas. Si sobra sopa, guárdela en el refrigerador y recaliéntela en la estufa o el microondas cuando la vuelva a servir. ¡La sopa sabe aún más deliciosa al día siguiente!",
+   "official": true,
+   "page": 11
+  },
+  "1004": {
+   "title": "Guisado de pollo",
+   "lines": [
+    "8 piezas de pollo, pechugas o pierna de pollo",
+    "1 taza de agua",
+    "2 dientes de ajo pequeños, molidos",
+    "1 cebolla pequeña, picada",
+    "1½ cucharaditas de sal",
+    "½ cucharadita de pimienta negra molida",
+    "3 tomates medianos, picados",
+    "1 cucharadita de perejil, picado",
+    "¼ de taza de apio, finamente picado",
+    "2 papas medianas, peladas y picadas",
+    "2 zanahorias pequeñas, picadas",
+    "2 hojas de laurel"
+   ],
+   "note": "¡Esta receta de cambio de imagen tiene un gran sabor y muchas verduras! Utilice pechuga o muslos de pollo en lugar de carnes grasas.",
+   "steps": [
+    "Quite la piel y el exceso de grasa de pollo y tírela.",
+    "En un grande sartén, combine el pollo, el agua, el ajo, cebolla, sal (lo menos posible), pimienta negra, jitomates y perejil.",
+    "Cúbralo y concine fuego lento durante 25 minutos.",
+    "Agregue el apio, las papas, las zanahorias y las hojas de laurel y continúe cociendo durante 15 minutos más o hasta que el pollo y las verduras estén tiernos.",
+    "Quite las hojas de laurel antes de servir."
+   ],
+   "extra": [],
+   "instructions": "Quite la piel y el exceso de grasa de pollo y tírela. En un grande sartén, combine el pollo, el agua, el ajo, cebolla, sal (lo menos posible), pimienta negra, jitomates y perejil. Cúbralo y concine fuego lento durante 25 minutos. Agregue el apio, las papas, las zanahorias y las hojas de laurel y continúe cociendo durante 15 minutos más o hasta que el pollo y las verduras estén tiernos. Quite las hojas de laurel antes de servir.",
+   "official": true,
+   "page": 13
+  },
+  "1005": {
+   "title": "Cázuela de carne rápida",
+   "lines": [
+    "½ libra de carne molida de res, baja en grasa",
+    "1 taza de cebolla, picada",
+    "1 taza de apio, picado",
+    "1 taza de pimiento verde, sin semillas y cortado en cuadraditos",
+    "3½ tazas de tomates, cortados en cubitos",
+    "¼ cucharadita de sal",
+    "½ cucharadita de pimienta negra",
+    "¼ cucharadita de pimentón (páprika)",
+    "1 taza de arvejas (chícharos) congelados",
+    "2 zanahorias pequeñas, cortadas en cubitos",
+    "1 taza de arroz crudo",
+    "1½ tazas de agua"
+   ],
+   "note": "Escurra la grasa que suelta la carne al cocinar para disminuir la cantidad de grasa y calorías.",
+   "steps": [
+    "Ponga la carne molida a dorar en un sartén. Cuando esté lista, escurra la grasa.",
+    "Agregue el resto de los ingredientes y mezcle bien.",
+    "Cubra la sartén y cocine a fuego mediano hasta que hierva.",
+    "Reduzca el fuego al mínimo y deje cocinar 35 minutos más. Sirva caliente."
+   ],
+   "extra": [],
+   "instructions": "Ponga la carne molida a dorar en un sartén. Cuando esté lista, escurra la grasa. Agregue el resto de los ingredientes y mezcle bien. Cubra la sartén y cocine a fuego mediano hasta que hierva. Reduzca el fuego al mínimo y deje cocinar 35 minutos más. Sirva caliente.",
+   "official": true,
+   "page": 17
+  },
+  "1006": {
+   "title": "Lomo saltado",
+   "lines": [
+    "1½ libras de lomo de res",
+    "2 cucharaditas de aceite vegetal",
+    "1 diente de ajo, picado",
+    "1 cucharadita de vinagre",
+    "⅛ cucharadita de sal",
+    "⅛ cucharadita de pimienta",
+    "2 cebollas grandes, rebanadas",
+    "1 tomate grande, rebanado",
+    "3 tazas de papas hervidas, cortadas en cubitos"
+   ],
+   "note": "El vinagre y el ajo le dan un rico sabor a este plato de fácil preparación.",
+   "steps": [
+    "Quite la grasa a la carne antes de cocinarla. Corte el resto en tiras delgadas y pequeñas.",
+    "Caliente el aceite en una sartén grande y sofría el ajo hasta que esté dorado.",
+    "Agregue la carne, el vinagre, la sal y la pimienta negra. Cocine 6 minutos más, moviendo la carne hasta que esté dorada.",
+    "Agregue las cebollas y el tomate. Cocine hasta que la cebolla esté transparente. Sirva con papas hervidas."
+   ],
+   "extra": [],
+   "instructions": "Quite la grasa a la carne antes de cocinarla. Corte el resto en tiras delgadas y pequeñas. Caliente el aceite en una sartén grande y sofría el ajo hasta que esté dorado. Agregue la carne, el vinagre, la sal y la pimienta negra. Cocine 6 minutos más, moviendo la carne hasta que esté dorada. Agregue las cebollas y el tomate. Cocine hasta que la cebolla esté transparente. Sirva con papas hervidas.",
+   "official": true,
+   "page": 19
+  },
+  "1007": {
+   "title": "Pastelón puertorriqueño de plántanos con carne molida",
+   "lines": [
+    "Relleno de carne",
+    "1½ libras de carne de res molida, baja en grasa",
+    "2 pimientos verdes, sin semillas y picados finamente",
+    "1 cebolla mediana, picada finamente",
+    "3 hojas de laurel",
+    "Masa",
+    "8 plátanos maduros (amarillos) grandes, pelados",
+    "10 tazas de agua",
+    "2 cucharadas de aceite de oliva",
+    "¼ taza de cilantro (culantro), picado finamente",
+    "1 taza de caldo de res bajo en sal",
+    "5 ajicitos dulces (tiny chili peppers)",
+    "½ cucharadita de pasta de achiote",
+    "2 dientes de ajo, picados finamente",
+    "1 taza de salsa de tomate",
+    "Otras capas",
+    "5 claras de huevo",
+    "1½ tazas de habichuelas (vainitas) tiernas cocidas",
+    "½ taza de queso mozzarella bajo en grasa, rallado"
+   ],
+   "note": "La dulzura natural de los plátanos maduros resalta el sabor de este plato típico puertorriqueño.",
+   "steps": [
+    "Precaliente el horno a 175°C.",
+    "En una sartén grande sofría la carne molida. Escurra la grasa de la carne y agregue los demás ingredientes del relleno. Cocine sobre fuego mediano por 5 minutos más y retire del fuego.",
+    "Pele los plátanos maduros y hiérvalos en 10 tazas de agua ahasta que estén muy blandos. Retírelos de la olla escurriendo el agua. En un tazón grande, aplaste los plátanos y agregue el aceite de oliva. Mezcle bien hasta que se convierta en una masa suave. En otro recipiente, bata las claras de huevo hasta que estén espumosas.",
+    "Ponga la mitad de la mezcla de los plátanos en un molde para hornear de unos 28 x 35.5 centímetros (11 x 14 pulgadas). Agregue una capa de relleno de carne, la tercera parte de las claras de huevo batidas y la mitad de las habichuelas tiernas.",
+    "Repita estas tres capas: carne, clara de huevos y habichuelas. Agregue una última capa de masa de plátanos y ponga encima más clara de huevos batidos.",
+    "Rocíe el queso mozzarella sobre las claras de huevo.",
+    "Hornee por 20 minutos."
+   ],
+   "extra": [],
+   "instructions": "Precaliente el horno a 175°C. En una sartén grande sofría la carne molida. Escurra la grasa de la carne y agregue los demás ingredientes del relleno. Cocine sobre fuego mediano por 5 minutos más y retire del fuego. Pele los plátanos maduros y hiérvalos en 10 tazas de agua ahasta que estén muy blandos. Retírelos de la olla escurriendo el agua. En un tazón grande, aplaste los plátanos y agregue el aceite de oliva. Mezcle bien hasta que se convierta en una masa suave. En otro recipiente, bata las claras de huevo hasta que estén espumosas. Ponga la mitad de la mezcla de los plátanos en un molde para hornear de unos 28 x 35.5 centímetros (11 x 14 pulgadas). Agregue una capa de relleno de carne, la tercera parte de las claras de huevo batidas y la mitad de las habichuelas tiernas. Repita estas tres capas: carne, clara de huevos y habichuelas. Agregue una última capa de masa de plátanos y ponga encima más clara de huevos batidos. Rocíe el queso mozzarella sobre las claras de huevo. Hornee por 20 minutos.",
+   "official": true,
+   "page": 21
+  },
+  "1008": {
+   "title": "Rollo de pavo",
+   "lines": [
+    "1 libra de carne molida de pavo con poca grasa (7% de grasa)",
+    "½ taza de avena regular, seca",
+    "1 huevo grande",
+    "1 cucharada de cebolla en polvo o 1 cebolla pequeña cortada en trocitos",
+    "¼ taza de salsa de tomate (ketchup)",
+    "2 tallos de apio, cortados finamente",
+    "2 dientes de ajo, picados finamente",
+    "½ pimiento verde, sin semilla y cortado en cuadritos"
+   ],
+   "note": "Esta es una versión más saludable de un plato favorito bien conocido.",
+   "steps": [
+    "Precaliente el horno a 175°C.",
+    "Mezcle bien todos los ingredientes.",
+    "Hornee en un molde por 25 minutos, hasta que llegue a una temperatura interna de 75°C.",
+    "Corte en cinco rebanadas y sirva."
+   ],
+   "extra": [],
+   "instructions": "Precaliente el horno a 175°C. Mezcle bien todos los ingredientes. Hornee en un molde por 25 minutos, hasta que llegue a una temperatura interna de 75°C. Corte en cinco rebanadas y sirva.",
+   "official": true,
+   "page": 23
+  },
+  "1009": {
+   "title": "Picadillo de pollo",
+   "lines": [
+    "1 libra de pechuga de pollo, sin el pellejo, cortada en tiritas",
+    "2 cucharadas de aceite de oliva",
+    "1 cebolla amarilla grande, picada finamente",
+    "1 pimiento verde mediano, sin semilla y picado finamente",
+    "1 pimiento rojo mediano, sin semilla y picado finamente",
+    "3 dientes de ajo, picados muy finamente",
+    "⅓ taza de salsa de tomate baja en sodio",
+    "⅓ taza de caldo de pollo bajo en sodio",
+    "⅓ taza de jugo de limón fresco",
+    "⅓ taza de agua",
+    "¼ cucharadita de comino molido",
+    "2 hojas de laurel",
+    "¼ taza de pasas blancas",
+    "Para adornar",
+    "hojas de cilantro fresco",
+    "1 cucharadita de alcaparras, escurridas",
+    "2 cucharadas de aceitunas verdes, picadas"
+   ],
+   "note": "Este platillo es ideal para cuando no hay mucho tiempo para cocinar.",
+   "steps": [
+    "En una sartén grande, caliente el aceite de oliva a fuego moderado. Agregue la cebolla, los pimientos y el ajo y sofría hasta que estén suaves, alrededor de unos 5 minutos.",
+    "Agregue el pollo y sofría de 5 a 10 minutos, hasta que el pollo esté completamente cocinado.",
+    "Agregue la salsa de tomate, el caldo de pollo, el jugo de limón, el comino, las hojas de laurel, el agua y las pasas.",
+    "Cubra la sartén, baje el fuego, y cocine por 10 minutos o hasta que el pollo esté suave.",
+    "Retire las hojas de laurel y sirva con arroz integral y frijoles negros. Adorne con cilantro fresco, alcaparras y aceitunas."
+   ],
+   "extra": [],
+   "instructions": "En una sartén grande, caliente el aceite de oliva a fuego moderado. Agregue la cebolla, los pimientos y el ajo y sofría hasta que estén suaves, alrededor de unos 5 minutos. Agregue el pollo y sofría de 5 a 10 minutos, hasta que el pollo esté completamente cocinado. Agregue la salsa de tomate, el caldo de pollo, el jugo de limón, el comino, las hojas de laurel, el agua y las pasas. Cubra la sartén, baje el fuego, y cocine por 10 minutos o hasta que el pollo esté suave. Retire las hojas de laurel y sirva con arroz integral y frijoles negros. Adorne con cilantro fresco, alcaparras y aceitunas.",
+   "official": true,
+   "page": 25
+  },
+  "1010": {
+   "title": "Pastel chileno de maíz (choclo) con carne y pollo",
+   "lines": [
+    "Relleno de carne",
+    "Aceite vegetal en aerosol",
+    "1 pechuga de pollo de 4 onzas, sin pellejo",
+    "8 onzas de carne de res molida, baja en grasa (5% de grasa)",
+    "1 pimiento verde, sin semillas y picado en cuadraditos",
+    "¼ cucharadita de pimienta negra",
+    "½ taza de pasas",
+    "2 cucharaditas de aceitunas, picadas",
+    "Puré de maíz",
+    "½ cucharadita de aceite de canola",
+    "⅛ cucharadita de pimentón (páprika)",
+    "1 cebolla mediana, picada finamente",
+    "16 onzas de granos de maíz, descongelados",
+    "½ taza de leche descremada",
+    "¼ cucharadita de sal",
+    "¾ cucharadita de comino molido",
+    "¼ cucharadita de pimienta negra",
+    "1 cucharadita de albahaca seca"
+   ],
+   "note": "Sirva el pastel con ensalada de lechuga y tomate y tendrá una comida completa.",
+   "steps": [
+    "Precaliente el horno a 204°C.",
+    "Rocíe una sartén con aceite vegetal en aerosol y caliente la sartén a fuego mediano. Cocine las pechugas del pollo por 4 minutos a cada lado. Retire el pollo del la sartén y desmenúcelo con un tenedor. Póngalo a un lado.",
+    "En la misma sartén, cocine la carne moviéndola constantemente hasta que esté completamente dorada. Agregue el pimiento verde, la pimienta negra, las pasas y las aceitunas. Vierta la mezcla de carne en un molde cuadrado para hornear* de 20 x 20 centímetros (8 x 8 pulgadas). Coloque el pollo desmenuzado sobre la mezcla de carne.",
+    "En la misma sartén, combine el aceite y el pimentón. Coloque la sartén sobre fuego mediano hasta que se caliente. Agregue la cebolla y cocínela unos 5 minutos, removiéndola frecuentemente hasta que esté suave y transparente. Mientras se cocina la cebolla, mezcle el maíz, la leche, comino, albaca, sal y pimienta en una licuadora hasta que se haga puré.",
+    "Agregue el puré de maíz a la cebolla en la sartén y mézclelo bien. Cocine por 5 minutos más. Vierta el puré de maíz sobre la mezcla de carne repartiéndolo en forma pareja sobre el molde para hornear. Hornee unos 35 a 40 minutos hasta que la superficie esté dorada."
+   ],
+   "extra": [
+    {
+     "h": "",
+     "t": "*Si prefiere, divida la mezcla en cuatro porciones y hornéelas en fuentes individuales que se puedan meter en el horno."
+    }
+   ],
+   "instructions": "Precaliente el horno a 204°C. Rocíe una sartén con aceite vegetal en aerosol y caliente la sartén a fuego mediano. Cocine las pechugas del pollo por 4 minutos a cada lado. Retire el pollo del la sartén y desmenúcelo con un tenedor. Póngalo a un lado. En la misma sartén, cocine la carne moviéndola constantemente hasta que esté completamente dorada. Agregue el pimiento verde, la pimienta negra, las pasas y las aceitunas. Vierta la mezcla de carne en un molde cuadrado para hornear* de 20 x 20 centímetros (8 x 8 pulgadas). Coloque el pollo desmenuzado sobre la mezcla de carne. En la misma sartén, combine el aceite y el pimentón. Coloque la sartén sobre fuego mediano hasta que se caliente. Agregue la cebolla y cocínela unos 5 minutos, removiéndola frecuentemente hasta que esté suave y transparente. Mientras se cocina la cebolla, mezcle el maíz, la leche, comino, albaca, sal y pimienta en una licuadora hasta que se haga puré. Agregue el puré de maíz a la cebolla en la sartén y mézclelo bien. Cocine por 5 minutos más. Vierta el puré de maíz sobre la mezcla de carne repartiéndolo en forma pareja sobre el molde para hornear. Hornee unos 35 a 40 minutos hasta que la superficie esté dorada.",
+   "official": true,
+   "page": 27
+  },
+  "1011": {
+   "title": "Tilapia al horno con tomate",
+   "lines": [
+    "Aceite vegetal en aerosol",
+    "4 filetes de tilapia (tipo de pescado)",
+    "4 tomates medianos, pelados y picados",
+    "2 cucharadas de aceite de oliva",
+    "1½ cucharaditas de tomillo",
+    "¼ taza de aceitunas negras sin semilla, en pedacitos",
+    "¼ cucharadita de pimienta roja",
+    "2 dientes de ajo, picados finamente",
+    "½ taza de cebolla roja, cortada en cuadritos",
+    "1 cucharada de jugo de limón verde",
+    "perejil y rodajas de limón para adornar"
+   ],
+   "note": "Esta receta deliciosa es fácil de preparar, baja en calorías y al alcance del bolsillo.",
+   "steps": [
+    "Precaliente el horno a unos 204°C.",
+    "Engrase un recipiente para hornear con aceite vegetal en aerosol.",
+    "Coloque los filetes en el recipiente. Asegúrese que los filetes no queden unos encima de otros.",
+    "Mezcle los demás ingredientes en un tazón.",
+    "Vierta la mezcla de los tomates sobre los filetes repartiéndola en forma pareja.",
+    "Hornee sin cubrir de 15 a 20 minutos o hasta que el pescado se pueda cortar fácilmente con un tenedor.",
+    "Adorne con hojas de perejil y rodajas de limón verde."
+   ],
+   "extra": [],
+   "instructions": "Precaliente el horno a unos 204°C. Engrase un recipiente para hornear con aceite vegetal en aerosol. Coloque los filetes en el recipiente. Asegúrese que los filetes no queden unos encima de otros. Mezcle los demás ingredientes en un tazón. Vierta la mezcla de los tomates sobre los filetes repartiéndola en forma pareja. Hornee sin cubrir de 15 a 20 minutos o hasta que el pescado se pueda cortar fácilmente con un tenedor. Adorne con hojas de perejil y rodajas de limón verde.",
+   "official": true,
+   "page": 29
+  },
+  "1012": {
+   "title": "El burrito vegetariano de María",
+   "lines": [
+    "1 pimiento rojo, sin semillas y picado",
+    "1 pimiento amarillo, sin semillas y picado",
+    "1 cebolla, pelada y cortada en tajadas",
+    "1 cucharadita de aceite de canola",
+    "1 lata (15 onzas) de frijoles negros bajos en sodio, escurridos del líquido y enjuagados en agua",
+    "½ aguacate (palta), pelado y cortado en cubitos",
+    "Jugo de un limón verde",
+    "½ taza de cilantro (culantro) fresco, picado",
+    "1 cucharadita de chile en polvo (opcional)",
+    "1 taza de crema agria sin grasa",
+    "4 tortillas (de 8 pulgadas) de trigo entero"
+   ],
+   "note": "Este exquisito burrito es repleto de ricos frijoles y verduras y es una gran fuente de fibra.",
+   "steps": [
+    "En una sartén en el que la comida no se pegue, saltee los pimientos y la cebolla en el aceite de canola por 5 minutos sobre fuego mediano. Gregue los frijoles y mezcle bien. Reduzca el fuego y cocine a fuego lento por unos 5 minutos y luego retírelos.",
+    "En un tazón pequeño, mezcle el aguacate (palta), jugo de limón, cilantro y chile en polvo. Divida la mezcla en dos y ponga la mitad a un lado para al final echarla encima de los burritos rellenos.",
+    "Agregue la crema agria a los frijoles y mézclelos bien.",
+    "Caliente las tortillas en el microondas o en una sartén sobre una hornilla.",
+    "Rellene una de las tortillas caliente con ¼ de la mezcla de frijoles y ¼ de la mezcla de aguacate. Ponga 2 cucharadas de pico de gallo sobre esta mezcla.",
+    "Doble las orillas de arriba y de abajo de la tortilla encima del relleno. Enrolle el resto de la tortilla para hacer un burrito. Repita el proceso con las tres tortillas restantes."
+   ],
+   "extra": [],
+   "instructions": "En una sartén en el que la comida no se pegue, saltee los pimientos y la cebolla en el aceite de canola por 5 minutos sobre fuego mediano. Gregue los frijoles y mezcle bien. Reduzca el fuego y cocine a fuego lento por unos 5 minutos y luego retírelos. En un tazón pequeño, mezcle el aguacate (palta), jugo de limón, cilantro y chile en polvo. Divida la mezcla en dos y ponga la mitad a un lado para al final echarla encima de los burritos rellenos. Agregue la crema agria a los frijoles y mézclelos bien. Caliente las tortillas en el microondas o en una sartén sobre una hornilla. Rellene una de las tortillas caliente con ¼ de la mezcla de frijoles y ¼ de la mezcla de aguacate. Ponga 2 cucharadas de pico de gallo sobre esta mezcla. Doble las orillas de arriba y de abajo de la tortilla encima del relleno. Enrolle el resto de la tortilla para hacer un burrito. Repita el proceso con las tres tortillas restantes.",
+   "official": true,
+   "page": 33
+  },
+  "1013": {
+   "title": "Ensalada de quínoa con frijoles negros",
+   "lines": [
+    "½ taza de quinua seca",
+    "1½ tazas de agua",
+    "1½ cucharadas de aceite de oliva",
+    "3 cucharadas de jugo de limón verde",
+    "¼ cucharadita de comino",
+    "¼ cucharadita de semillas secas de cilantro (coriander)",
+    "2 cucharaditas de cilantro, picado",
+    "2 cebollines pequeños, finamente picados",
+    "1 lata (15 onzas) de frijoles negros, enjuagados y sin el líquido",
+    "2 tazas de tomate, picado",
+    "1 pimiento rojo mediano, sin semillas y picado",
+    "1 pimiento verde mediano, sin semillas y picado",
+    "2 ajís (chiles) verdes (al gusto), sin semillas y picados finamente",
+    "pimienta negra, al gusto"
+   ],
+   "note": "Esta nutritiva ensalada puede servirse como plato principal o como guarnición.",
+   "steps": [
+    "Enjuague la quínoa en agua helada. En una olla, ponga a hervir el agua y luego agregue la quinua. Cuando vuelva a hervir el agua, reduzca el fuego y cocine lentamente de 10 a 15 minutos hasta que el agua se seque. Deje enfriar unos 15 minutos.",
+    "Mientras se cocina la quinua, mezcle el aceite de oliva, el jugo de limón verde, el comino, la semilla seca del cilantro (coriandro), el cilantro picado y los cebollines en un tazón y ponga a un lado.",
+    "Mezcle las verduras cortadas con los frijoles negros en un tazón grande y déjelos a un lado.",
+    "Cuando laquinua se haya enfriado, mézclela bien con los demás ingredientes. Cubra y refrigere hasta que esté listo para servir."
+   ],
+   "extra": [],
+   "instructions": "Enjuague la quínoa en agua helada. En una olla, ponga a hervir el agua y luego agregue la quinua. Cuando vuelva a hervir el agua, reduzca el fuego y cocine lentamente de 10 a 15 minutos hasta que el agua se seque. Deje enfriar unos 15 minutos. Mientras se cocina la quinua, mezcle el aceite de oliva, el jugo de limón verde, el comino, la semilla seca del cilantro (coriandro), el cilantro picado y los cebollines en un tazón y ponga a un lado. Mezcle las verduras cortadas con los frijoles negros en un tazón grande y déjelos a un lado. Cuando laquinua se haya enfriado, mézclela bien con los demás ingredientes. Cubra y refrigere hasta que esté listo para servir.",
+   "official": true,
+   "page": 35
+  },
+  "1014": {
+   "title": "Guiso de verduras",
+   "note": "Una gran forma nueva de usar las verduras de verano. Puede agregar sus otras verduras favoritas, como brócoli, coliflor o ejotes.",
+   "lines": [
+    "3 tazas de agua",
+    "1 cubito de caldo de verduras, bajo en sodio",
+    "2 tazas de papas blancas cortadas en tiras de 2 pulgadas",
+    "2 tazas de zanahorias, en rodajas",
+    "4 tazas de calabacita, cortada en cuadros de 1 pulgada",
+    "1 taza de calabacita, cortada en cuatro trozos",
+    "2 elotes frescos (1½ tazas)",
+    "1 cucharadita de tomillo molido",
+    "2 dientes de ajo, picados finamente",
+    "1 tallo de cebollín, picado",
+    "½ chile rojo picante pequeño, picado",
+    "1 taza de cebolla, picada en trozos grandes",
+    "1 taza de tomates, en cubitos"
+   ],
+   "steps": [
+    "Caliente el agua y el cubito de caldo en una olla grande y deje que hierva.",
+    "Agregue las papas y las zanahorias al caldo y cocine a fuego lento 5 minutos.",
+    "Corte los granos de maíz de la mazorca.",
+    "Agregue los demás ingredientes, excepto los tomates, y siga cocinando 15 minutos a fuego mediano.",
+    "Saque los cuatro trozos de calabacita y hágalos puré en la licuadora.",
+    "Regrese el puré a la olla y deje cocinar 10 minutos más.",
+    "Agregue los tomates y cocine otros 5 minutos.",
+    "Retire del fuego y deje reposar 10 minutos para que el guiso espese."
+   ],
+   "extra": [
+    {
+     "h": "Para una comida completa",
+     "t": "Para hacer de este plato una comida, sírvalo con una ensalada verde con lechuga (romana) o espinaca, pepino y otras verduras frescas. Use un aderezo ligero, como una vinagreta, o un aderezo bajo en grasa o sin grasa. Sirva con pan o panecillos integrales."
+    }
+   ],
+   "instructions": "Caliente el agua y el cubito de caldo en una olla grande y deje que hierva. Agregue las papas y las zanahorias al caldo y cocine a fuego lento 5 minutos. Corte los granos de maíz de la mazorca. Agregue los demás ingredientes, excepto los tomates, y siga cocinando 15 minutos a fuego mediano. Saque los cuatro trozos de calabacita y hágalos puré en la licuadora. Regrese el puré a la olla y deje cocinar 10 minutos más. Agregue los tomates y cocine otros 5 minutos. Retire del fuego y deje reposar 10 minutos para que el guiso espese."
+  },
+  "1015": {
+   "title": "Macarrones con queso clásicos",
+   "note": "Esta receta demuestra que no tiene que dejar sus platos favoritos para comer de forma saludable para el corazón. Aquí tiene una versión con menos grasa de un verdadero clásico.",
+   "lines": [
+    "2 tazas de macarrones",
+    "½ taza de cebolla picada",
+    "½ taza de leche evaporada sin grasa",
+    "1 huevo mediano, batido",
+    "¼ cucharadita de pimienta negra",
+    "1 ¼ tazas (4 oz.) de queso cheddar fuerte, natural, bajo en grasa, rallado"
+   ],
+   "steps": [
+    "Cocine los macarrones según las instrucciones del paquete. (No le ponga sal al agua). Escúrralos y póngalos a un lado.",
+    "Precaliente el horno a 350 °F.",
+    "Caliente 1 cucharadita de aceite en una cacerola.",
+    "Agregue la cebolla a la cacerola y sofría unos 3 minutos.",
+    "En otro recipiente, mezcle los macarrones, la cebolla y los demás ingredientes. Mezcle bien.",
+    "Pase la mezcla a un molde para hornear.",
+    "Hornee 25 minutos o hasta que burbujee. Deje reposar 10 minutos antes de servir."
+   ],
+   "extra": [],
+   "instructions": "Cocine los macarrones según las instrucciones del paquete. (No le ponga sal al agua). Escúrralos y póngalos a un lado. Precaliente el horno a 350 °F. Caliente 1 cucharadita de aceite en una cacerola. Agregue la cebolla a la cacerola y sofría unos 3 minutos. En otro recipiente, mezcle los macarrones, la cebolla y los demás ingredientes. Mezcle bien. Pase la mezcla a un molde para hornear. Hornee 25 minutos o hasta que burbujee. Deje reposar 10 minutos antes de servir."
+  },
+  "1016": {
+   "title": "Cazuela caribeña",
+   "note": "Este plato de inspiración tropical está suavemente condimentado para darle un sabor intenso.",
+   "lines": [
+    "1 cebolla mediana, picada",
+    "½ pimiento verde, lavado y en cubitos",
+    "1 cucharada de aceite de canola",
+    "1 lata (14½ onzas) de tomates cocidos",
+    "1 lata (15½ onzas) de frijoles negros bajos en sodio (o los frijoles que prefiera)",
+    "1 cucharadita de orégano seco",
+    "½ cucharadita de ajo en polvo",
+    "1½ tazas de arroz integral instantáneo, crudo"
+   ],
+   "steps": [
+    "Sofría la cebolla y el pimiento verde en el aceite de canola, en una olla grande, hasta que estén suaves. No deje que se doren.",
+    "Agregue los tomates y los frijoles (con el líquido de ambos), y también el orégano y el ajo en polvo. Deje que hierva.",
+    "Agregue el arroz y tape. Baje el fuego y cocine a fuego lento 5 minutos. Retire del fuego y deje reposar 5 minutos antes de servir."
+   ],
+   "extra": [],
+   "instructions": "Sofría la cebolla y el pimiento verde en el aceite de canola, en una olla grande, hasta que estén suaves. No deje que se doren. Agregue los tomates y los frijoles (con el líquido de ambos), y también el orégano y el ajo en polvo. Deje que hierva. Agregue el arroz y tape. Baje el fuego y cocine a fuego lento 5 minutos. Retire del fuego y deje reposar 5 minutos antes de servir."
+  },
+  "1017": {
+   "title": "Pollo crujiente frito al horno",
+   "note": "A los niños les encantará este pollo, y es bueno para el corazón.",
+   "lines": [
+    "½ taza de leche sin grasa o suero de leche (buttermilk)",
+    "1 cucharadita de sazonador para aves",
+    "1 taza de hojuelas de maíz, trituradas (o pan molido)",
+    "1½ cucharadas de cebolla en polvo",
+    "1½ cucharadas de ajo en polvo",
+    "2 cucharaditas de pimienta negra",
+    "2 cucharaditas de chile seco picante, triturado",
+    "1 cucharadita de jengibre molido",
+    "8 piezas de pollo, sin piel (4 pechugas, 4 muslos)",
+    "¼ cucharadita de pimentón (páprika)"
+   ],
+   "steps": [
+    "Precaliente el horno a 350 °F.",
+    "Agregue ½ cucharadita del sazonador para aves a la leche.",
+    "Mezcle la otra ½ cucharadita de sazonador y todas las demás especias, excepto el pimentón, con las hojuelas de maíz trituradas (o el pan molido), y póngalo en una bolsa de plástico.",
+    "Moje el pollo en la leche, sacúdalo para quitar el exceso de líquido y agítelo rápidamente dentro de la bolsa con el sazonador y las migas.",
+    "Refrigere 1 hora.",
+    "Saque del refrigerador y espolvoree un poco de pimentón para dar color.",
+    "Ponga el pollo sobre una rejilla y la rejilla sobre una bandeja para hornear cubierta con papel de aluminio. Deje espacio entre las piezas de pollo.",
+    "Las migas formarán una “piel” crujiente. No voltee el pollo mientras se hornea.",
+    "Hornee 40 minutos. Gire la bandeja y siga horneando de 30 a 40 minutos más, o hasta que la carne se separe fácilmente del hueso con un tenedor. Los jugos deben salir claros y la carne no debe estar rosada. Los muslos pueden necesitar menos tiempo que las pechugas."
+   ],
+   "extra": [],
+   "instructions": "Precaliente el horno a 350 °F. Agregue ½ cucharadita del sazonador para aves a la leche. Mezcle la otra ½ cucharadita de sazonador y todas las demás especias, excepto el pimentón, con las hojuelas de maíz trituradas (o el pan molido), y póngalo en una bolsa de plástico. Moje el pollo en la leche, sacúdalo para quitar el exceso de líquido y agítelo rápidamente dentro de la bolsa con el sazonador y las migas. Refrigere 1 hora. Saque del refrigerador y espolvoree un poco de pimentón para dar color. Ponga el pollo sobre una rejilla y la rejilla sobre una bandeja para hornear cubierta con papel de aluminio. Deje espacio entre las piezas de pollo. Las migas formarán una “piel” crujiente. No voltee el pollo mientras se hornea. Hornee 40 minutos. Gire la bandeja y siga horneando de 30 a 40 minutos más, o hasta que la carne se separe fácilmente del hueso con un tenedor. Los jugos deben salir claros y la carne no debe estar rosada. Los muslos pueden necesitar menos tiempo que las pechugas."
+  },
+  "1018": {
+   "title": "Pescado frito al horno para chuparse los dedos",
+   "note": "Este plato saludable para el corazón se puede hacer con muchos tipos de pescado, para disfrutarlo una y otra vez.",
+   "lines": [
+    "2 libras de filetes de pescado",
+    "1 cucharada de jugo de limón",
+    "¼ taza de suero de leche (buttermilk) sin grasa o al 1%",
+    "2 gotas de salsa picante",
+    "1 cucharadita de ajo fresco, picado finamente",
+    "¼ cucharadita de pimienta blanca molida",
+    "¼ cucharadita de sal",
+    "¼ cucharadita de cebolla en polvo",
+    "½ taza de hojuelas de maíz, trituradas, o pan molido común",
+    "1 cucharada de aceite vegetal",
+    "1 limón fresco, cortado en gajos"
+   ],
+   "steps": [
+    "Precaliente el horno a 475 °F.",
+    "Limpie y enjuague el pescado. Pase el jugo de limón por los filetes y séquelos con toallas de papel.",
+    "Mezcle la leche, la salsa picante y el ajo en un tazón.",
+    "Mezcle la pimienta blanca, la sal y la cebolla en polvo con las hojuelas de maíz o el pan molido, y extiéndalo en un plato.",
+    "Deje los filetes un momento en la mezcla de leche. Saque un filete y cúbralo por ambos lados con las hojuelas de maíz o el pan molido sazonado, y déjelo reposar un momento hasta que el empanizado se pegue por los dos lados. Repita con todos los filetes.",
+    "Ponga los filetes en un molde para hornear poco profundo, ligeramente engrasado.",
+    "Coloque el molde en la rejilla del medio. Hornee 20 minutos sin voltear.",
+    "Corte en seis porciones. Sirva con limón fresco."
+   ],
+   "extra": [],
+   "instructions": "Precaliente el horno a 475 °F. Limpie y enjuague el pescado. Pase el jugo de limón por los filetes y séquelos con toallas de papel. Mezcle la leche, la salsa picante y el ajo en un tazón. Mezcle la pimienta blanca, la sal y la cebolla en polvo con las hojuelas de maíz o el pan molido, y extiéndalo en un plato. Deje los filetes un momento en la mezcla de leche. Saque un filete y cúbralo por ambos lados con las hojuelas de maíz o el pan molido sazonado, y déjelo reposar un momento hasta que el empanizado se pegue por los dos lados. Repita con todos los filetes. Ponga los filetes en un molde para hornear poco profundo, ligeramente engrasado. Coloque el molde en la rejilla del medio. Hornee 20 minutos sin voltear. Corte en seis porciones. Sirva con limón fresco."
+  },
+  "1019": {
+   "title": "Pollo al curry para chuparse los dedos",
+   "note": "El nombre lo dice todo: el jengibre y el curry lo hacen irresistible.",
+   "lines": [
+    "1½ cucharaditas de curry en polvo",
+    "1 cucharadita de tomillo",
+    "1 tallo de cebollín (cebolla verde), picado",
+    "1 cucharada de chile picante, picado",
+    "½ cucharadita de pimienta de cayena molida",
+    "1 cucharadita de pimienta negra molida",
+    "8 dientes de ajo, machacados",
+    "1 cucharada de jengibre rallado",
+    "¾ cucharadita de sal",
+    "8 piezas de pollo sin piel (4 pechugas, 4 muslos)",
+    "1 cucharada de aceite de oliva",
+    "1 taza de agua",
+    "1 papa blanca mediana, en cubitos",
+    "1 cebolla grande, picada"
+   ],
+   "steps": [
+    "Lave el pollo y séquelo con toallas de papel.",
+    "En un tazón, mezcle el curry en polvo, el tomillo, el cebollín, el chile picante, la pimienta de cayena, la pimienta negra, el ajo, el jengibre y la sal.",
+    "Revuelva el pollo en la mezcla de condimentos.",
+    "Deje marinar al menos 2 horas en el refrigerador.",
+    "Caliente el aceite en un sartén a fuego mediano. Agregue el pollo y sofríalo.",
+    "Agregue el agua y deje cocinar el pollo a fuego mediano 30 minutos.",
+    "Agregue las papas en cubitos y cocine 30 minutos más.",
+    "Agregue la cebolla y cocine 15 minutos más o hasta que la carne esté tierna. Sirva caliente."
+   ],
+   "extra": [],
+   "instructions": "Lave el pollo y séquelo con toallas de papel. En un tazón, mezcle el curry en polvo, el tomillo, el cebollín, el chile picante, la pimienta de cayena, la pimienta negra, el ajo, el jengibre y la sal. Revuelva el pollo en la mezcla de condimentos. Deje marinar al menos 2 horas en el refrigerador. Caliente el aceite en un sartén a fuego mediano. Agregue el pollo y sofríalo. Agregue el agua y deje cocinar el pollo a fuego mediano 30 minutos. Agregue las papas en cubitos y cocine 30 minutos más. Agregue la cebolla y cocine 15 minutos más o hasta que la carne esté tierna. Sirva caliente."
+  },
+  "1020": {
+   "title": "Salmón escalfado",
+   "note": "La salsa de tomate fresco le da el toque justo de sabor.",
+   "lines": [
+    "Salsa picante de tomate",
+    "2 tomates medianos, picados",
+    "2 cucharadas de cebolla amarilla picada finamente",
+    "2 cucharadas de perejil fresco picado finamente",
+    "1 cucharadita de hojuelas de chile rojo, o al gusto",
+    "¼ taza de vinagre de vino tinto",
+    "2 cucharadas de aceite de oliva",
+    "pimienta negra molida, al gusto",
+    "Salmón",
+    "4 filetes (rodajas) de salmón, de 5 onzas cada uno",
+    "3 tazas de agua",
+    "4 granos de pimienta negra",
+    "1 limón, en rodajas gruesas",
+    "3 ramitas de perejil",
+    "1 cebolla pequeña, en rodajas gruesas",
+    "2 hojas de laurel"
+   ],
+   "steps": [
+    "Para la salsa, mezcle todos los ingredientes en un tazón y póngala a un lado.",
+    "En una olla lo bastante grande para los cuatro filetes de salmón, ponga a hervir el agua y agregue los granos de pimienta, las rodajas de limón, el perejil, la cebolla y el laurel.",
+    "Baje el fuego a hervor suave, tape y deje que suelte el sabor 5 minutos. Agregue el salmón y asegúrese de que quede cubierto de agua. Agregue más agua si hace falta.",
+    "Cocine sin tapar de 10 a 12 minutos o hasta que el pescado se desmenuce fácilmente con un tenedor en la parte más gruesa (temperatura interna mínima de 145 °F). No deje que el agua hierva fuerte o el pescado se endurecerá.",
+    "Sirva cada filete de salmón con la salsa."
+   ],
+   "extra": [],
+   "instructions": "Para la salsa, mezcle todos los ingredientes en un tazón y póngala a un lado. En una olla lo bastante grande para los cuatro filetes de salmón, ponga a hervir el agua y agregue los granos de pimienta, las rodajas de limón, el perejil, la cebolla y el laurel. Baje el fuego a hervor suave, tape y deje que suelte el sabor 5 minutos. Agregue el salmón y asegúrese de que quede cubierto de agua. Agregue más agua si hace falta. Cocine sin tapar de 10 a 12 minutos o hasta que el pescado se desmenuce fácilmente con un tenedor en la parte más gruesa (temperatura interna mínima de 145 °F). No deje que el agua hierva fuerte o el pescado se endurecerá. Sirva cada filete de salmón con la salsa."
+  },
+  "1021": {
+   "title": "Pollo jerk jamaiquino",
+   "note": "Las especias y los chiles de este plato lo llevarán a un sabor totalmente nuevo.",
+   "lines": [
+    "½ cucharadita de canela molida",
+    "1½ cucharaditas de pimienta de Jamaica molida",
+    "1½ cucharaditas de pimienta negra molida",
+    "1 cucharada de chile picante picado",
+    "1 cucharadita de chile seco picante",
+    "2 cucharaditas de orégano triturado",
+    "2 cucharaditas de tomillo seco",
+    "½ cucharadita de sal",
+    "6 dientes de ajo, picados finamente",
+    "1 taza de cebolla, en puré o picada finamente",
+    "¼ taza de vinagre",
+    "3 cucharadas de azúcar morena",
+    "8 piezas de pollo sin piel (4 pechugas, 4 muslos)"
+   ],
+   "steps": [
+    "Lave el pollo y séquelo con toallas de papel.",
+    "En un tazón grande, mezcle todos los ingredientes excepto el pollo.",
+    "Unte el pollo con los condimentos y déjelo marinar en el refrigerador 6 horas o más.",
+    "Precaliente el horno a 350 °F. Ponga el pollo, con espacio entre las piezas, en una bandeja para hornear antiadherente o ligeramente engrasada.",
+    "Cubra con papel de aluminio y hornee 40 minutos. Quite el papel y siga horneando de 30 a 40 minutos más, o hasta que la carne se separe fácilmente del hueso con un tenedor."
+   ],
+   "extra": [],
+   "instructions": "Lave el pollo y séquelo con toallas de papel. En un tazón grande, mezcle todos los ingredientes excepto el pollo. Unte el pollo con los condimentos y déjelo marinar en el refrigerador 6 horas o más. Precaliente el horno a 350 °F. Ponga el pollo, con espacio entre las piezas, en una bandeja para hornear antiadherente o ligeramente engrasada. Cubra con papel de aluminio y hornee 40 minutos. Quite el papel y siga horneando de 30 a 40 minutos más, o hasta que la carne se separe fácilmente del hueso con un tenedor."
+  },
+  "1022": {
+   "title": "Chuletas de cerdo al horno",
+   "note": "Estas chuletas le encantarán: quedan jugosas y sabrosas con claras de huevo, leche evaporada y una mezcla animada de hierbas.",
+   "lines": [
+    "6 chuletas de cerdo magras de centro de lomo, de ½ pulgada de grueso",
+    "1 clara de huevo (o clara de huevo líquida)",
+    "1 taza de leche evaporada sin grasa",
+    "¾ taza de hojuelas de maíz trituradas",
+    "¼ taza de pan molido",
+    "4 cucharaditas de pimentón (páprika)",
+    "2 cucharaditas de orégano",
+    "¾ cucharadita de chile en polvo",
+    "½ cucharadita de ajo en polvo",
+    "½ cucharadita de pimienta negra molida",
+    "⅛ cucharadita de pimienta de cayena",
+    "⅛ cucharadita de mostaza en polvo",
+    "½ cucharadita de sal",
+    "aceite en aerosol"
+   ],
+   "steps": [
+    "Precaliente el horno a 375 °F.",
+    "Quite la grasa a las chuletas.",
+    "Bata la clara de huevo con la leche evaporada. Ponga las chuletas en la mezcla y déjelas 5 minutos, volteándolas una vez.",
+    "Mientras tanto, mezcle las hojuelas de maíz trituradas, el pan molido, las especias y la sal.",
+    "Rocíe aceite en aerosol en un molde para hornear de 13 x 9 pulgadas.",
+    "Saque las chuletas de la mezcla de leche y cúbralas bien con la mezcla de migas.",
+    "Ponga las chuletas en el molde y hornee a 375 °F por 20 minutos. Voltéelas y hornee 15 minutos más o hasta que el cerdo esté bien cocido (temperatura interna mínima de 160 °F)."
+   ],
+   "extra": [
+    {
+     "h": "Nota:",
+     "t": "Pruebe la receta con piezas de pollo o pavo sin piel y sin hueso, o con pescado: hornee solo 20 minutos."
+    }
+   ],
+   "instructions": "Precaliente el horno a 375 °F. Quite la grasa a las chuletas. Bata la clara de huevo con la leche evaporada. Ponga las chuletas en la mezcla y déjelas 5 minutos, volteándolas una vez. Mientras tanto, mezcle las hojuelas de maíz trituradas, el pan molido, las especias y la sal. Rocíe aceite en aerosol en un molde para hornear de 13 x 9 pulgadas. Saque las chuletas de la mezcla de leche y cúbralas bien con la mezcla de migas. Ponga las chuletas en el molde y hornee a 375 °F por 20 minutos. Voltéelas y hornee 15 minutos más o hasta que el cerdo esté bien cocido (temperatura interna mínima de 160 °F)."
+  },
+  "1023": {
+   "title": "Jambalaya alegre",
+   "note": "Una jambalaya que su familia puede disfrutar. ¡Tiene mucho sabor, verduras y carnes sabrosas bajas en grasa! Una ensalada verde es una buena guarnición.",
+   "lines": [
+    "14 onzas de salchicha kielbasa de pavo baja en grasa",
+    "1 libra de pechuga de pollo sin hueso y sin piel",
+    "aceite antiadherente en aerosol",
+    "1 tallo mediano de apio, picado",
+    "2 cebollas pequeñas, picadas",
+    "4 dientes de ajo, picados",
+    "1 manojo pequeño de cebollitas verdes, picadas",
+    "1 pimiento verde mediano, picado",
+    "1 lata (14½ onzas) de tomates en cubitos sin sal añadida",
+    "1½ tazas de arroz integral crudo",
+    "4 tazas de agua",
+    "2 cubitos de caldo de pollo bajos en sodio",
+    "1 hoja de laurel",
+    "1½ cucharaditas de pimienta de cayena",
+    "3 cucharadas de perejil, picado finamente"
+   ],
+   "steps": [
+    "Lave el pollo y séquelo con toallas de papel. Corte la pechuga y la kielbasa en trozos de 1 pulgada.",
+    "Rocíe una olla mediana con aceite antiadherente en aerosol. Dore la kielbasa y el pollo a fuego mediano y sáquelos de la olla.",
+    "Ponga los 6 ingredientes siguientes en la misma olla y cocine a fuego mediano 10 minutos.",
+    "Regrese la carne cocida a la olla; agregue el arroz, el agua, los cubitos de caldo, el laurel y la pimienta de cayena. Deje que hierva. Tape, baje el fuego y cocine a fuego lento unos 50 minutos* o hasta que se evapore el agua.",
+    "Agregue el perejil y sirva caliente."
+   ],
+   "extra": [
+    {
+     "h": "",
+     "t": "*El arroz integral instantáneo se cocina en menos tiempo."
+    }
+   ],
+   "instructions": "Lave el pollo y séquelo con toallas de papel. Corte la pechuga y la kielbasa en trozos de 1 pulgada. Rocíe una olla mediana con aceite antiadherente en aerosol. Dore la kielbasa y el pollo a fuego mediano y sáquelos de la olla. Ponga los 6 ingredientes siguientes en la misma olla y cocine a fuego mediano 10 minutos. Regrese la carne cocida a la olla; agregue el arroz, el agua, los cubitos de caldo, el laurel y la pimienta de cayena. Deje que hierva. Tape, baje el fuego y cocine a fuego lento unos 50 minutos* o hasta que se evapore el agua. Agregue el perejil y sirva caliente."
+  },
+  "1024": {
+   "title": "Rollo de carne delicioso",
+   "note": "¿Aburrido del mismo rollo de carne? Esta receta convierte lo común en algo extraordinario.",
+   "lines": [
+    "1 libra de carne de res molida extra magra",
+    "½ taza de pasta de tomate",
+    "4 tazas de cebolla picada",
+    "4 tazas de pimiento verde picado",
+    "4 tazas de pimiento rojo picado",
+    "1 taza de tomates frescos, blanqueados",
+    "2 cucharaditas de mostaza baja en sodio",
+    "4 cucharaditas de pimienta negra molida",
+    "2 cucharaditas de chile picante picado",
+    "2 dientes de ajo, picados",
+    "2 cebollines (cebollas verdes), picados",
+    "2 cucharaditas de jengibre molido",
+    "8 cucharaditas de nuez moscada molida",
+    "1 cucharadita de cáscara de naranja rallada",
+    "2 cucharaditas de tomillo triturado",
+    "4 tazas de pan molido"
+   ],
+   "steps": [
+    "Precaliente el horno a 350 °F.",
+    "Mezcle todos los ingredientes.",
+    "Póngalo en un molde para pan (de preferencia con rejilla para escurrir) y hornee tapado 50 minutos.",
+    "Destape el molde y siga horneando 12 minutos.",
+    "Corte en seis rebanadas iguales y sirva."
+   ],
+   "extra": [],
+   "instructions": "Precaliente el horno a 350 °F. Mezcle todos los ingredientes. Póngalo en un molde para pan (de preferencia con rejilla para escurrir) y hornee tapado 50 minutos. Destape el molde y siga horneando 12 minutos. Corte en seis rebanadas iguales y sirva."
+  },
+  "1025": {
+   "title": "Pollo a la barbacoa sureño picante",
+   "note": "Déjese llevar por el encanto de esta salsa barbacoa dulce al estilo del sur.",
+   "lines": [
+    "5 cucharadas de pasta de tomate",
+    "1 cucharadita de salsa de tomate (ketchup)",
+    "2 cucharaditas de miel",
+    "1 cucharadita de melaza",
+    "1 cucharadita de salsa inglesa (Worcestershire)",
+    "4 cucharaditas de vinagre blanco",
+    "¾ cucharadita de pimienta de cayena",
+    "⅛ cucharadita de pimienta negra",
+    "¼ cucharadita de cebolla en polvo",
+    "2 dientes de ajo, picados finamente",
+    "⅛ cucharadita de jengibre rallado",
+    "8 piezas de pollo sin piel (4 pechugas, 4 muslos)"
+   ],
+   "steps": [
+    "Mezcle todos los ingredientes excepto el pollo en una cacerola. Cocine a fuego lento 15 minutos.",
+    "Lave el pollo y séquelo con toallas de papel. Póngalo en una fuente grande y úntelo con la mitad de la salsa.",
+    "Cubra con plástico y deje marinar en el refrigerador 1 hora.",
+    "Ponga el pollo en una bandeja para hornear cubierta con papel de aluminio y áselo a la parrilla del horno (broil) 10 minutos por cada lado para sellar los jugos.",
+    "Saque del horno y unte las piezas de pollo con el resto de la salsa. Cubra con papel de aluminio y hornee a 350 °F por 30 minutos."
+   ],
+   "extra": [],
+   "instructions": "Mezcle todos los ingredientes excepto el pollo en una cacerola. Cocine a fuego lento 15 minutos. Lave el pollo y séquelo con toallas de papel. Póngalo en una fuente grande y úntelo con la mitad de la salsa. Cubra con plástico y deje marinar en el refrigerador 1 hora. Ponga el pollo en una bandeja para hornear cubierta con papel de aluminio y áselo a la parrilla del horno (broil) 10 minutos por cada lado para sellar los jugos. Saque del horno y unte las piezas de pollo con el resto de la salsa. Cubra con papel de aluminio y hornee a 350 °F por 30 minutos."
+  }
+ },
+ "_note": "DRAFT translation, pending review by a native speaker (see /admin -> Translations)."
+}

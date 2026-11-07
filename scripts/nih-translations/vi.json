@@ -1,0 +1,868 @@
+{
+ "_about": "DRAFT Vietnamese translations by Make It Stretch, pending review by a native speaker: the 25 new foods and all 25 NHLBI main dishes (the books are in English and Spanish only).",
+ "foods": {
+  "chickenbreast": {
+   "name": "Ức gà không xương",
+   "full": "Ức gà không xương (1 lb)",
+   "note": "Ít mỡ, nấu nhanh. Thái sợi để dùng được nhiều bữa."
+  },
+  "drumsticks": {
+   "name": "Đùi gà tỏi",
+   "full": "Đùi gà tỏi (2 lb)",
+   "note": "Có xương, giá rẻ. Khoảng 8 cái."
+  },
+  "sirloin": {
+   "name": "Thịt bò thăn (sirloin)",
+   "full": "Thịt bò thăn sirloin (1 lb)",
+   "note": "Thái mỏng, xào với nhiều rau."
+  },
+  "roundroast": {
+   "name": "Thịt bò đùi (round) để nướng",
+   "full": "Thịt bò đùi để nướng (2 lb)",
+   "note": "Thịt bò ít mỡ. Cắt khối để hầm, nấu lửa nhỏ."
+  },
+  "tomatoes": {
+   "name": "Cà chua tươi",
+   "full": "Cà chua tươi (1 lb, khoảng 3 quả)",
+   "note": "Dùng quả chín trước. Để ngoài, không để tủ lạnh."
+  },
+  "avocado": {
+   "name": "Bơ",
+   "full": "Bơ (1 quả)",
+   "note": "Chín khi ấn nhẹ thấy hơi mềm."
+  },
+  "zucchini": {
+   "name": "Bí ngòi",
+   "full": "Bí ngòi hoặc bí mùa hè (1 lb)",
+   "note": "Chín trong vài phút. Hợp với món hầm và món xào."
+  },
+  "cornears": {
+   "name": "Bắp tươi",
+   "full": "Bắp tươi (2 trái)",
+   "note": "Tách hạt khỏi lõi để nấu món hầm."
+  },
+  "frozenpeas": {
+   "name": "Đậu Hà Lan đông lạnh",
+   "full": "Đậu Hà Lan đông lạnh (1 lb)",
+   "note": "Không cần sơ chế. Cho vào gần cuối khi nấu."
+  },
+  "tomatosauce": {
+   "name": "Sốt cà chua",
+   "full": "Sốt cà chua (lon 15 oz)",
+   "note": "Nền sẵn cho món hầm và món nướng."
+  },
+  "plantains": {
+   "name": "Chuối nấu chín (plantain)",
+   "full": "Chuối nấu chín plantain (khoảng 2 trái)",
+   "note": "Vỏ vàng có đốm đen là ngọt và sẵn để nấu."
+  },
+  "mozzarella": {
+   "name": "Phô mai mozzarella ít béo",
+   "full": "Phô mai mozzarella ít béo (8 oz)",
+   "note": "Ít béo hơn hầu hết các loại phô mai. Tan chảy tốt."
+  },
+  "raisins": {
+   "name": "Nho khô",
+   "full": "Nho khô (12 oz)",
+   "note": "Để được nhiều tháng. Một ít làm món mặn thêm ngọt."
+  },
+  "sourcream": {
+   "name": "Kem chua không béo",
+   "full": "Kem chua không béo (16 oz)",
+   "note": "Béo mịn, dùng với bánh cuốn, đậu và khoai tây."
+  },
+  "salmon": {
+   "name": "Cá hồi",
+   "full": "Cá hồi (1 lb)",
+   "note": "Giàu omega-3. Chín trong khoảng 10 phút."
+  },
+  "fish": {
+   "name": "Phi lê cá (cá rô phi hoặc tương tự)",
+   "full": "Phi lê cá, cá rô phi hoặc tương tự (1 lb)",
+   "note": "Cá thịt trắng, vị nhẹ. Nướng 15 đến 20 phút."
+  },
+  "cornflakes": {
+   "name": "Ngũ cốc bắp (corn flakes)",
+   "full": "Ngũ cốc bắp corn flakes (12 oz)",
+   "note": "Nghiền vụn làm lớp áo giòn cho gà hoặc cá nướng."
+  },
+  "breadcrumbs": {
+   "name": "Vụn bánh mì",
+   "full": "Vụn bánh mì (15 oz)",
+   "note": "Dùng cho thịt xay nướng khuôn và lớp áo giòn."
+  },
+  "kielbasa": {
+   "name": "Xúc xích gà tây kielbasa",
+   "full": "Xúc xích gà tây kielbasa (14 oz)",
+   "note": "Đã nấu chín sẵn. Một ít cũng thêm nhiều hương vị."
+  },
+  "buttermilk": {
+   "name": "Sữa bơ (buttermilk) ít béo",
+   "full": "Sữa bơ buttermilk ít béo (1 quart)",
+   "note": "Để nhúng gà hoặc cá trước khi lăn bột."
+  },
+  "hominy": {
+   "name": "Hạt bắp hominy đóng lon",
+   "full": "Hạt bắp hominy đóng lon (29 oz)",
+   "note": "Đã nấu chín sẵn. Là thành phần chính của món pozole."
+  },
+  "masaharina": {
+   "name": "Bột bắp masa harina",
+   "full": "Bột bắp masa harina (2 lb)",
+   "note": "Bột bắp làm bánh pupusa, bánh tortilla và tamale."
+  },
+  "quinoa": {
+   "name": "Hạt diêm mạch (quinoa)",
+   "full": "Hạt diêm mạch quinoa (12 oz)",
+   "note": "Ngũ cốc nguyên hạt, nhiều đạm. Nấu 15 phút."
+  },
+  "brownrice": {
+   "name": "Gạo lứt",
+   "full": "Gạo lứt (2 lb)",
+   "note": "Gạo nguyên cám. Nấu lâu hơn gạo trắng."
+  },
+  "groundturkey": {
+   "name": "Thịt gà tây xay ít mỡ",
+   "full": "Thịt gà tây xay ít mỡ (1 lb)",
+   "note": "Ít mỡ. Dùng thay thịt bò xay trong mọi món."
+  }
+ },
+ "recipes": {
+  "pupusas": {
+   "title": "Bánh bột bắp nhân kiểu El Salvador (pupusa)",
+   "note": "Thịt gà xay ít béo và phô mai ít béo giúp giảm chất béo bão hòa và calo trong món ăn ngon của El Salvador này.",
+   "lines": [
+    "1 pound ức gà xay",
+    "1 muỗng canh dầu thực vật",
+    "½ củ hành nhỏ, thái hạt lựu thật nhỏ",
+    "1 tép tỏi, băm nhỏ",
+    "1 quả ớt chuông xanh vừa, bỏ hạt và băm nhỏ",
+    "1 quả cà chua nhỏ, thái nhỏ",
+    "½ muỗng cà phê muối",
+    "5 chén bột bắp ăn liền (masa harina)",
+    "6 chén nước",
+    "½ pound phô mai mozzarella ít béo, bào sợi"
+   ],
+   "steps": [
+    "Trong chảo chống dính, lửa nhỏ, xào gà với dầu cho đến khi gà chuyển sang màu trắng. Đảo liên tục để gà chín đều.",
+    "Cho hành, tỏi, ớt chuông xanh, cà chua và muối vào, trộn đều. Nấu cho đến khi hỗn hợp gà chín hẳn (nhiệt độ bên trong 165°F). Nhấc chảo khỏi bếp. Cho hỗn hợp vào tô và để nguội trong tủ lạnh.",
+    "Trong lúc chờ hỗn hợp gà nguội, cho bột bắp vào tô lớn và từ từ khuấy thêm nước cho đến khi thành khối bột cứng như bột làm bánh tortilla.",
+    "Khi hỗn hợp gà đã nguội, trộn phô mai vào.",
+    "Chia bột thành 24 phần. Dùng tay vo bột thành viên. Dùng ngón cái ấn một lỗ vào giữa mỗi viên.",
+    "Cho khoảng một muỗng canh hỗn hợp gà vào lỗ của mỗi viên. Gấp bột lại để bọc kín nhân. Dùng lòng bàn tay ấn dẹt viên bột thành hình đĩa.",
+    "Trong chảo gang thật nóng, nướng bánh mỗi mặt cho đến khi vàng.",
+    "Ăn nóng với dưa cải bắp kiểu El Salvador. (Xem công thức ở trang 6.)"
+   ],
+   "extra": []
+  },
+  "pozole": {
+   "title": "Món hầm bò với hạt bắp hominy kiểu Mexico (pozole)",
+   "note": "Chỉ cần một ít dầu để xào thịt.",
+   "lines": [
+    "2 pound thịt bò nạc (thịt đùi bò eye round), cắt khối",
+    "1 muỗng canh dầu ô liu",
+    "1 củ hành lớn, thái nhỏ",
+    "1 tép tỏi, băm thật nhỏ",
+    "¼ muỗng cà phê muối",
+    "⅛ muỗng cà phê tiêu",
+    "¼ chén ngò",
+    "1 lon (15 ounce) cà chua hầm",
+    "1⁄3 lon (2 ounce) cà chua cô đặc",
+    "1 lon (1 pound 13 ounce) hạt bắp hominy"
+   ],
+   "steps": [
+    "Trong nồi lớn, đun nóng dầu. Xào thịt bò.",
+    "Cho hành, tỏi, muối, tiêu, ngò và đủ nước ngập thịt. Đậy nắp, nấu lửa nhỏ cho đến khi thịt mềm.",
+    "Cho cà chua và cà chua cô đặc vào. Nấu tiếp khoảng 20 phút.",
+    "Cho hạt bắp hominy vào và nấu thêm 15 phút, thỉnh thoảng khuấy, lửa nhỏ. Nếu quá đặc, thêm nước cho vừa ý."
+   ],
+   "extra": [
+    {
+     "h": "Cách khác:",
+     "t": "Có thể dùng ức gà không da, không xương thay cho thịt bò."
+    }
+   ]
+  },
+  "lentilsoup": {
+   "title": "Súp đậu lăng",
+   "note": "Súp đậu lăng là món khai vị ngon, chắc bụng, hoặc là cả một bữa ăn. Súp này tự nhiên ít béo và ít muối hơn hầu hết các loại súp đóng hộp. Chúc ngon miệng!",
+   "lines": [
+    "2 muỗng canh dầu ô liu",
+    "2 củ cà rốt vừa, thái hạt lựu",
+    "2 cọng cần tây vừa, thái nhỏ",
+    "1 củ hành vàng nhỏ, thái nhỏ",
+    "2 tép tỏi, băm nhỏ",
+    "1 muỗng cà phê lá oregano khô",
+    "1 muỗng cà phê lá húng quế khô",
+    "½ muỗng cà phê tiêu đen xay",
+    "2 chén đậu lăng khô",
+    "1 lon (14½ ounce) cà chua nghiền",
+    "2 chén nước dùng rau củ",
+    "6½ chén nước"
+   ],
+   "steps": [
+    "Trong nồi súp lớn, đun nóng dầu ở lửa vừa. Cho cà rốt, cần tây và hành vào; đảo cho đến khi hành mềm.",
+    "Cho tỏi, oregano, húng quế và tiêu đen vào khuấy đều. Nấu 2 phút.",
+    "Cho đậu lăng và cà chua vào khuấy đều, rồi thêm nước dùng rau củ và nước. Đậy nắp và đun sôi. Hạ lửa và ninh ít nhất 1 giờ hoặc cho đến khi đậu lăng mềm.",
+    "Cất phần còn lại trong tủ lạnh và hâm nóng trên bếp hoặc lò vi sóng. Súp để qua ngày sẽ càng ngon!"
+   ],
+   "extra": []
+  },
+  "chickenstew": {
+   "title": "Gà hầm",
+   "note": "Công thức cải biến này rất đậm đà và có nhiều rau! Món này dùng ức gà hoặc đùi gà thay cho các loại thịt nhiều mỡ.",
+   "lines": [
+    "8 miếng thịt gà, ức hoặc đùi",
+    "1 chén nước",
+    "2 tép tỏi nhỏ, băm nhỏ",
+    "1 củ hành nhỏ, thái nhỏ",
+    "1½ muỗng cà phê muối",
+    "½ muỗng cà phê tiêu đen xay",
+    "3 quả cà chua vừa, thái nhỏ",
+    "1 muỗng cà phê ngò tây, thái nhỏ",
+    "¼ chén cần tây, thái thật nhỏ",
+    "2 củ khoai tây vừa, gọt vỏ và thái nhỏ",
+    "2 củ cà rốt nhỏ, thái nhỏ",
+    "2 lá nguyệt quế"
+   ],
+   "steps": [
+    "Lột da và mỡ thừa khỏi thịt gà, bỏ đi.",
+    "Trong chảo lớn, cho gà, nước, tỏi, hành, muối (càng ít càng tốt), tiêu đen, cà chua và ngò tây vào.",
+    "Đậy nắp và nấu lửa nhỏ 25 phút.",
+    "Cho cần tây, khoai tây, cà rốt và lá nguyệt quế vào, nấu tiếp thêm 15 phút hoặc cho đến khi gà và rau mềm.",
+    "Bỏ lá nguyệt quế ra trước khi ăn."
+   ],
+   "extra": []
+  },
+  "beefcasserole": {
+   "title": "Thịt bò nấu cơm nhanh",
+   "note": "Chắt bỏ mỡ của thịt bò sau khi nấu để giảm chất béo và calo.",
+   "lines": [
+    "½ pound thịt bò xay nạc",
+    "1 chén hành, thái nhỏ",
+    "1 chén cần tây, thái nhỏ",
+    "1 chén ớt chuông xanh bỏ hạt, cắt hạt lựu",
+    "3½ chén cà chua, thái hạt lựu",
+    "¼ muỗng cà phê muối",
+    "½ muỗng cà phê tiêu đen",
+    "¼ muỗng cà phê bột ớt paprika",
+    "1 chén đậu Hà Lan đông lạnh",
+    "2 củ cà rốt nhỏ, thái hạt lựu",
+    "1 chén gạo chưa nấu",
+    "1½ chén nước"
+   ],
+   "steps": [
+    "Trong chảo, xào thịt bò xay cho săn và chắt bỏ mỡ.",
+    "Cho tất cả các nguyên liệu còn lại vào. Trộn đều.",
+    "Nấu ở lửa vừa và đậy nắp chảo cho đến khi sôi.",
+    "Hạ lửa nhỏ và ninh 35 phút. Ăn nóng."
+   ],
+   "extra": []
+  },
+  "stirfriedbeef": {
+   "title": "Bò xào",
+   "note": "Giấm và tỏi làm cho món dễ nấu này thêm đậm đà.",
+   "lines": [
+    "1½ pound thịt bò thăn sirloin",
+    "2 muỗng cà phê dầu thực vật",
+    "1 tép tỏi, băm nhỏ",
+    "1 muỗng cà phê giấm",
+    "⅛ muỗng cà phê muối",
+    "⅛ muỗng cà phê tiêu",
+    "2 củ hành lớn, thái lát",
+    "1 quả cà chua lớn, thái lát",
+    "3 chén khoai tây luộc, thái hạt lựu"
+   ],
+   "steps": [
+    "Lọc bỏ mỡ của thịt bò và thái thịt thành miếng nhỏ, mỏng.",
+    "Trong chảo lớn, đun nóng dầu và phi tỏi cho đến khi vàng.",
+    "Cho thịt bò, giấm, muối và tiêu vào. Nấu 6 phút, đảo thịt cho đến khi chín vàng.",
+    "Cho hành và cà chua vào. Nấu cho đến khi hành trong. Ăn với khoai tây luộc."
+   ],
+   "extra": []
+  },
+  "pastelon": {
+   "title": "Chuối plantain chín nướng với thịt kiểu Puerto Rico",
+   "note": "Vị ngọt tự nhiên của chuối làm tăng hương vị cho món ăn Puerto Rico này.",
+   "lines": [
+    "Lớp nhân thịt",
+    "1½ pound thịt bò xay nạc",
+    "2 quả ớt chuông xanh vừa, bỏ hạt, thái nhỏ",
+    "1 củ hành vàng vừa, thái nhỏ",
+    "3 lá nguyệt quế",
+    "Lớp bột",
+    "8 trái chuối plantain vàng lớn, chín, đã lột vỏ",
+    "10 chén nước",
+    "2 muỗng canh dầu ô liu",
+    "¼ chén ngò, thái nhỏ",
+    "1 chén nước dùng bò ít muối",
+    "5 trái ớt ajicito (ớt nhỏ)",
+    "½ muỗng canh sốt hạt điều màu (achiote)",
+    "2 tép tỏi, băm thật nhỏ",
+    "1 chén sốt cà chua",
+    "Các lớp khác",
+    "5 lòng trắng trứng, đánh tan",
+    "1½ chén đậu que đã nấu chín",
+    "½ chén phô mai mozzarella ít béo, bào sợi"
+   ],
+   "steps": [
+    "Làm nóng lò ở 350°F.",
+    "Xào thịt cho săn trong nồi lớn. Chắt bỏ mỡ và cho các nguyên liệu còn lại của phần nhân vào. Nấu ở lửa vừa 5 phút. Để riêng.",
+    "Luộc chuối đã lột vỏ trong 10 chén nước cho đến khi mềm, rồi chắt nước. Trong tô lớn, nghiền chuối rồi cho dầu ô liu vào. Trộn đều thành khối bột mềm. Trong một tô khác, đánh lòng trắng trứng cho đến khi nổi bọt.",
+    "Trải một nửa bột chuối vào khay nướng 11” x 14”. Thêm một lớp nhân thịt, lòng trắng trứng và một nửa đậu que.",
+    "Lặp lại các lớp này, và phủ trên cùng một lớp chuối và lòng trắng trứng.",
+    "Rắc phô mai mozzarella lên trên.",
+    "Nướng 20 phút."
+   ],
+   "extra": []
+  },
+  "turkeymeatloaf": {
+   "title": "Thịt gà tây xay nướng khuôn",
+   "note": "Thưởng thức phiên bản lành mạnh hơn của một món ăn tối quen thuộc.",
+   "lines": [
+    "1 pound thịt gà tây xay nạc (7% mỡ)",
+    "½ chén yến mạch thường, khô",
+    "1 quả trứng lớn",
+    "1 muỗng canh hành sấy khô, hoặc 1 củ hành nhỏ, băm nhỏ",
+    "¼ chén tương cà (ketchup)",
+    "2 cọng cần tây, thái nhỏ",
+    "2 tép tỏi, băm nhỏ",
+    "½ quả ớt chuông xanh, bỏ hạt và thái hạt lựu"
+   ],
+   "steps": [
+    "Làm nóng lò ở 350°F.",
+    "Cho tất cả nguyên liệu vào và trộn đều.",
+    "Nướng trong khuôn bánh mì 25 phút cho đến khi nhiệt độ bên trong đạt 165°F.",
+    "Cắt thành năm lát và dọn ra ăn."
+   ],
+   "extra": []
+  },
+  "chickadillo": {
+   "title": "Gà băm xào kiểu picadillo",
+   "note": "Đây là món tuyệt vời để nấu khi bạn không có nhiều thời gian.",
+   "lines": [
+    "1 pound ức gà, không xương, không da, thái sợi mỏng",
+    "2 muỗng cà phê dầu ô liu",
+    "1 củ hành vàng lớn, thái thật nhỏ",
+    "1 quả ớt chuông xanh vừa, thái thật nhỏ",
+    "1 quả ớt chuông đỏ vừa, thái thật nhỏ",
+    "3 tép tỏi, đập dập",
+    "⅓ chén sốt cà chua không thêm muối",
+    "⅓ chén nước dùng gà ít muối",
+    "⅓ chén nước cốt chanh vàng tươi",
+    "⅓ chén nước",
+    "¼ muỗng cà phê bột thì là Ai Cập (cumin)",
+    "2 lá nguyệt quế",
+    "¼ chén nho khô vàng",
+    "Để trang trí",
+    "lá ngò tươi",
+    "1 muỗng canh nụ bạch hoa (capers), để ráo",
+    "2 muỗng canh ô liu xanh, thái nhỏ"
+   ],
+   "steps": [
+    "Đun nóng dầu ô liu trong chảo lớn ở lửa vừa. Cho hành, ớt chuông và tỏi vào, xào cho đến khi rau mềm, khoảng 5 phút.",
+    "Cho gà vào và xào thêm 5 đến 10 phút, cho đến khi gà chín hẳn.",
+    "Cho sốt cà chua, nước dùng gà, nước cốt chanh, bột cumin, lá nguyệt quế, nước và nho khô vào chung với rau và gà.",
+    "Đậy nắp chảo và hạ lửa. Ninh 10 phút hoặc cho đến khi gà mềm.",
+    "Bỏ lá nguyệt quế ra, ăn với cơm gạo lứt và đậu đen. Trang trí bằng ngò tươi, nụ bạch hoa và ô liu."
+   ],
+   "extra": []
+  },
+  "pastelchileno": {
+   "title": "Bánh bắp nhân thịt kiểu Chile",
+   "note": "Ăn kèm salad xà lách và cà chua cho một bữa ăn đầy đủ.",
+   "lines": [
+    "Hỗn hợp thịt",
+    "Dầu thực vật dạng xịt chống dính",
+    "4 ounce ức gà không xương, không da",
+    "8 ounce thịt bò xay thật nạc (5% mỡ)",
+    "1 quả ớt chuông xanh, bỏ hạt và thái nhỏ",
+    "¼ muỗng cà phê tiêu đen xay",
+    "½ chén nho khô",
+    "2 muỗng cà phê ô liu, thái nhỏ",
+    "Lớp phủ bắp",
+    "½ muỗng canh dầu canola",
+    "⅛ muỗng cà phê bột ớt paprika",
+    "1 củ hành vừa, thái thật nhỏ",
+    "16 ounce hạt bắp, đã rã đông",
+    "½ chén sữa không béo",
+    "1⁄4 muỗng cà phê muối",
+    "¾ muỗng cà phê bột thì là Ai Cập (cumin)",
+    "¼ muỗng cà phê tiêu đen",
+    "1 muỗng cà phê lá húng quế khô"
+   ],
+   "steps": [
+    "Làm nóng lò ở 400°F.",
+    "Xịt dầu chống dính vào chảo; đặt lên lửa vừa cho đến khi nóng. Nấu ức gà mỗi mặt 4 phút. Lấy ra khỏi chảo và dùng nĩa xé gà thành sợi. Để riêng.",
+    "Cho thịt bò vào cùng chảo; nấu, đảo liên tục, cho đến khi không còn màu hồng. Cho ớt chuông xanh, tiêu đen, nho khô và ô liu vào khuấy đều. Múc hỗn hợp vào khay nướng 8” x 8”.* Xếp gà lên trên hỗn hợp trong khay.",
+    "Cho dầu và bột paprika vào cùng chảo; đặt lên lửa vừa cho đến khi nóng. Cho hành vào nấu, đảo thường xuyên, cho đến khi mềm và trong, khoảng 5 phút. Trong lúc nấu hành, cho bắp đã rã đông, sữa, cumin, muối, tiêu và húng quế vào máy xay; xay nhuyễn.",
+    "Cho hỗn hợp bắp xay vào chảo hành; trộn đều. Nấu tiếp 5 phút. Múc hỗn hợp bắp phủ lên hỗn hợp thịt trong khay. Nướng cho đến khi sủi bọt và vàng đẹp, 35 đến 40 phút."
+   ],
+   "extra": [
+    {
+     "h": "",
+     "t": "*Nếu muốn, chia hỗn hợp thành bốn phần và nướng trong bốn chén nhỏ chịu nhiệt."
+    }
+   ]
+  },
+  "tilapia": {
+   "title": "Cá rô phi nướng với cà chua",
+   "note": "Món này dễ làm, ít calo và tiết kiệm.",
+   "lines": [
+    "Dầu thực vật dạng xịt chống dính",
+    "4 miếng phi lê cá rô phi",
+    "4 quả cà chua vừa, lột vỏ và thái nhỏ",
+    "2 muỗng canh dầu ô liu",
+    "1½ muỗng cà phê lá xạ hương (thyme)",
+    "¼ chén ô liu đen bỏ hạt, thái hạt lựu",
+    "¼ muỗng cà phê ớt đỏ khô xay vụn",
+    "2 tép tỏi, băm nhỏ",
+    "½ chén hành tím, thái hạt lựu",
+    "1 muỗng canh nước cốt chanh xanh",
+    "ngò tây và múi chanh vàng để trang trí"
+   ],
+   "steps": [
+    "Làm nóng lò ở 400°F.",
+    "Xịt dầu thực vật vào khay nướng.",
+    "Xếp phi lê cá vào khay. Khay phải đủ lớn để các miếng cá không chồng lên nhau.",
+    "Trộn các nguyên liệu còn lại trong một tô.",
+    "Múc hỗn hợp cà chua rải đều lên cá.",
+    "Nướng không đậy 15 đến 20 phút hoặc cho đến khi cá dễ tách thớ bằng nĩa.",
+    "Trang trí bằng ngò tây và một múi chanh."
+   ],
+   "extra": []
+  },
+  "veggiewrap": {
+   "title": "Bánh cuốn rau của Maria",
+   "note": "Bánh cuốn ngon này đầy đậu và rau, và là nguồn chất xơ tuyệt vời.",
+   "lines": [
+    "1 quả ớt chuông đỏ vừa, bỏ hạt và thái lát",
+    "1 quả ớt chuông vàng vừa, bỏ hạt và thái lát",
+    "1 củ hành, thái lát",
+    "1 muỗng cà phê dầu canola",
+    "1 lon (15 ounce) đậu đen ít muối, để ráo và rửa sạch",
+    "½ quả bơ, lột vỏ và thái hạt lựu",
+    "nước cốt của 1 trái chanh xanh",
+    "½ chén ngò tươi thái nhỏ",
+    "1 muỗng cà phê bột ớt (tùy chọn)",
+    "1 chén kem chua không béo",
+    "4 bánh tortilla lúa mì nguyên cám 8 inch"
+   ],
+   "steps": [
+    "Trong chảo chống dính, xào ớt chuông và hành với dầu canola 5 phút ở lửa vừa. Cho đậu vào, khuấy đều. Hạ lửa nhỏ, ninh khoảng 5 phút, rồi để riêng.",
+    "Trong tô nhỏ, trộn bơ, nước cốt chanh, ngò và bột ớt. Để dành một nửa hỗn hợp để rưới lên trên.",
+    "Cho kem chua vào đậu và trộn đều.",
+    "Hâm nóng bánh tortilla trong lò vi sóng hoặc trong chảo trên bếp.",
+    "Cho ¼ hỗn hợp đậu và ¼ hỗn hợp bơ vào một bánh tortilla đã hâm nóng. Rưới 2 muỗng canh salsa lên hỗn hợp đậu và bơ.",
+    "Gấp hai đầu bánh tortilla lại. Cuộn lại thành bánh cuốn. Phủ phần hỗn hợp bơ còn lại lên trên. Làm tương tự với ba bánh còn lại."
+   ],
+   "extra": []
+  },
+  "quinoasalad": {
+   "title": "Salad diêm mạch (quinoa) với đậu đen",
+   "note": "Món salad ướp lạnh thú vị này có thể là món chính hoặc món phụ tuyệt vời.",
+   "lines": [
+    "½ chén hạt diêm mạch (quinoa) khô",
+    "1½ chén nước",
+    "1½ muỗng canh dầu ô liu",
+    "3 muỗng canh nước cốt chanh xanh",
+    "¼ muỗng cà phê bột thì là Ai Cập (cumin)",
+    "¼ muỗng cà phê bột hạt ngò (hạt ngò khô)",
+    "2 muỗng canh ngò, thái nhỏ",
+    "2 cọng hành lá vừa, băm nhỏ",
+    "1 lon (15 ounce) đậu đen, rửa sạch và để ráo",
+    "2 chén cà chua, thái nhỏ",
+    "1 quả ớt chuông đỏ vừa, thái nhỏ",
+    "1 quả ớt chuông xanh vừa, thái nhỏ",
+    "2 trái ớt xanh tươi (hoặc tùy khẩu vị), băm nhỏ",
+    "tiêu đen (tùy khẩu vị)"
+   ],
+   "steps": [
+    "Rửa quinoa bằng nước lạnh. Đun sôi nước trong nồi, rồi cho quinoa vào. Đun sôi lại, rồi ninh cho đến khi nước cạn, 10 đến 15 phút. Để nguội 15 phút.",
+    "Trong lúc nấu quinoa, trộn dầu ô liu, nước cốt chanh, cumin, bột hạt ngò, ngò thái nhỏ và hành lá trong một tô nhỏ, để riêng.",
+    "Trộn các loại rau đã thái với đậu đen trong một tô lớn, để riêng.",
+    "Khi quinoa đã nguội, trộn tất cả nguyên liệu lại với nhau cho đều. Đậy lại và cất tủ lạnh cho đến khi dọn ra ăn."
+   ],
+   "extra": []
+  },
+  "vegetablestew": {
+   "title": "Rau củ hầm",
+   "note": "Đây là một cách mới tuyệt vời để dùng rau mùa hè. Bạn có thể thêm các loại rau yêu thích khác như bông cải xanh, súp lơ trắng hoặc đậu que.",
+   "lines": [
+    "3 chén nước",
+    "1 viên nước dùng rau củ, ít muối",
+    "2 chén khoai tây trắng cắt thanh 2 inch",
+    "2 chén cà rốt, thái lát",
+    "4 chén bí mùa hè, cắt miếng vuông 1 inch",
+    "1 chén bí mùa hè, cắt thành bốn khúc",
+    "2 trái bắp tươi (1½ chén)",
+    "1 muỗng cà phê bột lá xạ hương (thyme)",
+    "2 tép tỏi, băm nhỏ",
+    "1 cọng hành lá, thái nhỏ",
+    "½ trái ớt đỏ cay nhỏ, thái nhỏ",
+    "1 chén hành, thái miếng to",
+    "1 chén cà chua, thái hạt lựu"
+   ],
+   "steps": [
+    "Đun nước và viên nước dùng trong nồi lớn cho sôi.",
+    "Cho khoai tây và cà rốt vào nước dùng, ninh 5 phút.",
+    "Tách hạt bắp khỏi lõi.",
+    "Cho các nguyên liệu còn lại vào, trừ cà chua, và nấu tiếp 15 phút ở lửa vừa.",
+    "Vớt bốn khúc bí ra và xay nhuyễn trong máy xay.",
+    "Cho hỗn hợp xay trở lại nồi và nấu thêm 10 phút.",
+    "Cho cà chua vào và nấu thêm 5 phút.",
+    "Nhấc khỏi bếp và để yên 10 phút cho món hầm sệt lại."
+   ],
+   "extra": [
+    {
+     "h": "Thành một bữa ăn",
+     "t": "Để món này thành một bữa ăn, dùng kèm salad rau xanh có xà lách (romaine) hoặc rau bina, dưa leo và các loại rau tươi khác. Dùng nước sốt nhẹ, như sốt dầu giấm, hoặc nước sốt ít béo hay không béo. Ăn với bánh mì hoặc bánh mì tròn nguyên cám."
+    }
+   ]
+  },
+  "macandcheese": {
+   "title": "Nui phô mai truyền thống",
+   "note": "Công thức này cho thấy bạn không phải bỏ món ăn yêu thích để ăn uống tốt cho tim. Đây là phiên bản ít béo hơn của một món kinh điển.",
+   "lines": [
+    "2 chén nui",
+    "½ chén hành thái nhỏ",
+    "½ chén sữa đặc không đường (evaporated) không béo",
+    "1 quả trứng vừa, đánh tan",
+    "¼ muỗng cà phê tiêu đen",
+    "1 ¼ chén (4 oz.) phô mai cheddar đậm vị, tự nhiên, ít béo, bào sợi"
+   ],
+   "steps": [
+    "Luộc nui theo hướng dẫn trên bao bì. (Không cho muối vào nước luộc.) Để ráo và để riêng.",
+    "Làm nóng lò ở 350 °F.",
+    "Đun nóng 1 muỗng cà phê dầu trong nồi.",
+    "Cho hành vào nồi và xào khoảng 3 phút.",
+    "Trong một tô khác, trộn nui, hành và các nguyên liệu còn lại. Trộn thật đều.",
+    "Cho hỗn hợp vào khay nướng.",
+    "Nướng 25 phút hoặc cho đến khi sủi bọt. Để yên 10 phút trước khi ăn."
+   ],
+   "extra": []
+  },
+  "caribbeancasserole": {
+   "title": "Cơm đậu kiểu Caribbean",
+   "note": "Món ăn mang hơi hướng nhiệt đới này được nêm gia vị nhẹ nhàng cho hương vị đậm đà.",
+   "lines": [
+    "1 củ hành vừa, thái nhỏ",
+    "½ quả ớt chuông xanh, rửa sạch và thái hạt lựu",
+    "1 muỗng canh dầu canola",
+    "1 lon (14½ ounce) cà chua hầm",
+    "1 lon (15½ ounce) đậu đen ít muối (hoặc loại đậu bạn thích)",
+    "1 muỗng cà phê lá oregano khô",
+    "½ muỗng cà phê bột tỏi",
+    "1½ chén gạo lứt nấu nhanh, chưa nấu"
+   ],
+   "steps": [
+    "Xào hành và ớt chuông xanh với dầu canola trong nồi lớn cho đến khi mềm. Không để vàng.",
+    "Cho cà chua và đậu (cả nước trong lon) vào, cùng với oregano và bột tỏi. Đun sôi.",
+    "Cho gạo vào khuấy đều và đậy nắp. Hạ lửa và ninh 5 phút. Nhấc khỏi bếp và để yên 5 phút trước khi ăn."
+   ],
+   "extra": []
+  },
+  "ovenfriedchicken": {
+   "title": "Gà chiên giòn bằng lò nướng",
+   "note": "Trẻ em sẽ rất thích món gà này, và nó tốt cho tim.",
+   "lines": [
+    "½ chén sữa không béo hoặc sữa bơ (buttermilk)",
+    "1 muỗng cà phê gia vị cho gia cầm",
+    "1 chén ngũ cốc bắp (corn flakes), nghiền vụn (hoặc vụn bánh mì)",
+    "1½ muỗng canh bột hành",
+    "1½ muỗng canh bột tỏi",
+    "2 muỗng cà phê tiêu đen",
+    "2 muỗng cà phê ớt cay khô, nghiền",
+    "1 muỗng cà phê bột gừng",
+    "8 miếng thịt gà, bỏ da (4 ức, 4 đùi tỏi)",
+    "¼ muỗng cà phê bột ớt paprika"
+   ],
+   "steps": [
+    "Làm nóng lò ở 350 °F.",
+    "Cho ½ muỗng cà phê gia vị gia cầm vào sữa.",
+    "Trộn ½ muỗng cà phê gia vị gia cầm còn lại và tất cả các gia vị khác, trừ paprika, với vụn corn flakes (hoặc vụn bánh mì), cho vào túi nhựa.",
+    "Nhúng gà vào sữa, lắc cho ráo, rồi nhanh tay lắc gà trong túi có gia vị và vụn.",
+    "Để tủ lạnh 1 giờ.",
+    "Lấy ra khỏi tủ lạnh và rắc nhẹ paprika cho có màu.",
+    "Đặt gà lên vỉ, đặt vỉ lên khay nướng đã lót giấy bạc. Xếp các miếng gà cách đều nhau.",
+    "Lớp vụn sẽ tạo thành “da” giòn. Không trở gà khi nướng.",
+    "Nướng 40 phút. Xoay khay và nướng thêm 30 đến 40 phút hoặc cho đến khi thịt dễ tách khỏi xương bằng nĩa. Nước thịt phải trong và thịt không còn màu hồng. Đùi tỏi có thể cần ít thời gian hơn ức."
+   ],
+   "extra": []
+  },
+  "ovenfriedfish": {
+   "title": "Cá chiên giòn bằng lò nướng",
+   "note": "Món ăn tốt cho tim này có thể làm với nhiều loại cá, để thưởng thức hết lần này đến lần khác.",
+   "lines": [
+    "2 pound phi lê cá",
+    "1 muỗng canh nước cốt chanh vàng",
+    "¼ chén sữa bơ (buttermilk) không béo hoặc 1%",
+    "2 giọt tương ớt",
+    "1 muỗng cà phê tỏi tươi, băm nhỏ",
+    "¼ muỗng cà phê tiêu trắng xay",
+    "¼ muỗng cà phê muối",
+    "¼ muỗng cà phê bột hành",
+    "½ chén corn flakes nghiền vụn, hoặc vụn bánh mì thường",
+    "1 muỗng canh dầu thực vật",
+    "1 trái chanh vàng tươi, cắt múi"
+   ],
+   "steps": [
+    "Làm nóng lò ở 475 °F.",
+    "Làm sạch và rửa cá. Lau phi lê bằng nước cốt chanh và thấm khô.",
+    "Trộn sữa, tương ớt và tỏi trong một tô.",
+    "Trộn tiêu trắng, muối và bột hành với corn flakes hoặc vụn bánh mì, rải ra đĩa.",
+    "Ngâm cá một chút trong hỗn hợp sữa. Lấy từng miếng cá ra, lăn cả hai mặt qua corn flakes hoặc vụn bánh mì đã nêm, để yên một chút cho lớp áo bám vào hai mặt cá. Làm tương tự với tất cả các miếng.",
+    "Xếp cá vào khay nướng nông đã thoa chút dầu.",
+    "Đặt khay ở tầng giữa lò. Nướng 20 phút, không trở.",
+    "Cắt thành sáu miếng. Ăn với chanh tươi."
+   ],
+   "extra": []
+  },
+  "curriedchicken": {
+   "title": "Cà ri gà ngon mút tay",
+   "note": "Cái tên đã nói lên tất cả: gừng và bột cà ri làm món này không thể cưỡng lại.",
+   "lines": [
+    "1½ muỗng cà phê bột cà ri",
+    "1 muỗng cà phê lá xạ hương (thyme)",
+    "1 cọng hành lá, thái nhỏ",
+    "1 muỗng canh ớt cay, thái nhỏ",
+    "½ muỗng cà phê bột ớt cayenne",
+    "1 muỗng cà phê tiêu đen xay",
+    "8 tép tỏi, đập dập",
+    "1 muỗng canh gừng bào",
+    "¾ muỗng cà phê muối",
+    "8 miếng thịt gà bỏ da (4 ức, 4 đùi tỏi)",
+    "1 muỗng canh dầu ô liu",
+    "1 chén nước",
+    "1 củ khoai tây trắng vừa, thái hạt lựu",
+    "1 củ hành lớn, thái nhỏ"
+   ],
+   "steps": [
+    "Rửa gà và thấm khô.",
+    "Trong một tô, trộn bột cà ri, lá xạ hương, hành lá, ớt cay, ớt cayenne, tiêu đen, tỏi, gừng và muối.",
+    "Đảo gà trong hỗn hợp gia vị.",
+    "Ướp ít nhất 2 giờ trong tủ lạnh.",
+    "Đun nóng dầu trong chảo ở lửa vừa. Cho gà vào và xào.",
+    "Cho nước vào và nấu gà ở lửa vừa 30 phút.",
+    "Cho khoai tây thái hạt lựu vào và nấu thêm 30 phút.",
+    "Cho hành vào và nấu thêm 15 phút hoặc cho đến khi thịt mềm. Ăn nóng."
+   ],
+   "extra": []
+  },
+  "poachedsalmon": {
+   "title": "Cá hồi luộc chần",
+   "note": "Món cà chua trộn làm tăng hương vị vừa đủ.",
+   "lines": [
+    "Cà chua trộn cay",
+    "2 quả cà chua vừa, thái nhỏ",
+    "2 muỗng canh hành vàng thái thật nhỏ",
+    "2 muỗng canh ngò tây tươi thái thật nhỏ",
+    "1 muỗng cà phê ớt đỏ khô xay vụn, hoặc tùy khẩu vị",
+    "¼ chén giấm rượu vang đỏ",
+    "2 muỗng canh dầu ô liu",
+    "tiêu đen xay, tùy khẩu vị",
+    "Cá hồi",
+    "4 khoanh cá hồi, mỗi khoanh 5 ounce",
+    "3 chén nước",
+    "4 hạt tiêu đen",
+    "1 trái chanh vàng, thái lát dày",
+    "3 nhánh ngò tây",
+    "1 củ hành nhỏ, thái lát dày",
+    "2 lá nguyệt quế"
+   ],
+   "steps": [
+    "Để làm món cà chua trộn, trộn tất cả nguyên liệu trong một tô và để riêng.",
+    "Dùng nồi đủ lớn để chứa bốn khoanh cá hồi, đun sôi nước rồi cho hạt tiêu, lát chanh, ngò tây, hành và lá nguyệt quế vào.",
+    "Hạ lửa cho sôi lăn tăn, đậy nắp và để các mùi vị hòa quyện 5 phút. Cho cá hồi vào và bảo đảm cá ngập nước. Thêm nước nếu cần.",
+    "Nấu không đậy nắp 10 đến 12 phút hoặc cho đến khi chỗ dày nhất của cá dễ tách thớ bằng nĩa (nhiệt độ bên trong tối thiểu 145 °F). Đừng bao giờ để nước sôi mạnh, cá sẽ bị dai.",
+    "Dọn mỗi khoanh cá hồi với cà chua trộn."
+   ],
+   "extra": []
+  },
+  "jerkchicken": {
+   "title": "Gà jerk kiểu Jamaica",
+   "note": "Gia vị và ớt trong món này sẽ đưa bạn đến một hương vị hoàn toàn mới.",
+   "lines": [
+    "½ muỗng cà phê bột quế",
+    "1½ muỗng cà phê bột tiêu Jamaica (allspice)",
+    "1½ muỗng cà phê tiêu đen xay",
+    "1 muỗng canh ớt cay thái nhỏ",
+    "1 muỗng cà phê ớt cay khô",
+    "2 muỗng cà phê lá oregano vò nát",
+    "2 muỗng cà phê lá xạ hương khô",
+    "½ muỗng cà phê muối",
+    "6 tép tỏi, băm thật nhỏ",
+    "1 chén hành, xay nhuyễn hoặc băm thật nhỏ",
+    "¼ chén giấm",
+    "3 muỗng canh đường nâu",
+    "8 miếng thịt gà bỏ da (4 ức, 4 đùi tỏi)"
+   ],
+   "steps": [
+    "Rửa gà và thấm khô.",
+    "Trong một tô lớn, trộn tất cả nguyên liệu trừ gà.",
+    "Xoa gia vị lên gà và ướp trong tủ lạnh 6 giờ hoặc lâu hơn.",
+    "Làm nóng lò ở 350°F. Xếp gà cách đều nhau trên khay nướng chống dính hoặc đã thoa chút dầu.",
+    "Đậy bằng giấy bạc và nướng 40 phút. Bỏ giấy bạc và nướng thêm 30 đến 40 phút hoặc cho đến khi thịt dễ tách khỏi xương bằng nĩa."
+   ],
+   "extra": []
+  },
+  "porkchops": {
+   "title": "Sườn heo nướng lò",
+   "note": "Bạn sẽ thật sự mê món sườn này: mềm ẩm và đậm vị nhờ lòng trắng trứng, sữa đặc không đường và hỗn hợp thảo mộc hấp dẫn.",
+   "lines": [
+    "6 miếng sườn cốt lết heo nạc phần giữa, dày ½ inch",
+    "1 lòng trắng trứng (hoặc lòng trắng trứng dạng lỏng)",
+    "1 chén sữa đặc không đường (evaporated) không béo",
+    "¾ chén vụn corn flakes",
+    "¼ chén vụn bánh mì",
+    "4 muỗng cà phê bột ớt paprika",
+    "2 muỗng cà phê lá oregano",
+    "¾ muỗng cà phê bột ớt",
+    "½ muỗng cà phê bột tỏi",
+    "½ muỗng cà phê tiêu đen xay",
+    "⅛ muỗng cà phê ớt cayenne",
+    "⅛ muỗng cà phê bột mù tạt",
+    "½ muỗng cà phê muối",
+    "dầu xịt nấu ăn"
+   ],
+   "steps": [
+    "Làm nóng lò ở 375 °F.",
+    "Lọc bỏ mỡ của sườn.",
+    "Đánh lòng trắng trứng với sữa. Ngâm sườn trong hỗn hợp sữa 5 phút, trở một lần.",
+    "Trong lúc đó, trộn vụn corn flakes, vụn bánh mì, gia vị và muối.",
+    "Xịt dầu vào khay nướng 13 x 9 inch.",
+    "Lấy sườn ra khỏi hỗn hợp sữa và lăn đều qua hỗn hợp vụn.",
+    "Xếp sườn vào khay và nướng ở 375 °F trong 20 phút. Trở sườn và nướng thêm 15 phút hoặc cho đến khi thịt heo chín hẳn (nhiệt độ bên trong tối thiểu 160 °F)."
+   ],
+   "extra": [
+    {
+     "h": "Ghi chú:",
+     "t": "Thử công thức này với thịt gà hoặc gà tây bỏ da, không xương, hoặc cá: chỉ nướng 20 phút."
+    }
+   ]
+  },
+  "jambalaya": {
+   "title": "Cơm jambalaya",
+   "note": "Đây là món jambalaya cả nhà đều thích. Món này đậm đà, nhiều rau và có thịt ít béo ngon miệng! Salad rau xanh là món ăn kèm hợp.",
+   "lines": [
+    "14 ounce xúc xích gà tây kielbasa ít béo",
+    "1 pound ức gà không xương, không da",
+    "dầu xịt chống dính",
+    "1 cọng cần tây vừa, thái nhỏ",
+    "2 củ hành nhỏ, thái nhỏ",
+    "4 tép tỏi, thái nhỏ",
+    "1 bó nhỏ hành lá, thái nhỏ",
+    "1 quả ớt chuông xanh vừa, thái nhỏ",
+    "1 lon (14½ ounce) cà chua thái hạt lựu không thêm muối",
+    "1½ chén gạo lứt chưa nấu",
+    "4 chén nước",
+    "2 viên nước dùng gà ít muối",
+    "1 lá nguyệt quế",
+    "1½ muỗng cà phê ớt cayenne",
+    "3 muỗng canh ngò tây, thái thật nhỏ"
+   ],
+   "steps": [
+    "Rửa gà và thấm khô. Cắt ức gà và xúc xích kielbasa thành miếng 1 inch.",
+    "Xịt dầu chống dính vào nồi vừa. Xào kielbasa và gà cho săn ở lửa vừa rồi lấy ra khỏi nồi.",
+    "Cho 6 nguyên liệu tiếp theo vào cùng nồi và nấu ở lửa vừa 10 phút.",
+    "Cho thịt đã nấu trở lại nồi; thêm gạo, nước, viên nước dùng, lá nguyệt quế và ớt cayenne. Đun sôi. Đậy nắp, hạ lửa và ninh khoảng 50 phút* hoặc cho đến khi cạn nước.",
+    "Cho ngò tây vào khuấy đều và ăn nóng."
+   ],
+   "extra": [
+    {
+     "h": "",
+     "t": "*Gạo lứt nấu nhanh sẽ chín nhanh hơn."
+    }
+   ]
+  },
+  "meatloaf": {
+   "title": "Thịt bò xay nướng khuôn thơm ngon",
+   "note": "Chán món thịt nướng khuôn cũ? Công thức này biến món bình thường thành món đặc biệt.",
+   "lines": [
+    "1 pound thịt bò xay thật nạc",
+    "½ chén cà chua cô đặc",
+    "4 chén hành thái nhỏ",
+    "4 chén ớt chuông xanh thái nhỏ",
+    "4 chén ớt chuông đỏ thái nhỏ",
+    "1 chén cà chua tươi, đã chần",
+    "2 muỗng cà phê mù tạt ít muối",
+    "4 muỗng cà phê tiêu đen xay",
+    "2 muỗng cà phê ớt cay thái nhỏ",
+    "2 tép tỏi, thái nhỏ",
+    "2 cọng hành lá, thái nhỏ",
+    "2 muỗng cà phê bột gừng",
+    "8 muỗng cà phê bột nhục đậu khấu",
+    "1 muỗng cà phê vỏ cam bào",
+    "2 muỗng cà phê lá xạ hương vò nát",
+    "4 chén vụn bánh mì"
+   ],
+   "steps": [
+    "Làm nóng lò ở 350 °F.",
+    "Trộn tất cả nguyên liệu với nhau.",
+    "Cho vào khuôn bánh mì (tốt nhất là có vỉ chắt mỡ) và nướng có đậy 50 phút.",
+    "Mở nắp khuôn và nướng tiếp 12 phút.",
+    "Cắt thành sáu lát đều nhau và dọn ra ăn."
+   ],
+   "extra": []
+  },
+  "bbqchicken": {
+   "title": "Gà nướng sốt barbecue cay kiểu miền Nam",
+   "note": "Hãy để mình say mê loại sốt barbecue ngọt kiểu miền Nam này.",
+   "lines": [
+    "5 muỗng canh cà chua cô đặc",
+    "1 muỗng cà phê tương cà (ketchup)",
+    "2 muỗng cà phê mật ong",
+    "1 muỗng cà phê mật mía",
+    "1 muỗng cà phê sốt Worcestershire",
+    "4 muỗng cà phê giấm trắng",
+    "¾ muỗng cà phê ớt cayenne",
+    "⅛ muỗng cà phê tiêu đen",
+    "¼ muỗng cà phê bột hành",
+    "2 tép tỏi, băm nhỏ",
+    "⅛ muỗng cà phê gừng bào",
+    "8 miếng thịt gà bỏ da (4 ức, 4 đùi tỏi)"
+   ],
+   "steps": [
+    "Cho tất cả nguyên liệu trừ gà vào nồi nhỏ. Ninh 15 phút.",
+    "Rửa gà và thấm khô. Đặt gà lên đĩa lớn và phết một nửa hỗn hợp sốt.",
+    "Bọc màng bọc thực phẩm và ướp trong tủ lạnh 1 giờ.",
+    "Xếp gà lên khay nướng lót giấy bạc và nướng lửa trên (broil) mỗi mặt 10 phút để giữ nước thịt.",
+    "Lấy ra khỏi lò và phết phần sốt còn lại lên gà. Đậy bằng giấy bạc và nướng ở 350 °F trong 30 phút."
+   ],
+   "extra": []
+  }
+ },
+ "ingredients": {
+  "chicken breast": "ức gà",
+  "chicken drumsticks": "đùi gà tỏi",
+  "beef": "thịt bò",
+  "ground turkey": "thịt gà tây xay",
+  "turkey kielbasa": "xúc xích gà tây kielbasa",
+  "fish": "cá",
+  "salmon": "cá hồi",
+  "tomatoes": "cà chua",
+  "tomato sauce": "sốt cà chua",
+  "bell peppers": "ớt chuông",
+  "celery": "cần tây",
+  "brown rice": "gạo lứt",
+  "quinoa": "hạt diêm mạch",
+  "masa harina": "bột bắp masa harina",
+  "hominy": "hạt bắp hominy",
+  "evaporated milk": "sữa đặc không đường",
+  "buttermilk": "sữa bơ",
+  "cheese": "phô mai",
+  "mozzarella": "phô mai mozzarella",
+  "sour cream": "kem chua",
+  "black beans": "đậu đen",
+  "green beans": "đậu que",
+  "peas": "đậu Hà Lan",
+  "corn": "bắp",
+  "corn on the cob": "bắp trái",
+  "summer squash": "bí mùa hè",
+  "plantains": "chuối plantain",
+  "avocado": "bơ",
+  "raisins": "nho khô",
+  "cornflakes": "ngũ cốc bắp",
+  "bread crumbs": "vụn bánh mì"
+ }
+}
