@@ -121,3 +121,10 @@ test('text bodies list every item and end with the link; hrefs are encoded', () 
   assert.ok(smsHref('a & b').startsWith('sms:?&body=a%20%26%20b'));
   assert.equal(mailHref('S', 'B'), 'mailto:?subject=S&body=B');
 });
+
+test('ticks on week 2+ lists survive a plan link', async () => {
+  const { packPlan, unpackPlan } = await import('../public/keep.js');
+  const a = { budget: 100, days: 14, people: 2, leftover: 'sometimes', store: 'full', cuisine: [], avoid: [], have: [], list: 'full' };
+  const back = unpackPlan(packPlan(a, { checked: ['rice', 'rice.2', 'bad.item.3'] }));
+  assert.deepEqual(back.checked, ['rice', 'rice.2']);
+});

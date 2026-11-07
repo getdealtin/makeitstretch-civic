@@ -31,6 +31,23 @@ export const LIGHT = { onions: 0.5, garlic: 0.25, oil: 0.5, oliveoil: 0.5, butte
 const NOT_A_VEGETABLE_SERVING = new Set(['onions', 'garlic']);
 /** Different recipes per meal slot across the plan: enough variety, a list that stays short. */
 export const MENU_SIZE = { breakfast: 3, lunch: 4, dinner: 5 };
+/** The "shorter list" (owner decision Nov 7): fewer different meals, so fewer things to buy. */
+export const SHORT_MENU = { breakfast: 2, lunch: 2, dinner: 3 };
+/**
+ * Variety cap (owner decision Nov 7): no one ingredient in more than about 1 in 4 cooked meals, so
+ * a cheap ingredient (canned tomatoes) can't take over the menu. Staples and seasonings are exempt.
+ */
+export const CAP_SHARE = 0.25;
+export const CAP_EXEMPT = new Set(['rice', 'drybeans', 'blackbeans', 'kidneybean', 'onions', 'oil', 'oliveoil', 'garlic']);
+/** How far a set of meals goes over the cap: 0 = within it. */
+export function capExcess(assigned) {
+  const limit = Math.max(1, Math.ceil(assigned.length * CAP_SHARE));
+  const count = {};
+  for (const x of assigned) for (const u of x.rec.uses) if (!CAP_EXEMPT.has(u.id)) count[u.id] = (count[u.id] || 0) + 1;
+  let excess = 0, worst = null;
+  for (const [id, n] of Object.entries(count)) if (n - limit > excess) { excess = n - limit; worst = id; }
+  return { excess, worst };
+}
 const BREAKFASTY = ['oatmeal', 'oats', 'porridge', 'scramble', 'egg', 'banana', 'potato breakfast'];
 const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const SLOTS = ['breakfast', 'lunch', 'dinner'];
@@ -190,11 +207,30 @@ export function planMeals(input, prices, recipes) {
       const idx = (occ.slice(0, i).filter(x => x.slot === o.slot).length + SLOTS.indexOf(o.slot)) % list.length;
       return { ...o, rec: list[idx] };
     });
+    // Variety cap: swap out the menu meal that uses the over-used ingredient most, for the most
+    // filling-per-dollar meal in that slot that doesn't use it. Stops when nothing better exists.
+    for (let guard = 0; guard < 30; guard++) {
+      const { excess, worst } = capExcess(assign(menu));
+      if (!excess) break;
+      let done = false;
+      for (const sl of SLOTS) {
+        const i = menu[sl].findIndex(r => r.uses.some(u => u.id === worst));
+        if (i < 0) continue;
+        const inMenu = new Set(SLOTS.flatMap(x => menu[x].map(r => r.id)));
+        const cand = pools[sl].find(c => !inMenu.has(c.id) && !c.uses.some(u => u.id === worst) &&
+          !SLOTS.some(x => menu[x].some(m => m.sig === c.sig)));
+        if (!cand) continue;
+        const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? cand : r)) };
+        if (capExcess(assign(trial)).excess < excess) { menu[sl] = trial[sl]; done = true; break; }
+      }
+      if (!done) break;
+    }
     const total = m => topUp(kitchen, assign(m), { people, days: d, budget });
     return { occ, isLeftover, menu, assign, total, base: packages(kitchen, assign(menu)).cost };
   };
   // Tight budget: fewer different meals first (fewer packages to buy), then fewer days.
-  const SMALLER = [MENU_SIZE, { breakfast: 2, lunch: 2, dinner: 3 }, { breakfast: 1, lunch: 2, dinner: 2 }];
+  const first = input.menu === 'short' ? SHORT_MENU : MENU_SIZE;
+  const SMALLER = [first, ...[SHORT_MENU, { breakfast: 1, lunch: 2, dinner: 2 }].filter(x => x !== first)];
   let d = days, plan;
   const fit = dd => { for (const size of SMALLER) { const p = attempt(dd, size); if (p.base <= budget) return p; } return attempt(dd, SMALLER.at(-1)); };
   plan = fit(d);
@@ -217,6 +253,7 @@ export function planMeals(input, prices, recipes) {
         SLOTS.flatMap(x => menu[x]).filter(r => r.mainProtein === cand.mainProtein).length >= (LEGUMES.has(cand.mainProtein) ? 3 : 2)) continue;
       if ((cand.cost - menu[sl][i].cost) * people * d * 2 > budget - current.cost + 1) continue; // can't fit
       const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? cand : r)) };
+      if (capExcess(plan.assign(trial)).excess > capExcess(plan.assign(menu)).excess) continue;
       const t = plan.total(trial);
       if (t.cost > budget || t.kcal < Math.min(current.kcal, FLOOR_KCAL * people * d)) continue;
       const gain = (mealQuality(trial) - q0) / Math.max(t.cost - current.cost, 0.25);
@@ -248,6 +285,7 @@ export function planMeals(input, prices, recipes) {
     const others = pools[sl].filter(c => c.id !== r.id).sort((a, b) => Number(inMenu.has(a.id)) - Number(inMenu.has(b.id)) || b.quality - a.quality || a.cost - b.cost);
     for (const c of others) {
       const swapped = assigned.map(x => (x.slot === sl && x.rec.id === r.id ? { ...x, rec: c } : x));
+      if (capExcess(swapped).excess > capExcess(assigned).excess) continue;
       if (topUp(kitchen, swapped, { people, days: d, budget }, balance).cost <= budget) { altFor[`${sl}:${r.id}`] = c; break; }
     }
   }
@@ -298,12 +336,33 @@ export function rebuildList(state, swaps = []) {
     return { ...f, qty, servings: +servingsUsed.toFixed(2), subtotal: round2(f.price * qty), role: mealIds.has(id) ? 'meal' : balance[id] || id === t.fruit ? 'balance' : sideIds.has(id) ? 'side' : 'meal' };
   });
   const have = [...kitchen.foods.values()].filter(f => f.have && mealIds.has(f.id)).map(f => f.id);
+  // One list per week (owner decision Nov 7): cumulative packages through each week, minus what
+  // earlier weeks already bought, so a bottle of oil is bought once and fresh food when it's eaten.
+  const nWeeks = Math.ceil(coveredDays / 7);
+  const byWeek = [];
+  if (nWeeks > 1) {
+    const cumQty = upTo => {
+      const need = {};
+      for (const x of assigned) if (x.day < upTo) for (const u of x.rec.uses) need[u.id] = (need[u.id] || 0) + u.amt * x.servings;
+      const share = Math.min(upTo, coveredDays) / coveredDays;
+      for (const [id, n] of Object.entries(t.extra)) need[id] = (need[id] || 0) + n * share;
+      return Object.fromEntries(Object.entries(need).map(([id, n]) => [id, Math.ceil(n / kitchen.foods.get(id).srv - 1e-9)]));
+    };
+    let prev = {};
+    for (let w = 0; w < nWeeks; w++) {
+      const now = cumQty(w === nWeeks - 1 ? Infinity : (w + 1) * 7);
+      const items = cart.map(i => ({ ...i, qty: (now[i.id] || 0) - (prev[i.id] || 0) })).filter(i => i.qty > 0)
+        .map(i => ({ ...i, subtotal: round2(i.price * i.qty) }));
+      byWeek.push({ week: w + 1, cart: items, spent: round2(items.reduce((a, i) => a + i.subtotal, 0)) });
+      prev = now;
+    }
+  }
   const spent = round2(pk.cost);
   const remaining = round2(budget - spent);
   const totalCals = Math.round(t.kcal);
   const cppd = Math.round(totalCals / input.people / input.days);
   return {
-    cart, remaining, totalCals, spent, have, coveredDays, overBudget: spent > budget ? round2(spent - budget) : 0,
+    cart, byWeek, remaining, totalCals, spent, have, coveredDays, overBudget: spent > budget ? round2(spent - budget) : 0,
     pppd: round2(spent / input.days / input.people), ppmeal: round2(spent / input.days / input.people / 3),
     cppd, calPct: Math.round((cppd / FLOOR_KCAL) * 100),
   };

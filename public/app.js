@@ -83,7 +83,7 @@ const regionFor = zip => (city?.price_region ? null : zipToInfo(zip || '')?.regi
 const fresh = () => ({
   budget: null, days: null, people: null, zip: null,
   leftover: 'sometimes', store: 'full', cuisine: [], avoid: [], have: [],
-  list: 'short', // long lists start shorter; 'full' after "Show the full list"
+  list: 'full', // plans open on full variety; "Show a shorter list" repeats fewer different meals
 });
 let answers = fresh();
 let box = { items: [], avoid: [], other: [] };
@@ -104,6 +104,7 @@ const engineInput = a => ({
   budget: a.budget, days: a.days || 7, people: a.people || 1,
   cuisine: a.cuisine, avoid: a.avoid, have: a.have,
   stores: a.store && a.store !== 'full' ? [a.store] : [], leftover: a.leftover,
+  menu: a.list === 'short' ? 'short' : 'full',
 });
 
 /** Run the meal planner in the browser: meals first, then the list from those meals (engine/meals.js). */
@@ -111,7 +112,11 @@ async function computePlan(a) {
   const [recipes, priced] = await Promise.all([getRecipes(), getPrices(regionFor(a.zip))]);
   const input = engineInput(a);
   const r = planMeals(input, priced.prices, recipes);
-  return { input, result: r, weeks: r.weeks, shopping: groupShoppingList(r.cart), priced, state: r.state };
+  const other = planMeals({ ...input, menu: input.menu === 'short' ? 'full' : 'short' }, priced.prices, recipes);
+  const [full, short] = input.menu === 'short' ? [other, r] : [r, other];
+  const listInfo = short.state && short.cart.length < full.cart.length
+    ? { mode: input.menu, short: short.cart.length, full: full.cart.length } : null;
+  return { input, result: r, weeks: r.weeks, shopping: groupShoppingList(r.cart), priced, state: r.state, listInfo };
 }
 
 // ── Boot ────────────────────────────────────────────────────────
@@ -789,20 +794,25 @@ function renderResults(plan, restore = {}) {
   const recipes = new Map();
   weeks.flat().forEach(d => { if (!d.leftover && !d.uncovered) ['breakfast', 'lunch', 'dinner'].forEach(sl => d[sl].forEach(r => recipes.set(String(r.id), r))); });
 
-  const listHtml = () => (s.have?.length ? `<p class="have-note">${esc(t('have_note', { items: s.have.map(fName).join(t('list_sep')) }))}</p>` : '') + shopping.map(g => `
+  const rowsHtml = (groups, wk) => groups.map(g => `
     <div class="cat-head"><h3 class="shop-cat">${esc(t('cat_' + g.cat))}</h3>
       <span class="cat-sub">$${money(g.items.reduce((a, i) => a + i.subtotal, 0))}</span></div>
     <ul class="rows">${g.items.map(i => {
-      const name = fName(i.id);
+      const name = fName(i.id), key = wk > 1 ? `${i.id}.${wk}` : i.id, dom = key.replace('.', '-');
       return `<li class="row">
-        <input type="checkbox" id="ck-${i.id}" data-item="${i.id}" ${checked.has(i.id) ? 'checked' : ''}>
-        <label for="ck-${i.id}">${esc(name)} <span class="qty">×${i.qty}</span></label>
-        <button type="button" class="info" aria-expanded="false" aria-controls="more-${i.id}"
+        <input type="checkbox" id="ck-${dom}" data-item="${key}" ${checked.has(key) ? 'checked' : ''}>
+        <label for="ck-${dom}">${esc(name)} <span class="qty">×${i.qty}</span></label>
+        <button type="button" class="info" aria-expanded="false" aria-controls="more-${dom}"
           aria-label="${esc(t('more_about', { item: name }))}">ⓘ</button>
         <span class="price">$${money(i.subtotal)}</span>
-        <div class="more" id="more-${i.id}" hidden><span class="size">${esc(fFull(i.id, i.name))}</span> ${esc(fNote(i.id, i.note))}${i.tip ? `<div class="shop-tip">${esc(fTip(i.tip))}</div>` : ''}</div>
+        <div class="more" id="more-${dom}" hidden><span class="size">${esc(fFull(i.id, i.name))}</span> ${esc(fNote(i.id, i.note))}${i.tip ? `<div class="shop-tip">${esc(fTip(i.tip))}</div>` : ''}</div>
       </li>`;
     }).join('')}</ul>`).join('');
+  const listHtml = () => (s.have?.length ? `<p class="have-note">${esc(t('have_note', { items: s.have.map(fName).join(t('list_sep')) }))}</p>` : '') +
+    (s.byWeek?.length > 1
+      ? s.byWeek.map(w => `<div class="week-list"><div class="week-list-head"><h3>${esc(t('list_week', { n: w.week }))}</h3><span>$${money(w.spent)}</span></div>
+          ${rowsHtml(groupShoppingList(w.cart), w.week)}</div>`).join('')
+      : rowsHtml(shopping, 1));
 
   const weekPanel = (week, wi) => `
     <div class="week-panel" data-week="${wi}" ${wi === 0 ? '' : 'hidden'}>
@@ -847,7 +857,11 @@ function renderResults(plan, restore = {}) {
           <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
         </div>`,
       panels: [
-        { id: 'list', html: `<section class="section" id="list" aria-labelledby="h-list">
+        { id: 'list', html: `${plan.listInfo ? `<div class="list-nudge no-print">
+            <p>${esc(plan.listInfo.mode === 'short' ? t('list_short_note', { n: plan.listInfo.short, total: plan.listInfo.full }) : t('list_full_note', { n: plan.listInfo.full }))}</p>
+            <button type="button" class="btn btn-ghost btn-sm" id="list-switch">${esc(t(plan.listInfo.mode === 'short' ? 'list_show_full' : 'list_show_short'))}</button>
+          </div>` : ''}
+          <section class="section" id="list" aria-labelledby="h-list">
             <div class="section-head"><h2 id="h-list">${esc(t('sec_list'))}</h2>
               <span class="head-hint no-print">${esc(t('tips_hint'))}</span></div>
             <p class="list-intro">${esc(t('list_from_meals'))}</p>
@@ -901,7 +915,9 @@ function renderResults(plan, restore = {}) {
     hash: currentHash,
     text: full => planText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
-      shopping: shopping.map(g => ({ items: g.items.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) })),
+      shopping: s.byWeek?.length > 1
+        ? s.byWeek.map(w => ({ head: `${t('list_week', { n: w.week })} ($${money(w.spent)})`, items: w.cart.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) }))
+        : shopping.map(g => ({ items: g.items.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) })),
       weeks, choice, total: s.spent, url: linkFor(currentHash()), full, titleOf: rTitle, dayOf,
       labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), uncovered: t('day_uncovered'), link: t('full_plan_link') },
     }),
@@ -1009,6 +1025,16 @@ function renderResults(plan, restore = {}) {
     try { await img.decode(); } catch { /* print anyway */ }
     window.print();
   };
+  app.querySelector('#list-switch')?.addEventListener('click', () => {
+    const to = plan.listInfo.mode === 'short' ? 'full' : 'short';
+    track('list_switched', { to, short: plan.listInfo.short, full: plan.listInfo.full });
+    answers.list = to;
+    showResults({ switched: true }); // a different menu: swaps and ticks start fresh
+  });
+  if (restore.switched) {
+    app.querySelector('#announce').textContent = t('list_meals_updated');
+    app.querySelector('#list-switch')?.focus();
+  }
   app.querySelector('#print').onclick = doPrint;
   app.querySelector('#packet-print')?.addEventListener('click', doPrint);
   app.querySelector('#packet-again')?.addEventListener('click', renderPacket);

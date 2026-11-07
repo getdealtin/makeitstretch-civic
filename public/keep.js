@@ -57,7 +57,7 @@ export function unpackPlan(o) {
       list: o.f === 's' ? 'short' : 'full',
     },
     swaps: (Array.isArray(o.w) ? o.w : []).filter(k => /^\d{1,2}-\d-(breakfast|lunch|dinner)$/.test(k)),
-    checked: (Array.isArray(o.k) ? o.k : []).filter(k => /^[a-z]{2,20}$/.test(k)),
+    checked: (Array.isArray(o.k) ? o.k : []).filter(k => /^[a-z]{2,20}(\.\d{1,2})?$/.test(k)), // week 2+ items: id.week
   };
 }
 
@@ -88,7 +88,10 @@ const money = n => Number(n).toFixed(2);
 /** Shopping list (+ week 1 meals for email) as plain text. */
 export function planText({ title, shopping, weeks, choice = {}, total, url, labels, full = false, titleOf = r => r.title, dayOf = d => d }) {
   const lines = [title, '', `${labels.list} ($${money(total)})`];
-  for (const g of shopping) for (const i of g.items) lines.push(`☐ ${i.label} ×${i.qty}  $${money(i.subtotal)}`);
+  for (const g of shopping) {
+    if (g.head) lines.push('', g.head);
+    for (const i of g.items) lines.push(`☐ ${i.label} ×${i.qty}  $${money(i.subtotal)}`);
+  }
   if (full && weeks.length) {
     lines.push('', labels.week1);
     weeks[0].forEach((d, di) => {

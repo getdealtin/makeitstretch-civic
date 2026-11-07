@@ -103,3 +103,33 @@ test('same inputs, same plan', () => {
   assert.deepEqual(a.cart.map(i => [i.id, i.qty]), b.cart.map(i => [i.id, i.qty]));
   assert.deepEqual(a.weeks, b.weeks);
 });
+
+test('variety cap: no ingredient but staples and seasonings in more than about 1 in 4 meals', async () => {
+  const { capExcess, CAP_EXEMPT } = await import('../engine/meals.js');
+  for (const c of GRID.filter(c => c.budget >= 60)) {
+    const r = run(c);
+    assert.equal(capExcess(r.state.assigned).excess, 0, JSON.stringify(c));
+  }
+  for (const id of ['rice', 'drybeans', 'onions', 'oil', 'garlic']) assert.ok(CAP_EXEMPT.has(id), id);
+  // The reported case: 17 cans of tomatoes for a family of 5 over two weeks.
+  const fam = run({ budget: 500, days: 14, people: 5, avoid: ['halal'] });
+  assert.ok(fam.cart.find(i => i.id === 'cannedtomatoes').qty <= 8);
+});
+
+test('plans over a week get one list per week that adds up to the whole plan', () => {
+  for (const c of [{ budget: 500, days: 14, people: 5 }, { budget: 150, days: 14, people: 3 }, { budget: 300, days: 21, people: 4 }]) {
+    const r = run(c);
+    assert.equal(r.byWeek.length, Math.ceil(r.coveredDays / 7));
+    for (const i of r.cart) assert.equal(r.byWeek.reduce((a, w) => a + (w.cart.find(x => x.id === i.id)?.qty || 0), 0), i.qty, `${JSON.stringify(c)} ${i.id}`);
+    assert.equal(+r.byWeek.reduce((a, w) => a + w.spent, 0).toFixed(2), r.spent);
+  }
+  assert.equal(run({ budget: 60, days: 7, people: 2 }).byWeek.length, 0, 'a one-week plan has one list');
+});
+
+test('the shorter list repeats fewer different meals', () => {
+  const distinct = r => new Set(r.state.assigned.map(x => x.rec.id)).size;
+  const c = { budget: 120, days: 14, people: 3 };
+  const full = run(c), short = run({ ...c, menu: 'short' });
+  assert.ok(distinct(short) < distinct(full));
+  assert.ok(short.cart.length <= full.cart.length);
+});

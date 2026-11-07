@@ -79,7 +79,14 @@ Outside production, `?city=austin` or `?city=national` on any URL switches the c
    vegetables, fruit; no more than 2 menu meals on the same meat, fish or eggs) and on food groups (a vegetable
    side, a second fruit, a cup of milk). Money still left is shown as left over, not spent on more of one food.
 4. **Tight budgets.** Fewer different meals first, then fewer days; the plan says how many days it covers.
-5. **Agency.** Each meal has one alternative that keeps the plan within budget. Swapping rebuilds the list
+5. **Variety cap (owner decision Nov 7).** No ingredient in more than about 1 in 4 cooked meals (rice, beans,
+   onions, oil and garlic exempt). On the very tightest budgets, where the plan falls back to one breakfast,
+   the cap can't always be met; the planner gets as close as it can.
+6. **One list per week (owner decision Nov 7)** for plans longer than a week: each week buys what its meals
+   need beyond what's left from earlier weeks (a bottle of oil once; fresh food when it's eaten).
+7. **Shorter list (owner decision Nov 7).** Plans open on full variety; "Show a shorter list" repeats fewer
+   different meals (2 breakfasts, 2 lunches, 3 dinners). Offered only when it means fewer items.
+8. **Agency.** Each meal has one alternative that keeps the plan within budget. Swapping rebuilds the list
    (`rebuildList`); if many swaps together cost more, the extras give way first, then the plan says by how much.
 
 Diets live in `engine/diets.js` and apply to both the plan and the food box: pork (also left out by halal and
