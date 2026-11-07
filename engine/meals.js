@@ -363,6 +363,9 @@ export function rebuildList(state, swaps = []) {
   const cppd = Math.round(totalCals / input.people / input.days);
   return {
     cart, byWeek, remaining, totalCals, spent, have, coveredDays, overBudget: spent > budget ? round2(spent - budget) : 0,
+    // Owner decision Nov 7: on the tightest budgets the plan recommends what it can and says some
+    // foods repeat often, pointing to free food (the variety cap couldn't be met within the budget).
+    repeats: capExcess(assigned).excess > 0,
     pppd: round2(spent / input.days / input.people), ppmeal: round2(spent / input.days / input.people / 3),
     cppd, calPct: Math.round((cppd / FLOOR_KCAL) * 100),
   };

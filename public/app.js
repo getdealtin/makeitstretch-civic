@@ -841,6 +841,8 @@ function renderResults(plan, restore = {}) {
         <p class="sum-big"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}</p>
         <p class="sum-facts" id="sum-facts">${sumFacts()}</p>
         ${s.coveredDays < input.days ? `<p class="cover-note">${esc(t('cover_note', { n: s.coveredDays, days: input.days }))}</p>` : ''}
+        ${s.repeats ? `<p class="cover-note">${esc(t('repeat_note'))}</p>` : ''}
+        ${(s.coveredDays < input.days || s.repeats || s.calPct < 80) && residents().length ? `<p class="no-print"><button type="button" class="btn btn-primary btn-sm" data-open-panel="help">${esc(t('find_free_food'))}</button></p>` : ''}
         <p class="cover-note" id="over-note" role="status"${s.overBudget > 0 ? '' : ' hidden'}>${s.overBudget > 0 ? esc(t('over_note', { amount: money(s.overBudget) })) : ''}</p>
         ${dietNotes.length ? `<ul class="diet-notes">${dietNotes.map(k => `<li>${esc(t(k))}</li>`).join('')}</ul>` : ''}
       </section>`,

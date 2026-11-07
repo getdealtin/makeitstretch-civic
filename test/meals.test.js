@@ -133,3 +133,10 @@ test('the shorter list repeats fewer different meals', () => {
   assert.ok(distinct(short) < distinct(full));
   assert.ok(short.cart.length <= full.cart.length);
 });
+
+test('tightest budgets: the plan still recommends meals and says when foods repeat', () => {
+  const r = run({ budget: 60, days: 14, people: 5 });
+  assert.ok(r.state && r.cart.length > 0);
+  assert.equal(r.repeats, true);
+  assert.equal(run({ budget: 120, days: 7, people: 2 }).repeats, false);
+});

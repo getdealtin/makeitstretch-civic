@@ -293,6 +293,8 @@ export default {
   list_meals_updated: "Sus comidas y su lista de compras están actualizadas.",
   day_uncovered: "El presupuesto no alcanza para este día. Vea comida gratis y SNAP en Ayuda.",
   cover_note: "Su presupuesto alcanza para las comidas de {n} de {days} días. Para los otros días, vea comida gratis y SNAP en Ayuda.",
+  repeat_note: "Con este presupuesto, algunos alimentos se repiten en muchas comidas. La comida gratis de un banco de comida puede dar más variedad y hacer rendir su dinero.",
+  find_free_food: "Encontrar comida gratis cerca",
   diet_note_low_sodium: "Bajo en sodio: dejamos fuera la salsa de soya, la sopa y el chili en lata, el caldo, la salsa y la salsa picante. Use poca o nada de sal, enjuague los frijoles de lata y busque latas “sin sal agregada”.",
   diet_note_diabetic: "Menos azúcar: dejamos fuera el mango seco y los duraznos en lata (que suelen venir en almíbar). Este no es un plan de comidas médico. Pregunte a su doctor o a un dietista cuánto arroz, pasta, pan y otros almidones le conviene.",
   diet_note_kosher: "Kosher: no hay cerdo, y ninguna comida mezcla carne con lácteos. Busque el símbolo kosher en los paquetes; nosotros no podemos verificarlo.",

@@ -316,6 +316,8 @@ export default {
   list_meals_updated: "Your meals and shopping list are updated.",
   day_uncovered: "Not covered by this budget. See free food and SNAP under Help.",
   cover_note: "Your budget covers meals for {n} of {days} days. For the other days, see free food and SNAP under Help.",
+  repeat_note: "With this budget, some foods show up in a lot of meals. Free food from a food bank can add variety and stretch your money.",
+  find_free_food: "Find free food near you",
   diet_note_low_sodium: "Low sodium: we left out soy sauce, canned soup and chili, broth, salsa and hot sauce. Use little or no salt, rinse canned beans, and look for “no salt added” cans.",
   diet_note_diabetic: "Less sugar: we left out dried mango and canned peaches (often packed in syrup). This isn’t a medical meal plan. Ask your doctor or a dietitian how much rice, pasta, bread and other starch is right for you.",
   diet_note_kosher: "Kosher: no pork, and no meal mixes meat with dairy. Look for a kosher symbol on packages; we can’t check that for you.",
