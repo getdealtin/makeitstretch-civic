@@ -280,6 +280,7 @@ export default {
   sites_zip_go: 'Ver los más cercanos',
   sites_zip_err: 'Escriba un código postal de 5 dígitos.',
   sites_sorted: 'Los más cercanos a {zip} primero.',
+  sites_none_near: "Todavía no hay lugares de comida a menos de 10 millas de {zip}. El buscador del banco de comida de abajo muestra más.",
   sites_zip_change: 'Cambiar',
   avoid_halal: "Halal",
   avoid_kosher: "Kosher",

@@ -72,7 +72,7 @@ test('API: root, paging, filters, single records', async () => {
   assert.equal(all.total_items, total); assert.equal(all.page_number, 1); assert.equal(all.empty, false);
   const pantries = await get('/api/hsds/services?taxonomy_term_id=1130');
   assert.deepEqual(pantries.contents.map(s => s.name).sort(), [...austin.resources.filter(r => (r.taxonomy || []).includes('1130')).map(r => r.name), 'Test Pantry'].sort());
-  assert.ok(pantries.contents.length >= 7, 'the Food Bank finder, five local pantries and the test site');
+  assert.ok(pantries.contents.length >= 5, 'the Food Bank finder, three grassroots pantries and the test site');
   const one = await get(`/api/hsds/services/${provider.id}`);
   assert.equal(one.organization.name, 'Test Pantry'); assert.equal(one.service_at_locations[0].location.location_type, 'physical');
   const lastPage = Math.ceil(total / 5);

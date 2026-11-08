@@ -44,7 +44,7 @@ test('cross-site writes to the admin API are refused', async () => {
 test('public sign-up goes to review, never straight to the site', async () => {
   const r = await post('/api/providers/submit?city=austin', site());
   assert.deepEqual(await r.json(), { ok: true });
-  assert.deepEqual(await (await get('/api/providers?city=austin')).json(), [], 'not public before approval');
+  assert.deepEqual((await (await get('/api/providers?city=austin&zip=78702')).json()).filter(p => !p.resource_id), [], 'not public before approval');
   const s = await (await get('/api/admin/summary?city=austin')).json();
   assert.equal(s.pending.length, 1);
   assert.equal(s.pending[0].source, 'public');
@@ -70,9 +70,10 @@ test('invite link: shows the org name, submission is tagged and still needs revi
 test('approve → public listing without private fields, nearest zip first', async () => {
   let s = await (await get('/api/admin/summary?city=austin')).json();
   for (const p of s.pending) assert.equal((await post(`/api/admin/providers/${p.id}`, { action: 'approve' })).status, 200);
-  const pub = await (await get('/api/providers?city=austin&zip=78721')).json();
+  const all = await (await get('/api/providers?city=austin&zip=78721')).json();
+  const pub = all.filter(p => !p.resource_id); // the city's curated grassroots sites come along too
   assert.equal(pub.length, 2);
-  assert.equal(pub[0].zip, '78721', 'same zip first');
+  assert.equal(all[0].zip, '78721', 'same zip first');
   for (const p of pub) {
     for (const k of ['contact_name', 'contact_email', 'contact_phone', 'admin_note', 'invite_id', 'status', 'city_id']) assert.ok(!(k in p), k);
     assert.ok(p.confirmed_at);
@@ -88,11 +89,11 @@ test('admin can edit, hide and restore; hidden listings leave the site', async (
   const e = await (await post(`/api/admin/providers/${id}`, { action: 'edit', fields: { hours: 'Sat 9–noon', name: '' } })).json();
   assert.equal(e.ok, false, 'cannot blank the name');
   await post(`/api/admin/providers/${id}`, { action: 'edit', fields: { hours: 'Sat 9–noon' } });
-  assert.ok((await (await get('/api/providers?city=austin')).json()).some(p => p.hours === 'Sat 9–noon'));
+  assert.ok((await (await get('/api/providers?city=austin&zip=78702')).json()).some(p => p.hours === 'Sat 9–noon'));
   await post(`/api/admin/providers/${id}`, { action: 'hide' });
-  assert.ok(!(await (await get('/api/providers?city=austin')).json()).some(p => p.id === id));
+  assert.ok(!(await (await get('/api/providers?city=austin&zip=78702')).json()).some(p => p.id === id));
   await post(`/api/admin/providers/${id}`, { action: 'restore' });
-  assert.ok((await (await get('/api/providers?city=austin')).json()).some(p => p.id === id));
+  assert.ok((await (await get('/api/providers?city=austin&zip=78702')).json()).some(p => p.id === id));
 });
 
 test('6-month re-confirm: overdue after ~182 days, cleared by "confirm"', () => {
@@ -142,4 +143,16 @@ test('Supabase adapter sends the secret key and the right PostgREST calls', asyn
   assert.equal(calls[0].opts.headers.apikey, 'sb_secret_TEST');
   assert.equal(calls[1].opts.method, 'PATCH');
   assert.equal(calls[1].opts.headers.Prefer, 'return=representation');
+});
+
+// Owner decision Nov 8: only sites near the person (within 10 miles of their ZIP), and none without a ZIP.
+test('food sites near you: within 10 miles, nearest first, grassroots sites included, nothing without a ZIP', async () => {
+  assert.deepEqual(await (await get('/api/providers?city=austin')).json(), [], 'no ZIP, no list');
+  const east = await (await get('/api/providers?city=austin&zip=78721')).json();
+  assert.ok(east.some(p => p.resource_id === 'mobile-blessings'), 'Mobile Blessings near East Austin');
+  assert.ok(!east.some(p => p.resource_id === 'food-for-all-pflugerville'), 'Pflugerville is over 10 miles from 78721');
+  const pf = await (await get('/api/providers?city=austin&zip=78660')).json();
+  assert.equal(pf[0].resource_id, 'food-for-all-pflugerville', 'Pflugerville first in Pflugerville');
+  const far = await (await get('/api/providers?city=austin&zip=78610')).json(); // Buda
+  assert.ok(!far.some(p => p.resource_id), 'no curated site is within 10 miles of Buda');
 });

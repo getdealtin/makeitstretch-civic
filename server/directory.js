@@ -94,6 +94,21 @@ export function zipMiles(a, b) {
   return 3958.8 * 2 * Math.asin(Math.sqrt(h));
 }
 
+/** How far "near you" reaches for food sites, in miles between ZIP-code centers. */
+export const NEARBY_MILES = 10;
+
+/**
+ * A city's curated grassroots food sites (listings with a `site` in its config) in the same shape as a
+ * directory listing. `resource_id` lets the page show the listing's translated description.
+ */
+export function curatedSites(city) {
+  return (city.resources || []).filter(r => r.site).map(r => ({
+    id: r.id, resource_id: r.id, name: r.name, kind: r.site.kind, address: r.site.address || null, city: r.site.city,
+    zip: r.site.zip, phone: r.phone || null, website: r.url || null, hours: null, access: null, id_required: r.site.id_required ?? null,
+    languages: [], offers: r.site.offers || ['groceries'], description: r.description, confirmed_at: null,
+  }));
+}
+
 /** Nearest first, by real distance between zip centers. Same zip first; unknown zips last. */
 export function byZip(rows, zip) {
   if (!/^\d{5}$/.test(zip || '') || !ZIP_CENTERS[zip]) return rows;
@@ -125,11 +140,18 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
   };
 
   // ── Public ────────────────────────────────────────────────────
+  // Food sites near a ZIP code: approved directory listings plus the city's curated grassroots sites
+  // (cities/<city>.js → resources with a `site`), only those within NEARBY_MILES, nearest first. No ZIP,
+  // no list: "near you" means nothing without one, and the page asks for it (owner decision Nov 8:
+  // the Food Bank's finder covers its partner pantries; this list holds what its map misses, at most 3 shown).
   app.get('/api/providers', async (req, res) => {
+    const zip = /^\d{5}$/.test(req.query.zip || '') ? req.query.zip : null;
+    if (!zip) return res.set('Cache-Control', 'no-cache').json([]);
     try {
-      const rows = (await db().listProviders(req.city.id, ['approved'])).map(pickPublic);
-      res.set('Cache-Control', 'no-cache').json(byZip(rows, req.query.zip).slice(0, 25)); // approvals show up right away
-    } catch (e) { console.error(e.message); res.json([]); }
+      const rows = [...(await db().listProviders(req.city.id, ['approved'])).map(pickPublic), ...curatedSites(req.city)];
+      const near = rows.filter(r => r.zip === zip || zipMiles(zip, r.zip) <= NEARBY_MILES);
+      res.set('Cache-Control', 'no-cache').json(byZip(near, zip).slice(0, 25)); // approvals show up right away
+    } catch (e) { console.error(e.message); res.json(curatedSites(req.city).filter(r => r.zip === zip || zipMiles(zip, r.zip) <= NEARBY_MILES)); }
   });
 
   // Invite link → is it real? (The form shows the org name it was made for.)

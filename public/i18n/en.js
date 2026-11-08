@@ -303,6 +303,7 @@ export default {
   sites_zip_go: 'Show closest',
   sites_zip_err: 'Enter a 5-digit zip code.',
   sites_sorted: 'Closest to {zip} first.',
+  sites_none_near: "No food sites listed within 10 miles of {zip} yet. The food bank finder below shows more.",
   sites_zip_change: 'Change',
   avoid_halal: "Halal",
   avoid_kosher: "Kosher",

@@ -279,6 +279,7 @@ export default {
   sites_zip_go: '显示最近的',
   sites_zip_err: '请输入 5 位邮政编码。',
   sites_sorted: '离 {zip} 最近的排在前面。',
+  sites_none_near: "{zip} 附近 10 英里内暂时没有列出的食物点。下方的食物银行查找工具有更多。",
   sites_zip_change: '更改',
   avoid_halal: "清真",
   avoid_kosher: "犹太洁食",

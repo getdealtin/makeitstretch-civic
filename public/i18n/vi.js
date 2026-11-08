@@ -279,6 +279,7 @@ export default {
   sites_zip_go: 'Xem nơi gần nhất',
   sites_zip_err: 'Nhập mã bưu điện 5 chữ số.',
   sites_sorted: 'Nơi gần {zip} nhất ở trên cùng.',
+  sites_none_near: "Chưa có điểm phát thực phẩm nào trong vòng 10 dặm quanh {zip}. Công cụ tìm của ngân hàng thực phẩm bên dưới có thêm.",
   sites_zip_change: 'Đổi',
   avoid_halal: "Halal",
   avoid_kosher: "Kosher",

@@ -553,7 +553,8 @@ const dayOf = name => {
   const i = DAYS_EN.indexOf(name);
   try { return i < 0 ? name : new Intl.DateTimeFormat(lang, { weekday: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + i, 12))); } catch { return name; }
 };
-const residents = () => (city.resources || []).filter(r => r.audience !== 'organizations' && r.audience !== 'needs');
+// Always-shown help for residents. Grassroots sites ('nearby') show only in "Food sites near you", by ZIP code.
+const residents = () => (city.resources || []).filter(r => !['organizations', 'needs', 'nearby'].includes(r.audience));
 const orgs = () => (city.resources || []).filter(r => r.audience === 'organizations');
 
 function helpSection() {
@@ -732,6 +733,8 @@ async function loadShop(zip, { quiet = false } = {}) {
 // Tapping a need shows where to get that help now: verified City/County sources, nonprofits from the
 // directory that offer it (nearest first), and 2-1-1. Taps are counted anonymously; nobody is contacted.
 const FOOD_OFFERS = ['groceries', 'produce', 'meals'];
+/** How many nearby food sites to show (the nearest first). */
+const NEARBY_SHOWN = 3;
 let siteCache = [];
 const helpCard = r => `<article class="help-card">
   <h3>${esc(resText(r, 'name'))}</h3><p>${esc(resText(r, 'description'))}</p>
@@ -782,10 +785,13 @@ async function loadSites(zip) {
   siteCache = sites;
   // Food sites only here; listings that offer only other help appear under "Need help with anything else?".
   sites = sites.filter(p => p.kind !== 'other' || (p.offers || []).some(o => FOOD_OFFERS.includes(o)));
-  if (!sites.length || !box.isConnected) return;
+  if (!box.isConnected) return;
   const month = iso => new Date(iso).toLocaleDateString(document.documentElement.lang || 'en', { month: 'long', year: 'numeric' });
-  const shown = sites.slice(0, 6);
-  box.querySelector('#sites-list').innerHTML = shown.map(p => {
+  // At most 3, the nearest (owner decision Nov 8: the Food Bank finder plus a few nearby sites, never a long list).
+  // The server sends only sites within 10 miles of the ZIP, so no ZIP means none yet: the box asks for one.
+  const shown = sites.slice(0, NEARBY_SHOWN);
+  const descOf = p => (p.resource_id ? resText({ id: p.resource_id, description: p.description }, 'description') : p.description);
+  box.querySelector('#sites-list').innerHTML = (!shown.length && /^\d{5}$/.test(zip || '') ? `<p class="muted">${esc(t('sites_none_near', { zip }))}</p>` : '') + shown.map(p => {
     const where = [p.address, p.city, p.zip].filter(Boolean).join(', ');
     const facts = [
       p.access ? t('access_' + p.access) : '',
@@ -801,7 +807,7 @@ async function loadSites(zip) {
       ${facts ? `<p>${esc(facts)}</p>` : ''}
       ${offers ? `<p class="site-offers">${esc(offers)}</p>` : ''}
       ${langs.length ? `<p>${esc(t('speaks', { langs: langs.join(t('list_sep')) }))}</p>` : ''}
-      ${p.description ? `<p class="muted">${esc(p.description)}</p>` : ''}
+      ${p.description ? `<p class="muted">${esc(descOf(p))}</p>` : ''}
       <div class="help-actions">
         ${where ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ', ' + where)}" target="_blank" rel="noopener" data-track="site" data-target="${esc(p.id)}" data-action="directions">${esc(t('directions'))}<span class="sr-only"> (${esc(p.name)})</span></a>` : ''}
         ${p.phone ? `<a href="tel:${esc(p.phone)}" data-track="site" data-target="${esc(p.id)}" data-action="call">${esc(t('call', { phone: p.phone }))}</a>` : ''}
