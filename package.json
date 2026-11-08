@@ -8,8 +8,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "test": "node --test test/*.test.js",
-    "fixtures": "node test/make-fixtures.js"
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "express": "^4.22.3",

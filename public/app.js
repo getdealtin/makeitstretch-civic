@@ -794,8 +794,6 @@ async function loadSites(zip) {
   }).join('');
   renderSitesZip(box, zip);
   box.hidden = false;
-  const jump = app.querySelector('.jump-help span');
-  if (jump) jump.textContent = t('jump_help_sub', { n: residents().length + shown.length }) + ' ↓';
 }
 
 function renderResults(plan, restore = {}) {
@@ -966,7 +964,7 @@ function renderResults(plan, restore = {}) {
     }));
   };
   wireRows();
-  // A swapped meal changes what to buy: rebuild the list from the meals she chose (engine/meals.js).
+  // A swapped meal changes what to buy: rebuild the list from the meals chosen (engine/meals.js).
   const refreshList = () => {
     if (!plan.state) return;
     const kept = new Set([...app.querySelectorAll('.row input:checked')].map(x => x.dataset.item));
@@ -1130,15 +1128,6 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
   return sync;
 }
 
-// Jump links move focus too (keyboard and screen-reader users land in the section).
-function wireJumps() {
-  app.querySelectorAll('.jump a').forEach(a => a.addEventListener('click', e => {
-    e.preventDefault();
-    const target = app.querySelector(a.getAttribute('href'));
-    target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-    target.focus({ preventScroll: true });
-  }));
-}
 
 function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
   const dlg = app.querySelector('#recipe');

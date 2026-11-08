@@ -23,26 +23,32 @@ Build spec and decisions: *The Enough Project: Austin Build Spec & Requirements*
 ## Layout
 
 ```
-engine/      The shared math. No DOM, no network, no city names.
-  cart.js      4-phase Thrifty Food Plan cart optimizer (budget → cart)
-  recipes.js   recipe matcher (cart → candidate recipes per meal)
-  plan.js      meal planner with variety safeguards (recipes → weeks)
-  shopping.js  shopping-list grouping + tips
+engine/      The shared math. No DOM, no network, no city names. Runs on the server and in the browser.
+  meals.js     the meal-first planner: meals → shopping list → fit the budget (see below)
+  pricing.js   region prices + store-type adjustments; the 2,000-calorie floor
+  food-db.js   83 foods (58 core + 25 the NHLBI recipes need) with package sizes and regional estimates
+  extra-foods.js  the 25 recipe foods: USDA nutrition and each price's source (generated)
+  nutrition.js USDA FoodData Central calories, protein and fiber per package
+  satiety.js   how filling each food is per calorie (protein, fiber, water), from nutrition.js
+  diets.js     foods to leave out and diets (halal, kosher, diabetic, low sodium)
+  recipes.js   seed recipe ids and slot rules
   box.js       food-box mode: box items → meals you can make (explicit ingredient map)
-  food-db.js   58-item food catalogue + regional fallback prices
+  shopping.js  shopping-list grouping + tips
   zip-map.js   zip3 → state/BLS region
 cities/      One config card per city. Everything city-specific lives here.
-  austin.js    Austin: tokens, price region, local resources, languages
+  austin.js    Austin: tokens, price region, listings, languages, local data
   national.js  generic fallback for unknown domains
+  shared.js    listings every city gets for the needs it offers (e.g. NAFC free-clinic finder)
   index.js     registry + host → city resolver
 server.js    Express: picks the city by Host. Serves /theme.css, /api/config, /api/plan, and
              /api/prices + /api/recipes + /engine/ so the engine also runs in the browser
+server/      prices (BLS), stores, events, City report, food directory, open data feed (HSDS), reminders
 public/      The UI (plain HTML/CSS/ES modules, no build step)
   keep.js      save / text / email / link a plan without an account
-  i18n/en.js   all UI strings (add es.js in Phase 3)
-data/        seed-recipes.json (161 recipes), nih-recipes.json (25 NHLBI main dishes, built by scripts/build-nih-recipes.py)
-test/        engine + server tests (node:test, no dependencies)
-  legacy/reference.cjs  frozen word-for-word copy of the live tool's math
+  i18n/        screen text per language; data/ holds food, recipe and tip translations
+data/        seed-recipes.json (161 recipes), nih-recipes.json (25 NHLBI main dishes), city data files
+scripts/     reproducible builders for every generated data file (each names its sources)
+test/        node:test, no dependencies; test/cities.test.js runs every city through the same checks
 ```
 
 ## Run it
@@ -114,9 +120,13 @@ hominy for canned); quinoa and ground turkey converted from cooked prices with U
 approximate); masa harina and brown rice at H-E-B Austin shelf prices checked by the owner (USDA's cooked
 prices didn't hold up). `/admin → Annual updates` reminds you to refresh them. Tests: `test/nih.test.js`.
 
-The old cart builder (`engine/cart.js`, a word-for-word port of the live tool, checked against
-`test/legacy/reference.cjs` on a 360-case grid) is no longer used for plans; it stays for its tests and for
-the shared price and store helpers.
+**Government guidance and satiety (kept from the original engine, Nov 8 2026).** Plans aim for USDA's
+2,000-calorie reference per person per day and USDA food groups (a fruit a day, then a vegetable side, a second
+fruit and a cup of milk as money allows). Calories come first on tight budgets; once the floor is met, extra money
+upgrades meals toward more protein, vegetables, fruit and fullness (satiety from USDA protein, fiber and water,
+`engine/satiety.js`). `test/meals.test.js` checks plans at or above the SNAP average for calories, protein, fiber,
+fruit, vegetables and fullness. The original price-per-calorie cart builder that first carried these rules was
+retired on Nov 8 2026 (git history has it).
 
 ## Adding a city
 

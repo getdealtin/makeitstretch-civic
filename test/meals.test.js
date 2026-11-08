@@ -111,9 +111,10 @@ test('variety cap: no ingredient but staples and seasonings in more than about 1
     assert.equal(capExcess(r.state.assigned).excess, 0, JSON.stringify(c));
   }
   for (const id of ['rice', 'drybeans', 'onions', 'oil', 'garlic']) assert.ok(CAP_EXEMPT.has(id), id);
-  // The reported case: 17 cans of tomatoes for a family of 5 over two weeks.
+  // The reported case: 17 cans of tomatoes for a family of 5 over two weeks. Now about half: 3 stews over
+  // two weeks (9 cans since meals also count fullness, Nov 8, and tomato stews are filling per calorie).
   const fam = run({ budget: 500, days: 14, people: 5, avoid: ['halal'] });
-  assert.ok(fam.cart.find(i => i.id === 'cannedtomatoes').qty <= 8);
+  assert.ok(fam.cart.find(i => i.id === 'cannedtomatoes').qty <= 9);
 });
 
 test('plans over a week get one list per week that adds up to the whole plan', () => {
@@ -139,4 +140,38 @@ test('tightest budgets: the plan still recommends meals and says when foods repe
   assert.ok(r.state && r.cart.length > 0);
   assert.equal(r.repeats, true);
   assert.equal(run({ budget: 120, days: 7, people: 2 }).repeats, false);
+});
+
+// Government guidance and satiety (the principles the original engine was built on, now enforced on the
+// meal planner itself). Budgets at or above the average SNAP benefit ($6.22 per person per day) must give
+// each person about 2,000 calories, enough protein and fiber, a fruit and two vegetable servings a day, and
+// calories that are filling (calorie-weighted satiety ≥ 1.0: protein, fiber and water, engine/satiety.js).
+test('plans meet the calorie floor, food groups and fullness at or above the SNAP average', () => {
+  const F = Object.fromEntries(FOOD_DB.map(f => [f.id, f]));
+  for (const people of [1, 2, 4]) for (const pppd of [6.22, 8.44, 12]) {
+    const c = { budget: +(pppd * people * 7).toFixed(2), days: 7, people };
+    const r = run(c), pd = people * r.coveredDays, tag = JSON.stringify(c);
+    assert.equal(r.coveredDays, 7, `covers the week: ${tag}`);
+    let kcal = 0, protein = 0, fiber = 0, filling = 0; const groups = { fruit: 0, vegetable: 0 };
+    for (const i of r.cart) {
+      const f = F[i.id], k = (f.cal / f.srv) * i.servings;
+      kcal += k; filling += k * f.sat;
+      protein += ((f.protein || 0) / f.srv) * i.servings; fiber += ((f.fiber || 0) / f.srv) * i.servings;
+      if (f.cat in groups && !['onions', 'garlic'].includes(f.id)) groups[f.cat] += i.servings;
+    }
+    assert.ok(kcal / pd >= 1950, `calories ${Math.round(kcal / pd)}: ${tag}`);
+    assert.ok(protein / pd >= 50, `protein ${Math.round(protein / pd)} g: ${tag}`);
+    assert.ok(fiber / pd >= 25, `fiber ${Math.round(fiber / pd)} g: ${tag}`);
+    assert.ok(groups.fruit / pd >= 0.75, `fruit ${(groups.fruit / pd).toFixed(1)}: ${tag}`);
+    assert.ok(groups.vegetable / pd >= 2, `vegetables ${(groups.vegetable / pd).toFixed(1)}: ${tag}`);
+    assert.ok(filling / kcal >= 1.0, `satiety ${(filling / kcal).toFixed(2)}: ${tag}`);
+  }
+});
+
+test('extra money buys more filling meals, never fewer calories', () => {
+  const satiety = r => { const F = Object.fromEntries(FOOD_DB.map(f => [f.id, f]));
+    let k = 0, s = 0; for (const i of r.cart) { const kc = (F[i.id].cal / F[i.id].srv) * i.servings; k += kc; s += kc * F[i.id].sat; } return s / k; };
+  const tight = run({ budget: 44, days: 7, people: 2 }), roomy = run({ budget: 120, days: 7, people: 2 });
+  assert.ok(roomy.cppd >= tight.cppd - 50, 'no fewer calories with more money');
+  assert.ok(satiety(roomy) >= satiety(tight), 'more money, more filling food');
 });

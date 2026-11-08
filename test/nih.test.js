@@ -67,8 +67,13 @@ test('diets and foods to leave out apply to NHLBI dishes', () => {
   for (const x of r.state.assigned) assert.ok(!x.rec.uses.some(u => FOOD_DB.find(f => f.id === u.id).avoid.includes('meat')), x.rec.recipe.title);
 });
 
-test('the older cart builder never buys recipe-only foods', async () => {
-  const { buildCart } = await import('../engine/index.js');
-  const c = buildCart({ budget: 200, days: 14, people: 4, cuisine: [], avoid: [], have: [], stores: [] }, prices);
-  assert.ok(!c.cart.some(i => i.recipeOnly));
+test('with the NHLBI dishes in the mix, plans still meet the calorie floor and stay filling', () => {
+  const F = Object.fromEntries(FOOD_DB.map(f => [f.id, f]));
+  for (const c of [{ budget: 87.08, days: 7, people: 2 }, { budget: 236.32, days: 7, people: 4 }, { budget: 59.08, days: 7, people: 1, cuisine: ['latin'] }]) {
+    const r = run(c), pd = c.people * r.coveredDays;
+    let kcal = 0, filling = 0;
+    for (const i of r.cart) { const k = (F[i.id].cal / F[i.id].srv) * i.servings; kcal += k; filling += k * F[i.id].sat; }
+    assert.ok(kcal / pd >= 1950, `calories ${Math.round(kcal / pd)}: ${JSON.stringify(c)}`);
+    assert.ok(filling / kcal >= 1.0, `satiety ${(filling / kcal).toFixed(2)}: ${JSON.stringify(c)}`);
+  }
 });

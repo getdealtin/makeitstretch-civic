@@ -484,7 +484,7 @@ def main():
         prices[fid] = price
         sources[fid] = {'kind': kind, 'source': src}
         foods_js.append({'id': fid, 'name': name, 'cal': nutrition[fid]['kcal'], 'srv': srv, 'cat': cat, 'tier': 2, 'note': note,
-                         'avoid': avoid, 'hasProp': None, 'recipeOnly': True})
+                         'avoid': avoid, 'hasProp': None})
 
     out = []
     for n, r in enumerate(R):
@@ -531,7 +531,6 @@ def main():
     (ROOT / 'data' / 'nih-recipes.json').write_text(json.dumps(data, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
 
     js = ['// Built by scripts/build-nih-recipes.py: do not edit by hand. The foods the NHLBI main dishes need.',
-          '// recipeOnly: bought only for those recipes (the older cart builder never picks them).',
           '// Nutrition: USDA FoodData Central SR Legacy (fdc id), per package of g edible grams.',
           '// Prices: national; BLS "live" foods are replaced by current BLS prices (server/prices.js).',
           f'export const EXTRA_FOODS = {json.dumps(foods_js, ensure_ascii=False)};',

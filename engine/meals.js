@@ -12,17 +12,19 @@
 //      data/nih-recipes.json). Packages are rounded up once per food, so shared foods are bought once.
 //   3. Fit the budget: start from the cheapest menu, add a fruit a day, top up with filling sides
 //      (extra bread, rice, oats…) only until the household reaches about 2,000 calories per person
-//      per day, then spend what's left on better meals (more protein, vegetables, fruit). Money
-//      that's still left stays left: it is shown, not spent on more of one food.
+//      per day (USDA's reference), then spend what's left on better meals: more protein, vegetables,
+//      fruit, and more filling per calorie (satiety, engine/satiety.js). Calories come first, fullness
+//      second, as in the original engine. Money that's still left stays left: it is shown, not spent
+//      on more of one food.
 //   4. If even the cheapest meals cost more than the budget, the plan covers the days it can and
 //      says so, instead of quietly giving less food.
 //
 // Each meal also gets one alternative that keeps the plan within budget. Swapping recomputes the
-// list (rebuildList), so whatever she picks, everything she needs is on it.
+// list (rebuildList), so whatever someone picks, everything they need is on it.
 // Deterministic: same inputs, same plan. No DOM, runs on the server or in the browser.
 
 import { FOOD_DB } from './food-db.js';
-import { applyStoreAdjustments, FLOOR_KCAL } from './cart.js';
+import { applyStoreAdjustments, FLOOR_KCAL } from './pricing.js';
 import { INGREDIENT_FOODS, PANTRY_BASICS } from './box.js';
 import { SIDE_DISH_BLOCKLIST, NOT_BREAKFAST } from './recipes.js';
 import { foodAllowed, recipeAllowed } from './diets.js';
@@ -72,9 +74,9 @@ function setup(input, prices, recipes) {
     if (!foodAllowed(f, avoid)) continue;
     if (!(p[f.id] > 0) && !have.has(f.id)) continue;
     const price = p[f.id] || 0;
-    foods.set(f.id, { ...f, price, have: have.has(f.id), srvCost: have.has(f.id) ? 0 : price / f.srv, srvCal: f.cal / f.srv, srvProtein: (f.protein || 0) / f.srv });
+    foods.set(f.id, { ...f, price, have: have.has(f.id), srvCost: have.has(f.id) ? 0 : price / f.srv, srvCal: f.cal / f.srv, srvFill: (f.cal / f.srv) * (f.sat || 1), srvProtein: (f.protein || 0) / f.srv });
   }
-  // A recipe word → the food we'd use: one she has first, otherwise the cheapest per serving.
+  // A recipe word → the food we'd use: one already at home first, otherwise the cheapest per serving.
   const resolve = word => {
     const ids = (INGREDIENT_FOODS[word] || []).filter(id => foods.has(id));
     if (!ids.length) return null;
@@ -106,10 +108,16 @@ function setup(input, prices, recipes) {
     if (!ok || !uses.length) continue;
     const per = k => uses.reduce((a, u) => a + foods.get(u.id)[k] * u.amt, 0);
     const kcal = per('srvCal'), protein = per('srvProtein'), cost = per('srvCost');
+    // Filling calories: calories weighted by how filling each food is (engine/satiety.js: protein, fiber
+    // and water keep you full longer), so a bean stew beats the same calories of white flour and oil.
+    const fill = per('srvFill');
     const veg = uses.filter(u => foods.get(u.id).cat === 'vegetable' && !NOT_A_VEGETABLE_SERVING.has(u.id)).length;
     const fruit = uses.filter(u => foods.get(u.id).cat === 'fruit').length;
-    // Better meal = more protein, vegetables and fruit, and enough food in a serving.
-    const quality = (Math.min(protein, 25) / 25) * 2 + Math.min(veg, 2) + fruit * 0.5 + Math.min(kcal / 550, 1);
+    // Better meal = more protein, vegetables and fruit, enough food in a serving, and more filling per
+    // calorie (satiety: fill/kcal runs 0.5 to 1.4, so this adds −1 to +0.8). Used when there's money to
+    // upgrade meals; the cheapest menu is still chosen on calories, so a tight budget never gets less food.
+    const fullness = Math.max(-1, Math.min(1, (fill / Math.max(kcal, 1) - 1) * 2));
+    const quality = (Math.min(protein, 25) / 25) * 2 + Math.min(veg, 2) + fruit * 0.5 + Math.min(kcal / 550, 1) + fullness;
     let slots;
     if (r.slot === 'breakfast') slots = ['breakfast'];
     else if (r.slot === 'lunch' || r.slot === 'dinner') slots = [r.slot === 'lunch' ? 'lunch' : 'dinner', r.slot === 'lunch' ? 'dinner' : 'lunch'];
@@ -117,7 +125,7 @@ function setup(input, prices, recipes) {
     if (NOT_BREAKFAST.has(title)) slots = slots.filter(s => s !== 'breakfast');
     const mainProtein = uses.filter(u => foods.get(u.id).cat === 'protein').sort((a, b) => foods.get(b.id).srvProtein - foods.get(a.id).srvProtein)[0]?.id || null;
     const sig = uses.map(u => u.id).sort().join(',');
-    prepared.push({ recipe: r, id: r.id, uses, kcal, protein, cost, quality, slots, mainProtein, sig });
+    prepared.push({ recipe: r, id: r.id, uses, kcal, fill, protein, cost, quality, slots, mainProtein, sig });
   }
   return { foods, prepared };
 }
@@ -193,6 +201,7 @@ export function planMeals(input, prices, recipes) {
   const days = Math.max(1, input.days || 7);
   const kitchen = setup(input, prices, recipes);
   const pools = Object.fromEntries(SLOTS.map(sl => [sl, kitchen.prepared.filter(r => r.slots.includes(sl))
+    // Cheapest calories first (the calorie floor comes before fullness, as in the original engine).
     .sort((a, b) => a.cost / Math.max(a.kcal, 1) - b.cost / Math.max(b.kcal, 1) || b.quality - a.quality || a.id - b.id)]));
   if (SLOTS.some(sl => !pools[sl].length)) return empty(input, days, 'no_meals');
 
@@ -318,7 +327,7 @@ export function planMeals(input, prices, recipes) {
 }
 
 /**
- * The list and totals for the meals she has chosen. swaps: keys "w-d-slot" where she picked the
+ * The list and totals for the meals chosen. swaps: keys "w-d-slot" where the person picked the
  * alternative. Used after every swap, so the list always matches the meals.
  */
 export function rebuildList(state, swaps = []) {
