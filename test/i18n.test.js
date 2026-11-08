@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import en from '../public/i18n/en.js';
-import { FOOD_DB, ALL_TIPS, INGREDIENT_FOODS, PANTRY_BASICS } from '../engine/index.js';
+import { FOOD_DB, ALL_TIPS, INGREDIENT_FOODS, PANTRY_BASICS, TWIST_IDS } from '../engine/index.js';
 import { CITIES } from '../cities/index.js';
 const austin = CITIES.austin; // as served: Austin's own listings plus the shared ones (cities/shared.js)
 
@@ -32,6 +32,7 @@ for (const code of LANGS) {
       for (const k of ['name', 'full', 'note']) assert.ok(d.foods?.[f.id]?.[k], `${code} food ${f.id}.${k}`);
     }
     for (const tip of ALL_TIPS) assert.ok(d.tips?.[tip.text], `${code} tip "${tip.text.slice(0, 40)}"`);
+    for (const id of TWIST_IDS) assert.ok(d.twists?.[id], `${code} twist ${id}`);
     for (const w of [...Object.keys(INGREDIENT_FOODS), ...PANTRY_BASICS]) assert.ok(d.ingredients?.[w], `${code} ingredient "${w}"`);
     for (const r of recipes) {
       assert.ok(d.recipes?.[r.id]?.title, `${code} recipe ${r.id} title (${r.title})`);

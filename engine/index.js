@@ -7,6 +7,7 @@ export { planMeals, rebuildList, MENU_SIZE, LIGHT } from './meals.js';
 export { LEAVE_OUT, DIETS, DIET_NOTE_KEYS, foodAllowed, recipeAllowed } from './diets.js';
 export { groupShoppingList, CATEGORY_ORDER, TIER_KEYS } from './shopping.js';
 export { NUTRITION } from './nutrition.js';
+export { twistsFor, TWIST_REPEATS, TWIST_IDS, TWISTS } from './twists.js';
 export { SATIETY, satietyOf } from './satiety.js';
 export { matchBox, BOX_GROUPS, INGREDIENT_FOODS, PANTRY_BASICS, foodLabel, BOX_SYNONYMS, findBoxFood, cleanFoodWord } from './box.js';
 

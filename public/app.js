@@ -9,6 +9,7 @@ import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   planMeals, rebuildList, LEAVE_OUT, DIETS, DIET_NOTE_KEYS, groupShoppingList, zipToInfo,
   matchBox, BOX_GROUPS, foodLabel, findBoxFood, cleanFoodWord, INGREDIENT_FOODS, PANTRY_BASICS,
+  twistsFor, TWIST_REPEATS,
 } from '/engine/index.js';
 import {
   packPlan, packBox, planHash, boxHash, readHash, planText, boxText, smsHref, mailHref, store,
@@ -52,6 +53,18 @@ function nihRecipeHtml(r, chip) {
     ${extra.map(x => `<p>${x.h ? `<b>${esc(x.h)}</b> ` : ''}${esc(x.t)}</p>`).join('')}
     <p class="recipe-credit">${esc(credit)}${trNote ? ` ${esc(trNote)}` : ''}</p>`;
 }
+// "Ways to change it up" (draft, Nov 8): for a meal that comes up TWIST_REPEATS+ times, a few twists using
+// only foods already on the list (engine/twists.js). Text is translated in D.twists.
+const foodsOf = (r, onList) => (r.uses ? r.uses.map(u => u.id)
+  : (r.ingredients || []).flatMap(w => (INGREDIENT_FOODS[w] || []).filter(id => onList.includes(id)).slice(0, 1)));
+const twistText = tw => D.twists?.[tw.id] || tw.text;
+const twistsHtml = (r, times, onList) => {
+  if (times < TWIST_REPEATS) return '';
+  const tws = twistsFor(foodsOf(r, onList), onList);
+  return tws.length ? `<div class="twists"><h3>${esc(t('twists_title'))}</h3>
+    <p class="muted">${esc(t('twists_hint', { n: times }))}</p>
+    <ul>${tws.map(tw => `<li>${esc(twistText(tw))}</li>`).join('')}</ul></div>` : '';
+};
 /** Kitchen basics (spices, condiments, broth…) are tagged; salt, water and section headings are not. */
 const nihChip = missing => l => !!l.p || (!!l.f && (missing || []).some(w => (INGREDIENT_FOODS[w] || []).some(id => l.f.includes(id))));
 const cityText = key => city?.i18n?.[lang]?.[key] || city?.[key];
@@ -621,7 +634,11 @@ function hubHtml({ cards, homeTop, homeBottom, panels, planTitle }) {
       <h1 class="sr-only">${esc(planTitle)}</h1></div>
     ${panels.map(p => `<div class="panel" data-panel="${p.id}" hidden>${p.html}</div>`).join('')}`;
 }
-function wireHub(onOpen = {}) {
+/**
+ * Wire the plan home's cards and the back bar. `open`: a panel to show right away (after switching to
+ * the shorter or full list the person stays on the list instead of being sent back to the plan home).
+ */
+function wireHub(onOpen = {}, open = null) {
   const home = app.querySelector('#home'), bar = app.querySelector('#back-bar');
   const show = id => {
     app.querySelectorAll('.panel').forEach(p => { p.hidden = p.dataset.panel !== id; });
@@ -644,6 +661,7 @@ function wireHub(onOpen = {}) {
     show(lastPanel);
   }));
   app.querySelector('#to-home').addEventListener('click', () => (history.state?.panel ? history.back() : show(null)));
+  if (open) { lastPanel = open; history.replaceState({ panel: open }, '', location.href); show(open); return; }
   if (history.state?.panel) history.replaceState(null, '', location.href); // a fresh plan always opens on its home
 }
 const setHubSub = (id, html) => { const el = app.querySelector('#hub-sub-' + id); if (el) el.innerHTML = html; };
@@ -802,7 +820,10 @@ function renderResults(plan, restore = {}) {
   let s = plan.result, shopping = plan.shopping;
   const peopleLabel = input.people === 1 ? t('person') : t('people', { n: input.people });
   // 'Enough' only at 100% of the 2,000-calorie reference; 'a little under' from 80%.
-  const calNote = () => (s.calPct >= 100 ? t('cal_ok') : s.calPct >= 80 ? t('cal_low') : t('cal_tight'));
+  // Under the 2,000-calorie floor, say how many calories the plan reaches (owner decision Nov 8: transparency,
+  // in one short line). Rounded to the nearest 50 so it doesn't read as more precise than it is.
+  const kcal = (Math.round(s.cppd / 50) * 50).toLocaleString(lang);
+  const calNote = () => (s.calPct >= 100 ? t('cal_ok') : s.calPct >= 80 ? t('cal_low', { kcal }) : t('cal_tight', { kcal }));
   const sumFacts = () => `${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote())}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}`;
   const dietNotes = DIETS.filter(d => (input.avoid || []).includes(d)).map(d => DIET_NOTE_KEYS[d]);
   let nItems = s.cart.length;
@@ -914,7 +935,7 @@ function renderResults(plan, restore = {}) {
     <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
 
   focusTop('#res-title');
-  wireHub();
+  wireHub({}, restore.switched ? 'list' : null);
   wireNeeds();
   loadSites(answers.zip || siteZip);
   if (city.has_stores) loadShop(answers.zip || siteZip);
@@ -1009,8 +1030,10 @@ function renderResults(plan, restore = {}) {
     const missing = (opts[ci].ingredients || []).filter(word => !PANTRY_BASICS.has(word) &&
       !(INGREDIENT_FOODS[word] || []).some(id => onList.includes(id)) &&
       !onList.some(id => id.includes(word.replace(/ /g, '')) || word.includes(id)));
+    const times = timesChosen(opts[ci].id);
+    const twists = twistsHtml(opts[ci], times, onList);
     openRecipe(opts[ci], opts[1 - ci] ? {
-      missing,
+      missing, twists,
       justSwapped,
       alt: opts[1 - ci],
       onSwap: () => {
@@ -1022,8 +1045,11 @@ function renderResults(plan, restore = {}) {
         sync();
         showMeal(b, true);
       },
-    } : { missing });
+    } : { missing, twists });
   };
+  /** How many times a recipe is on the menu across the plan, counting the meals swapped in. */
+  const timesChosen = id => weeks.reduce((n, w, wi) => n + w.reduce((m, d, di) => m + (d.leftover || d.uncovered ? 0
+    : ['breakfast', 'lunch', 'dinner'].filter(sl => d[sl][choice[`${wi}-${di}-${sl}`] || 0]?.id === id).length), 0), 0);
   app.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => showMeal(b)));
 
   // Paper copy: every chosen meal's recipe, plus a QR code that reopens this plan on a phone.
@@ -1038,7 +1064,7 @@ function renderResults(plan, restore = {}) {
         ${[...chosen.values()].map(r => `<article class="print-recipe"><h3>${esc(rTitle(r))}</h3>
           ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
           ${Array.isArray(r.lines) ? nihRecipeHtml(r, nihChip([])) : `<p><b>${esc(t('ingredients'))}${esc(t('label_colon'))}</b> ${esc((r.ingredients || []).map(ing).join(t('list_sep')))}</p>
-          <p>${esc(rSteps(r))}</p>`}</article>`).join('')}
+          <p>${esc(rSteps(r))}</p>`}${twistsHtml(r, timesChosen(r.id), [...s.cart.map(i => i.id), ...(s.have || [])])}</article>`).join('')}
       </section>
       <section class="print-qr"><img src="/qr.svg?h=${encodeURIComponent(qrHash)}" alt="" width="120" height="120">
         <p>${esc(t('print_scan'))}</p></section>`;
@@ -1129,7 +1155,7 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
 }
 
 
-function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
+function openRecipe(r, { alt, onSwap, missing, justSwapped, twists = '' } = {}) {
   const dlg = app.querySelector('#recipe');
   dlg.querySelector('.dialog-body').innerHTML = `
     <button type="button" class="btn btn-ghost dialog-close" id="close">${esc(t('close'))}</button>
@@ -1141,6 +1167,7 @@ function openRecipe(r, { alt, onSwap, missing, justSwapped } = {}) {
     <ul>${(r.ingredients || []).map(i => `<li>${esc(ing(i))}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
     <h3>${esc(t('steps'))}</h3>
     <p>${esc(rSteps(r))}</p>`}
+    ${twists}
     ${alt ? `<div class="alt"><p class="eyebrow">${esc(justSwapped ? t('swap_back') : t('another_option'))}</p>
       <p class="alt-title">${esc(rTitle(alt))}</p>
       <button type="button" class="btn ${justSwapped ? 'btn-ghost' : 'btn-primary'}" id="swap">${esc(justSwapped ? t('switch_back') : t('use_instead'))}</button></div>` : ''}`;

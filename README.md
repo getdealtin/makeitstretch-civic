@@ -85,7 +85,10 @@ Outside production, `?city=austin` or `?city=national` on any URL switches the c
    until about 2,000 calories per person per day, then spend what's left on better meals (more protein,
    vegetables, fruit; no more than 2 menu meals on the same meat, fish or eggs) and on food groups (a vegetable
    side, a second fruit, a cup of milk). Money still left is shown as left over, not spent on more of one food.
-4. **Tight budgets.** Fewer different meals first, then fewer days; the plan says how many days it covers.
+4. **Tight budgets (owner decisions Nov 7–8).** Fewer different meals first, down to one breakfast, one lunch and
+   one dinner repeated all week, and only then fewer days; the plan says how many days it covers and, under
+   2,000 calories, about how many calories a day it reaches. A meal that comes up 3+ times shows "Ways to
+   change it up": up to 3 twists using only foods already on the list (`engine/twists.js`, 39 twists, translated).
 5. **Variety cap (owner decision Nov 7).** No ingredient in more than about 1 in 4 cooked meals (rice, beans,
    onions, oil and garlic exempt). On the very tightest budgets, where the plan falls back to one breakfast,
    the cap can't always be met; the planner gets as close as it can.

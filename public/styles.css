@@ -500,3 +500,9 @@ html { scroll-padding-bottom: 110px; }
 .nih-lines .ing-head { list-style: none; margin-left: -1em; margin-top: 8px; font-weight: 600; }
 .nih-steps li { margin-bottom: 6px; }
 .recipe-credit { font-family: var(--font-label); font-size: 13px; color: var(--text-muted); margin-top: 16px; }
+
+/* "Ways to change it up" on a meal that repeats (draft, Nov 8) */
+.twists { background: var(--tint); border-radius: 12px; padding: 12px 16px; margin: 16px 0; }
+.twists h3 { margin-top: 0; }
+.twists ul { margin: 8px 0 0; padding-left: 1.2em; }
+.twists li { margin-bottom: 4px; }

@@ -247,9 +247,11 @@ export function planMeals(input, prices, recipes) {
     const total = m => topUp(kitchen, assign(m), { people, days: d, budget });
     return { occ, isLeftover, menu, assign, total, base: packages(kitchen, assign(menu)).cost };
   };
-  // Tight budget: fewer different meals first (fewer packages to buy), then fewer days.
+  // Tight budget: fewer different meals first (fewer packages to buy), down to one breakfast, one lunch
+  // and one dinner (draft, Nov 8: a full week of the same three meals, with "ways to change it up", beats
+  // covering one day while the food bought would last longer); only then fewer days.
   const first = input.menu === 'short' ? SHORT_MENU : MENU_SIZE;
-  const SMALLER = [first, ...[SHORT_MENU, { breakfast: 1, lunch: 2, dinner: 2 }].filter(x => x !== first)];
+  const SMALLER = [first, ...[SHORT_MENU, { breakfast: 1, lunch: 2, dinner: 2 }, { breakfast: 1, lunch: 1, dinner: 1 }].filter(x => x !== first)];
   let d = days, plan;
   const fit = dd => { for (const size of SMALLER) { const p = attempt(dd, size); if (p.base <= budget) return p; } return attempt(dd, SMALLER.at(-1)); };
   plan = fit(d);

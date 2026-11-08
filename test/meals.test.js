@@ -175,3 +175,22 @@ test('extra money buys more filling meals, never fewer calories', () => {
   assert.ok(roomy.cppd >= tight.cppd - 50, 'no fewer calories with more money');
   assert.ok(satiety(roomy) >= satiety(tight), 'more money, more filling food');
 });
+
+// Very tight budgets (owner decision Nov 8): one breakfast, one lunch and one dinner before cutting days,
+// so the food bought isn't left unplanned; repeated meals get "ways to change it up".
+test('tight budgets: a full week of three meals before fewer days, and every twist is free', async () => {
+  const { twistsFor, TWIST_REPEATS } = await import('../engine/twists.js');
+  for (const people of [1, 2]) {
+    const r = run({ budget: 21, days: 7, people });
+    assert.equal(r.coveredDays, 7, `$21, ${people} people`);
+    const onList = [...r.cart.map(i => i.id), ...r.have];
+    const times = {};
+    for (const x of r.state.assigned) times[x.rec.id] = (times[x.rec.id] || 0) + 1;
+    for (const x of r.state.assigned.filter(x => times[x.rec.id] >= TWIST_REPEATS)) {
+      const tws = twistsFor(x.rec.uses.map(u => u.id), onList);
+      assert.ok(tws.length >= 1, `${x.rec.recipe.title} gets a twist`);
+      for (const tw of tws) for (const n of tw.needs) assert.ok(onList.some(id => id === n || (n === 'beans' && ['drybeans', 'blackbeans', 'kidneybean'].includes(id)) || (n === 'milk' && ['milk', 'evaporatedmilk'].includes(id))), `${tw.id} needs ${n}`);
+    }
+  }
+  assert.equal(run({ budget: 25, days: 7, people: 1 }).coveredDays, 7, 'more money never covers fewer days');
+});
