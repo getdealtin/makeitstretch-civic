@@ -3,13 +3,15 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import app from '../server.js';
 import { memoryDb } from '../server/db.js';
-import { suppress, cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK, METRICS, ZIP_DISTRICTS } from '../server/report.js';
+import { suppress, cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK, METRICS } from '../server/report.js';
+import { readFileSync } from 'node:fs';
 import { CITIES } from '../cities/index.js';
 const austin = CITIES.austin; // as served: Austin's own listings plus the shared ones (cities/shared.js)
 import { cleanEvent } from '../server/events.js';
 
 const K = 15;
-const AUS = { roles: rolesOf(austin.resources), framework: austin.report };
+const AUS = { roles: rolesOf(austin.resources), framework: austin.report, local: austin.local };
+const ZIP_DISTRICTS = JSON.parse(readFileSync(new URL(`../data/${austin.local.districts.file}`, import.meta.url), 'utf8'));
 const t = '2026-11-05T12:00:00Z';
 const sid = i => String(i).padStart(12, 'a').slice(-12).replace(/[^a-z0-9]/g, 'a');
 const ev = (i, event, data = {}) => ({ session_id: 's' + String(i).padStart(11, '0'), event, lang: 'en', data, created_at: t });

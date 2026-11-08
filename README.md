@@ -120,11 +120,23 @@ the shared price and store helpers.
 
 ## Adding a city
 
-1. Copy `cities/austin.js` to `cities/<city>.js` and change the values: `hosts`, `place`, `disclaimer`,
-   `branding.tokens`, `price_region`, `local_prices`, `languages`, `resources`.
-2. Register it in `cities/index.js`.
-3. Point the city's domain (e.g. `denver.makeitstretch.org`) at the same deploy.
-4. `npm test` checks every card for required keys and color tokens.
+1. Copy `cities/austin.js` to `cities/<city>.js` and change the values: `hosts`, `place`, `region`,
+   `disclaimer`, `branding.tokens`, `price_region`, `local_prices`, `languages`, `needs`, `resources`,
+   and their translations in `i18n`.
+2. Register it in `cities/index.js` (one line in the list). The landing page's city list, the 2-1-1 card
+   (any listing with `phone: '211'`) and the shared listings (`cities/shared.js`, such as the NAFC free-clinic
+   finder for cities with a health need) all follow automatically.
+3. Optional local data, under `local` on the card. Leave any of it out and that part simply doesn't show
+   (never Austin's data in its place):
+   - `stores`: `python3 -I scripts/build-snap-stores.py <USDA csv> --state XX --county Name`
+     → "Where to shop", store tables in the report, and the store-list reminder.
+   - `food_access`: `scripts/build-food-access.py <dir> --state Name --county Name --fips 12345 --focus <focus_zips>`.
+   - `districts`: a ZIP → district file like Austin's (`scripts/build-zip-districts.py` is Austin's version).
+   - `county`, `focus_note`, `food_access_note`: report wording. `transit_trip_url` ({dest} = store address):
+     the "by bus" link on each store. `sample_zip`: the ZIP shown as an example in the ZIP question.
+4. Point the city's domain (e.g. `denver.makeitstretch.org`) at the same deploy.
+5. `npm test` runs every city through the same checks (`test/cities.test.js`), including a made-up city with
+   only the basics, which must never show Austin's data or wording.
 
 No engine or UI code changes. If a city needs one, that's a sign the city's feature belongs on its config card.
 

@@ -206,7 +206,7 @@ function wire() {
     const org = root.querySelector('#org').value.trim();
     const r = await api('/invites', { org_name: org });
     if (!r.ok) return toast('Couldn’t make the link.');
-    const email = `Hi ${org} team,\n\nI run Make It Stretch, a free tool that helps Austin residents plan groceries on a tight budget and find free food nearby. We'd love to list ${org} so people can find you.\n\nIt takes about 3 minutes: ${r.link}\n\nWe review every listing before it goes live, and your contact details are never shown publicly.\n\nThank you!`;
+    const email = `Hi ${org} team,\n\nI run Make It Stretch, a free tool that helps ${(data.cities || []).find(c => c.id === city)?.place || 'local'} residents plan groceries on a tight budget and find free food nearby. We'd love to list ${org} so people can find you.\n\nIt takes about 3 minutes: ${r.link}\n\nWe review every listing before it goes live, and your contact details are never shown publicly.\n\nThank you!`;
     await load();
     const box = root.querySelector('#new-invite');
     box.innerHTML = `<div class="card"><b>Link for ${esc(org)}</b>

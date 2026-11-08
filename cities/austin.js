@@ -66,6 +66,25 @@ export default {
 
   // Grant geography: Council Districts 1–4, east of I-35. Used for reporting, not gating:
   // anyone can use the tool with any zip.
+  // Local data (files in data/, each built by the script it names). A city without one of these simply
+  // doesn't show that part: no "Where to shop" without `stores`, no district tables without `districts`.
+  local: {
+    county: 'Travis County',
+    stores: 'snap-stores-travis.json',        // scripts/build-snap-stores.py
+    food_access: 'food-access-travis.json',   // scripts/build-food-access.py
+    food_access_note: 'The grant’s figure (26 of 33) comes from the 2015 edition.',
+    focus_note: 'chosen to approximate Council Districts 1–4; ZIP codes and districts don’t line up exactly',
+    districts: {
+      file: 'zip-districts.json',               // scripts/build-zip-districts.py
+      focus: ['1', '2', '3', '4'], focus_label: 'grant area',
+      outside_label: 'Outside Austin city limits (or ZIP unknown)',
+      note: 'Estimated: each person is spread across districts by how their ZIP code’s 2020 residents split (2020 Census blocks placed in City of Austin council districts). ZIP codes cross district lines, so these are estimates, not counts. Grant area: Districts 1–4.',
+    },
+    // "Get directions" on each store opens the city's transit trip planner ({dest} = the store's address).
+    transit_trip_url: 'https://www.capmetro.org/ride/plan/trip-planner?destination_search={dest}',
+    sample_zip: '78702',
+  },
+
   focus_area: 'Council Districts 1–4 (eastern crescent)',
   // ZIP codes used to approximate the focus area in the City report's food-retail findings.
   // ZIP codes and council districts don't line up exactly; the report says so.

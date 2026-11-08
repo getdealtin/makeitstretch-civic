@@ -1,14 +1,16 @@
-"""Build data/snap-stores-travis.json from USDA's SNAP Retailer Locator data.
+"""Build a city's store list (data/snap-stores-<county>.json) from USDA's SNAP Retailer Locator data.
 
 Source: USDA Food and Nutrition Administration, "Historical SNAP Retailer Locator Data"
 https://www.fna.usda.gov/snap/retailer-locator/data  (CSV in a .zip; public data)
 The release used here is "current as of Dec. 31, 2025" (page updated Feb 19, 2026).
 
-Run:  python3 -I scripts/build-snap-stores.py "<path to the unzipped CSV>"
-Keeps stores in Travis County, TX that were still authorized (no end date). Store types are
+Run:  python3 -I scripts/build-snap-stores.py "<path to the unzipped CSV>" [--state TX --county Travis]
+      (Travis County, TX is the default; a new city passes its own state and county, then names the
+      output file in its config: local.stores.)
+Keeps stores in the county that were still authorized (no end date). Store types are
 USDA's own. Display names drop store numbers and tidy chain names; usda_name keeps the original.
 """
-import csv, json, re, sys
+import argparse, csv, json, re
 
 SRC_ASOF = '2025-12-31'
 GROUP = {
@@ -42,10 +44,10 @@ def clean(name):
     return re.sub(r'\s+', ' ', n).strip()
 
 
-def main(path):
+def main(path, state='TX', county='Travis'):
     out = []
     for r in csv.DictReader(open(path, encoding='utf-8-sig')):
-        if r['State'] != 'TX' or r['County'].strip().upper() != 'TRAVIS' or r['End Date'].strip():
+        if r['State'] != state or r['County'].strip().upper() != county.upper() or r['End Date'].strip():
             continue
         if not r['Latitude'] or not r['Longitude']:
             continue
@@ -58,10 +60,14 @@ def main(path):
             'zip': r['Zip Code'][:5], 'lat': round(float(r['Latitude']), 5), 'lon': round(float(r['Longitude']), 5),
         })
     out.sort(key=lambda s: s['id'])
-    json.dump({'source': 'USDA SNAP Retailer Locator historical data', 'as_of': SRC_ASOF, 'county': 'Travis, TX', 'stores': out},
-              open('data/snap-stores-travis.json', 'w'), separators=(',', ':'))
-    print(len(out), 'stores written')
+    dest = f'data/snap-stores-{county.lower().replace(" ", "-")}.json'
+    json.dump({'source': 'USDA SNAP Retailer Locator historical data', 'as_of': SRC_ASOF, 'county': f'{county}, {state}', 'stores': out},
+              open(dest, 'w'), separators=(',', ':'))
+    print(len(out), 'stores written to', dest)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument('csv'); ap.add_argument('--state', default='TX'); ap.add_argument('--county', default='Travis')
+    a = ap.parse_args()
+    main(a.csv, a.state, a.county)

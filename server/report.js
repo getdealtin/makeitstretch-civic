@@ -20,21 +20,32 @@
 import { NEED_TERMS, describe } from './taxonomy.js';
 import { readFileSync } from 'node:fs';
 
-// ZIP → council district shares (population-weighted; built by scripts/build-zip-districts.py).
-const ZIPD = JSON.parse(readFileSync(new URL('../data/zip-districts.json', import.meta.url), 'utf8'));
-export const ZIP_DISTRICTS = ZIPD;
-const DISTRICT_NOTE = 'Estimated: each person is spread across districts by how their ZIP code’s 2020 residents split (2020 Census blocks placed in City of Austin council districts). ZIP codes cross district lines, so these are estimates, not counts. Grant area: Districts 1–4.';
-/** Expected people per district from per-person ZIPs: [[label, n]], districts in order, then outside the city. */
-function byDistrict(sessions) {
+// Districts are the city's own (config `local.districts`): which ZIP codes split into which districts,
+// population-weighted (built for Austin by scripts/build-zip-districts.py). A city without them gets no
+// district tables. Read once per file.
+const districtFiles = new Map();
+const districtsOf = local => {
+  const d = local?.districts;
+  if (!d?.file) return null;
+  if (!districtFiles.has(d.file)) districtFiles.set(d.file, JSON.parse(readFileSync(new URL(`../data/${d.file}`, import.meta.url), 'utf8')));
+  return { ...d, zips: districtFiles.get(d.file).zips };
+};
+/**
+ * Expected people per district from per-person ZIPs: [[label, n]], districts in order, then outside the city.
+ * Each person counts as fractions of a person across the districts their ZIP code spans.
+ */
+function byDistrict(sessions, districts) {
   const est = new Map();
   const add = (k, v) => est.set(k, (est.get(k) || 0) + v);
   for (const [, zip] of sessions) {
-    const z = ZIPD.zips[zip];
+    const z = districts.zips[zip];
     if (!z) { add('outside', 1); continue; }
     for (const [d, sh] of Object.entries(z.shares)) add(d, sh);
   }
-  const order = [...Array(10)].map((_, i) => String(i + 1)).concat('outside');
-  return order.filter(k => est.has(k) && Math.round(est.get(k)) > 0).map(k => [k === 'outside' ? 'Outside Austin city limits (or ZIP unknown)' : `District ${k}${+k <= 4 ? ' (grant area)' : ''}`, Math.round(est.get(k))]);
+  const ids = [...new Set(Object.values(districts.zips).flatMap(z => Object.keys(z.shares)))].sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
+  const focus = new Set(districts.focus || []);
+  return [...ids, 'outside'].filter(k => est.has(k) && Math.round(est.get(k)) > 0)
+    .map(k => [k === 'outside' ? districts.outside_label : `District ${k}${focus.has(k) && districts.focus_label ? ` (${districts.focus_label})` : ''}`, Math.round(est.get(k))]);
 }
 import { CANT_USE } from './events.js';
 
@@ -136,9 +147,9 @@ export const METRICS = {
   cant_item: c => c.table('Item', ['Food-box item', 'People'], countBy(c.cant, e => e.data.item)),
   unlisted_food: c => c.table('Foods in boxes that aren’t on our list', ['Food (as typed)', 'People'], countBy(c.boxEv, e => e.data.other || []), { note: 'What people typed in. Shows what pantries hand out that the tool can’t use yet.' }),
   needs: c => c.table('Other needs people asked about', ['Need', 'People'], lab(LABEL.need, countBy(c.events.filter(e => e.event === 'need_tapped'), e => e.data.need)), { oe: needOE, note: `Taps on a need after the plan. No one is contacted and nothing is requested. Standard categories (Open Eligibility, the taxonomy used with HSDS): ${NEED_OE_NOTE}.` }),
-  district: c => c.table('People by council district (estimated)', ['District', 'People'], byDistrict(Object.entries(c.zipOf).filter(([sid]) => c.visits.has(sid) || c.plans.has(sid) || c.boxes.has(sid))), { note: DISTRICT_NOTE }),
-  budget_band_by_district: c => c.table('Plans below the average SNAP benefit by council district (estimated)', ['District', 'People'], byDistrict([...c.shortfall].filter(sid => c.zipOf[sid]).map(sid => [sid, c.zipOf[sid]])), { note: DISTRICT_NOTE }),
-  needs_by_district: c => c.table('People who asked about other needs by council district (estimated)', ['District', 'People'], byDistrict([...new Set(c.needTaps.map(e => e.session_id))].filter(sid => c.zipOf[sid]).map(sid => [sid, c.zipOf[sid]])), { note: DISTRICT_NOTE }),
+  district: c => c.districts && c.table('People by council district (estimated)', ['District', 'People'], byDistrict(Object.entries(c.zipOf).filter(([sid]) => c.visits.has(sid) || c.plans.has(sid) || c.boxes.has(sid)), c.districts), { note: c.districts.note }),
+  budget_band_by_district: c => c.districts && c.table('Plans below the average SNAP benefit by council district (estimated)', ['District', 'People'], byDistrict([...c.shortfall].filter(sid => c.zipOf[sid]).map(sid => [sid, c.zipOf[sid]]), c.districts), { note: c.districts.note }),
+  needs_by_district: c => c.districts && c.table('People who asked about other needs by council district (estimated)', ['District', 'People'], byDistrict([...new Set(c.needTaps.map(e => e.session_id))].filter(sid => c.zipOf[sid]).map(sid => [sid, c.zipOf[sid]]), c.districts), { note: c.districts.note }),
   // Needs signal: who asked, and whether they opened any source shown for that need. "Opened none" is the
   // closest sign of a gap the tool can see without contacting anyone.
   needs_followthrough: c => c.table('Other needs: did people open a source?', ['Need · result', 'People'], countBy(c.needTaps, e => `${LABEL.need[e.data.need] || e.data.need} · ${c.openedFor(e.session_id, e.data.need) ? 'opened a listed source' : 'opened none'}`), { oe: needOE, note: 'A source counts if it was shown for that need: a City or County program, a directory site offering it, or 2-1-1. One person asking about two needs who opens 2-1-1 counts as opening a source for both. “Opened none” may mean the listing didn’t fit, or that they will come back later.' }),
@@ -155,23 +166,23 @@ export const METRICS = {
       ['People who entered a food box', ok ? vals.length : null],
       ['Total estimated store value', ok ? usd(vals.reduce((a, b) => a + b, 0)) : null],
       ['Typical (median) box', ok ? usd(vals[Math.floor(vals.length / 2)]) : null],
-    ], note: 'What the box’s foods would cost at the tool’s grocery prices (BLS South-region averages where available, otherwise built-in estimates), one package per item listed. An estimate of money a household doesn’t have to spend, not a measured saving. Hidden when fewer people than the report’s threshold entered a box.' };
+    ], note: 'What the box’s foods would cost at the tool’s grocery prices (BLS averages for the city’s region where available, otherwise documented estimates), one package per item listed. An estimate of money a household doesn’t have to spend, not a measured saving. Hidden when fewer people than the report’s threshold entered a box.' };
   },
   needs_supply: c => ({ title: 'Listed help for each need', head: ['Need', 'Sources shown'], rows: Object.entries(LABEL.need).map(([n, l]) => [l, (c.roles.needs?.[n] || []).length + c.providers.filter(p => (p.offers || []).includes(n)).length]), note: 'City and County programs plus approved directory sites that offer it (2-1-1 is shown with every need and not counted). Organizations, not people: not suppressed.', organizations: true }),
   needs_by_zip: c => c.table('Other needs by ZIP code', ['ZIP · need', 'People'], countBy(c.withZip.filter(e => e.event === 'need_tapped'), e => `${e.zip} · ${LABEL.need[e.data.need] || e.data.need}`), { oe: needOE }),
-  retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of Travis County (USDA, as of ${longDate(c.retail.as_of)})`, head: ['', 'Stores'], rows: [
+  retail_mix: c => c.retail ? ({ title: `SNAP-authorized stores: focus area vs. rest of ${c.county} (USDA, as of ${longDate(c.retail.as_of)})`, head: ['', 'Stores'], rows: [
     [`Focus area (${c.retail.focus.zips} ZIP codes): convenience stores`, c.retail.focus.convenience],
     ['Focus area: supermarkets and large grocery stores', c.retail.focus.full],
     ['Focus area: convenience stores for each supermarket or large grocery store', c.retail.focus.ratio],
-    [`Rest of Travis County (${c.retail.rest.zips} ZIP codes): convenience stores`, c.retail.rest.convenience],
+    [`Rest of ${c.county} (${c.retail.rest.zips} ZIP codes): convenience stores`, c.retail.rest.convenience],
     ['Rest of county: supermarkets and large grocery stores', c.retail.rest.full],
     ['Rest of county: convenience stores for each supermarket or large grocery store', c.retail.rest.ratio],
     ['Focus area: typical distance from a ZIP code\u2019s center to the nearest supermarket or large grocery store (miles)', c.retail.focus.median_miles],
     ['Rest of county: same distance (miles)', c.retail.rest.median_miles],
   ], note: 'Store counts by USDA store type for stores authorized to take SNAP. Places, not people: not suppressed. Distance is the median across ZIP codes, measured from each ZIP code\u2019s center, so it is approximate.' }) : null,
-  food_access: c => c.retail?.access ? ({ title: 'USDA low-income and low-access census tracts in Travis County (Food Access Research Atlas)', head: ['USDA edition', 'Tracts flagged'],
-    rows: Object.values(c.retail.access.editions).map(e => [`${e.name}: distance to ${e.counts_distance_to}`, `${e.lila} of ${e.tracts} in Travis County; ${e.lila_focus} mostly in the focus-area ZIP codes`]),
-    note: 'USDA measure: low income and low access at 1 mile (cities) or 10 miles (rural). The grant\u2019s figure (26 of 33) comes from the 2015 edition. The editions are not a trend: they use different census years and stores, and the 2025 edition counts every SNAP store, including convenience stores, so it measures nearness to any SNAP store, not to a supermarket. A tract is placed in the ZIP code holding most of its population (2010 tracts) or land (2020 tracts).' }) : null,
+  food_access: c => c.retail?.access ? ({ title: `USDA low-income and low-access census tracts in ${c.county} (Food Access Research Atlas)`, head: ['USDA edition', 'Tracts flagged'],
+    rows: Object.values(c.retail.access.editions).map(e => [`${e.name}: distance to ${e.counts_distance_to}`, `${e.lila} of ${e.tracts} in ${c.county}; ${e.lila_focus} mostly in the focus-area ZIP codes`]),
+    note: `USDA measure: low income and low access at 1 mile (cities) or 10 miles (rural).${c.local.food_access_note ? ' ' + c.local.food_access_note : ''} The editions are not a trend: they use different census years and stores, and the 2025 edition counts every SNAP store, including convenience stores, so it measures nearness to any SNAP store, not to a supermarket. A tract is placed in the ZIP code holding most of its population (2010 tracts) or land (2020 tracts).` }) : null,
   food_access_by_zip: c => c.retail?.access ? ({ title: 'Low-income and low-access tracts in each focus-area ZIP code (USDA)', head: ['ZIP code', '2015 · 2019 · 2025'],
     rows: c.retail.access.focus_zips.map(z => [z, ['2015', '2019', '2025'].map(y => c.retail.access.editions[y]?.lila_by_focus_zip[z] ?? '\u2013').join(' · ')]), note: '2015 and 2019 count distance to supermarkets; 2025 counts distance to any SNAP store.' }) : null,
   retail_by_zip: c => c.retail ? ({ title: 'SNAP-authorized stores in each focus-area ZIP code', head: ['ZIP code', 'Stores (USDA store types)'], rows: c.retail.byZip.map(z => [z.zip,
@@ -190,7 +201,11 @@ export const METRICS = {
  * @param {{k:number, providers:object[], from:string, to:string, city:string,
  *          roles?:{benefits:string[], food_help:string[]}, framework?:object}} opts
  */
-export function cityReport(events, { k = 15, providers = [], from, to, city, roles = { benefits: [], food_help: [] }, framework = DEFAULT_FRAMEWORK, retail = null }) {
+/**
+ * The City report for a date range. `local` is the city's local-data config (county name, districts,
+ * food-access note); `prices` says where the city's prices come from (shown in the report's limits).
+ */
+export function cityReport(events, { k = 15, providers = [], from, to, city, roles = { benefits: [], food_help: [] }, framework = DEFAULT_FRAMEWORK, retail = null, local = {}, prices = null }) {
   const views = events.filter(e => e.event === 'page_view');
   const visits = new Set(views.map(e => e.session_id));
   const planEv = events.filter(e => e.event === 'plan_built');
@@ -221,6 +236,7 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
     (h.data.kind === 'resource' && ((roles.needs?.[need] || []).includes(h.data.target) || (roles.any_need || []).includes(h.data.target)))
     || (h.data.kind === 'site' && (offers[h.data.target] || []).includes(need))));
   const ctx = {
+    local, county: local.county || 'the rest of the county', districts: districtsOf(local),
     k, events, needTaps, openedFor, views, visits, planEv, bandOf, bandShort, retail, boxEv, plans, boxes, zipOf, withZip, bandRows, shortfall, providers,
     roles: { benefits: roles.benefits || [], food_help: roles.food_help || [], needs: roles.needs || {}, any_need: roles.any_need || [] },
     labels: { ...DEFAULT_FRAMEWORK.labels, ...(framework.labels || {}) },
@@ -258,8 +274,8 @@ export function cityReport(events, { k = 15, providers = [], from, to, city, rol
       `Any number under ${k} people is hidden, along with any number that would reveal it.`,
       'Answers are self-reported and not verified. The same person visiting twice is counted twice.',
       'Link taps are not outcomes: the tool cannot see benefit applications or pantry visits.',
-      'Dollar figures use U.S. South region BLS average prices for 13 foods and estimates for the rest, until local shelf prices are added.',
-      ...(retail ? [`Store findings use USDA's list of stores authorized to take SNAP (as of ${longDate(retail.as_of)}) and USDA's store types. Stores that don't take SNAP aren't counted. The focus area is ${retail.focus.zips} ZIP codes chosen to approximate Council Districts 1\u20134; ZIP codes and districts don't line up exactly.`] : []),
+      prices || 'Dollar figures use BLS average grocery prices where BLS publishes them and documented estimates for the rest, until local shelf prices are added.',
+      ...(retail ? [`Store findings use USDA's list of stores authorized to take SNAP (as of ${longDate(retail.as_of)}) and USDA's store types. Stores that don't take SNAP aren't counted. The focus area is ${retail.focus.zips} ZIP codes${local.focus_note ? ` ${local.focus_note}` : ''}.`] : []),
       `Budget benchmarks: the average SNAP benefit is about $${SNAP} per person per day (FY2025), and USDA's Thrifty Food Plan costs $${TFP} per person per day (reference family of four, ${BENCHMARKS.tfpAsOf}). The average SNAP benefit is lower than the Thrifty Food Plan cost. "Below the SNAP average" describes a household's grocery budget compared with what SNAP pays on average; it says nothing about SNAP eligibility or enrollment.`,
     ],
   };

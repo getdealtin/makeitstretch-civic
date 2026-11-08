@@ -30,7 +30,10 @@ export function publicConfig(c) {
     i18n: c.i18n || {},
     sources: c.sources || [],
     needs: c.needs || [],
-    has_stores: !!c.focus_zips,
+    has_stores: !!c.local?.stores,
+    region: c.region || null,
+    transit_trip_url: c.local?.transit_trip_url || null,
+    sample_zip: c.local?.sample_zip || null,
     wic_finder_url: c.wic_finder_url || null,
   };
 }

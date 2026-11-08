@@ -11,8 +11,12 @@ import { CITIES } from '../cities/index.js';
 import { summarize } from './events.js';
 import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
 import { retailFindings } from './stores.js';
+import { BLS_ITEMS } from './prices.js';
 import { maintenanceFor } from './maintenance.js';
 import { readFileSync } from 'node:fs';
+
+/** Where a city's report prices come from, in one sentence (its BLS region, or the visitor's). */
+const priceNote = c => `Dollar figures use ${c.price_region ? `BLS ${c.price_region}-region` : 'BLS regional'} average prices for the ${Object.keys(BLS_ITEMS).length} foods BLS prices, and documented estimates for the rest (engine/extra-foods.js lists each source), until local shelf prices are added.`;
 
 // Zip → [lat, lon] at the center of each zip area (US Census ZCTAs, via the MIT-licensed
 // us-zips package; see data/README). Used only to sort food sites by distance.
@@ -274,7 +278,8 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
     ]);
     const inRange = events.filter(e => e.created_at.slice(0, 10) <= to);
     const c = CITIES[city];
-    return cityReport(inRange, { k: c.k_anon_threshold || 15, providers, from, to, city: c.place || c.name || city, roles: rolesOf(c.resources), framework: c.report || DEFAULT_FRAMEWORK, retail: retailFindings(c.focus_zips || []) });
+    return cityReport(inRange, { k: c.k_anon_threshold || 15, providers, from, to, city: c.place || c.name || city, roles: rolesOf(c.resources), framework: c.report || DEFAULT_FRAMEWORK, retail: retailFindings(c),
+      local: c.local || {}, prices: priceNote(c) });
   };
   admin.get('/report', async (req, res) => {
     try { res.json(await reportFor(req)); } catch (e) { console.error(e.message); res.status(500).json({ ok: false }); }

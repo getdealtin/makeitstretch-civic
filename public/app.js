@@ -449,7 +449,7 @@ const STEP_VIEWS = {
     <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_zip'))}</h1>
     <p class="hint" id="h">${esc(t('q_zip_hint'))}</p>
     <input class="field" id="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5"
-      pattern="[0-9]{5}" placeholder="78702" aria-labelledby="q" aria-describedby="h" value="${answers.zip ?? ''}">`,
+      pattern="[0-9]{5}" placeholder="${esc(city.sample_zip || '12345')}" aria-labelledby="q" aria-describedby="h" value="${answers.zip ?? ''}">`,
 
   prefs: () => `
     <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_prefs'))}</h1>
@@ -685,7 +685,8 @@ async function loadShop(zip, { quiet = false } = {}) {
   const doubler = d.markets.find(m => m.double);
   setHubSub('shop', [d.grocery[0] ? esc(t('hub_shop_near', { mi: Number(d.grocery[0].miles).toFixed(1) })) : '',
     doubler ? esc(t('hub_shop_double', { mi: Number(doubler.miles).toFixed(1) })) : ''].filter(Boolean).join(' · '));
-  const where = st => `${st.addr}, Austin, TX ${st.zip}`;
+  // Full address for map and transit links, in the city's own place and state.
+  const where = st => [st.addr, [city.place, city.region].filter(Boolean).join(', '), st.zip].filter(Boolean).join(' ');
   const card = st => `<article class="store">
       <h3>${esc(st.name)}</h3>
       <p class="store-meta">${esc([st.addr, aboutMi(st.miles), st.hours ? t('hours_' + st.hours) : ''].filter(Boolean).join(' · '))}</p>
@@ -697,7 +698,7 @@ async function loadShop(zip, { quiet = false } = {}) {
       </div>
       <div class="help-actions">
         <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(st.name + ', ' + where(st))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="directions">${esc(t('directions'))}<span class="sr-only"> (${esc(st.name)})</span></a>
-        <a href="https://www.capmetro.org/ride/plan/trip-planner?destination_search=${encodeURIComponent(where(st))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="bus">${esc(t('shop_bus'))}<span class="sr-only"> (${esc(st.name)})</span></a>
+        ${city.transit_trip_url ? `<a href="${esc(city.transit_trip_url.replace('{dest}', encodeURIComponent(where(st))))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="bus">${esc(t('shop_bus'))}<span class="sr-only"> (${esc(st.name)})</span></a>` : ''}
       </div></article>`;
   const asOf = new Date(d.as_of + 'T12:00:00Z').toLocaleDateString(lang, { month: 'long', year: 'numeric', timeZone: 'UTC' });
   body.innerHTML = `<p class="sites-sorted">${esc(t('shop_near', { zip }))}
@@ -739,7 +740,8 @@ function wireNeeds() {
     if (!open) { panel.hidden = true; return; }
     if (!counted.has(need)) { counted.add(need); track('need_tapped', { need }); }
     const sources = (city.resources || []).filter(r => (r.needs || []).includes(need));
-    const two11 = (city.resources || []).find(r => r.id === '211-texas');
+    // Every city's 2-1-1 listing (phone 211) ends the list: it can help with any need.
+    const two11 = (city.resources || []).find(r => r.phone === '211');
     const orgs = siteCache.filter(p => (p.offers || []).includes(need)).slice(0, 4);
     panel.innerHTML = [...sources.map(helpCard), ...orgs.map(p => `<article class="help-card site-card">
         <span class="site-kind">${esc(t('kind_' + p.kind))}</span><h3>${esc(p.name)}</h3>

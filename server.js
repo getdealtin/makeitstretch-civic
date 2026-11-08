@@ -206,8 +206,8 @@ app.get('/api/cities', (req, res) => res.json(liveCities()));
 
 // Where to shop: nearest SNAP-authorized grocery stores and farmers markets for a ZIP (USDA data).
 app.get('/api/stores', (req, res) => {
-  if (!req.city.focus_zips || !/^\d{5}$/.test(String(req.query.zip || ''))) return res.json(null);
-  res.set('Cache-Control', 'public, max-age=3600').json(storesNear(req.query.zip, { notes: req.city.store_notes || {} }));
+  if (!req.city.local?.stores || !/^\d{5}$/.test(String(req.query.zip || ''))) return res.json(null);
+  res.set('Cache-Control', 'public, max-age=3600').json(storesNear(req.city, req.query.zip));
 });
 
 // Every name a box food goes by (English, synonyms, es/vi/zh), for the "Something else?" box field.

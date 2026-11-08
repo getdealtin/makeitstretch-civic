@@ -2,7 +2,7 @@
 // updated or checked, and when it's next due. Shown in /admin ("Annual updates").
 // When you update one, change its date here (or in the file named) so the reminder resets.
 import { BENCHMARKS } from '../engine/index.js';
-import { STORES_AS_OF, FOOD_ACCESS } from './stores.js';
+import { cityData } from './stores.js';
 import { BLS_CHECKED, BLS_ITEMS } from './prices.js';
 import { EXTRA_PRICES_AS_OF, PRICE_SOURCES } from '../engine/extra-foods.js';
 import { HSDS_VERSION } from './hsds.js';
@@ -14,10 +14,12 @@ const firstDate = s => (String(s || '').match(/\d{4}-\d{2}-\d{2}/) || [])[0] || 
 /** Each item: what, last (data or check date), due (when to do it next), how (plain words). */
 export function maintenanceFor(city, now = new Date()) {
   const today = now.toISOString().slice(0, 10);
+  // The city's own data files (cities/<city>.js → local); a city without them has no reminder for them.
+  const { storesAsOf, access } = cityData(city);
   const items = [
-    { id: 'stores', title: 'Store list (Where to shop)', last: STORES_AS_OF, due: addMonths(STORES_AS_OF, 15),
+    ...(storesAsOf ? [{ id: 'stores', title: 'Store list (Where to shop)', last: storesAsOf, due: addMonths(storesAsOf, 15),
       what: 'USDA’s list of stores that take SNAP. USDA posts a new file early each year.',
-      how: 'Ask Claude: “update the store list” (rebuilds data/snap-stores-travis.json with scripts/build-snap-stores.py).' },
+      how: `Ask Claude: “update the store list” (rebuilds data/${city.local.stores} with scripts/build-snap-stores.py).` }] : []),
     { id: 'tfp', title: 'Thrifty Food Plan benchmark', last: BENCHMARKS.tfpDate, due: addMonths(BENCHMARKS.tfpDate, 12),
       what: `Used in the City report’s budget groups (now $${BENCHMARKS.tfpPerPersonDay} per person per day, ${BENCHMARKS.tfpAsOf}).`,
       how: 'Download USDA’s latest “Cost of Food: Thrifty Food Plan” report and ask Claude to update the benchmark (engine/index.js).' },
@@ -35,7 +37,7 @@ export function maintenanceFor(city, now = new Date()) {
       what: `The open data feed at /api/hsds follows Open Referral’s HSDS ${HSDS_VERSION}, with Open Eligibility categories. Open Referral publishes new versions from time to time.`,
       how: 'Ask Claude: “check for a new HSDS version” (server/hsds.js, server/taxonomy.js, scripts/build-open-eligibility.py).' },
   ];
-  if (FOOD_ACCESS?.checked) items.push({ id: 'access', title: 'USDA food-access data (City report)', last: FOOD_ACCESS.checked, due: addMonths(FOOD_ACCESS.checked, 12),
+  if (access?.checked) items.push({ id: 'access', title: 'USDA food-access data (City report)', last: access.checked, due: addMonths(access.checked, 12),
     what: 'Low-income and low-access tracts from USDA’s Food Access Research Atlas. New editions come every few years.',
     how: 'Ask Claude: “check for a new Food Access Research Atlas” (scripts/build-food-access.py).' });
   const links = (city.resources || []).map(r => firstDate(r.verified)).filter(Boolean).sort();
