@@ -66,13 +66,18 @@ test('API: root, paging, filters, single records', async () => {
   const root = await get('/api/hsds/');
   assert.equal(root.version, HSDS_VERSION); assert.match(root.openapi_url, /openreferral\/specification\/v3\.3\.1/);
   const all = await get('/api/hsds/services');
-  assert.equal(all.total_items, 14); assert.equal(all.page_number, 1); assert.equal(all.empty, false); // 13 Austin listings + the shared NAFC clinic finder
+  // Every Austin listing for residents (its own plus the shared ones; listings for organizations aren't
+  // services) and the one test food site.
+  const total = austin.resources.filter(r => r.audience !== 'organizations').length + 1;
+  assert.equal(all.total_items, total); assert.equal(all.page_number, 1); assert.equal(all.empty, false);
   const pantries = await get('/api/hsds/services?taxonomy_term_id=1130');
-  assert.deepEqual(pantries.contents.map(s => s.name).sort(), ['Central Texas Food Bank: Find Food Now', 'Test Pantry']);
+  assert.deepEqual(pantries.contents.map(s => s.name).sort(), [...austin.resources.filter(r => (r.taxonomy || []).includes('1130')).map(r => r.name), 'Test Pantry'].sort());
+  assert.ok(pantries.contents.length >= 7, 'the Food Bank finder, five local pantries and the test site');
   const one = await get(`/api/hsds/services/${provider.id}`);
   assert.equal(one.organization.name, 'Test Pantry'); assert.equal(one.service_at_locations[0].location.location_type, 'physical');
-  const paged = await get('/api/hsds/services?per_page=5&page=3');
-  assert.equal(paged.size, 4); assert.equal(paged.last_page, true);
+  const lastPage = Math.ceil(total / 5);
+  const paged = await get(`/api/hsds/services?per_page=5&page=${lastPage}`);
+  assert.equal(paged.size, total - 5 * (lastPage - 1)); assert.equal(paged.last_page, true);
   const terms = await get('/api/hsds/taxonomy_terms');
   assert.equal(terms.total_items, Object.keys(OE.terms).length);
   const minimal = await get('/api/hsds/services?minimal=true');
