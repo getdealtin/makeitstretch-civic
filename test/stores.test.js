@@ -2,7 +2,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { storesNear, retailFindings, STORES, STORES_AS_OF } from '../server/stores.js';
-import austin from '../cities/austin.js';
+import { CITIES } from '../cities/index.js';
+const austin = CITIES.austin; // as served: Austin's own listings plus the shared ones (cities/shared.js)
 
 test('store data is USDA SNAP-authorized stores in Travis County, as of Dec 31, 2025', () => {
   assert.equal(STORES_AS_OF, '2025-12-31');

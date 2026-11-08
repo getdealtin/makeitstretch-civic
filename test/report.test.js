@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import app from '../server.js';
 import { memoryDb } from '../server/db.js';
 import { suppress, cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK, METRICS, ZIP_DISTRICTS } from '../server/report.js';
-import austin from '../cities/austin.js';
+import { CITIES } from '../cities/index.js';
+const austin = CITIES.austin; // as served: Austin's own listings plus the shared ones (cities/shared.js)
 import { cleanEvent } from '../server/events.js';
 
 const K = 15;
@@ -123,7 +124,7 @@ test('report and exports are admin-only; CSV downloads work when signed in', asy
 
 test('needs beyond food: every need has sources, they stay out of the food help list, and the report counts people', async () => {
   for (const need of austin.needs) assert.ok(austin.resources.some(r => (r.needs || []).includes(need)), need);
-  for (const r of austin.resources.filter(r => r.audience === 'needs')) assert.match(r.verified, /2026-11-06/, r.id);
+  for (const r of austin.resources.filter(r => r.audience === 'needs')) assert.match(r.verified, /^\d{4}-\d{2}-\d{2} /, r.id); // every listing says when it was last checked
   const events = [];
   for (let i = 0; i < 20; i++) { events.push(ev(i, 'page_view')); events.push(ev(i, 'need_tapped', { need: 'rent' })); events.push(ev(i, 'need_tapped', { need: 'rent' })); }
   const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', roles: rolesOf(austin.resources), framework: austin.report });

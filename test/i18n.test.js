@@ -5,7 +5,8 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import en from '../public/i18n/en.js';
 import { FOOD_DB, ALL_TIPS, INGREDIENT_FOODS, PANTRY_BASICS } from '../engine/index.js';
-import austin from '../cities/austin.js';
+import { CITIES } from '../cities/index.js';
+const austin = CITIES.austin; // as served: Austin's own listings plus the shared ones (cities/shared.js)
 
 const LANGS = ['es', 'vi', 'zh-Hans'];
 const holes = s => [...String(s).matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort();

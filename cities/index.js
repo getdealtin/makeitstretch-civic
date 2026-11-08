@@ -3,8 +3,10 @@
 // is just another entry in that city's `hosts`.
 import austin from './austin.js';
 import national from './national.js';
+import { withSharedListings } from './shared.js';
 
-export const CITIES = { austin, national };
+/** Every city, with the listings all cities share (cities/shared.js) already added. */
+export const CITIES = Object.fromEntries([austin, national].map(card => [card.id, withSharedListings(card)]));
 
 /**
  * @param {string} host          request Host header

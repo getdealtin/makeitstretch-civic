@@ -42,10 +42,10 @@ export function maintenanceFor(city, now = new Date()) {
   if (links.length) items.push({ id: 'links', title: 'Help listings and links', last: links[0], due: addMonths(links[0], 12),
     what: (() => { const n = city.resources.filter(r => r.audience === 'needs').length;
       return `All ${city.resources.length} help listings: links work and descriptions are still true. Includes food banks, benefits and 2-1-1${n ? `, and the ${n} listings under “Need help with anything else?” (rent and utilities, health care, child care, jobs and transportation)` : ''}.`; })(),
-    how: 'Ask Claude: “check every help link” (cities/austin.js, the verified date on each listing).' });
+    how: `Ask Claude: “check every help link” (cities/${city.id}.js and cities/shared.js, the verified date on each listing).` });
   if (city.store_notes_checked) items.push({ id: 'notes', title: 'Farmers market notes (WIC, Double Up, hours)', last: city.store_notes_checked, due: addMonths(city.store_notes_checked, 12),
     what: 'The “Takes WIC”, “Doubles SNAP & WIC” and hours shown for SFC markets.',
-    how: 'Check Sustainable Food Center’s market and Double Up pages, or ask Claude to (cities/austin.js, store_notes).' });
+    how: `Check Sustainable Food Center’s market and Double Up pages, or ask Claude to (cities/${city.id}.js, store_notes).` });
   const soon = addMonths(today, 1);
   return items.map(i => ({ ...i, status: i.due <= today ? 'due' : i.due <= soon ? 'soon' : 'ok' }))
     .sort((a, b) => a.due.localeCompare(b.due));

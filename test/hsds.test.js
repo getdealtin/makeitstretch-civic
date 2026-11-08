@@ -6,7 +6,8 @@ import { memoryDb } from '../server/db.js';
 import { buildDataset, uuid5, HSDS_VERSION } from '../server/hsds.js';
 import { OE, NEED_TERMS, KIND_TERMS, OFFER_TERMS } from '../server/taxonomy.js';
 import { KINDS, OFFERS } from '../server/directory.js';
-import austin from '../cities/austin.js';
+import { CITIES } from '../cities/index.js';
+const austin = CITIES.austin; // as served: Austin's own listings plus the shared ones (cities/shared.js)
 
 const provider = {
   id: '0b8f1c2e-1111-4a2b-9c3d-123456789abc', status: 'approved', name: 'Test Pantry', kind: 'pantry',
@@ -65,13 +66,13 @@ test('API: root, paging, filters, single records', async () => {
   const root = await get('/api/hsds/');
   assert.equal(root.version, HSDS_VERSION); assert.match(root.openapi_url, /openreferral\/specification\/v3\.3\.1/);
   const all = await get('/api/hsds/services');
-  assert.equal(all.total_items, 12); assert.equal(all.page_number, 1); assert.equal(all.empty, false);
+  assert.equal(all.total_items, 14); assert.equal(all.page_number, 1); assert.equal(all.empty, false); // 13 Austin listings + the shared NAFC clinic finder
   const pantries = await get('/api/hsds/services?taxonomy_term_id=1130');
   assert.deepEqual(pantries.contents.map(s => s.name).sort(), ['Central Texas Food Bank: Find Food Now', 'Test Pantry']);
   const one = await get(`/api/hsds/services/${provider.id}`);
   assert.equal(one.organization.name, 'Test Pantry'); assert.equal(one.service_at_locations[0].location.location_type, 'physical');
   const paged = await get('/api/hsds/services?per_page=5&page=3');
-  assert.equal(paged.size, 2); assert.equal(paged.last_page, true);
+  assert.equal(paged.size, 4); assert.equal(paged.last_page, true);
   const terms = await get('/api/hsds/taxonomy_terms');
   assert.equal(terms.total_items, Object.keys(OE.terms).length);
   const minimal = await get('/api/hsds/services?minimal=true');
