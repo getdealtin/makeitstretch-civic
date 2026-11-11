@@ -17,6 +17,7 @@ import { BOX_GROUPS, BOX_SYNONYMS, foodLabel } from './engine/box.js';
 import { resolveCity, publicConfig, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
 import { mountDirectory } from './server/directory.js';
+import { makeLivePrices } from './server/live-prices.js';
 import { mountHsds } from './server/hsds.js';
 import { mountEvents, AVOID } from './server/events.js';
 
@@ -66,16 +67,14 @@ app.get('/theme.css', (req, res) => {
 app.get('/api/config', (req, res) => res.json(publicConfig(req.city)));
 
 // ── Prices ──────────────────────────────────────────────────────
-// BLS average prices exist per Census region. Cached 24h. City local_prices
+// BLS average prices exist per Census region (kept by server/live-prices.js). City local_prices
 // (Data Steward shelf captures) override BLS item by item.
-const blsCache = new Map();
 // Verified series codes, pound→package conversion and the safety check live in server/prices.js.
 // Each region's series are asked for alongside the national ones; a food a region doesn't
 // publish falls back to the national average.
-async function blsPrices(region) {
+// One ask to BLS; null on any failure. server/live-prices.js decides when to ask and what to keep.
+async function fetchBlsPrices(region) {
   if (!BLS_KEY) return null;
-  const hit = blsCache.get(region);
-  if (hit && Date.now() - hit.at < 24 * 3600e3) return hit.prices;
   const year = String(new Date().getFullYear());
   try {
     const r = await fetch('https://api.bls.gov/publicAPI/v2/timeseries/data/', {
@@ -94,11 +93,17 @@ async function blsPrices(region) {
       if (v > 0) bySeries[s.seriesID] = v;
     }
     const estimates = FALLBACK_PRICES[region] || FALLBACK_PRICES.national;
-    const prices = { ...toPackagePrices(bySeries, 'national', estimates), ...toPackagePrices(bySeries, region, estimates) };
-    blsCache.set(region, { at: Date.now(), prices });
-    return prices;
+    return { ...toPackagePrices(bySeries, 'national', estimates), ...toPackagePrices(bySeries, region, estimates) };
   } catch { return null; }
 }
+
+// Fresh for 24 hours; through a BLS outage, the last good prices (saved in the database, so a
+// restart keeps them) instead of waiting on BLS for every visitor.
+const livePrices = makeLivePrices({
+  fetchPrices: fetchBlsPrices,
+  store: BLS_KEY ? { load: region => db.getPriceCache(region), save: (region, prices, at) => db.savePriceCache(region, prices, at) } : null,
+});
+const blsPrices = region => (BLS_KEY ? livePrices.get(region) : Promise.resolve(null));
 
 // ── Data for the in-browser engine (instant preview, works if the connection drops) ──
 /** Region → merged prices: fallback ← live BLS ← city local shelf prices. */
@@ -198,7 +203,7 @@ app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOStri
 // otherwise in-memory (tests, local runs). Tests can swap it with app.locals.setDb().
 let db = makeDb();
 app.locals.setDb = d => { db = d; };
-mountDirectory(app, { getDb: () => db });
+mountDirectory(app, { getDb: () => db, priceStatus: () => (BLS_KEY ? livePrices.status() : null) });
 mountHsds(app, { getProviders: city => db.listProviders(city, ['approved']) });
 mountEvents(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));

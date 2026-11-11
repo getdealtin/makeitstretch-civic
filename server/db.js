@@ -19,7 +19,7 @@ export const newToken = () => crypto.randomBytes(18).toString('base64url');
 
 // ── In-memory ───────────────────────────────────────────────────
 export function memoryDb() {
-  const providers = new Map(), invites = new Map();
+  const providers = new Map(), invites = new Map(), priceCache = new Map();
   const events = [];
   const reviews = new Map(['es', 'vi', 'zh-Hans'].map(l => [l, { lang: l, status: 'pending', reviewer: null, reviewed_at: null, note: null }]));
   const now = () => new Date().toISOString();
@@ -55,6 +55,8 @@ export function memoryDb() {
     async insertEvent(ev) { events.push({ ...ev, created_at: now() }); },
     async listEvents(city, since) { return events.filter(e => e.city_id === city && e.created_at >= since).map(copy); },
     async updateReview(lang, patch) { const r = reviews.get(lang); if (!r) return null; Object.assign(r, patch); return copy(r); },
+    async getPriceCache(region) { return copy(priceCache.get(region)); },
+    async savePriceCache(region, prices, fetchedAt) { priceCache.set(region, { region, prices, fetched_at: fetchedAt }); },
   };
 }
 
@@ -99,6 +101,9 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
       return out;
     },
     updateReview: async (lang, patch) => one(await call(`translation_reviews?lang=eq.${enc(lang)}`, { method: 'PATCH', body: patch, prefer: 'return=representation' })),
+    // Last good BLS prices per region (db/price-cache.sql), so a restart keeps them.
+    getPriceCache: async region => one(await call(`price_cache?region=eq.${enc(region)}&select=region,prices,fetched_at`)),
+    savePriceCache: (region, prices, fetchedAt) => call('price_cache?on_conflict=region', { method: 'POST', body: { region, prices, fetched_at: fetchedAt }, prefer: 'resolution=merge-duplicates,return=minimal' }),
   };
 }
 

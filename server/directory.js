@@ -128,7 +128,26 @@ const safeEqual = (a, b) => {
   return x.length === y.length && crypto.timingSafeEqual(x, y);
 };
 
-export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_KEY, secureCookies = () => process.env.NODE_ENV === 'production' }) {
+/**
+ * Live BLS prices on the admin page (server/live-prices.js): one line per price region, flagged when
+ * the last good prices are more than 3 days old (BLS has been down or a series broke).
+ */
+export function livePriceItems(status) {
+  if (!status) return [];
+  return status.map(s => {
+    const last = (s.fetched_at || '').slice(0, 10) || new Date().toISOString().slice(0, 10);
+    const due = s.fetched_at ? new Date(Date.parse(s.fetched_at) + 3 * 864e5).toISOString().slice(0, 10) : last;
+    return {
+      id: `liveprices-${s.region}`, title: `Live BLS prices (${s.region} region)`, last, due, status: s.stale ? 'due' : 'ok',
+      what: s.fetched_at
+        ? `Prices are refreshed from BLS each day.${s.stale ? ' BLS hasn’t answered for over 3 days, so plans use the last good prices.' : ''}${s.last_failure ? ` Last failed try: ${s.last_failure.slice(0, 16).replace('T', ' ')} UTC.` : ''}`
+        : 'BLS hasn’t answered since the server started and no saved prices were found, so plans use the built-in average prices.',
+      how: 'Usually fixes itself when BLS is back. If it lasts, check status at bls.gov and that BLS_API_KEY is set on Render, or ask Claude to check the BLS price series (server/prices.js).',
+    };
+  });
+}
+
+export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey = () => process.env.ADMIN_KEY, secureCookies = () => process.env.NODE_ENV === 'production' }) {
   const db = () => getDb();
 
   // Simple in-memory rate limit for the public form (IP is never stored).
@@ -248,7 +267,7 @@ export function mountDirectory(app, { getDb, adminKey = () => process.env.ADMIN_
         reviews,
         reconfirm_days: RECONFIRM_DAYS,
         activity: await activityFor(city, req.query.days),
-        maintenance: maintenanceFor(CITIES[city]),
+        maintenance: [...livePriceItems(priceStatus()), ...maintenanceFor(CITIES[city])],
       });
     } catch (e) { console.error(e.message); res.status(500).json({ ok: false, error: 'db' }); }
   });
