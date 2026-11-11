@@ -115,9 +115,11 @@ export function checkPrinciples(result) {
   for (const x of assigned) if (!recipeAllowed(x.rec.recipe, avoid)) fail('household', `${x.rec.recipe.title} breaks a diet`);
 
   // no_piles: each food's packages are just enough for what's used.
+  // Exact servings (the list shows them rounded to 2 decimals, which can sit right on the SLIVER line).
+  const used = packages(kitchen, assigned, result.sides || {}).need;
   for (const i of result.cart) {
-    const f = kitchen.foods.get(i.id);
-    if (i.qty > Math.max(1, Math.ceil((i.servings - SLIVER) / f.srv))) fail('no_piles', `${i.id}: ${i.qty} packages for ${i.servings} servings`);
+    const f = kitchen.foods.get(i.id), n = used[i.id] ?? i.servings;
+    if (i.qty > Math.max(1, Math.ceil((n - SLIVER) / f.srv))) fail('no_piles', `${i.id}: ${i.qty} packages for ${i.servings} servings`);
   }
 
   // honest: the numbers shown add up.
