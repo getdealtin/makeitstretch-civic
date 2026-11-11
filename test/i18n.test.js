@@ -11,6 +11,7 @@ const austin = CITIES.austin; // as served: Austin's own listings plus the share
 const LANGS = ['es', 'vi', 'zh-Hans'];
 const holes = s => [...String(s).matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort();
 const nih = JSON.parse(readFileSync(new URL('../data/nih-recipes.json', import.meta.url), 'utf8')).recipes;
+const simple = JSON.parse(readFileSync(new URL('../data/simple-meals.json', import.meta.url), 'utf8')).recipes;
 const recipes = JSON.parse(readFileSync(new URL('../data/seed-recipes.json', import.meta.url), 'utf8')).map((r, i) => ({ ...r, id: i + 1 }));
 
 for (const code of LANGS) {
@@ -34,7 +35,7 @@ for (const code of LANGS) {
     for (const tip of ALL_TIPS) assert.ok(d.tips?.[tip.text], `${code} tip "${tip.text.slice(0, 40)}"`);
     for (const id of TWIST_IDS) assert.ok(d.twists?.[id], `${code} twist ${id}`);
     for (const w of [...Object.keys(INGREDIENT_FOODS), ...PANTRY_BASICS]) assert.ok(d.ingredients?.[w], `${code} ingredient "${w}"`);
-    for (const r of recipes) {
+    for (const r of [...recipes, ...simple]) {
       assert.ok(d.recipes?.[r.id]?.title, `${code} recipe ${r.id} title (${r.title})`);
       assert.ok(d.recipes?.[r.id]?.instructions, `${code} recipe ${r.id} steps (${r.title})`);
     }

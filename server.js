@@ -27,10 +27,12 @@ const DEFAULT_CITY = process.env.DEFAULT_CITY || 'national';
 // ?city= overrides are for local testing; off in production unless explicitly allowed.
 const ALLOW_CITY_OVERRIDE = process.env.ALLOW_CITY_OVERRIDE === '1' || process.env.NODE_ENV !== 'production';
 
-// The 161 seed recipes (ids 1–161) and the NHLBI main dishes, word for word (ids 1001+, data/nih-recipes.json).
+// The 161 seed recipes (ids 1–161), the NHLBI main dishes, word for word (ids 1001+, data/nih-recipes.json),
+// and the simple meals from everyday staples (ids 2001+, data/simple-meals.json).
 const NIH = JSON.parse(readFileSync(path.join(__dirname, 'data', 'nih-recipes.json'), 'utf8'));
+const SIMPLE = JSON.parse(readFileSync(path.join(__dirname, 'data', 'simple-meals.json'), 'utf8')).recipes;
 const RECIPES = [...indexRecipes(JSON.parse(readFileSync(path.join(__dirname, 'data', 'seed-recipes.json'), 'utf8'))),
-  ...NIH.recipes.map(({ es, key, ...r }) => r)];
+  ...NIH.recipes.map(({ es, key, ...r }) => r), ...SIMPLE];
 
 const app = express();
 app.disable('x-powered-by');
@@ -160,6 +162,8 @@ app.post('/api/plan', async (req, res) => {
 
   // Meals first, then the list from those meals (engine/meals.js).
   const result = planMeals(input, prices, RECIPES);
+  // Every plan is checked against the engine's principles (engine/principles.js); a failure is a bug to fix.
+  if (!result.principles.ok) console.warn('[principles]', JSON.stringify({ input: { budget, days, people, avoid: input.avoid, cuisine: input.cuisine }, failed: result.principles.failed }));
   const weeks = result.weeks;
 
   const slim = r => ({ id: r.id, title: r.title, cuisine: r.cuisine, ingredients: r.ingredients, instructions: r.instructions, tags: r.tags, srv: r.srv,

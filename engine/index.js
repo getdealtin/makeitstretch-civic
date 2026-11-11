@@ -3,7 +3,16 @@ export { FOOD_DB, FALLBACK_PRICES, ALL_TIPS } from './food-db.js';
 export { ZIP_MAP, zipToInfo } from './zip-map.js';
 export { resolvePrices, applyStoreAdjustments, FLOOR_KCAL } from './pricing.js';
 export { indexRecipes } from './recipes.js';
-export { planMeals, rebuildList, MENU_SIZE, LIGHT } from './meals.js';
+import { planMeals as plan } from './meals.js';
+import { checkPrinciples } from './principles.js';
+export { rebuildList, MENU_SIZE, LIGHT, VARIETY_KCAL_GIVE } from './meals.js';
+export { PRINCIPLES, checkPrinciples } from './principles.js';
+
+/** Plan meals and the list (engine/meals.js), checked against the engine's principles (engine/principles.js). */
+export function planMeals(input, prices, recipes) {
+  const r = plan(input, prices, recipes);
+  return { ...r, principles: checkPrinciples(r) };
+}
 export { LEAVE_OUT, DIETS, DIET_NOTE_KEYS, foodAllowed, recipeAllowed } from './diets.js';
 export { groupShoppingList, CATEGORY_ORDER, TIER_KEYS } from './shopping.js';
 export { NUTRITION } from './nutrition.js';

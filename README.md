@@ -46,7 +46,7 @@ server/      prices (BLS), stores, events, City report, food directory, open dat
 public/      The UI (plain HTML/CSS/ES modules, no build step)
   keep.js      save / text / email / link a plan without an account
   i18n/        screen text per language; data/ holds food, recipe and tip translations
-data/        seed-recipes.json (161 recipes), nih-recipes.json (25 NHLBI main dishes), city data files
+data/        seed-recipes.json (161 recipes), nih-recipes.json (25 NHLBI main dishes), simple-meals.json (22 everyday staple meals), city data files
 scripts/     reproducible builders for every generated data file (each names its sources)
 test/        node:test, no dependencies; test/cities.test.js runs every city through the same checks
 ```

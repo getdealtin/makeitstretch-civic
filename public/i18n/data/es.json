@@ -1900,6 +1900,94 @@
    ],
    "extra": [],
    "instructions": "Mezcle todos los ingredientes excepto el pollo en una cacerola. Cocine a fuego lento 15 minutos. Lave el pollo y séquelo con toallas de papel. Póngalo en una fuente grande y úntelo con la mitad de la salsa. Cubra con plástico y deje marinar en el refrigerador 1 hora. Ponga el pollo en una bandeja para hornear cubierta con papel de aluminio y áselo a la parrilla del horno (broil) 10 minutos por cada lado para sellar los jugos. Saque del horno y unte las piezas de pollo con el resto de la salsa. Cubra con papel de aluminio y hornee a 350 °F por 30 minutos."
+  },
+  "2001": {
+   "title": "Tazón de arroz con huevo y aguacate",
+   "instructions": "Cocine el arroz. Fría o revuelva los huevos. Sirva los huevos sobre el arroz con aguacate en rebanadas y una pizca de sal."
+  },
+  "2002": {
+   "title": "Arroz con frijoles y huevo frito",
+   "instructions": "Cocine el arroz y caliente los frijoles con un poco de sal. Fría los huevos en un poco de aceite y sírvalos encima del arroz con frijoles."
+  },
+  "2003": {
+   "title": "Tacos de frijoles con aguacate",
+   "instructions": "Caliente los frijoles con un poco de sal y machaque algunos. Caliente las tortillas en un sartén seco. Rellene con frijoles y aguacate en rebanadas."
+  },
+  "2004": {
+   "title": "Tacos de huevo",
+   "instructions": "Revuelva los huevos en un poco de aceite con una pizca de sal. Caliente las tortillas en un sartén seco y rellénelas con el huevo."
+  },
+  "2005": {
+   "title": "Burritos de frijoles y arroz",
+   "instructions": "Cocine el arroz y caliente los frijoles con un poco de sal. Caliente las tortillas, rellénelas con arroz y frijoles y enróllelas."
+  },
+  "2006": {
+   "title": "Burritos de papa y frijoles",
+   "instructions": "Corte las papas en cubitos y fríalas en un poco de aceite hasta que estén suaves y doradas. Caliente los frijoles. Rellene las tortillas calientes con papas y frijoles y enróllelas."
+  },
+  "2007": {
+   "title": "Frijoles sobre pan tostado",
+   "instructions": "Caliente los frijoles con un poco de sal y macháquelos un poco. Tueste el pan y ponga los frijoles encima."
+  },
+  "2008": {
+   "title": "Pan francés",
+   "instructions": "Bata los huevos con la leche y una pizca de canela. Remoje cada rebanada de pan y fríala en un poco de aceite hasta que se dore por ambos lados."
+  },
+  "2009": {
+   "title": "Pan tostado con aguacate y huevo",
+   "instructions": "Tueste el pan. Machaque el aguacate con una pizca de sal y úntelo en el pan. Ponga encima un huevo frito o cocido."
+  },
+  "2010": {
+   "title": "Arroz frito con ajo",
+   "instructions": "Cocine el arroz con anticipación (el arroz del día anterior es mejor). Fría ajo picado en un poco de aceite, agregue el arroz y una pizca de sal, y revuelva hasta que esté caliente y un poco crujiente."
+  },
+  "2011": {
+   "title": "Pasta con frijoles y ajo",
+   "instructions": "Cocine la pasta y guarde un poco del agua. Fría ajo picado en un poco de aceite, agregue los frijoles y un chorrito del agua de la pasta, y luego incorpore la pasta."
+  },
+  "2012": {
+   "title": "Fideos con huevo y salsa de soya",
+   "instructions": "Cocine los fideos y escúrralos. Revuelva los huevos en un poco de aceite, agregue los fideos y un chorrito de salsa de soya, y mezcle hasta que estén calientes."
+  },
+  "2013": {
+   "title": "Arroz dulce con plátano",
+   "instructions": "Hierva a fuego lento el arroz cocido en un poco de agua con una pizca de canela hasta que esté suave y espeso. Ponga plátano en rebanadas encima."
+  },
+  "2014": {
+   "title": "Atole de grits con plátano",
+   "instructions": "Cocine la harina de maíz en agua con sal, revolviendo, hasta que espese. Ponga plátano en rebanadas y una pizca de canela encima."
+  },
+  "2015": {
+   "title": "Grits salados con huevo",
+   "instructions": "Cocine la harina de maíz en agua con sal, revolviendo, hasta que espese. Ponga encima de cada plato un huevo frito o tibio."
+  },
+  "2016": {
+   "title": "Panqueques de avena y plátano",
+   "instructions": "Machaque el plátano y luego mezcle los huevos y la avena. Cocine cucharadas de la mezcla en un poco de aceite a fuego medio hasta que se doren por ambos lados."
+  },
+  "2017": {
+   "title": "Avena con crema de cacahuate",
+   "instructions": "Cocine la avena en agua con una pizca de sal. Incorpore una cucharada de crema de cacahuate."
+  },
+  "2018": {
+   "title": "Avena salada con huevo",
+   "instructions": "Cocine la avena en agua con sal en lugar de azúcar. Ponga encima de cada plato un huevo frito."
+  },
+  "2019": {
+   "title": "Papa al horno con huevo",
+   "instructions": "Hornee las papas o cocínelas en el microondas hasta que estén suaves. Ábralas, agregue un poco de aceite y sal, y ponga encima un huevo frito."
+  },
+  "2020": {
+   "title": "Lentejas y arroz con huevo",
+   "instructions": "Hierva las lentejas a fuego lento en agua con sal hasta que estén suaves. Cocine el arroz. Sirva las lentejas sobre el arroz con un huevo frito o cocido."
+  },
+  "2021": {
+   "title": "Sopa de repollo y frijoles",
+   "instructions": "Hierva a fuego lento el repollo picado en agua con sal hasta que esté suave. Agregue los frijoles con un poco de su caldo y caliente bien."
+  },
+  "2022": {
+   "title": "Tortilla con crema de cacahuate y plátano",
+   "instructions": "Unte crema de cacahuate en una tortilla, agregue plátano en rebanadas y enróllela."
   }
  },
  "_note": "DRAFT translation, pending review by a native speaker (see /admin -> Translations).",

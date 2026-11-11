@@ -111,10 +111,10 @@ test('variety cap: no ingredient but staples and seasonings in more than about 1
     assert.equal(capExcess(r.state.assigned).excess, 0, JSON.stringify(c));
   }
   for (const id of ['rice', 'drybeans', 'onions', 'oil', 'garlic']) assert.ok(CAP_EXEMPT.has(id), id);
-  // The reported case: 17 cans of tomatoes for a family of 5 over two weeks. Now about half: 3 stews over
-  // two weeks (9 cans since meals also count fullness, Nov 8, and tomato stews are filling per calorie).
+  // The reported case: 17 cans of tomatoes for a family of 5 over two weeks. Now 10 at most: tomato meals
+  // stay within the 1-in-4 spread (fullness counts since Nov 8, the shared-foods menu since Nov 11).
   const fam = run({ budget: 500, days: 14, people: 5, avoid: ['halal'] });
-  assert.ok(fam.cart.find(i => i.id === 'cannedtomatoes').qty <= 9);
+  assert.ok(fam.cart.find(i => i.id === 'cannedtomatoes').qty <= 10);
 });
 
 test('plans over a week get one list per week that adds up to the whole plan', () => {
@@ -176,21 +176,19 @@ test('extra money buys more filling meals, never fewer calories', () => {
   assert.ok(satiety(roomy) >= satiety(tight), 'more money, more filling food');
 });
 
-// Very tight budgets (owner decision Nov 8): one breakfast, one lunch and one dinner before cutting days,
-// so the food bought isn't left unplanned; repeated meals get "ways to change it up".
-test('tight budgets: a full week of three meals before fewer days, and every twist is free', async () => {
+// Very tight budgets (owner decisions Nov 8 and Nov 11): a full week before fewer days, different meals
+// from the same foods where they fit, and "ways to change it up" only from foods already on the list.
+test('tight budgets: a full week of meals before fewer days, and every twist is free', async () => {
   const { twistsFor, TWIST_REPEATS } = await import('../engine/twists.js');
+  const isOn = (onList, n) => onList.some(id => id === n || (n === 'beans' && ['drybeans', 'blackbeans', 'kidneybean'].includes(id)) || (n === 'milk' && ['milk', 'evaporatedmilk'].includes(id)));
   for (const people of [1, 2]) {
     const r = run({ budget: 21, days: 7, people });
     assert.equal(r.coveredDays, 7, `$21, ${people} people`);
     const onList = [...r.cart.map(i => i.id), ...r.have];
     const times = {};
     for (const x of r.state.assigned) times[x.rec.id] = (times[x.rec.id] || 0) + 1;
-    for (const x of r.state.assigned.filter(x => times[x.rec.id] >= TWIST_REPEATS)) {
-      const tws = twistsFor(x.rec.uses.map(u => u.id), onList);
-      assert.ok(tws.length >= 1, `${x.rec.recipe.title} gets a twist`);
-      for (const tw of tws) for (const n of tw.needs) assert.ok(onList.some(id => id === n || (n === 'beans' && ['drybeans', 'blackbeans', 'kidneybean'].includes(id)) || (n === 'milk' && ['milk', 'evaporatedmilk'].includes(id))), `${tw.id} needs ${n}`);
-    }
+    for (const x of r.state.assigned.filter(x => times[x.rec.id] >= TWIST_REPEATS))
+      for (const tw of twistsFor(x.rec.uses.map(u => u.id), onList)) for (const n of tw.needs) assert.ok(isOn(onList, n), `${tw.id} needs ${n}`);
   }
   assert.equal(run({ budget: 25, days: 7, people: 1 }).coveredDays, 7, 'more money never covers fewer days');
 });
