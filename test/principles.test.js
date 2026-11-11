@@ -77,3 +77,12 @@ test('same answers, same plan', () => {
     assert.equal(ids(run(c)), ids(run(c)), tag(c));
   }
 });
+
+test('the "How your plan is made" page lists the same principles, in the same order, in every language', async () => {
+  for (const code of ['en', 'es', 'vi', 'zh-Hans']) {
+    const P = (await import(`../public/i18n/principles/${code}.js`)).default;
+    assert.deepEqual(P.items.map(i => i.id), PRINCIPLES.map(p => p.id), code);
+    for (const i of P.items) assert.ok(i.h && i.p, `${code} ${i.id}`);
+    assert.ok(P.title && P.intro && P.back, code);
+  }
+});

@@ -254,6 +254,7 @@ app.get('/join/:token', page('provider.html'));
 app.get('/add-site', page('provider.html'));
 app.get('/admin', page('admin.html'));
 app.get('/privacy', page('privacy.html'));
+app.get('/how-plans-work', page('principles.html'));
 
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', 'index.html')));

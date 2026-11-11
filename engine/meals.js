@@ -276,7 +276,8 @@ export function planMeals(input, prices, recipes) {
   const haveIds = [...kitchen.foods.values()].filter(f => f.have).map(f => f.id);
   // Build for d days; if the cheapest menu costs more than the budget, cover fewer days.
   // cap: false skips the ingredient-spread swaps (used only when the spread can't be afforded).
-  const attempt = (d, size = MENU_SIZE, { cap = true } = {}) => {
+  // fixed: use this menu as is (to stretch a chosen menu over more days).
+  const attempt = (d, size = MENU_SIZE, { cap = true, fixed = null } = {}) => {
     const { occ, isLeftover } = schedule(d, people, input.leftover);
     const count = sl => occ.filter(o => o.slot === sl).length;
     const want = sl => Math.min(size[sl], count(sl));
@@ -287,83 +288,86 @@ export function planMeals(input, prices, recipes) {
     // the same rice, beans and eggs come first, and a tight budget gets different meals from the same
     // few foods instead of one meal all week. Cost per calorie decides (calories first).
     const priceIn = (r, sl, basket) => (r.uses.reduce((a, u) => a + (basket.has(u.id) ? 0 : kitchen.foods.get(u.id).price), 0) + r.cost * per(sl)) / Math.max(r.kcal * per(sl), 1);
-    let menu = Object.fromEntries(SLOTS.map(sl => [sl, []]));
-    const basket = new Set(haveIds), used = new Set(), sigs = new Set();
-    // Take turns: a first breakfast, lunch and dinner, then a second of each, and so on.
-    for (let round = 0; SLOTS.some(sl => menu[sl].length === round && round < want(sl)); round++) {
-      for (const sl of SLOTS) {
-        if (menu[sl].length !== round || round >= want(sl)) continue;
-        let best = null, bestScore = Infinity;
-        for (const r of pools[sl]) {
-          // No recipe in two slots, and no two meals that are the same dish under another name (same foods).
-          if (used.has(r.id) || sigs.has(r.sig)) continue;
-          const s = priceIn(r, sl, basket);
-          if (s < bestScore - 1e-12) { best = r; bestScore = s; }
-        }
-        if (!best) continue;
-        menu[sl].push(best); used.add(best.id); sigs.add(best.sig);
-        for (const u of best.uses) basket.add(u.id);
-      }
-    }
-    // Very few recipes fit (strict leave-outs, few cuisines): rather than no meal, repeat one from another slot.
-    for (const sl of SLOTS) if (!menu[sl].length && count(sl)) menu[sl].push(pools[sl][0]);
     const assign = m => occ.map((o, i) => {
       const list = m[o.slot];
       const idx = (occ.slice(0, i).filter(x => x.slot === o.slot).length + SLOTS.indexOf(o.slot)) % list.length;
       return { ...o, rec: list[idx] };
     });
-    // Variety cap: swap out the menu meal that uses the over-used ingredient most, for the cheapest meal
-    // (per calorie, counting what it adds to the list) in that slot that doesn't use it. Stops when
-    // nothing better exists.
-    for (let guard = 0; cap && guard < 30; guard++) {
-      const { excess, worst } = capExcess(assign(menu));
-      if (!excess) break;
-      let done = false;
-      for (const sl of SLOTS) {
-        const i = menu[sl].findIndex(r => r.uses.some(u => u.id === worst));
-        if (i < 0) continue;
-        const inMenu = new Set(SLOTS.flatMap(x => menu[x].map(r => r.id)));
-        const rest = new Set([...haveIds, ...SLOTS.flatMap(x => menu[x].filter((_, j) => !(x === sl && j === i)).flatMap(r => r.uses.map(u => u.id)))]);
-        const cand = pools[sl].filter(c => !inMenu.has(c.id) && !c.uses.some(u => u.id === worst) &&
-          !SLOTS.some(x => menu[x].some(m => m.sig === c.sig)))
-          .reduce((b, c) => (!b || priceIn(c, sl, rest) < priceIn(b, sl, rest) - 1e-12 ? c : b), null);
-        if (!cand) continue;
-        const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? cand : r)) };
-        if (capExcess(assign(trial)).excess < excess) { menu[sl] = trial[sl]; done = true; break; }
-      }
-      if (!done) break;
-    }
-    // Whole-list pass: the turn-taking above can't see that, say, rice for breakfast too would make the
-    // list cheaper. Swap one meal at a time for the swap that most improves the plan: within budget first,
-    // then less ingredient repetition (when the spread is on), then the most calories once filling sides
-    // are added (calories first), then the lower cost. A few rounds, best swap first.
-    // Score = [how far the meals go over budget, ingredient repetition (with the spread on), calories short
-    // of the target after filling sides, cost]; compared in that order.
-    const target = FLOOR_KCAL * people * d;
-    const score = m => {
-      const a = assign(m), base = packages(kitchen, a).cost, ex = cap ? capExcess(a).excess : 0;
-      if (base > budget) return [base - budget, ex, 0, base];
-      const t = topUp(kitchen, a, { people, days: d, budget });
-      return [0, ex, Math.max(0, target - t.kcal), t.cost];
-    };
-    const TOL = [1e-9, 0, 1, 0.005];
-    const better = (a, b) => { for (let k = 0; k < a.length; k++) { if (a[k] < b[k] - TOL[k]) return true; if (a[k] > b[k] + TOL[k]) return false; } return false; };
-    let cur = score(menu);
-    for (let pass = 0; pass < SWAP_PASSES; pass++) {
-      let best = null;
-      for (const sl of SLOTS) for (let i = 0; i < menu[sl].length; i++) {
-        const inMenu = new Set(SLOTS.flatMap(x => menu[x].map(r => r.id)));
-        const rest = new Set([...haveIds, ...SLOTS.flatMap(x => menu[x].filter((_, j) => !(x === sl && j === i)).flatMap(r => r.uses.map(u => u.id)))]);
-        const cands = pools[sl].filter(c => !inMenu.has(c.id) && !SLOTS.some(x => menu[x].some((m, j) => m.sig === c.sig && !(x === sl && j === i))))
-          .map(c => [c, priceIn(c, sl, rest)]).sort((a, b) => a[1] - b[1]).slice(0, SWAP_CANDIDATES);
-        for (const [c] of cands) {
-          const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? c : r)) };
-          const s = score(trial);
-          if (better(s, best ? best.s : cur)) best = { trial, s };
+    let menu = fixed;
+    if (!menu) {
+      menu = Object.fromEntries(SLOTS.map(sl => [sl, []]));
+      const basket = new Set(haveIds), used = new Set(), sigs = new Set();
+      // Take turns: a first breakfast, lunch and dinner, then a second of each, and so on.
+      for (let round = 0; SLOTS.some(sl => menu[sl].length === round && round < want(sl)); round++) {
+        for (const sl of SLOTS) {
+          if (menu[sl].length !== round || round >= want(sl)) continue;
+          let best = null, bestScore = Infinity;
+          for (const r of pools[sl]) {
+            // No recipe in two slots, and no two meals that are the same dish under another name (same foods).
+            if (used.has(r.id) || sigs.has(r.sig)) continue;
+            const s = priceIn(r, sl, basket);
+            if (s < bestScore - 1e-12) { best = r; bestScore = s; }
+          }
+          if (!best) continue;
+          menu[sl].push(best); used.add(best.id); sigs.add(best.sig);
+          for (const u of best.uses) basket.add(u.id);
         }
       }
-      if (!best) break;
-      menu = best.trial; cur = best.s;
+      // Very few recipes fit (strict leave-outs, few cuisines): rather than no meal, repeat one from another slot.
+      for (const sl of SLOTS) if (!menu[sl].length && count(sl)) menu[sl].push(pools[sl][0]);
+      // Variety cap: swap out the menu meal that uses the over-used ingredient most, for the cheapest meal
+      // (per calorie, counting what it adds to the list) in that slot that doesn't use it. Stops when
+      // nothing better exists.
+      for (let guard = 0; cap && guard < 30; guard++) {
+        const { excess, worst } = capExcess(assign(menu));
+        if (!excess) break;
+        let done = false;
+        for (const sl of SLOTS) {
+          const i = menu[sl].findIndex(r => r.uses.some(u => u.id === worst));
+          if (i < 0) continue;
+          const inMenu = new Set(SLOTS.flatMap(x => menu[x].map(r => r.id)));
+          const rest = new Set([...haveIds, ...SLOTS.flatMap(x => menu[x].filter((_, j) => !(x === sl && j === i)).flatMap(r => r.uses.map(u => u.id)))]);
+          const cand = pools[sl].filter(c => !inMenu.has(c.id) && !c.uses.some(u => u.id === worst) &&
+            !SLOTS.some(x => menu[x].some(m => m.sig === c.sig)))
+            .reduce((b, c) => (!b || priceIn(c, sl, rest) < priceIn(b, sl, rest) - 1e-12 ? c : b), null);
+          if (!cand) continue;
+          const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? cand : r)) };
+          if (capExcess(assign(trial)).excess < excess) { menu[sl] = trial[sl]; done = true; break; }
+        }
+        if (!done) break;
+      }
+      // Whole-list pass: the turn-taking above can't see that, say, rice for breakfast too would make the
+      // list cheaper. Swap one meal at a time for the swap that most improves the plan: within budget first,
+      // then less ingredient repetition (when the spread is on), then the most calories once filling sides
+      // are added (calories first), then the lower cost. A few rounds, best swap first.
+      // Score = [how far the meals go over budget, ingredient repetition (with the spread on), calories short
+      // of the target after filling sides, cost]; compared in that order.
+      const target = FLOOR_KCAL * people * d;
+      const score = m => {
+        const a = assign(m), base = packages(kitchen, a).cost, ex = cap ? capExcess(a).excess : 0;
+        if (base > budget) return [base - budget, ex, 0, base];
+        const t = topUp(kitchen, a, { people, days: d, budget });
+        return [0, ex, Math.max(0, target - t.kcal), t.cost];
+      };
+      const TOL = [1e-9, 0, 1, 0.005];
+      const better = (a, b) => { for (let k = 0; k < a.length; k++) { if (a[k] < b[k] - TOL[k]) return true; if (a[k] > b[k] + TOL[k]) return false; } return false; };
+      let cur = score(menu);
+      for (let pass = 0; pass < SWAP_PASSES; pass++) {
+        let best = null;
+        for (const sl of SLOTS) for (let i = 0; i < menu[sl].length; i++) {
+          const inMenu = new Set(SLOTS.flatMap(x => menu[x].map(r => r.id)));
+          const rest = new Set([...haveIds, ...SLOTS.flatMap(x => menu[x].filter((_, j) => !(x === sl && j === i)).flatMap(r => r.uses.map(u => u.id)))]);
+          const cands = pools[sl].filter(c => !inMenu.has(c.id) && !SLOTS.some(x => menu[x].some((m, j) => m.sig === c.sig && !(x === sl && j === i))))
+            .map(c => [c, priceIn(c, sl, rest)]).sort((a, b) => a[1] - b[1]).slice(0, SWAP_CANDIDATES);
+          for (const [c] of cands) {
+            const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? c : r)) };
+            const s = score(trial);
+            if (better(s, best ? best.s : cur)) best = { trial, s };
+          }
+        }
+        if (!best) break;
+        menu = best.trial; cur = best.s;
+      }
     }
     const total = m => topUp(kitchen, assign(m), { people, days: d, budget });
     return { occ, isLeftover, menu, assign, total, count, price: id => kitchen.foods.get(id).price, base: packages(kitchen, assign(menu)).cost };
@@ -396,6 +400,14 @@ export function planMeals(input, prices, recipes) {
   plan = fit(d);
   while (plan.base > budget && d > 1) { d -= 1; plan = fit(d); }
   if (plan.base > budget) return empty(input, days, 'budget_too_small');
+  // Leftovers (owner decision, Nov 11): food bought for fewer days often has servings left in its
+  // packages (most of a bag of grits). Keep the same meals and add days while the list still fits the
+  // budget, so what's bought is planned and counted instead of left over.
+  while (d < days) {
+    const next = attempt(d + 1, MENU_SIZE, { fixed: plan.menu });
+    if (next.base > budget) break;
+    next.kcalFloor = plan.kcalFloor; d += 1; plan = next;
+  }
 
   // Spend what's left on better meals: swap a menu recipe for a better one while everything fits.
   let { menu } = plan;
@@ -526,10 +538,22 @@ export function rebuildList(state, swaps = []) {
   }
   const spent = round2(pk.cost);
   const remaining = round2(budget - spent);
-  const totalCals = Math.round(t.kcal);
+  // Leftovers count (owner decision, Nov 11): servings left in the packages bought (most of a bag of
+  // grits, a few cups of rice) are food the household has, so they count toward the calories shown.
+  // Not oil, butter, garlic, onions or soy sauce: flavorings, not meals.
+  let leftoverCals = 0;
+  for (const { id, qty, servingsUsed } of pk.items) {
+    if (id in LIGHT) continue;
+    const f = kitchen.foods.get(id);
+    leftoverCals += Math.max(0, qty * f.srv - servingsUsed) * f.srvCal;
+  }
+  // They only fill the gap to about 2,000 a day: past that they'd overstate what a plan is for.
+  const fullCals = FLOOR_KCAL * input.people * input.days;
+  leftoverCals = Math.round(Math.max(0, Math.min(leftoverCals, fullCals - t.kcal)));
+  const totalCals = Math.round(t.kcal) + leftoverCals;
   const cppd = Math.round(totalCals / input.people / input.days);
   return {
-    cart, byWeek, remaining, totalCals, spent, have, coveredDays, overBudget: spent > budget ? round2(spent - budget) : 0,
+    cart, byWeek, remaining, totalCals, leftoverCals, spent, have, coveredDays, overBudget: spent > budget ? round2(spent - budget) : 0,
     sides: t.extra, // food servings bought beyond the meals: fruit, filling sides, food groups
     // Owner decision Nov 7: on the tightest budgets the plan recommends what it can and says some
     // foods repeat often, pointing to free food (the variety cap couldn't be met within the budget).
