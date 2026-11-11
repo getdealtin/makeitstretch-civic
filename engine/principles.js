@@ -11,7 +11,7 @@
 import { FOOD_DB } from './food-db.js';
 import { FLOOR_KCAL } from './pricing.js';
 import { foodAllowed, recipeAllowed } from './diets.js';
-import { capExcess, SIDES, packages, acceptableVariety, varietyFloor, VARIETY_KCAL_GIVE } from './meals.js';
+import { capExcess, SIDES, SLIVER, packages, acceptableVariety, varietyFloor, VARIETY_KCAL_GIVE } from './meals.js';
 
 const F = Object.fromEntries(FOOD_DB.map(f => [f.id, f]));
 const SLOTS = ['breakfast', 'lunch', 'dinner'];
@@ -23,7 +23,7 @@ export const PRINCIPLES = [
   { id: 'within_budget', text: 'The list never costs more than the budget.' },
   { id: 'calories_first', text: 'Calories come first: about 2,000 per person per day (USDA reference). Until a plan reaches that, money goes to the cheapest filling food before anything else, and a plan is never chosen for looks over calories.' },
   { id: 'fullness_next', text: 'Fullness comes next: among meals that give similar calories for the money, the more filling ones win (protein, fiber and water keep people full longer).' },
-  { id: 'guidance', text: 'At or above the average SNAP benefit ($6.22 per person per day), each person gets about 2,000 calories, at least 50 g protein and 25 g fiber, a fruit and two vegetable servings a day, and filling food (federal dietary guidance).' },
+  { id: 'guidance', text: 'For plans of a week or longer at or above the average SNAP benefit ($6.22 per person per day), each person gets about 2,000 calories, at least 50 g protein and 25 g fiber, a fruit and two vegetable servings a day, and filling food (federal dietary guidance). Shorter plans buy whole packages they don\'t finish, so they get every other check but not this one.' },
   { id: 'variety', text: `Different meals cost nothing extra when they can: meals that reuse foods already on the list come first, and a different meal is added whenever it fits the budget and keeps the calories (within ${Math.round(VARIETY_KCAL_GIVE * 100)}% of the most the budget can buy). The same meal never lands in the same slot two days running when that slot has more than one meal.` },
   { id: 'spread', text: 'No one ingredient (other than staples like rice, beans, oil, onions and garlic) in more than about 1 in 4 meals. When the budget can\'t allow that, the plan says some foods repeat.' },
   { id: 'household', text: 'Every amount is for the number of people chosen, and the plan never breaks a food the household leaves out or a diet it follows.' },
@@ -67,8 +67,9 @@ export function checkPrinciples(result) {
     }
   }
 
-  // guidance (only when the budget is at or above the SNAP average and the whole plan is covered)
-  if (budget >= SNAP_PPD * people * days - 0.01 && coveredDays === days) {
+  // guidance: plans of a week or longer, at or above the SNAP average, covering the whole plan (owner
+  // decision Nov 11: shorter plans pay for whole packages they don't finish).
+  if (days >= 7 && budget >= SNAP_PPD * people * days - 0.01 && coveredDays === days) {
     const pd = people * days;
     let kcal = 0, protein = 0, fiber = 0, filling = 0, fruit = 0, veg = 0;
     // Every serving eaten: the meals and sides, whether bought or already at home.
@@ -82,7 +83,8 @@ export function checkPrinciples(result) {
     }
     const checks = [[kcal / pd >= 1950, `calories ${Math.round(kcal / pd)}`], [protein / pd >= 50, `protein ${Math.round(protein / pd)} g`],
       [fiber / pd >= 25, `fiber ${Math.round(fiber / pd)} g`], [fruit / pd >= 0.75, `fruit ${(fruit / pd).toFixed(2)}`],
-      [veg / pd >= 2, `vegetables ${(veg / pd).toFixed(2)}`], [filling / Math.max(kcal, 1) >= 1.0, `satiety ${(filling / Math.max(kcal, 1)).toFixed(2)}`]];
+      [veg / pd >= 2, `vegetables ${(veg / pd).toFixed(2)}`], [filling / Math.max(kcal, 1) >= 0.99, `satiety ${(filling / Math.max(kcal, 1)).toFixed(2)}`]];
+    // Fullness of 0.99 counts as filling ("about" 1.0, as 1,950 counts as about 2,000 calories; owner decision Nov 11).
     for (const [ok, d] of checks) if (!ok) fail('guidance', d);
   }
 
@@ -115,7 +117,7 @@ export function checkPrinciples(result) {
   // no_piles: each food's packages are just enough for what's used.
   for (const i of result.cart) {
     const f = kitchen.foods.get(i.id);
-    if (i.qty > Math.max(1, Math.ceil(i.servings / f.srv - 1e-9))) fail('no_piles', `${i.id}: ${i.qty} packages for ${i.servings} servings`);
+    if (i.qty > Math.max(1, Math.ceil((i.servings - SLIVER) / f.srv))) fail('no_piles', `${i.id}: ${i.qty} packages for ${i.servings} servings`);
   }
 
   // honest: the numbers shown add up.

@@ -63,6 +63,8 @@ export const SIDES = [
 const FRUITS = ['bananas', 'apples', 'oranges'];
 const LEGUMES = new Set(['drybeans', 'blackbeans', 'kidneybean', 'chickpeas', 'lentils', 'splitpeas', 'peanutbutter']);
 const round2 = n => +n.toFixed(2);
+/** Servings short of a whole package that are ignored when counting packages (see packages()). */
+export const SLIVER = 0.05;
 
 /** Who is eating and what the kitchen offers: priced foods, foods on hand, recipes prepared. */
 function setup(input, prices, recipes) {
@@ -152,7 +154,9 @@ export function packages(kitchen, assigned, extra = {}) {
   for (const [id, n] of Object.entries(need)) {
     const f = kitchen.foods.get(id);
     if (f.have) continue;
-    const qty = Math.max(1, Math.ceil(n / f.srv - 1e-9));
+    // A sliver over a package (under SLIVER of a serving: a few grams, often just rounding in recipe
+    // amounts) doesn't buy a whole extra package.
+    const qty = Math.max(1, Math.ceil((n - SLIVER) / f.srv));
     items.push({ id, qty, servingsUsed: n });
     cost += qty * f.price;
   }
@@ -160,17 +164,18 @@ export function packages(kitchen, assigned, extra = {}) {
 }
 
 /** Fruit a day (if affordable) and filling sides up to the calorie target, for a set of meals. */
-function topUp(kitchen, assigned, { people, days, budget }, balance = {}) {
+export function topUp(kitchen, assigned, { people, days, budget }, balance = {}) {
   const mealKcal = assigned.reduce((a, x) => a + x.rec.kcal * x.servings, 0);
   let extra = { ...balance };
   let cost = packages(kitchen, assigned, extra).cost;
   let kcal = mealKcal + Object.entries(balance).reduce((a, [id, n]) => a + kitchen.foods.get(id).srvCal * n, 0);
   // One fruit serving per person per day, cheapest fruit first.
   const fruit = FRUITS.map(id => kitchen.foods.get(id)).filter(Boolean).sort((a, b) => a.srvCost - b.srvCost)[0];
+  let fruitAdded = false;
   if (fruit && !balance[fruit.id]) {
     const trial = { ...extra, [fruit.id]: people * days };
     const c = packages(kitchen, assigned, trial).cost;
-    if (c <= budget) { extra = trial; cost = c; kcal += fruit.srvCal * people * days; }
+    if (c <= budget) { extra = trial; cost = c; kcal += fruit.srvCal * people * days; fruitAdded = true; }
   }
   // Filling sides, each capped per person per week, until about FLOOR_KCAL per person per day.
   const target = FLOOR_KCAL * people * days;
@@ -188,7 +193,9 @@ function topUp(kitchen, assigned, { people, days, budget }, balance = {}) {
     while (lo < hi) { const mid = Math.ceil((lo + hi) / 2); if (costWith(mid) <= budget) lo = mid; else hi = mid - 1; }
     if (lo > 0) { extra = { ...extra, [s.id]: (extra[s.id] || 0) + lo }; cost = packages(kitchen, assigned, extra).cost; kcal += f.srvCal * lo; sideAdded[s.id] = lo; }
   }
-  return { extra, cost, kcal, mealKcal, fruit: extra[fruit?.id] ? fruit.id : null, sideAdded };
+  // fruit: the daily fruit made it in (bananas added only as a filling side don't count), or a
+  // fruit was already part of the balance.
+  return { extra, cost, kcal, mealKcal, fruit: fruitAdded || (fruit && balance[fruit.id]) ? fruit.id : null, sideAdded };
 }
 
 /**
@@ -237,7 +244,8 @@ export const varietyFloor = (plan, current, target) => Math.min(plan.kcalFloor ?
 export function acceptableVariety({ pools, plan, menu, current, haveIds }, sl, budget, floor) {
   const excess = capExcess(plan.assign(menu)).excess;
   return varietyCandidates({ pools, plan, menu, current, haveIds }, sl)
-    .filter(c => c.t.cost <= budget && c.t.kcal >= floor && c.excess <= excess);
+    // ...and never costs the daily fruit.
+    .filter(c => c.t.cost <= budget && c.t.kcal >= floor && c.excess <= excess && (c.t.fruit || !current.fruit));
 }
 
 function addVariety({ pools, plan, menu, current, budget, size, haveIds, target }) {
@@ -429,6 +437,7 @@ export function planMeals(input, prices, recipes) {
       if (capExcess(plan.assign(trial)).excess > capExcess(plan.assign(menu)).excess) continue;
       const t = plan.total(trial);
       if (t.cost > budget || t.kcal < Math.min(current.kcal, FLOOR_KCAL * people * d)) continue;
+      if (current.fruit && !t.fruit) continue; // a better meal never costs the daily fruit
       const gain = (mealQuality(trial) - q0) / Math.max(t.cost - current.cost, 0.25);
       if (!best || gain > best.gain) best = { trial, t, gain };
     }
@@ -528,7 +537,7 @@ export function rebuildList(state, swaps = []) {
       for (const x of assigned) if (x.day < upTo) for (const u of x.rec.uses) need[u.id] = (need[u.id] || 0) + u.amt * x.servings;
       const share = Math.min(upTo, coveredDays) / coveredDays;
       for (const [id, n] of Object.entries(t.extra)) need[id] = (need[id] || 0) + n * share;
-      return Object.fromEntries(Object.entries(need).map(([id, n]) => [id, Math.ceil(n / kitchen.foods.get(id).srv - 1e-9)]));
+      return Object.fromEntries(Object.entries(need).map(([id, n]) => [id, Math.ceil((n - SLIVER) / kitchen.foods.get(id).srv)]));
     };
     let prev = {};
     for (let w = 0; w < nWeeks; w++) {
