@@ -174,20 +174,21 @@ function topUp(kitchen, assigned, { people, days, budget }, balance = {}) {
   }
   // Filling sides, each capped per person per week, until about FLOOR_KCAL per person per day.
   const target = FLOOR_KCAL * people * days;
+  const sideAdded = {}; // servings added as a filling side, per food (for engine/principles.js)
   for (const s of SIDES) {
     if (kcal >= target) break;
     const f = kitchen.foods.get(s.id);
     if (!f) continue;
     const capServings = Math.ceil(s.perPersonWeek * f.srv * people * Math.max(1, days / 7));
-    let add = Math.min(capServings, Math.ceil((target - kcal) / f.srvCal));
-    while (add > 0) {
-      const trial = { ...extra, [s.id]: (extra[s.id] || 0) + add };
-      const c = packages(kitchen, assigned, trial).cost;
-      if (c <= budget) { extra = trial; cost = c; kcal += f.srvCal * add; break; }
-      add = Math.floor(add / 2);
-    }
+    const want = Math.min(capServings, Math.ceil((target - kcal) / f.srvCal));
+    // The most servings (up to what's wanted) that still fit the budget: cost only grows with
+    // servings, so a binary search finds it (halving could stop with a package's worth of money left).
+    const costWith = n => packages(kitchen, assigned, { ...extra, [s.id]: (extra[s.id] || 0) + n }).cost;
+    let lo = 0, hi = want;
+    while (lo < hi) { const mid = Math.ceil((lo + hi) / 2); if (costWith(mid) <= budget) lo = mid; else hi = mid - 1; }
+    if (lo > 0) { extra = { ...extra, [s.id]: (extra[s.id] || 0) + lo }; cost = packages(kitchen, assigned, extra).cost; kcal += f.srvCal * lo; sideAdded[s.id] = lo; }
   }
-  return { extra, cost, kcal, mealKcal, fruit: extra[fruit?.id] ? fruit.id : null };
+  return { extra, cost, kcal, mealKcal, fruit: extra[fruit?.id] ? fruit.id : null, sideAdded };
 }
 
 /**
@@ -453,8 +454,10 @@ export function planMeals(input, prices, recipes) {
   for (const [f, n] of [[veg, perDay], [fruits[1] || fruits[0], perDay], [milk, perDay]]) {
     if (!f) continue;
     const trial = { ...balance, [f.id]: (balance[f.id] || 0) + n };
+    const before = topUp(kitchen, assigned, { people, days: d, budget }, balance);
     const t = topUp(kitchen, assigned, { people, days: d, budget }, trial);
-    if (t.cost <= budget && t.kcal >= Math.min(current.kcal, FLOOR_KCAL * people * d)) Object.assign(balance, trial);
+    // An extra food group never pushes out the daily fruit (topUp drops the fruit when it can't fit).
+    if (t.cost <= budget && t.kcal >= Math.min(current.kcal, FLOOR_KCAL * people * d) && (t.fruit || !before.fruit)) Object.assign(balance, trial);
   }
   // One alternative per meal that keeps the whole plan within budget.
   const inMenu = new Set(SLOTS.flatMap(sl => menu[sl].map(r => r.id)));
@@ -555,6 +558,7 @@ export function rebuildList(state, swaps = []) {
   return {
     cart, byWeek, remaining, totalCals, leftoverCals, spent, have, coveredDays, overBudget: spent > budget ? round2(spent - budget) : 0,
     sides: t.extra, // food servings bought beyond the meals: fruit, filling sides, food groups
+    sideAdded: t.sideAdded, // of those, servings added as capped filling sides
     // Owner decision Nov 7: on the tightest budgets the plan recommends what it can and says some
     // foods repeat often, pointing to free food (the variety cap couldn't be met within the budget).
     repeats: capExcess(assigned).excess > 0,

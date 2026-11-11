@@ -59,10 +59,10 @@ export function checkPrinciples(result) {
       const f = kitchen.foods.get(s.id);
       if (!f || f.have) continue;
       const cap = Math.ceil(s.perPersonWeek * f.srv * people * Math.max(1, coveredDays / 7));
-      const used = result.sides?.[s.id] || 0;
+      const used = result.sideAdded?.[s.id] || 0;
       const add = Math.min(f.srv, cap - used);
       if (add <= 0) continue;
-      const more = { ...result.sides, [s.id]: used + add };
+      const more = { ...result.sides, [s.id]: (result.sides?.[s.id] || 0) + add };
       if (packages(kitchen, assigned, more).cost <= budget) fail('calories_first', `short of calories but ${s.id} still fits`);
     }
   }
@@ -71,12 +71,14 @@ export function checkPrinciples(result) {
   if (budget >= SNAP_PPD * people * days - 0.01 && coveredDays === days) {
     const pd = people * days;
     let kcal = 0, protein = 0, fiber = 0, filling = 0, fruit = 0, veg = 0;
-    for (const i of result.cart) {
-      const f = F[i.id], k = (f.cal / f.srv) * i.servings;
+    // Every serving eaten: the meals and sides, whether bought or already at home.
+    const eaten = packages(kitchen, assigned, result.sides || {}).need;
+    for (const [id, n] of Object.entries(eaten)) {
+      const f = F[id], k = (f.cal / f.srv) * n;
       kcal += k; filling += k * f.sat;
-      protein += ((f.protein || 0) / f.srv) * i.servings; fiber += ((f.fiber || 0) / f.srv) * i.servings;
-      if (f.cat === 'fruit') fruit += i.servings;
-      if (f.cat === 'vegetable' && !['onions', 'garlic'].includes(f.id)) veg += i.servings;
+      protein += ((f.protein || 0) / f.srv) * n; fiber += ((f.fiber || 0) / f.srv) * n;
+      if (f.cat === 'fruit') fruit += n;
+      if (f.cat === 'vegetable' && !['onions', 'garlic'].includes(f.id)) veg += n;
     }
     const checks = [[kcal / pd >= 1950, `calories ${Math.round(kcal / pd)}`], [protein / pd >= 50, `protein ${Math.round(protein / pd)} g`],
       [fiber / pd >= 25, `fiber ${Math.round(fiber / pd)} g`], [fruit / pd >= 0.75, `fruit ${(fruit / pd).toFixed(2)}`],
