@@ -531,3 +531,19 @@ html { scroll-padding-bottom: 110px; }
 .install-tip .install-ios { font-weight: 600; }
 .install-tip .btn { margin: 4px 8px 0 0; }
 .share-icon { width: 1.1em; height: 1.1em; vertical-align: -0.15em; color: #0A66D8; }
+
+/* Meals first on the plan home (option C): day buttons, the day's meals with Swap, link to all days */
+.glance { margin: 6px 0 22px; }
+.glance h2 { margin: 0 0 12px; }
+.day-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin: 0 0 12px; }
+.day-tab { flex: none; min-width: 52px; padding: 10px 8px; border-radius: 12px; border: 1px solid var(--rule); background: #fff; color: var(--text); font: 700 15px var(--font-label); cursor: pointer; }
+.day-tab[aria-selected="true"] { background: var(--violet); border-color: var(--violet); color: #fff; }
+.glance-day { border: 1px solid var(--rule); border-radius: 16px; background: var(--tint-light); padding: 4px 14px; }
+.glance-day .lo { margin: 14px 0; color: var(--text-muted); font-style: italic; }
+.glance-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--rule); }
+.glance-row:first-child { border-top: 0; }
+.glance-meal { display: grid; gap: 2px; min-width: 0; }
+.glance-slot { font: 600 12px var(--font-label); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.glance .meal-pick { text-align: left; font: 700 18px var(--font-label); color: var(--text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 4px; }
+.glance-swap { flex: none; }
+.glance-all { margin: 12px 0 0; background: none; border: 0; padding: 4px 0; font: 600 16px var(--font-label); color: var(--violet); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

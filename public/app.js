@@ -588,6 +588,10 @@ async function showResults(restore = {}) {
 
 // Day names come from the planner in English ('Mon'…); show them in the reader's language.
 const DAYS_EN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const dayShort = name => {
+  const i = DAYS_EN.indexOf(name);
+  try { return i < 0 ? name : new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + i, 12))); } catch { return name; }
+};
 const dayOf = name => {
   const i = DAYS_EN.indexOf(name);
   try { return i < 0 ? name : new Intl.DateTimeFormat(lang, { weekday: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + i, 12))); } catch { return name; }
@@ -913,6 +917,29 @@ function renderResults(plan, restore = {}) {
           ${rowsHtml(groupShoppingList(w.cart), w.week)}</div>`).join('')
       : rowsHtml(shopping, 1));
 
+  // Meals first (owner choice, Nov 16: "C"): under the summary, a button per day of the first week and
+  // that day's breakfast, lunch and dinner, each with Swap when there's another option, then a link to
+  // the whole plan (the meals panel). Tapping a meal opens its recipe, as on the meal plan.
+  let glanceDay = 0;
+  const glanceDayHtml = di => {
+    const d = weeks[0][di];
+    if (d.uncovered) return `<p class="lo">${esc(t('day_uncovered'))}</p>`;
+    if (d.leftover) return `<p class="lo">${esc(t('leftovers'))}</p>`;
+    return ['breakfast', 'lunch', 'dinner'].filter(sl => d[sl].length).map(sl => {
+      const key = `0-${di}-${sl}`;
+      return `<div class="glance-row"><span class="glance-meal"><span class="glance-slot">${esc(t(sl))}</span>
+        <button type="button" class="meal-pick" data-key="${key}">${esc(rTitle(d[sl][choice[key] || 0]))}</button></span>
+        ${d[sl][1] ? `<button type="button" class="btn btn-ghost btn-sm glance-swap" data-swap="${key}">${esc(t('swap_btn'))}</button>` : ''}</div>`;
+    }).join('');
+  };
+  const glanceHtml = () => `<section class="glance no-print" aria-labelledby="h-glance">
+      <h2 id="h-glance">${esc(t('glance_title'))}</h2>
+      <div class="day-tabs" role="tablist" aria-labelledby="h-glance">${weeks[0].map((d, di) => `<button type="button" role="tab" class="day-tab"
+        id="day-tab-${di}" data-day="${di}" aria-selected="${di === glanceDay}" aria-controls="glance-day" aria-label="${esc(dayOf(d.dayName))}">${esc(dayShort(d.dayName))}</button>`).join('')}</div>
+      <div class="glance-day" id="glance-day" role="tabpanel" aria-labelledby="day-tab-${glanceDay}">${glanceDayHtml(glanceDay)}</div>
+      <button type="button" class="glance-all" data-open-panel="meals">${esc(input.days <= 7 ? t('glance_all_week') : t('glance_all_days', { days: input.days }))} ›</button>
+    </section>`;
+
   const weekPanel = (week, wi) => `
     <div class="week-panel" data-week="${wi}" ${wi === 0 ? '' : 'hidden'}>
       <p class="print-only week-print-title">${esc(t('week_of', { n: wi + 1, total: weeks.length }))}</p>
@@ -942,10 +969,9 @@ function renderResults(plan, restore = {}) {
         ${(s.coveredDays < input.days || s.repeats || s.calPct < 80) && residents().length ? `<p class="no-print sum-help"><button type="button" class="btn btn-primary btn-sm" data-open-panel="help">${esc(t('find_free_food'))}</button></p>` : ''}
         <p class="cover-note" id="over-note" role="status"${s.overBudget > 0 ? '' : ' hidden'}>${s.overBudget > 0 ? esc(t('over_note', { amount: money(s.overBudget) })) : ''}</p>
         ${dietNotes.length ? `<ul class="diet-notes">${dietNotes.map(k => `<li>${esc(t(k))}</li>`).join('')}</ul>` : ''}
-      </section>`,
+      </section>${glanceHtml()}`,
       cards: [
         { id: 'list', icon: '🛒', title: t('sec_list'), sub: `${esc(t('hub_list_sub', { n: nItems, total: money(s.spent) }))}<span class="hub-done" id="hub-done"></span>` },
-        { id: 'meals', icon: '🍽️', title: t('sec_plan'), sub: esc(t('hub_meals_sub', { days: input.days })) },
         ...(city.has_stores ? [{ id: 'shop', icon: '📍', title: t('hub_shop'), sub: esc(t('loading_data')) }] : []),
         ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
         ...((city.needs || []).length ? [{ id: 'needs', icon: '💬', title: t('needs_title'), sub: esc(t('hub_needs_sub')) }] : []),
@@ -1071,6 +1097,19 @@ function renderResults(plan, restore = {}) {
   app.querySelector('#wk-prev')?.addEventListener('click', () => showWeek(wk - 1));
   app.querySelector('#wk-next')?.addEventListener('click', () => showWeek(wk + 1));
 
+  // Swap a meal for its alternate (from the recipe dialog or a Swap button): every place that meal
+  // shows (the glance and the meal plan) and the shopping list update.
+  const doSwap = key => {
+    const [w, d, sl] = key.split('-');
+    const opts = weeks[w][d][sl];
+    const ci = 1 - (choice[key] || 0);
+    choice[key] = ci;
+    track('meal_swapped', { recipe: opts[ci].id });
+    app.querySelectorAll(`.meal-pick[data-key="${key}"]`).forEach(x => { x.textContent = rTitle(opts[ci]); });
+    refreshList();
+    app.querySelector('#announce').textContent = t('swapped_list', { title: rTitle(opts[ci]) });
+    sync();
+  };
   // Meals: recipe + swap to the alternate. After a swap the dialog stays open on the
   // new meal's recipe, with the swapped-out meal offered as the way back.
   const showMeal = (b, justSwapped = false) => {
@@ -1089,21 +1128,29 @@ function renderResults(plan, restore = {}) {
       missing, twists,
       justSwapped,
       alt: opts[1 - ci],
-      onSwap: () => {
-        choice[b.dataset.key] = 1 - ci;
-        track('meal_swapped', { recipe: opts[1 - ci].id });
-        b.textContent = rTitle(opts[1 - ci]);
-        refreshList();
-        app.querySelector('#announce').textContent = t('swapped_list', { title: rTitle(opts[1 - ci]) });
-        sync();
-        showMeal(b, true);
-      },
+      onSwap: () => { doSwap(b.dataset.key); showMeal(b, true); },
     } : { missing, twists });
   };
   /** How many times a recipe is on the menu across the plan, counting the meals swapped in. */
   const timesChosen = id => weeks.reduce((n, w, wi) => n + w.reduce((m, d, di) => m + (d.leftover || d.uncovered ? 0
     : ['breakfast', 'lunch', 'dinner'].filter(sl => d[sl][choice[`${wi}-${di}-${sl}`] || 0]?.id === id).length), 0), 0);
   app.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => showMeal(b)));
+  // The glance: day buttons switch the day shown; Swap swaps in place.
+  const wireGlanceDay = () => {
+    const box = app.querySelector('#glance-day');
+    if (!box) return;
+    box.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => showMeal(b)));
+    box.querySelectorAll('[data-swap]').forEach(b => b.addEventListener('click', () => doSwap(b.dataset.swap)));
+  };
+  app.querySelectorAll('.day-tab').forEach(tab => tab.addEventListener('click', () => {
+    glanceDay = Number(tab.dataset.day);
+    app.querySelectorAll('.day-tab').forEach(x => x.setAttribute('aria-selected', x === tab));
+    const box = app.querySelector('#glance-day');
+    box.setAttribute('aria-labelledby', tab.id);
+    box.innerHTML = glanceDayHtml(glanceDay);
+    wireGlanceDay();
+  }));
+  app.querySelector('#glance-day')?.querySelectorAll('[data-swap]').forEach(b => b.addEventListener('click', () => doSwap(b.dataset.swap)));
 
   // Paper copy: every chosen meal's recipe, plus a QR code that reopens this plan on a phone.
   const fillPrint = () => {
