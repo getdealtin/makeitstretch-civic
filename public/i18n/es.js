@@ -309,7 +309,6 @@ export default {
   list_show_full: "Ver la lista completa",
   list_meals_updated: "Sus comidas y su lista de compras están actualizadas.",
   day_uncovered: "El presupuesto no alcanza para este día. Vea comida gratis y SNAP en Ayuda.",
-  cover_note: "Su presupuesto alcanza para las comidas de {n} de {days} días. Para los otros días, vea comida gratis y SNAP en Ayuda.",
   repeat_note: "Con este presupuesto, algunos alimentos se repiten en muchas comidas. La comida gratis de un banco de comida puede dar más variedad y hacer rendir su dinero.",
   find_free_food: "Encontrar comida gratis cerca",
   diet_note_low_sodium: "Bajo en sodio: dejamos fuera la salsa de soya, la sopa y el chili en lata, el caldo, la salsa y la salsa picante. Use poca o nada de sal, enjuague los frijoles de lata y busque latas “sin sal agregada”.",

@@ -308,7 +308,6 @@ export default {
   list_show_full: "Xem danh sách đầy đủ",
   list_meals_updated: "Bữa ăn và danh sách mua sắm đã được cập nhật.",
   day_uncovered: "Ngân sách không đủ cho ngày này. Xem thực phẩm miễn phí và SNAP ở mục Trợ giúp.",
-  cover_note: "Ngân sách của quý vị đủ cho bữa ăn {n} trên {days} ngày. Với những ngày còn lại, xem thực phẩm miễn phí và SNAP ở mục Trợ giúp.",
   repeat_note: "Với ngân sách này, một số thực phẩm lặp lại trong nhiều bữa. Thực phẩm miễn phí từ ngân hàng thực phẩm có thể thêm đa dạng và giúp tiền đi xa hơn.",
   find_free_food: "Tìm thực phẩm miễn phí gần bạn",
   diet_note_low_sodium: "Ít muối: chúng tôi bỏ nước tương, súp và chili đóng hộp, nước dùng, salsa và tương ớt. Dùng ít hoặc không dùng muối, rửa đậu đóng hộp, và chọn loại hộp “không thêm muối”.",

@@ -308,7 +308,6 @@ export default {
   list_show_full: "查看完整清单",
   list_meals_updated: "您的餐食和购物清单已更新。",
   day_uncovered: "这一天预算不够。请看“帮助”里的免费食物和 SNAP。",
-  cover_note: "您的预算够 {days} 天中 {n} 天的餐食。其余几天，请看“帮助”里的免费食物和 SNAP。",
   repeat_note: "在这个预算下，有些食物会在很多餐里重复出现。食物银行的免费食物可以增加花样，让钱更经用。",
   find_free_food: "查找附近的免费食物",
   diet_note_low_sodium: "低钠：我们去掉了酱油、罐装汤和辣豆酱、高汤、莎莎酱和辣酱。少放或不放盐，罐装豆子先冲洗，并选择“无添加盐”的罐头。",
