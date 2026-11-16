@@ -3,8 +3,8 @@ export default {
   title: 'Cómo se hace su plan',
   intro: 'Cada plan de Make It Stretch sigue estas reglas.',
   items: [
-    { id: 'cookable', h: 'Puede cocinar cada comida con su lista', p: 'Cada comida usa solo lo que está en su lista de compras, además de sal, agua y canela y lo que nos dijo que ya tiene.' },
-    { id: 'within_budget', h: 'Su lista cabe en su presupuesto', p: 'La lista de compras nunca cuesta más de la cantidad que escribió.' },
+    { id: 'cookable', h: 'Puede cocinar cada comida con su lista', p: 'Cada comida usa solo lo que está en su lista de compras, además de lo que nos dijo que ya tiene.' },
+    { id: 'within_budget', h: 'Su lista cabe en su presupuesto', p: 'La lista de compras se ajusta a la cantidad que escribió.' },
     { id: 'calories_first', h: 'Primero, suficiente comida', p: 'Buscamos unas 2,000 calorías al día por persona, la cantidad que usan las guías de alimentación de EE. UU. Hasta llegar a eso, el dinero va primero a la comida que más llena por su precio.' },
     { id: 'fullness_next', h: 'Comida que llena', p: 'Cuando dos comidas cuestan más o menos lo mismo, escogemos la que lo mantiene lleno por más tiempo: más proteína, fibra y agua.' },
     { id: 'guidance', h: 'Saludable cuando el presupuesto alcanza', p: 'En planes de una semana o más, con el beneficio promedio de SNAP o más (unos $6.22 por persona al día), cada persona recibe suficiente proteína y fibra, una fruta y dos porciones de verduras al día, según las guías federales de nutrición.' },
@@ -13,7 +13,6 @@ export default {
     { id: 'household', h: 'Hecho para su hogar', p: 'Cada cantidad es para el número de personas que escogió. Siempre respetamos los alimentos que no come y las dietas que sigue.' },
     { id: 'no_piles', h: 'Nada de montones de un solo alimento', p: 'Solo compramos lo que usan sus comidas. Si sobra dinero, se lo mostramos en vez de gastarlo en más de un solo alimento.' },
     { id: 'honest', h: 'Honestos cuando el dinero no alcanza', p: 'Su plan dice cuántos días cubre y cuántas calorías al día da, más o menos, contando la comida que queda en los paquetes que compra. Cuando el dinero no alcanza, le mostramos comida gratis cerca de usted y SNAP.' },
-    { id: 'same_plan', h: 'Las mismas respuestas, el mismo plan', p: 'No hay adivinanzas ni azar. Las mismas respuestas siempre dan el mismo plan, para que lo pueda compartir, imprimir o revisar.' },
   ],
   back: 'Hacer un plan',
 };

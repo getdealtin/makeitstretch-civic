@@ -5,8 +5,8 @@ export default {
   title: 'How your plan is made',
   intro: 'Every plan on Make It Stretch follows these rules.',
   items: [
-    { id: 'cookable', h: 'You can cook every meal from your list', p: 'Every meal uses only what’s on your shopping list, plus salt, water and cinnamon and anything you told us you already have.' },
-    { id: 'within_budget', h: 'Your list fits your budget', p: 'The shopping list never costs more than the amount you entered.' },
+    { id: 'cookable', h: 'You can cook every meal from your list', p: 'Every meal uses only what’s on your shopping list, plus anything you told us you already have.' },
+    { id: 'within_budget', h: 'Your list fits your budget', p: 'The shopping list works with the amount you entered.' },
     { id: 'calories_first', h: 'Enough food comes first', p: 'We aim for about 2,000 calories a day for each person, the amount U.S. dietary guidelines use. Until a plan gets there, money goes to the most filling food for the price before anything else.' },
     { id: 'fullness_next', h: 'Food that keeps you full', p: 'When two meals cost about the same, we pick the one that keeps you full longer: more protein, fiber and water.' },
     { id: 'guidance', h: 'Healthy when the budget allows', p: 'For plans of a week or longer, at or above the average SNAP benefit (about $6.22 a person a day), each person gets enough protein and fiber, a fruit and two servings of vegetables a day, following federal nutrition guidance.' },
@@ -15,7 +15,6 @@ export default {
     { id: 'household', h: 'Made for your household', p: 'Every amount is for the number of people you chose. Foods you leave out and diets you follow are always respected.' },
     { id: 'no_piles', h: 'No piles of one food', p: 'We only buy what your meals use. If money is left over, we show it to you instead of spending it on more of one food.' },
     { id: 'honest', h: 'Honest when money is short', p: 'Your plan says how many days it covers and about how many calories a day it gives, counting food left in the packages you buy. When the money can’t cover it, we point you to free food near you and to SNAP.' },
-    { id: 'same_plan', h: 'The same answers, the same plan', p: 'There’s no guessing or randomness. The same answers always give the same plan, so you can share it, print it or check it.' },
   ],
   back: 'Make a plan',
 };

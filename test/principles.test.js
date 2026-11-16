@@ -78,10 +78,13 @@ test('same answers, same plan', () => {
   }
 });
 
-test('the "How your plan is made" page lists the same principles, in the same order, in every language', async () => {
+// The page shows the principles a family needs (owner, Nov 16: 'same_plan' is engine-only), in the
+// engine's order, and never one the engine doesn't have.
+const PAGE_HIDES = ['same_plan'];
+test('the "How your plan is made" page lists the engine\'s principles, in order, in every language', async () => {
   for (const code of ['en', 'es', 'vi', 'zh-Hans']) {
     const P = (await import(`../public/i18n/principles/${code}.js`)).default;
-    assert.deepEqual(P.items.map(i => i.id), PRINCIPLES.map(p => p.id), code);
+    assert.deepEqual(P.items.map(i => i.id), PRINCIPLES.map(p => p.id).filter(id => !PAGE_HIDES.includes(id)), code);
     for (const i of P.items) assert.ok(i.h && i.p, `${code} ${i.id}`);
     assert.ok(P.title && P.intro && P.back, code);
   }
