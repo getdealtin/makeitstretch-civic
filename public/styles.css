@@ -149,6 +149,16 @@ input[type=number] { -moz-appearance: textfield; }
 .sum-big { font-size: 21px; margin: 0 0 .35em; }
 .sum-big b { font-family: var(--font-display); color: #fff; }
 .sum-facts { font-size: 16px; margin: 0; }
+/* Plan summary (option B): headline with highlighted numbers, calorie bar, costs */
+.summary h1.sum-headline { font-size: clamp(26px, 5vw, 34px); line-height: 1.2; margin: 0 0 18px; }
+.sum-hi { font-style: normal; color: #F5CF6B; }
+.cal-meter { height: 12px; border-radius: 6px; background: rgba(255,255,255,.18); overflow: hidden; }
+.cal-meter i { display: block; height: 100%; border-radius: 6px; background: #F5CF6B; }
+.cal-legend { display: flex; justify-content: space-between; gap: 12px; margin: 8px 0 0; font: 600 15px var(--font-label); }
+.cal-legend .sum-hi { color: #fff; font-size: 19px; }
+.sum-note { font-size: 16px; margin: 10px 0 0; }
+.sum-costs { font: 600 15px var(--font-label); color: var(--on-violet-eyebrow); margin: 14px 0 0; }
+.sum-costs b { color: #fff; font-size: 18px; }
 
 .section { margin-bottom: 40px; scroll-margin-top: 12px; }
 .section:focus { outline: none; }
@@ -239,7 +249,8 @@ dialog::backdrop { background: rgba(38,38,79,.5); }
   body { font-size: 11pt; }
   .site-header, .no-print, .nav, .skip, .progress, dialog, .preview, .info { display: none !important; }
   .summary { background: none; color: #000; border: 2px solid #000; padding: 14px; }
-  .summary h1, .summary h2, .sum-big b, .summary .eyebrow { color: #000; }
+  .summary h1, .summary h2, .sum-big b, .summary .eyebrow, .sum-hi, .sum-costs, .sum-costs b, .cal-legend .sum-hi { color: #000; }
+  .cal-meter { border: 1px solid #000; background: none; } .cal-meter i { background: #000; }
   .week-panel { display: block !important; break-inside: avoid; }
   .print-only { display: block; font-weight: 700; margin: 12px 0 0; }
   .meal-pick { text-decoration: none; }

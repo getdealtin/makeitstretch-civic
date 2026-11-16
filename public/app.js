@@ -867,9 +867,19 @@ function renderResults(plan, restore = {}) {
   // 'Enough' only at 100% of the 2,000-calorie reference; 'a little under' from 80%.
   // Under the 2,000-calorie floor, say how many calories the plan reaches (owner decision Nov 8: transparency,
   // in one short line). Rounded to the nearest 50 so it doesn't read as more precise than it is.
-  const kcal = (Math.round(s.cppd / 50) * 50).toLocaleString(lang);
-  const calNote = () => (s.calPct >= 100 ? t('cal_ok') : s.calPct >= 80 ? t('cal_low', { kcal }) : t('cal_tight', { kcal }));
-  const sumFacts = () => `${esc(t('res_facts', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }))} ${esc(calNote())}${s.remaining > 1 ? ' ' + esc(t('res_left', { remaining: money(s.remaining) })) : ''}`;
+  const kcal = () => (Math.round(s.cppd / 50) * 50).toLocaleString(lang);
+  // Plan summary (owner choice, Nov 16: "B"): one sentence with the key numbers highlighted, a bar
+  // for calories against the 2,000 goal, then the costs. Rebuilt after a swap (sumBody).
+  const hi = str => esc(str).replace(/\*([^*]+)\*/g, '<em class="sum-hi">$1</em>');
+  const headline = () => hi(s.coveredDays < input.days
+    ? t('res_headline_part', { budget: Math.round(input.budget), people: peopleLabel, n: s.coveredDays, days: input.days })
+    : t('res_headline', { budget: Math.round(input.budget), people: peopleLabel, days: input.days }));
+  const calNote = () => (s.calPct >= 100 ? '' : t(s.calPct >= 80 ? 'cal_low_short' : 'cal_tight_short'));
+  const sumBody = () => `
+    <div class="cal-meter" role="img" aria-label="${esc(t('cal_meter_label', { kcal: kcal() }))}"><i style="width:${Math.max(3, Math.min(100, s.calPct))}%"></i></div>
+    <p class="cal-legend" aria-hidden="true"><span>${hi(t('cal_each', { kcal: kcal() }))}</span><span>${esc(t('cal_goal', { goal: (2000).toLocaleString(lang) }))}</span></p>
+    ${calNote() ? `<p class="sum-note">${esc(calNote())}</p>` : ''}
+    <p class="sum-costs"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}${s.remaining > 1 ? ` · ${esc(t('res_left', { remaining: money(s.remaining) }))}` : ''}</p>`;
   const dietNotes = DIETS.filter(d => (input.avoid || []).includes(d)).map(d => DIET_NOTE_KEYS[d]);
   let nItems = s.cart.length;
 
@@ -926,9 +936,8 @@ function renderResults(plan, restore = {}) {
       planTitle: t('res_title', { days: input.days }),
       homeTop: `<section class="summary" aria-labelledby="res-title">
         <p class="eyebrow">${esc(t('res_eyebrow'))}</p>
-        <h1 id="res-title" tabindex="-1">${esc(t('res_title', { days: input.days }))}</h1>
-        <p class="sum-big"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}</p>
-        <p class="sum-facts" id="sum-facts">${sumFacts()}</p>
+        <h1 id="res-title" class="sum-headline" tabindex="-1">${headline()}</h1>
+        <div id="sum-body">${sumBody()}</div>
         ${s.coveredDays < input.days ? `<p class="cover-note">${esc(t('cover_note', { n: s.coveredDays, days: input.days }))}</p>` : ''}
         ${s.repeats ? `<p class="cover-note">${esc(t('repeat_note'))}</p>` : ''}
         ${(s.coveredDays < input.days || s.repeats || s.calPct < 80) && residents().length ? `<p class="no-print"><button type="button" class="btn btn-primary btn-sm" data-open-panel="help">${esc(t('find_free_food'))}</button></p>` : ''}
@@ -1043,8 +1052,7 @@ function renderResults(plan, restore = {}) {
     rows.querySelectorAll('.row input').forEach(x => { x.checked = kept.has(x.dataset.item); x.addEventListener('change', () => { sync(); updateDone(); }); });
     wireRows();
     app.querySelector('#list-total').textContent = '$' + money(s.spent);
-    app.querySelector('.sum-big').innerHTML = `<b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}`;
-    app.querySelector('#sum-facts').innerHTML = sumFacts();
+    app.querySelector('#sum-body').innerHTML = sumBody();
     const over = app.querySelector('#over-note');
     over.hidden = !(s.overBudget > 0);
     over.textContent = s.overBudget > 0 ? t('over_note', { amount: money(s.overBudget) }) : '';
