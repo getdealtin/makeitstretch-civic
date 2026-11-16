@@ -105,6 +105,42 @@ const qs = location.search; // keeps ?city= in dev
 const app = document.getElementById('app');
 let city = null;
 
+// ── Install on a phone (owner request, Nov 11 2026) ─────────────
+// The offline helper (/sw.js) keeps what's been opened, so an installed site works without a signal.
+// The "Add to your phone" tip shows once a plan exists (when it's clearly useful), on phones only,
+// never once installed, and never again after "No thanks" (fewer decisions: one small card, once).
+if ('serviceWorker' in navigator && !TESTING) navigator.serviceWorker.register('/sw.js').catch(() => {});
+let installPrompt = null; // Android/Chrome: the browser's own install prompt, saved for our button
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; document.querySelector('#install-tip')?.replaceChildren(...installTipNodes()); });
+const INSTALL_DONE = 'mis:install-tip';
+const isInstalled = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const installDismissed = () => { try { return localStorage.getItem(INSTALL_DONE) === '1'; } catch { return false; } };
+// The Share icon (a box with an arrow), drawn for the project.
+const SHARE_ICON = '<svg class="share-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10M6 6l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9H4v9h12V9h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+function installTipNodes() {
+  if (PACKET || isInstalled() || installDismissed() || !(installPrompt || isIOS())) return [];
+  const box = document.createElement('div');
+  box.className = 'install-tip no-print';
+  box.innerHTML = `<img src="/icons/icon-192.png" alt="" width="48" height="48">
+    <div><p class="install-title">${esc(t('install_title'))}</p>
+      <p class="muted">${esc(t('install_body'))}</p>
+      ${installPrompt ? `<button type="button" class="btn btn-primary btn-sm" data-install="go">${esc(t('install_btn'))}</button>`
+        : `<p class="install-ios">${esc(t('install_ios', { share: '\u0000' })).replace('\u0000', SHARE_ICON)}</p>`}
+      <button type="button" class="btn btn-ghost btn-sm" data-install="no">${esc(t('install_dismiss'))}</button></div>`;
+  box.querySelector('[data-install="go"]')?.addEventListener('click', async () => {
+    const p = installPrompt; installPrompt = null;
+    p.prompt(); await p.userChoice.catch(() => null);
+    box.remove();
+  });
+  box.querySelector('[data-install="no"]').addEventListener('click', () => {
+    try { localStorage.setItem(INSTALL_DONE, '1'); } catch { /* the tip just shows again next time */ }
+    box.remove();
+  });
+  return [box];
+}
+const showInstallTip = () => document.querySelector('#install-tip')?.replaceChildren(...installTipNodes());
+
 // ── Data (loaded once, in the background) ───────────────────────
 let recipesP = null;
 const pricesP = {};
@@ -906,7 +942,7 @@ function renderResults(plan, restore = {}) {
         ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
         ...((city.needs || []).length ? [{ id: 'needs', icon: '💬', title: t('needs_title'), sub: esc(t('hub_needs_sub')) }] : []),
       ],
-      homeBottom: `${keepBar()}
+      homeBottom: `<div id="install-tip"></div>${keepBar()}
         <div class="nav no-print">
           <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
           <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
@@ -944,6 +980,7 @@ function renderResults(plan, restore = {}) {
     <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
 
   focusTop('#res-title');
+  showInstallTip();
   wireHub({}, restore.switched ? 'list' : null);
   wireNeeds();
   loadSites(answers.zip || siteZip);

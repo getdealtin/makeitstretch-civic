@@ -66,6 +66,32 @@ app.get('/theme.css', (req, res) => {
 
 app.get('/api/config', (req, res) => res.json(publicConfig(req.city)));
 
+// ── Install on a phone (owner request, Nov 11 2026) ─────────────
+// Each city site can be added to a phone's home screen: this web app manifest names it and points
+// to the icon (public/icons, drawn for the project). /sw.js keeps what's been opened working offline.
+app.get('/manifest.webmanifest', (req, res) => {
+  const c = req.city, t = c.branding?.tokens || {};
+  res.type('application/manifest+json').set('Cache-Control', 'public, max-age=3600').json({
+    name: c.place ? `${c.name} ${c.place}` : c.name,
+    short_name: c.name,
+    description: 'Turn the grocery money you have into a shopping list and meal plan that lasts.',
+    lang: 'en', dir: 'ltr',
+    start_url: '/', scope: '/', id: '/',
+    display: 'standalone',
+    background_color: t['--page'] || '#FFFFFF',
+    theme_color: t['--violet'] || '#38377E',
+    icons: [
+      { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
+    ],
+  });
+});
+// The offline helper must be served from the site root (so it covers every page) and never cached
+// by the browser itself, so a new version reaches phones on their next visit.
+app.get('/sw.js', (req, res) => res.type('text/javascript').set('Cache-Control', 'no-cache').sendFile(path.join(__dirname, 'public', 'sw.js')));
+
 // ── Prices ──────────────────────────────────────────────────────
 // BLS average prices exist per Census region (kept by server/live-prices.js). City local_prices
 // (Data Steward shelf captures) override BLS item by item.

@@ -91,3 +91,18 @@ test('the browser engine and /api/plan give the same plan', async () => {
   const ids = w => w.map(d => (d.leftover ? 'L' : d.uncovered ? 'U' : d.dinner.map(r => r.id)));
   assert.deepEqual(mine.weeks.map(ids), api.weeks.map(ids));
 });
+
+test('install on a phone: per-city manifest, icons and an offline helper that is never browser-cached', async () => {
+  const m = await (await fetch(`${base}/manifest.webmanifest?city=austin`)).json();
+  assert.equal(m.name, 'Make It Stretch Austin');
+  assert.equal(m.display, 'standalone');
+  assert.equal(m.start_url, '/');
+  assert.ok(m.icons.some(i => i.sizes === '512x512' && i.purpose === 'maskable'));
+  for (const i of m.icons) assert.equal((await fetch(base + i.src)).status, 200, i.src);
+  assert.equal((await fetch(`${base}/icons/apple-touch-icon.png`)).status, 200);
+  const sw = await fetch(`${base}/sw.js`);
+  assert.equal(sw.status, 200);
+  assert.match(sw.headers.get('content-type'), /javascript/);
+  assert.equal(sw.headers.get('cache-control'), 'no-cache');
+  assert.match(await sw.text(), /api\\\/event/, 'usage events are never cached');
+});
