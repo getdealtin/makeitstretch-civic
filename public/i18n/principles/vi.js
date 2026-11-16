@@ -1,7 +1,7 @@
 // "Kế hoạch của bạn được lập như thế nào", tiếng Việt. Bản dịch của en.js (cùng thứ tự, cùng id).
 export default {
   title: 'Kế hoạch của bạn được lập như thế nào',
-  intro: 'Mọi kế hoạch trên Make It Stretch đều theo cùng những nguyên tắc, theo thứ tự này. Khi hai nguyên tắc mâu thuẫn, nguyên tắc ở trên được ưu tiên. Mọi kế hoạch đều được kiểm tra theo các nguyên tắc này.',
+  intro: 'Mọi kế hoạch trên Make It Stretch đều theo những nguyên tắc này.',
   items: [
     { id: 'cookable', h: 'Bạn nấu được mọi bữa từ danh sách của mình', p: 'Mỗi bữa chỉ dùng những gì có trong danh sách mua sắm, cộng với muối, nước, quế và những gì bạn cho biết đã có sẵn.' },
     { id: 'within_budget', h: 'Danh sách vừa với ngân sách', p: 'Danh sách mua sắm không bao giờ tốn hơn số tiền bạn nhập.' },

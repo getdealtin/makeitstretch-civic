@@ -1,7 +1,7 @@
 // "Cómo se hace su plan", español. Traducción de en.js (mismo orden y mismos ids).
 export default {
   title: 'Cómo se hace su plan',
-  intro: 'Cada plan de Make It Stretch sigue las mismas reglas, en este orden. Cuando dos reglas chocan, gana la que está más arriba en la lista. Cada plan se revisa con ellas.',
+  intro: 'Cada plan de Make It Stretch sigue estas reglas.',
   items: [
     { id: 'cookable', h: 'Puede cocinar cada comida con su lista', p: 'Cada comida usa solo lo que está en su lista de compras, además de sal, agua y canela y lo que nos dijo que ya tiene.' },
     { id: 'within_budget', h: 'Su lista cabe en su presupuesto', p: 'La lista de compras nunca cuesta más de la cantidad que escribió.' },

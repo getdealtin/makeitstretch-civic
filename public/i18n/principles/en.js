@@ -3,7 +3,7 @@
 // check the page still matches the engine. Change both together.
 export default {
   title: 'How your plan is made',
-  intro: 'Every plan on Make It Stretch follows the same rules, in this order. When two rules pull against each other, the one higher on the list wins. Every plan is checked against them.',
+  intro: 'Every plan on Make It Stretch follows these rules.',
   items: [
     { id: 'cookable', h: 'You can cook every meal from your list', p: 'Every meal uses only what’s on your shopping list, plus salt, water and cinnamon and anything you told us you already have.' },
     { id: 'within_budget', h: 'Your list fits your budget', p: 'The shopping list never costs more than the amount you entered.' },
