@@ -340,7 +340,7 @@ function renderIntro() {
           <p class="pill">${esc(t('band_eyebrow'))}</p>
           <h2 id="band-title">${accent(t('band_title'))}</h2>
           <p>${esc(t('band_body'))}</p>
-          <ul class="promises"><li>${esc(t('band_p1'))}</li><li>${esc(t('band_p2'))}</li><li>${esc(t('band_p3'))}</li></ul>
+          <ul class="promises"><li>${esc(t('band_p1'))}</li><li>${esc(t('band_p2'))}</li></ul>
           <h3 class="promises-h">${esc(t('plan_h'))}</h3>
           <ul class="promises">${[1, 2, 3, 4, 5].map(n => `<li>${esc(t('plan_p' + n))}</li>`).join('')}</ul>
           <p class="promises-link"><a href="/how-plans-work${location.search}">${esc(t('plan_link'))}</a></p>
