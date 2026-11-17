@@ -875,7 +875,9 @@ function renderResults(plan, restore = {}) {
   // 'Enough' only at 100% of the 2,000-calorie reference; 'a little under' from 80%.
   // Under the 2,000-calorie floor, say how many calories the plan reaches (owner decision Nov 8: transparency,
   // in one short line). Rounded to the nearest 50 so it doesn't read as more precise than it is.
-  const kcal = () => (Math.round(s.cppd / 50) * 50).toLocaleString(lang);
+  // Shown to the nearest 50, but a plan under the goal rounds DOWN, so "2,000" never sits next to
+  // "A little under" (owner request, Nov 17: $50 / 3 people showed both).
+  const kcal = () => ((s.calPct >= 100 ? Math.round : Math.floor)(s.cppd / 50) * 50).toLocaleString(lang);
   // Plan summary (owner choice, Nov 16: "B"): one sentence with the key numbers highlighted, a bar
   // for calories against the 2,000 goal, then the costs. Rebuilt after a swap (sumBody).
   const hi = str => esc(str).replace(/\*([^*]+)\*/g, '<em class="sum-hi">$1</em>');
