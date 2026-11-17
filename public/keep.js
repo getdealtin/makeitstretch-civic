@@ -61,13 +61,17 @@ export function unpackPlan(o) {
   };
 }
 
-export const packBox = b => ({ v: 1, t: 'b', i: b.items, a: b.avoid.length ? b.avoid : undefined, o: b.other?.length ? b.other : undefined });
+export const packBox = b => ({ v: 1, t: 'b', i: b.items, a: b.avoid.length ? b.avoid : undefined, o: b.other?.length ? b.other : undefined,
+  u: b.cant?.some(c => c.id) ? b.cant.filter(c => c.id).map(c => c.id) : undefined, // u: foods left out ("won't use")
+  uw: b.cant?.some(c => c.word) ? b.cant.filter(c => c.word).map(c => c.word) : undefined }); // uw: same, typed
 
 export function unpackBox(o) {
   if (!o || o.t !== 'b') return null;
   const items = pick(o.i, 'boxItems');
   const other = (Array.isArray(o.o) ? o.o : []).map(cleanFoodWord).filter(Boolean).slice(0, 5);
-  return items.length || other.length ? { items, avoid: pick(o.a, 'avoid'), other } : null;
+  const cant = [...pick(o.u, 'boxItems').filter(id => items.includes(id)).map(id => ({ id, reason: null })),
+    ...[...new Set((Array.isArray(o.uw) ? o.uw : []).map(cleanFoodWord).filter(Boolean))].slice(0, 5).map(word => ({ word, reason: null }))];
+  return items.length || other.length ? { items, avoid: pick(o.a, 'avoid'), other, cant } : null;
 }
 
 /** "#p=…" / "#b=…" → { kind, state } or null. */

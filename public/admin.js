@@ -243,7 +243,8 @@ const pct = (n, d) => (d ? Math.round((n / d) * 100) + '%' : '—');
 const PRETTY = {
   step: { budget: 'Budget', days: 'How long', people: 'People', zip: 'Zip', prefs: 'Preferences' },
   store: { full: 'Grocery store', dollar: 'Dollar store', corner: 'Corner store' },
-  group: { cultural: 'Culture or religion', medical: 'Health', practical: 'Other reasons' },
+  group: { cultural: 'Culture or religion', medical: 'Health', practical: 'Other reasons', unsaid: 'Reason not given' },
+  cantStep: { picked: 'Picked foods they won’t use', none: 'Said everything works', skipped: 'Skipped the question', not_asked: 'Not asked (before Nov 17)' },
   how: { save: 'Saved on phone', text: 'Texted', email: 'Emailed', copy: 'Link copied' },
   source: { saved: 'Reopened a saved plan', link: 'Opened a shared link' },
 };
@@ -286,9 +287,11 @@ function activityHtml(a) {
         <h4>By zip</h4>${table(a.store_by_zip, ['Zip · store', 'Plans'], k => k.replace(/ · (full|dollar|corner)$/, (m, x) => ' · ' + PRETTY.store[x]))}</div>
       <div><h3>Can't use from food boxes</h3>
         <p class="a-hint">${cu.reports} reports out of ${cu.box_items} box items (${pct(cu.reports, cu.box_items)}). Recipient-reported; a proxy for Food Plan Goal 4, not a storage percentage.</p>
+        ${cu.step ? `<h4>“Anything you won’t use?”</h4>${table(Object.entries(cu.step), ['Answer', 'Boxes'], k => PRETTY.cantStep[k] || k)}` : ''}
         ${table(Object.entries(cu.by_group), ['Reason group', 'Reports'], k => PRETTY.group[k] || k)}
         <h4>By reason</h4>${table(cu.by_reason, ['Reason', 'Reports'])}
-        <h4>By item</h4>${table(cu.by_item, ['Item', 'Reports'])}</div>
+        <h4>By item</h4>${table(cu.by_item, ['Item', 'Reports'])}
+        ${cu.by_typed?.length ? `<h4>Typed in</h4>${table(cu.by_typed, ['Food (as typed)', 'Reports'])}` : ''}</div>
       <div><h3>Other needs (after the plan)</h3>
         <p class="a-hint">Taps on "Need help with anything else?". Nobody is contacted.</p>
         ${table(Object.entries(a.needs || {}), ['Need', 'Taps'])}</div>

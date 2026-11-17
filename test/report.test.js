@@ -177,3 +177,29 @@ test('dollars stretched: latest box per person, hidden under the threshold', () 
     [['People who entered a food box', 20], ['Total estimated store value', '$590'], ['Typical (median) box', '$30']]);
   assert.ok(get(cityReport(evs(10), { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS })).every(([, v]) => v === null));
 });
+
+test('"Anything you won\'t use?" step: answered, everything works, skipped, and reasons not given (Nov 17)', () => {
+  const events = [];
+  for (let i = 0; i < 60; i++) {
+    const step = i < 20 ? 'picked' : i < 40 ? 'none' : 'skipped';
+    events.push(ev(i, 'page_view'), ev(i, 'box_built', { items: ['rice', 'peanutbutter'], cant_step: step, cant: step === 'picked' ? 1 : 0 }));
+    if (step === 'picked') events.push(ev(i, 'cant_use', { item: 'peanutbutter', reason: i < 15 ? 'allergy' : 'unsaid' }));
+  }
+  const r = cityReport(events, { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS });
+  const tables = r.sections.flatMap(s => s.tables);
+  const rows = Object.fromEntries(tables.find(x => x.title.startsWith('People reporting food')).rows);
+  assert.equal(rows['Entered a food box'], 60);
+  assert.equal(rows['Answered “Anything you won’t use?” (picked foods or said everything works)'], 40);
+  assert.equal(rows['…of those, said everything in the box works'], 20);
+  assert.equal(rows['Reported at least one item they won’t use'], 20);
+  assert.equal(rows['Skipped the question'], 20);
+  const groups = Object.fromEntries(tables.find(x => x.title === 'Reason group').rows);
+  assert.equal(groups['Health'], 15);
+  assert.equal(groups['Reason not given'], null, 'under k (5 people) stays hidden');
+  // Typed foods get their own table.
+  const typed = [];
+  for (let i = 0; i < 20; i++) typed.push(ev(100 + i, 'box_built', { items: ['rice'], cant_step: 'picked', cant: 1 }), ev(100 + i, 'cant_use', { food: 'canned sardines', reason: 'unsaid' }));
+  const r2 = cityReport(typed, { k: K, from: 'a', to: 'b', city: 'Austin', ...AUS });
+  const t2 = r2.sections.flatMap(s => s.tables).find(x => x.title.startsWith('Foods people typed'));
+  assert.deepEqual(t2.rows, [['canned sardines', 20]]);
+});

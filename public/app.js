@@ -349,7 +349,7 @@ function renderIntro() {
       </div>
     </section>`;
   app.querySelector('#door-budget').onclick = () => { answers = fresh(); go(0); };
-  app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [], other: [] }; renderBox(); };
+  app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [], other: [], cant: [] }; renderBox(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
     const e = findSaved(store, saveKey(), b.dataset.open);
     if (!e || !openFromHash(e.hash, e.id, 'saved')) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }
@@ -1334,8 +1334,8 @@ function renderBox() {
   f.onsubmit = e => {
     e.preventDefault();
     if (!box.items.length && !box.other.length) { f.querySelector('#err').textContent = t('err_box'); return; }
-    logNext = { built: true };
-    renderBoxResults();
+    box.cant = (box.cant || []).filter(c => c.word || box.items.includes(c.id));
+    if (box.items.length) renderBoxCant(); else { logNext = { built: true, cantStep: 'none' }; renderBoxResults(); }
   };
   focusTop('#q');
 }
@@ -1386,12 +1386,90 @@ function wireOtherFood(f) {
   drawList();
 }
 
+// ── "Anything in your box you won't use?" (owner choice, Nov 17: "G") ──
+// One optional step between entering the box and the meals. Each food is a tap button; a picked food
+// gets one-tap reasons (optional). The meals then leave those foods out, and each one is recorded for
+// the impact reports. "Something else?" adds a food the site knows by name in any of the four
+// languages; anything else is kept as typed (owner decision Nov 17: capture what people offer) and
+// recorded as typed, cleaned like the box's own typed foods (letters only, so no numbers or emails).
+function renderBoxCant() {
+  current = renderBoxCant;
+  box.cant ||= [];
+  const keyOf = c => c.id || 'w:' + c.word;
+  const nameOf = c => (c.id ? fName(c.id) : c.word);
+  const picked = id => box.cant.find(c => c.id === id);
+  const byKey = k => box.cant.find(c => keyOf(c) === k);
+  const reasonsHtml = c => `<div class="cant-why"><p class="fh">${esc(t('cant_why', { item: nameOf(c) }))}</p>
+    <div class="chips">${Object.values(CU_REASONS).flat().map(r => `<button type="button" class="chip" data-reason="${r}" data-for="${esc(keyOf(c))}" aria-pressed="${c.reason === r}">${esc(t('cu_' + r))}</button>`).join('')}</div></div>`;
+  const draw = () => {
+    app.innerHTML = `<form class="step" id="cantform" novalidate>
+      <p class="eyebrow">${esc(t('cant_eyebrow'))}</p>
+      <h1 id="q" class="q-head" tabindex="-1">${esc(t('cant_title'))}</h1>
+      <p class="q-sub">${esc(t('cant_sub'))}</p>
+      <div class="chips cant-foods" role="group" aria-labelledby="q">${box.items.map(id => `<button type="button" class="chip" data-cant="${id}" aria-pressed="${!!picked(id)}">${esc(fName(id))}</button>`).join('')}${box.cant.filter(c => c.word).map(c => `<button type="button" class="chip" data-cant-word="${esc(c.word)}" aria-pressed="true">${esc(c.word)}</button>`).join('')}</div>
+      ${box.cant.map(reasonsHtml).join('')}
+      <div class="other-row cant-add"><input id="cant-other" class="fi" autocomplete="off" maxlength="30" placeholder="${esc(t('cant_other_ph'))}" aria-label="${esc(t('cant_other_ph'))}">
+        <button type="button" class="btn btn-ghost btn-sm" id="cant-add">${esc(t('box_other_add'))}</button></div>
+      <p class="error" id="cant-err" role="alert"></p>
+      <div class="nav">
+        <button type="button" class="btn btn-ghost" id="cant-skip">${esc(t('cant_skip'))}</button>
+        <button type="submit" class="btn btn-primary">${esc(t('cant_go'))}</button>
+      </div>
+    </form>`;
+    const f = app.querySelector('#cantform');
+    f.querySelectorAll('[data-cant]').forEach(b => b.addEventListener('click', () => {
+      const id = b.dataset.cant;
+      box.cant = picked(id) ? box.cant.filter(c => c.id !== id) : [...box.cant, { id, reason: null }];
+      draw(); app.querySelector(`[data-cant="${id}"]`)?.focus();
+    }));
+    f.querySelectorAll('[data-cant-word]').forEach(b => b.addEventListener('click', () => {
+      box.cant = box.cant.filter(c => c.word !== b.dataset.cantWord); draw();
+    }));
+    f.querySelectorAll('[data-reason]').forEach(b => b.addEventListener('click', () => {
+      const c = byKey(b.dataset.for);
+      c.reason = c.reason === b.dataset.reason ? null : b.dataset.reason;
+      f.querySelectorAll(`[data-for="${b.dataset.for}"]`).forEach(x => x.setAttribute('aria-pressed', x.dataset.reason === c.reason));
+    }));
+    const add = async () => {
+      const input = f.querySelector('#cant-other'), err = f.querySelector('#cant-err');
+      err.textContent = '';
+      const raw = input.value.trim();
+      if (!raw) return;
+      const words = await (boxWordsP ||= fetch('/api/box-words').then(r => r.json()).catch(() => ({})));
+      const id = findBoxFood(raw, words)[0];
+      if (id) {
+        if (!box.items.includes(id)) box.items.push(id);
+        if (!picked(id)) box.cant.push({ id, reason: null });
+      } else {
+        // Not a food the site knows: keep it as typed (cleaned: letters only, up to 30).
+        const w = cleanFoodWord(raw);
+        if (!w) { err.textContent = t('box_other_bad'); return; }
+        const typed = box.cant.filter(c => c.word);
+        if (typed.length >= 5 && !typed.some(c => c.word === w)) { err.textContent = t('box_other_max'); return; }
+        if (!typed.some(c => c.word === w)) box.cant.push({ word: w, reason: null });
+      }
+      draw(); app.querySelector('#cant-other')?.focus();
+    };
+    f.querySelector('#cant-add').addEventListener('click', add);
+    f.querySelector('#cant-other').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+    f.querySelector('#cant-skip').onclick = () => { box.cant = []; logNext = { built: true, cantStep: 'skipped' }; renderBoxResults(); };
+    f.onsubmit = e => {
+      e.preventDefault();
+      logNext = { built: true, cantStep: box.cant.length ? 'picked' : 'none', cantReport: box.cant.map(c => ({ ...c })) };
+      renderBoxResults();
+    };
+  };
+  draw();
+  focusTop('#q');
+}
+
 async function renderBoxResults() {
   current = () => openFromHash(location.hash, openedSavedId);
   app.innerHTML = `<div class="loading" role="status"><div class="spinner" aria-hidden="true"></div>${esc(t('loading_data'))}</div>`;
   let matches, boxValue = 0;
   try {
-    matches = matchBox(await getRecipes(), box.items, { avoid: box.avoid });
+    const cantIds = new Set((box.cant || []).filter(c => c.id).map(c => c.id));
+    matches = matchBox(await getRecipes(), box.items.filter(id => !cantIds.has(id)), { avoid: box.avoid });
     // What the box's items would cost at local prices: the "this box saved you $X" number.
     const priced = await getPrices(regionFor(siteZip));
     boxValue = +box.items.reduce((sum, id) => sum + (priced.prices[id] || 0), 0).toFixed(2);
@@ -1428,9 +1506,9 @@ async function renderBoxResults() {
         <h1 id="res-title" class="sum-headline" tabindex="-1">${matches.length ? boxHeadline() : esc(t('box_res_title'))}</h1>
         ${boxValue > 0 ? `<p class="sum-costs box-worth">${esc(t('box_worth', { value: '\u0000' })).replace('\u0000', `<b>$${money(boxValue)}</b>`)}</p>` : ''}
         <p class="sum-note">${esc(t('box_from', { n: box.items.length + (box.other?.length || 0) }))}</p>
+        ${box.cant?.length ? `<p class="sum-note">${esc(t('box_left_out', { items: box.cant.map(c => (c.id ? fName(c.id) : c.word)).join(t('list_sep')) }))}</p>` : ''}
       </section>${boxGlance()}`,
       cards: [
-        { id: 'cant', icon: '📝', title: t('cu_title'), sub: esc(t('hub_cu_sub')) },
         ...(city.has_stores ? [{ id: 'shop', icon: '📍', title: t('hub_shop'), sub: esc(t('loading_data')) }] : []),
         ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
         ...((city.needs || []).length ? [{ id: 'needs', icon: '💬', title: t('needs_title'), sub: esc(t('hub_needs_sub')) }] : []),
@@ -1455,19 +1533,7 @@ async function renderBoxResults() {
                 ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</p>
             </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
         </section>` },
-        { id: 'cant', html: `<section class="section cant-use no-print" aria-labelledby="h-cant">
-          <div class="section-head"><h2 id="h-cant">${esc(t('cu_title'))}</h2></div>
-          <p class="hint">${esc(t('cu_hint'))}</p>
-          <ul class="cu-list">${box.items.map(id => `
-            <li class="cu-row">
-              <label for="cu-${id}">${esc(fName(id))}</label>
-              <select id="cu-${id}" data-item="${id}">
-                <option value="">${esc(t('cu_none'))}</option>
-                ${Object.entries(CU_REASONS).map(([g, rs]) => `<optgroup label="${esc(t('cu_g_' + g))}">${rs.map(r => `<option value="${r}">${esc(t('cu_' + r))}</option>`).join('')}</optgroup>`).join('')}
-              </select>
-              <span class="cu-ok" aria-live="polite"></span>
-            </li>`).join('')}</ul>
-        </section>` },
+        // ("Can't use" moved to its own step before the meals: renderBoxCant.)
         ...(city.has_stores ? [{ id: 'shop', html: shopPanel() }] : []),
         { id: 'help', html: helpSection() },
         { id: 'needs', html: needsSection() },
@@ -1480,16 +1546,14 @@ async function renderBoxResults() {
   wireNeeds();
   loadSites(siteZip);
   if (city.has_stores) loadShop(siteZip);
-  if (logNext?.built) track('box_built', { items: box.items, other: box.other, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue });
+  if (logNext?.built) {
+    track('box_built', { items: box.items, other: box.other, avoid: box.avoid, meals: matches.length, zip: siteZip, value: boxValue,
+      cant_step: logNext.cantStep, cant: (box.cant || []).length });
+    // "Won't use" (Food Plan Goal 4 proxy): one report per food picked, with its reason if given.
+    for (const c of logNext.cantReport || []) track('cant_use', { ...(c.id ? { item: c.id } : { food: c.word }), reason: c.reason || 'unsaid' });
+  }
   else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'box' }); askOutcome('box'); }
   logNext = null;
-  // "Can't use this": one report per item per change (Food Plan Goal 4 cultural/medical proxy).
-  app.querySelectorAll('.cu-row select').forEach(sel => sel.addEventListener('change', () => {
-    const ok = sel.parentElement.querySelector('.cu-ok');
-    if (!sel.value) { ok.textContent = ''; return; }
-    track('cant_use', { item: sel.dataset.item, reason: sel.value });
-    ok.textContent = t('cu_thanks');
-  }));
   const openBoxMeal = b => {
     const m = byId.get(b.dataset.id);
     track('recipe_opened', { recipe: m.recipe.id, flow: 'box' });

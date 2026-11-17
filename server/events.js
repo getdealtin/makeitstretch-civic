@@ -14,7 +14,8 @@ export const CANT_USE = {
   medical: ['diabetic', 'low_sodium', 'allergy'],
   practical: ['no_kitchen', 'dont_know_how', 'spoiled'],
 };
-const REASONS = Object.values(CANT_USE).flat();
+// 'unsaid': the person picked a food they won't use but didn't give a reason (the step's reasons are optional).
+const REASONS = [...Object.values(CANT_USE).flat(), 'unsaid'];
 
 // ── Field validators: return a clean value or undefined (field dropped) ──
 const num = (min, max, dp = 2) => v => { const n = Number(v); return Number.isFinite(n) && n >= min && n <= max ? +n.toFixed(dp) : undefined; };
@@ -39,14 +40,16 @@ export const SCHEMA = {
     leftover: oneOf(['yes', 'sometimes', 'no']),
     pppd: num(0, 9999), cal_pct: int(0, 1000), items: int(0, 200), spent: num(0, 9999),
   },
-  box_built: { items: listOf(BOX_ITEMS, 60), other: foodWords, avoid: listOf(AVOID), meals: int(0, 200), zip, value: num(0, 9999) },
+  box_built: { items: listOf(BOX_ITEMS, 60), other: foodWords, avoid: listOf(AVOID), meals: int(0, 200), zip, value: num(0, 9999),
+    cant_step: oneOf(['picked', 'none', 'skipped']), cant: int(0, 60) }, // the "won't use" step: what the person did, how many foods
   recipe_opened: { recipe: int(1, 100000), flow: oneOf(['plan', 'box']) },
   meal_swapped: { recipe: int(1, 100000) },
   help_clicked: { target: slug, kind: oneOf(['resource', 'site', 'store']), action: oneOf(['call', 'directions', 'website', 'bus', 'wic_finder']) },
   zip_added_later: { zip },
   plan_kept: { how: oneOf(['save', 'text', 'email', 'copy']), kind: oneOf(['plan', 'box']) },
   language_changed: { from: oneOf(LANGS), to: oneOf(LANGS) },
-  cant_use: { item: oneOf(BOX_ITEMS), reason: oneOf(REASONS) },
+  // item: a food from the box list; food: one typed by the person (cleaned: letters only, so no numbers or emails).
+  cant_use: { item: oneOf(BOX_ITEMS), food: v => cleanFoodWord(v) || undefined, reason: oneOf(REASONS) },
   plan_reopened: { source: oneOf(['saved', 'link']), kind: oneOf(['plan', 'box']) },
   plan_outcome: { answer: oneOf(['yes', 'some', 'no']), kind: oneOf(['plan', 'box']) },
   need_tapped: { need: oneOf(['rent', 'health', 'childcare', 'jobs']) },
@@ -120,9 +123,12 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
     cant_use: {
       reports: cant.length,
       box_items: boxItemCount,
-      by_group: count(cant, c => groupOf(c.data.reason) || 'other'),
+      by_group: count(cant, c => (c.data.reason === 'unsaid' ? 'unsaid' : groupOf(c.data.reason) || 'other')),
+      // How people answered the "won't use" step (boxes from before Nov 17 have no answer recorded).
+      step: count(boxes, b => b.data.cant_step || 'not_asked'),
       by_reason: top(count(cant, c => c.data.reason)),
-      by_item: top(count(cant, c => c.data.item)),
+      by_item: top(count(cant.filter(c => c.data.item), c => c.data.item)),
+      by_typed: top(count(cant.filter(c => c.data.food), c => c.data.food)),
     },
     unlisted: top(count(boxes, b => b.data.other || []), 30),
     needs: count(by('need_tapped'), e => e.data.need),

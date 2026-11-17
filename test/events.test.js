@@ -35,6 +35,13 @@ test('"can\'t use" reasons are grouped cultural / medical / practical, as the Fo
   assert.deepEqual(Object.keys(CANT_USE), ['cultural', 'medical', 'practical']);
   assert.ok(cleanEvent({ event: 'cant_use', session_id: S, data: { item: 'drybeans', reason: 'halal' } }).data.reason);
   assert.deepEqual(cleanEvent({ event: 'cant_use', session_id: S, data: { item: 'not-a-food', reason: 'whatever' } }).data, {});
+  assert.equal(cleanEvent({ event: 'cant_use', session_id: S, data: { item: 'drybeans', reason: 'unsaid' } }).data.reason, 'unsaid', 'a food picked without a reason');
+  // A typed food is kept, cleaned; anything with numbers or an email is dropped.
+  assert.equal(cleanEvent({ event: 'cant_use', session_id: S, data: { food: '  Canned Sardines ', reason: 'unfamiliar' } }).data.food, 'canned sardines');
+  for (const bad of ['call 512-555-0101', 'me@x.com', 'x'.repeat(40)]) assert.equal(cleanEvent({ event: 'cant_use', session_id: S, data: { food: bad, reason: 'unsaid' } }).data.food, undefined, bad);
+  const bb = cleanEvent({ event: 'box_built', session_id: S, data: { items: ['rice'], cant_step: 'skipped', cant: 0 } }).data;
+  assert.equal(bb.cant_step, 'skipped');
+  assert.equal(cleanEvent({ event: 'box_built', session_id: S, data: { items: ['rice'], cant_step: 'hacked' } }).data.cant_step, undefined);
 });
 
 test('/api/event stores a clean event tagged with the city; bad events get 400', async () => {

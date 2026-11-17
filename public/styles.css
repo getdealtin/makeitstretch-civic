@@ -553,3 +553,10 @@ html { scroll-padding-bottom: 110px; }
 .box-row .box-line.need b { color: #8A4B00; }
 .box-row .box-line.have-all { color: var(--green-text); }
 .summary .box-worth { margin: 4px 0 0; }
+
+/* "Anything in your box you won't use?" step */
+.cant-foods { margin: 6px 0 4px; }
+.cant-why { margin: 12px 0 0; padding: 12px; border: 1px solid var(--rule); border-radius: 14px; background: var(--tint-light); }
+.cant-why .fh { margin: 0 0 8px; font-weight: 600; color: var(--text); }
+.cant-add { margin: 18px 0 0; }
+.cant-add .fi { min-width: 0; }

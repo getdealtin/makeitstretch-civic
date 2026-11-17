@@ -96,11 +96,18 @@ test('edited or hostile links are rejected or cleaned', () => {
 
 test('box links keep only real box items', () => {
   const h = boxHash(packBox({ items: ['rice', 'drybeans'], avoid: ['eggs'] }));
-  assert.deepEqual(readHash(h), { kind: 'box', state: { items: ['rice', 'drybeans'], avoid: ['eggs'], other: [] } });
-  assert.deepEqual(unpackBox({ t: 'b', i: ['rice', 'bogus'] }), { items: ['rice'], avoid: [], other: [] });
+  assert.deepEqual(readHash(h), { kind: 'box', state: { items: ['rice', 'drybeans'], avoid: ['eggs'], other: [], cant: [] } });
+  assert.deepEqual(unpackBox({ t: 'b', i: ['rice', 'bogus'] }), { items: ['rice'], avoid: [], other: [], cant: [] });
+  // foods left out ("won't use") ride along, but only ones in the box
+  const c = readHash(boxHash(packBox({ items: ['rice', 'peanutbutter'], avoid: [], cant: [{ id: 'peanutbutter', reason: 'allergy' }] })));
+  assert.deepEqual(c.state.cant, [{ id: 'peanutbutter', reason: null }]);
+  assert.deepEqual(unpackBox({ t: 'b', i: ['rice'], u: ['peanutbutter', 'bogus'] }).cant, []);
+  const w = readHash(boxHash(packBox({ items: ['rice'], avoid: [], cant: [{ word: 'canned sardines', reason: null }] })));
+  assert.deepEqual(w.state.cant, [{ word: 'canned sardines', reason: null }]);
+  assert.deepEqual(unpackBox({ t: 'b', i: ['rice'], uw: ['555-0101', 'Okra'] }).cant, [{ word: 'okra', reason: null }]);
   assert.equal(unpackBox({ t: 'b', i: ['bogus'] }), null);
   // typed foods ride along, cleaned; a box of only typed foods still opens
-  assert.deepEqual(unpackBox({ t: 'b', i: [], o: ['Canned Salmon', '555-0101'] }), { items: [], avoid: [], other: ['canned salmon'] });
+  assert.deepEqual(unpackBox({ t: 'b', i: [], o: ['Canned Salmon', '555-0101'] }), { items: [], avoid: [], other: ['canned salmon'], cant: [] });
 });
 
 test('unicode survives packing', () => {
