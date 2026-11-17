@@ -195,6 +195,7 @@ export default {
   box_go: 'Xem các món',
   err_box: 'Chạm vào ít nhất một món trong thùng.',
   box_res_title: 'Các món bạn có thể nấu',
+  box_none_slot: "Chưa có món nào cho {meal} từ thùng này.",
   box_food_rice: "Gạo",
   box_food_pasta: "Mì Ý",
   box_food_oats: "Yến mạch",

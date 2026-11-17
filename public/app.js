@@ -1485,19 +1485,25 @@ async function renderBoxResults() {
   // Dinner buttons (for the meals that have matches) and the best 3 for the one chosen, then a link to
   // every match. The summary highlights how many meals the box makes and what it's worth.
   const SLOT_ORDER = ['breakfast', 'lunch', 'dinner'];
-  const slots = SLOT_ORDER.filter(sl => matches.some(m => m.recipe.slot === sl));
-  let boxSlot = slots[0];
+  // All three buttons always show (owner decision Nov 17). Lunch and dinner dishes work for either
+  // meal, as in the meal planner: each button lists its own meal's dishes first, then the other's.
+  const forSlot = sl => (sl === 'breakfast' ? matches.filter(m => m.recipe.slot === 'breakfast')
+    : [...matches.filter(m => m.recipe.slot === sl), ...matches.filter(m => m.recipe.slot === (sl === 'lunch' ? 'dinner' : 'lunch'))]);
+  const slots = SLOT_ORDER;
+  let boxSlot = slots.find(sl => forSlot(sl).length) || 'breakfast';
   const boxRow = m => `<div class="glance-row box-row"><span class="glance-meal">
       <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
       <span class="box-line"><b>${esc(t('box_uses'))}${esc(t('label_colon'))}</b> ${esc(m.uses.map(ing).join(t('list_sep')))}</span>
       <span class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
         ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</span></span></div>`;
-  const boxSlotHtml = sl => matches.filter(m => m.recipe.slot === sl).slice(0, 3).map(boxRow).join('');
+  // A meal with nothing from this box says so, with the way to free food, instead of disappearing.
+  const boxSlotHtml = sl => forSlot(sl).slice(0, 3).map(boxRow).join('') || `<p class="lo">${esc(t('box_none_slot', { meal: t(sl).toLocaleLowerCase(lang) }))}</p>
+    ${residents().length ? `<p><button type="button" class="btn btn-primary btn-sm box-free">${esc(t('find_free_food'))}</button></p>` : ''}`;
   const boxGlance = () => matches.length ? `<section class="glance no-print" aria-labelledby="h-box-glance">
       <h2 id="h-box-glance">${esc(t('box_res_title'))}</h2>
-      ${slots.length > 1 ? `<div class="day-tabs" role="tablist" aria-labelledby="h-box-glance">${slots.map(sl => `<button type="button" role="tab" class="day-tab slot-tab"
-        id="slot-tab-${sl}" data-slot="${sl}" aria-selected="${sl === boxSlot}" aria-controls="box-slot">${esc(t(sl))}</button>`).join('')}</div>` : ''}
-      <div class="glance-day" id="box-slot" role="tabpanel"${slots.length > 1 ? ` aria-labelledby="slot-tab-${boxSlot}"` : ''}>${boxSlotHtml(boxSlot)}</div>
+      ${`<div class="day-tabs" role="tablist" aria-labelledby="h-box-glance">${slots.map(sl => `<button type="button" role="tab" class="day-tab slot-tab"
+        id="slot-tab-${sl}" data-slot="${sl}" aria-selected="${sl === boxSlot}" aria-controls="box-slot">${esc(t(sl))}</button>`).join('')}</div>`}
+      <div class="glance-day" id="box-slot" role="tabpanel" aria-labelledby="slot-tab-${boxSlot}">${boxSlotHtml(boxSlot)}</div>
       <button type="button" class="glance-all" data-open-panel="meals">${esc(t('box_all', { n: matches.length }))} ›</button>
     </section>` : '';
   const boxHeadline = () => esc(matches.length === 1 ? t('box_headline_one') : t('box_headline', { n: matches.length }))
@@ -1565,6 +1571,9 @@ async function renderBoxResults() {
     openRecipe(m.recipe, { missing: m.missing });
   };
   app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => openBoxMeal(b)));
+  // "Find free food near you" under a meal with nothing: opens Help, like the Help card.
+  const wireBoxFree = () => app.querySelectorAll('.box-free').forEach(b => b.addEventListener('click', () => app.querySelector('.hub-card[data-open-panel="help"]')?.click()));
+  wireBoxFree();
   app.querySelectorAll('.slot-tab').forEach(tab => tab.addEventListener('click', () => {
     boxSlot = tab.dataset.slot;
     app.querySelectorAll('.slot-tab').forEach(x => x.setAttribute('aria-selected', x === tab));
@@ -1572,6 +1581,7 @@ async function renderBoxResults() {
     panel.setAttribute('aria-labelledby', tab.id);
     panel.innerHTML = boxSlotHtml(boxSlot);
     panel.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => openBoxMeal(b)));
+    wireBoxFree();
   }));
   wireKeep({
     title: t('box_res_title'),

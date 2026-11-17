@@ -196,6 +196,7 @@ export default {
   box_go: 'Ver comidas',
   err_box: 'Toque al menos un producto de su caja.',
   box_res_title: 'Comidas que puede preparar',
+  box_none_slot: "Con esta caja todavía no hay opciones de {meal}.",
   box_food_rice: "Arroz",
   box_food_pasta: "Pasta",
   box_food_oats: "Avena",

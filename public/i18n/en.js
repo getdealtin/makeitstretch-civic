@@ -212,6 +212,7 @@ export default {
   box_go: 'Show me meals',
   err_box: 'Tap at least one item from your box.',
   box_res_title: 'Meals you can make',
+  box_none_slot: "Nothing for {meal} from this box yet.",
   box_food_rice: "Rice",
   box_food_pasta: "Pasta",
   box_food_oats: "Oats",

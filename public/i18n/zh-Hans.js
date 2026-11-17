@@ -195,6 +195,7 @@ export default {
   box_go: '看看能做什么',
   err_box: '请至少点选箱子里的一样东西。',
   box_res_title: '您能做的饭菜',
+  box_none_slot: "这个箱子里的食物还做不了{meal}。",
   box_food_rice: "米",
   box_food_pasta: "意大利面",
   box_food_oats: "燕麦",
