@@ -1398,18 +1398,38 @@ async function renderBoxResults() {
   }
   catch { app.innerHTML = `<p class="error" role="alert">${esc(t('error_plan'))}</p>`; return; }
   const byId = new Map(matches.map(m => [String(m.recipe.id), m]));
+  // Meals first (owner choice, Nov 17: "D", like the plan page's day buttons): Breakfast, Lunch and
+  // Dinner buttons (for the meals that have matches) and the best 3 for the one chosen, then a link to
+  // every match. The summary highlights how many meals the box makes and what it's worth.
+  const SLOT_ORDER = ['breakfast', 'lunch', 'dinner'];
+  const slots = SLOT_ORDER.filter(sl => matches.some(m => m.recipe.slot === sl));
+  let boxSlot = slots[0];
+  const boxRow = m => `<div class="glance-row box-row"><span class="glance-meal">
+      <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
+      <span class="box-line"><b>${esc(t('box_uses'))}${esc(t('label_colon'))}</b> ${esc(m.uses.map(ing).join(t('list_sep')))}</span>
+      <span class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
+        ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</span></span></div>`;
+  const boxSlotHtml = sl => matches.filter(m => m.recipe.slot === sl).slice(0, 3).map(boxRow).join('');
+  const boxGlance = () => matches.length ? `<section class="glance no-print" aria-labelledby="h-box-glance">
+      <h2 id="h-box-glance">${esc(t('box_res_title'))}</h2>
+      ${slots.length > 1 ? `<div class="day-tabs" role="tablist" aria-labelledby="h-box-glance">${slots.map(sl => `<button type="button" role="tab" class="day-tab slot-tab"
+        id="slot-tab-${sl}" data-slot="${sl}" aria-selected="${sl === boxSlot}" aria-controls="box-slot">${esc(t(sl))}</button>`).join('')}</div>` : ''}
+      <div class="glance-day" id="box-slot" role="tabpanel"${slots.length > 1 ? ` aria-labelledby="slot-tab-${boxSlot}"` : ''}>${boxSlotHtml(boxSlot)}</div>
+      <button type="button" class="glance-all" data-open-panel="meals">${esc(t('box_all', { n: matches.length }))} ›</button>
+    </section>` : '';
+  const boxHeadline = () => esc(matches.length === 1 ? t('box_headline_one') : t('box_headline', { n: matches.length }))
+    .replace(/\*([^*]+)\*/g, '<em class="sum-hi">$1</em>');
 
   app.innerHTML = `
     ${hubHtml({
       planTitle: t('box_res_title'),
       homeTop: `<section class="summary" aria-labelledby="res-title">
         <p class="eyebrow">${esc(t('door_box'))}</p>
-        <h1 id="res-title" tabindex="-1">${esc(t('box_res_title'))}</h1>
-        <p class="sum-facts">${esc(t('box_res_sub', { n: box.items.length + (box.other?.length || 0) }))}</p>
-        ${boxValue > 0 ? `<p class="sum-big box-value">${esc(t('box_value', { value: money(boxValue) }))}</p>` : ''}
-      </section>`,
+        <h1 id="res-title" class="sum-headline" tabindex="-1">${matches.length ? boxHeadline() : esc(t('box_res_title'))}</h1>
+        ${boxValue > 0 ? `<p class="sum-costs box-worth">${esc(t('box_worth', { value: '\u0000' })).replace('\u0000', `<b>$${money(boxValue)}</b>`)}</p>` : ''}
+        <p class="sum-note">${esc(t('box_from', { n: box.items.length + (box.other?.length || 0) }))}</p>
+      </section>${boxGlance()}`,
       cards: [
-        { id: 'meals', icon: '🍽️', title: t('box_res_title'), sub: esc(t('hub_box_meals_sub', { n: matches.length })) },
         { id: 'cant', icon: '📝', title: t('cu_title'), sub: esc(t('hub_cu_sub')) },
         ...(city.has_stores ? [{ id: 'shop', icon: '📍', title: t('hub_shop'), sub: esc(t('loading_data')) }] : []),
         ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
@@ -1470,10 +1490,19 @@ async function renderBoxResults() {
     track('cant_use', { item: sel.dataset.item, reason: sel.value });
     ok.textContent = t('cu_thanks');
   }));
-  app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => {
+  const openBoxMeal = b => {
     const m = byId.get(b.dataset.id);
     track('recipe_opened', { recipe: m.recipe.id, flow: 'box' });
     openRecipe(m.recipe, { missing: m.missing });
+  };
+  app.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => openBoxMeal(b)));
+  app.querySelectorAll('.slot-tab').forEach(tab => tab.addEventListener('click', () => {
+    boxSlot = tab.dataset.slot;
+    app.querySelectorAll('.slot-tab').forEach(x => x.setAttribute('aria-selected', x === tab));
+    const panel = app.querySelector('#box-slot');
+    panel.setAttribute('aria-labelledby', tab.id);
+    panel.innerHTML = boxSlotHtml(boxSlot);
+    panel.querySelectorAll('.box-title').forEach(b => b.addEventListener('click', () => openBoxMeal(b)));
   }));
   wireKeep({
     title: t('box_res_title'),

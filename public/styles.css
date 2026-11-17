@@ -547,3 +547,9 @@ html { scroll-padding-bottom: 110px; }
 .glance .meal-pick { text-align: left; font: 700 18px var(--font-label); color: var(--text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 4px; }
 .glance-swap { flex: none; }
 .glance-all { margin: 12px 0 0; background: none; border: 0; padding: 4px 0; font: 600 16px var(--font-label); color: var(--violet); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* Food box: meals first by Breakfast / Lunch / Dinner (option D) */
+.box-row .box-line { display: block; font: 15px/1.4 var(--font-body); margin: 4px 0 0; }
+.box-row .box-line.need b { color: #8A4B00; }
+.box-row .box-line.have-all { color: var(--green-text); }
+.summary .box-worth { margin: 4px 0 0; }
