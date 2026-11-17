@@ -560,3 +560,15 @@ html { scroll-padding-bottom: 110px; }
 .cant-why .fh { margin: 0 0 8px; font-weight: 600; color: var(--text); }
 .cant-add { margin: 18px 0 0; }
 .cant-add .fi { min-width: 0; }
+
+/* Food box tiles (option H): picture + short name, three across on a phone */
+.food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+.food-tile { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 88px; padding: 10px 6px 8px;
+  border: 1.5px solid var(--rule); border-radius: 14px; background: var(--page); cursor: pointer; color: var(--text); }
+.food-tile .fe { font-size: 30px; line-height: 1.1; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; }
+.food-tile .fn { font: 600 14px/1.2 var(--font-label); text-align: center; overflow-wrap: anywhere; }
+.food-tile:hover { background: var(--tint-light); }
+.food-tile[aria-pressed="true"] { border-color: var(--violet); background: #EEEDF8; }
+.food-tile[aria-pressed="true"]::after { content: '✓'; position: absolute; top: 5px; right: 6px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--violet); color: #fff; font: 700 12px/20px var(--font-label); text-align: center; }
+.food-tile:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }

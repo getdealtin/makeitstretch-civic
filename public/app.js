@@ -25,7 +25,11 @@ const accent = s => esc(s).replace(/\*([^*]+)\*/g, '<em class="accent">$1</em>')
 const t = (key, vars = {}) => (S[key] ?? en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 // Display-only translations. The engine always works in English (ids and titles),
 // so a plan is identical in every language and links work across languages.
-const fName = id => D.foods?.[id]?.name || foodLabel(id);                 // "Dry Pinto Beans"
+const fName = id => D.foods?.[id]?.name || foodLabel(id);
+// Food box tiles (owner choice, Nov 17: "H"): a picture and a short name per food. The pictures are
+// emoji, drawn by each phone's own font. Short names are translated (box_food_<id>).
+const BOX_EMOJI = {"rice": "🍚", "pasta": "🍝", "oats": "🥣", "bread": "🍞", "tortillas": "🫓", "cornmeal": "🌽", "flour": "🌾", "drybeans": "🫘", "blackbeans": "🫘", "kidneybean": "🫘", "chickpeas": "🧆", "lentils": "🍲", "peanutbutter": "🥜", "tuna": "🐟", "eggs": "🥚", "chicken": "🍗", "groundbeef": "🥩", "porkchops": "🍖", "cannedtomatoes": "🥫", "coconutmilk": "🥥", "applesauce": "🍎", "soy": "🍶", "potatoes": "🥔", "sweetpotatoes": "🍠", "onions": "🧅", "carrots": "🥕", "cabbage": "🥬", "garlic": "🧄", "bananas": "🍌", "milk": "🥛", "evaporatedmilk": "🥫", "butter": "🧈", "oil": "🫗", "oliveoil": "🫒"};
+const fShort = id => (S['box_food_' + id] ?? en['box_food_' + id] ?? fName(id));                 // "Dry Pinto Beans"
 const fFull = (id, enName) => D.foods?.[id]?.full || enName;             // "Dry Pinto Beans (1 lb)"
 const fNote = (id, enNote) => D.foods?.[id]?.note || enNote;
 const fTip = enTip => (enTip && D.tips?.[enTip]) || enTip;
@@ -1288,8 +1292,9 @@ function renderBox() {
     <form class="step" id="boxform" novalidate>
       <h1 id="q" class="q-head" tabindex="-1">${esc(t('box_title'))}</h1>
       <p class="hint">${esc(t('box_hint'))}</p>
-      ${BOX_GROUPS.map(g => `<fieldset class="pref-group"><legend>${esc(t('box_group_' + g.id))}</legend><div class="chips">
-        ${g.items.map(id => `<button type="button" class="chip" data-item="${id}" aria-pressed="${box.items.includes(id)}">${esc(fName(id))}</button>`).join('')}
+      ${BOX_GROUPS.map(g => `<fieldset class="pref-group"><legend>${esc(t('box_group_' + g.id))}</legend><div class="food-grid">
+        ${g.items.map(id => `<button type="button" class="food-tile" data-item="${id}" aria-pressed="${box.items.includes(id)}" title="${esc(fName(id))}">
+          <span class="fe" aria-hidden="true">${BOX_EMOJI[id] || '🍽️'}</span><span class="fn">${esc(fShort(id))}</span></button>`).join('')}
       </div></fieldset>`).join('')}
       <div class="pref-group other-food">
         <label class="fl" for="other">${esc(t('box_other_label'))}</label>
