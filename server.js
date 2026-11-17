@@ -90,6 +90,8 @@ app.get('/manifest.webmanifest', (req, res) => {
 });
 // The offline helper must be served from the site root (so it covers every page) and never cached
 // by the browser itself, so a new version reaches phones on their next visit.
+// Browsers and link previews still ask for /favicon.ico by name: give them the app icon.
+app.get('/favicon.ico', (req, res) => res.type('image/png').set('Cache-Control', 'public, max-age=86400').sendFile(path.join(__dirname, 'public', 'icons', 'icon-192.png')));
 app.get('/sw.js', (req, res) => res.type('text/javascript').set('Cache-Control', 'no-cache').sendFile(path.join(__dirname, 'public', 'sw.js')));
 
 // ── Prices ──────────────────────────────────────────────────────
