@@ -24,12 +24,12 @@ test('QR code: allowed source tag kept, unknown tag dropped, unknown city 404', 
   assert.equal((await fetch(`${base}/share/qr.svg?city=nowhere`)).status, 404);
 });
 
-test('bare domain gets the landing page; city subdomain gets the tool', async () => {
+test('bare domain gets the tool (one site, Nov 19 2026); city subdomain gets the tool', async () => {
   // fetch() won't send a custom Host header, so use node:http
   const get = host => new Promise((ok, no) => http.get({ port: server.address().port, path: '/', headers: { host } }, res => {
     let b = ''; res.on('data', c => { b += c; }); res.on('end', () => ok(b));
   }).on('error', no));
-  assert.match(await get('makeitstretch.org'), /id="hero-title"/);
+  assert.match(await get('makeitstretch.org'), /id="app"/);
   assert.match(await get('austin.makeitstretch.org'), /id="app"/);
 });
 

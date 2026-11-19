@@ -136,3 +136,19 @@ body { overflow-x: clip; }
 @media (max-width: 859px) { .band-deco { display: none; } }
 /* Windows high-contrast mode drops backgrounds: keep the button shape visible */
 @media (forced-colors: active) { .dc-go, .btn-dark { border: 2px solid ButtonText; } .accent { text-decoration-color: CanvasText; } }
+
+/* One site (Nov 19 2026): the main site's home adds a partners section (from the old landing page). */
+.partners-sec { padding: 56px 0 8px; }
+.partners-sec h2 { font-size: clamp(28px, 5vw, 40px); margin: 8px 0 0; }
+.pcards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 22px; }
+.pcard { border-radius: 18px; padding: 20px 20px 22px; border: 2px solid var(--text); display: flex; flex-direction: column; color: var(--text); text-decoration: none; }
+.pcard:hover .pgo, .pcard:focus-visible .pgo { text-decoration: underline; }
+.pcard:nth-child(1) { background: var(--peach); }
+.pcard:nth-child(2) { background: var(--sage); }
+.pcard:nth-child(3) { background: #F9E3A6; }
+.pcard .kicker { font: 600 12px var(--font-label); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; }
+.pcard h3 { font-size: 21px; margin: 0 0 6px; }
+.pcard p { font-size: 16px; margin: 0; }
+.pgo { margin-top: auto; padding-top: 14px; font: 600 15px var(--font-label); }
+/* The band runs 80px under the next thing (it was built to meet the footer); start the partners section below it. */
+.band + .partners-sec { margin-top: 80px; }

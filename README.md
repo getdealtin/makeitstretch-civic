@@ -131,6 +131,28 @@ upgrades meals toward more protein, vegetables, fruit and fullness (satiety from
 fruit, vegetables and fullness. The original price-per-calorie cart builder that first carried these rules was
 retired on Nov 8 2026 (git history has it).
 
+## One site (Nov 19, 2026)
+
+makeitstretch.org runs the tool for everyone in the U.S. (`cities/national.js`): regional prices from the
+visitor's ZIP code, national help (Feeding America's food bank finder, 2-1-1, SNAP and WIC by state), four
+languages. A partner city's ZIP code (its card's `zips` list; Austin's is every ZIP code with 2020 residents
+inside city limits) switches that visitor onto the city's card: its food sites, help, name in the header and
+report. From then on the browser adds `?city=austin` to its requests, which the server honors only from the
+main site and only for partner cities (`partnerFor` in `cities/index.js`). The switch sends one `page_view`
+with source `main` to the city, so the City report shows visits that came through makeitstretch.org. The ZIP code is the
+first question for budget plans and food boxes on every site (owner decision, Nov 19; still skippable), so
+everything after it, including the foods people can't use, counts in the right city. A plan's
+prices follow its own ZIP code; a ZIP added later for food sites never changes the plan, but it does move
+that plan or box, and everything counted since it began, from the main site's totals to the partner city's
+(`POST /api/event/move`, owner decision Nov 19: counted once, where the person lives). austin.makeitstretch.org
+is unchanged. Activity on the main site counts under `national`, shown in /admin as "Everywhere else
+(makeitstretch.org)", for the owner only.
+
+**Rollback.** In Render → makeitstretch-civic → Environment, add `ONE_SITE` = `off` and save (Render redeploys).
+The bare domain shows the old landing page again (`public/landing.html`, kept unchanged) and nothing switches
+by ZIP. Remove the variable to turn one site back on. `/api/health` shows `one_site: true|false`. The code from
+before this change is kept on the branch `backup/before-one-site`.
+
 ## Adding a city
 
 1. Copy `cities/austin.js` to `cities/<city>.js` and change the values: `hosts`, `place`, `region`,

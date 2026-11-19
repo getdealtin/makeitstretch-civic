@@ -62,6 +62,7 @@ export function unpackPlan(o) {
 }
 
 export const packBox = b => ({ v: 1, t: 'b', i: b.items, a: b.avoid.length ? b.avoid : undefined, o: b.other?.length ? b.other : undefined,
+  z: /^\d{5}$/.test(b.zip || '') ? b.zip : undefined, // z: the box's ZIP code (asked first since Nov 19)
   u: b.cant?.some(c => c.id) ? b.cant.filter(c => c.id).map(c => c.id) : undefined, // u: foods left out ("won't use")
   uw: b.cant?.some(c => c.word) ? b.cant.filter(c => c.word).map(c => c.word) : undefined }); // uw: same, typed
 
@@ -71,7 +72,8 @@ export function unpackBox(o) {
   const other = (Array.isArray(o.o) ? o.o : []).map(cleanFoodWord).filter(Boolean).slice(0, 5);
   const cant = [...pick(o.u, 'boxItems').filter(id => items.includes(id)).map(id => ({ id, reason: null })),
     ...[...new Set((Array.isArray(o.uw) ? o.uw : []).map(cleanFoodWord).filter(Boolean))].slice(0, 5).map(word => ({ word, reason: null }))];
-  return items.length || other.length ? { items, avoid: pick(o.a, 'avoid'), other, cant } : null;
+  const zip = /^\d{5}$/.test(String(o.z || '')) ? String(o.z) : null;
+  return items.length || other.length ? { items, avoid: pick(o.a, 'avoid'), other, cant, zip } : null;
 }
 
 /** "#p=…" / "#b=…" → { kind, state } or null. */

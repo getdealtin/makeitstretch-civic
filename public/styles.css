@@ -572,3 +572,8 @@ html { scroll-padding-bottom: 110px; }
 .food-tile[aria-pressed="true"]::after { content: '✓'; position: absolute; top: 5px; right: 6px; width: 20px; height: 20px; border-radius: 50%;
   background: var(--violet); color: #fff; font: 700 12px/20px var(--font-label); text-align: center; }
 .food-tile:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+
+/* One site (Nov 19 2026): the line under the ZIP question on the main site, and the "no local sites yet" card. */
+.zip-where { margin: 12px 0 0; font: 500 15px/1.45 var(--font-label); color: var(--text); }
+.zip-where:empty { display: none; }
+.site-none { border-style: dashed; background: var(--tint-light); }

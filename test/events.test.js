@@ -78,7 +78,8 @@ test('summary: visits, drop-off, budget pressure, shortfall routing, can\'t-use 
   assert.equal(a.cant_use.box_items, 4);
   assert.deepEqual(a.cant_use.by_group, { cultural: 1, practical: 1 });
   assert.deepEqual(a.returns, { saved: 1 });
-  assert.deepEqual(a.steps[0], ['budget', 2]);
+  assert.deepEqual(a.steps.find(s => s[0] === 'budget'), ['budget', 2]);
+  assert.equal(a.steps[0][0], 'zip'); // ZIP code is the first question (Nov 19 2026)
 });
 
 test('admin summary includes activity for the chosen range', async () => {

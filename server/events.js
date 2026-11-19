@@ -5,6 +5,7 @@
 
 import { BOX_GROUPS, cleanFoodWord } from '../engine/box.js';
 import { BENCHMARKS } from '../engine/index.js';
+import { PARTNERS } from '../cities/index.js';
 
 const BOX_ITEMS = BOX_GROUPS.flatMap(g => g.items);
 export const AVOID = ['gluten', 'dairy', 'meat', 'pork', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'];
@@ -104,7 +105,7 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
     plans: plans.length,
     boxes: boxes.length,
     returns: count(by('plan_reopened'), e => e.data.source || 'unknown'),
-    steps: ['budget', 'days', 'people', 'zip', 'prefs'].map(s => [s, by('step_completed').filter(e => e.data.step === s).length]),
+    steps: ['zip', 'budget', 'days', 'people', 'prefs'].map(s => [s, by('step_completed').filter(e => e.data.step === s).length]),
     zips: top(count(events.filter(e => e.event === 'plan_built' || e.event === 'box_built' || e.event === 'zip_added_later'), e => e.data.zip || 'none'), 20),
     budget_total: +plans.reduce((s, p) => s + (p.data.budget || 0), 0).toFixed(2),
     box_value_total: +boxes.reduce((s, b) => s + (b.data.value || 0), 0).toFixed(2),
@@ -139,7 +140,7 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
 }
 
 // ── Routes ──────────────────────────────────────────────────────
-export function mountEvents(app, { getDb }) {
+export function mountEvents(app, { getDb, oneSite = false }) {
   const hits = new Map();
   setInterval(() => hits.clear(), 10 * 60e3).unref();
   app.post('/api/event', async (req, res) => {
@@ -150,6 +151,23 @@ export function mountEvents(app, { getDb }) {
     if (!ev) return res.status(400).end();
     if (ev.data.src && !(req.city.sources || []).includes(ev.data.src)) delete ev.data.src;
     try { await getDb().insertEvent({ ...ev, city_id: req.city.id }); } catch (e) { console.error(e.message); }
+    res.status(204).end();
+  });
+
+  // One site (owner decision, Nov 19 2026): someone on makeitstretch.org who skipped the ZIP question and
+  // later types a partner city's ZIP code (in "Free food & help") belongs to that city. Their plan or box,
+  // and everything they did since starting it, moves from the main site's totals to the city's, so it is
+  // counted once, in the right place. Only from the main site, only to the partner city that ZIP code
+  // belongs to, only that visit's own events (its random visit code), and only since the plan or box began.
+  app.post('/api/event/move', async (req, res) => {
+    const n = (hits.get(req.ip) || 0) + 1; hits.set(req.ip, n);
+    if (n > 300) return res.status(429).end();
+    const b = req.body || {};
+    const sinceMs = Date.parse(b.since);
+    const to = PARTNERS.find(c => c.zips.includes(String(b.zip)));
+    if (!oneSite || req.city.id !== 'national' || !to || !/^[a-z0-9]{12}$/.test(String(b.session_id || ''))
+      || !Number.isFinite(sinceMs) || sinceMs < Date.now() - 864e5 || sinceMs > Date.now() + 60e3) return res.status(400).end();
+    try { await getDb().moveSession(b.session_id, 'national', to.id, new Date(sinceMs).toISOString()); } catch (e) { console.error(e.message); }
     res.status(204).end();
   });
 }

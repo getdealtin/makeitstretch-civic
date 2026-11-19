@@ -14,7 +14,7 @@ import QRCode from 'qrcode';
 import { seriesFor, toPackagePrices, BLS_REGION } from './server/prices.js';
 import { storesNear } from './server/stores.js';
 import { BOX_GROUPS, BOX_SYNONYMS, foodLabel } from './engine/box.js';
-import { resolveCity, publicConfig, CITIES } from './cities/index.js';
+import { resolveCity, publicConfig, partnerFor, CITIES } from './cities/index.js';
 import { makeDb } from './server/db.js';
 import { mountDirectory } from './server/directory.js';
 import { makeLivePrices } from './server/live-prices.js';
@@ -27,6 +27,10 @@ const BLS_KEY = process.env.BLS_KEY || '';
 const DEFAULT_CITY = process.env.DEFAULT_CITY || 'national';
 // ?city= overrides are for local testing; off in production unless explicitly allowed.
 const ALLOW_CITY_OVERRIDE = process.env.ALLOW_CITY_OVERRIDE === '1' || process.env.NODE_ENV !== 'production';
+// One site (owner decision, Nov 19 2026): makeitstretch.org runs the tool for everyone, and a partner city's
+// ZIP code switches a visitor onto that city. Rollback: set ONE_SITE=off in Render (Environment) and the
+// bare domain shows the old landing page again, with no ZIP switching. Nothing else changes either way.
+const ONE_SITE = process.env.ONE_SITE !== 'off';
 
 // The 161 seed recipes (ids 1–161), the NHLBI main dishes, word for word (ids 1001+, data/nih-recipes.json),
 // and the simple meals from everyday staples (ids 2001+, data/simple-meals.json).
@@ -43,6 +47,8 @@ app.use(express.json({ limit: '10kb' }));
 // Attach the city to every request.
 app.use((req, res, next) => {
   req.city = resolveCity(req.headers.host, ALLOW_CITY_OVERRIDE ? req.query.city : undefined, DEFAULT_CITY);
+  // On the main site, a partner city the browser switched to by ZIP code (?city=austin).
+  if (ONE_SITE) req.city = partnerFor(req.city, req.query.city) || req.city;
   next();
 });
 
@@ -64,7 +70,7 @@ app.get('/theme.css', (req, res) => {
   );
 });
 
-app.get('/api/config', (req, res) => res.json(publicConfig(req.city)));
+app.get('/api/config', (req, res) => res.json(publicConfig(req.city, { oneSite: ONE_SITE })));
 
 // ── Install on a phone (owner request, Nov 11 2026) ─────────────
 // Each city site can be added to a phone's home screen: this web app manifest names it and points
@@ -223,7 +229,7 @@ app.post('/api/plan', async (req, res) => {
 
 // ── Ops ─────────────────────────────────────────────────────────
 // Anonymous usage events live in server/events.js (strict schema, matching the privacy policy).
-app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, recipes: RECIPES.length, bls: !!BLS_KEY, db: db.kind, admin: !!process.env.ADMIN_KEY }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, one_site: ONE_SITE, recipes: RECIPES.length, bls: !!BLS_KEY, db: db.kind, admin: !!process.env.ADMIN_KEY }));
 app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
 // ── Food directory + admin (server/directory.js) ────────────────
@@ -233,7 +239,7 @@ let db = makeDb();
 app.locals.setDb = d => { db = d; };
 mountDirectory(app, { getDb: () => db, priceStatus: () => (BLS_KEY ? livePrices.status() : null) });
 mountHsds(app, { getProviders: city => db.listProviders(city, ['approved']) });
-mountEvents(app, { getDb: () => db });
+mountEvents(app, { getDb: () => db, oneSite: ONE_SITE });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
 // ── Cities that are live, and share links / QR codes for partners (landing + /share) ──
 const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.length).map(c => ({
@@ -273,12 +279,13 @@ app.get('/qr.svg', async (req, res) => {
   res.type('image/svg+xml').set('Cache-Control', 'public, max-age=86400').send(svg);
 });
 
-// makeitstretch.org (the bare domain) shows the project landing page; city subdomains show
-// their tool. Outside production, /?site=landing previews it.
+// makeitstretch.org (the bare domain) runs the tool for everyone (ONE_SITE, the default). With ONE_SITE=off
+// it shows the old project landing page instead (public/landing.html, kept unchanged for that). City
+// subdomains always show their tool. Outside production, /?site=landing previews the landing page.
 const LANDING_HOSTS = ['makeitstretch.org', 'www.makeitstretch.org'];
 app.get('/', (req, res, next) => {
   const host = (req.headers.host || '').toLowerCase().split(':')[0];
-  if (LANDING_HOSTS.includes(host) || (ALLOW_CITY_OVERRIDE && req.query.site === 'landing')) return page('landing.html')(req, res);
+  if ((!ONE_SITE && LANDING_HOSTS.includes(host)) || (ALLOW_CITY_OVERRIDE && req.query.site === 'landing')) return page('landing.html')(req, res);
   next();
 });
 app.get('/share', page('share.html'));

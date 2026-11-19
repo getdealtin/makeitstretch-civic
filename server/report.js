@@ -199,7 +199,7 @@ export const METRICS = {
   outcome: c => c.table('“Did you use this plan?”', ['Answer', 'People'], lab(LABEL.answer, countBy(c.outcome, e => e.data.answer))),
   returns: c => c.table('Return visits', ['How', 'People'], lab({ saved: 'Reopened a saved plan', link: 'Opened a shared link' }, countBy(c.events.filter(e => e.event === 'plan_reopened'), e => e.data.source))),
   directory: c => ({ title: 'Food sites in the directory', head: ['Type', 'Organizations'], rows: Object.entries(c.providers.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {})), note: 'Organizations, not people: not suppressed.', organizations: true }),
-  sources: c => c.table('Visits by source', ['Source', 'People'], countBy(c.views, e => e.data?.src || 'direct'), { total: c.visits.size }),
+  sources: c => c.table('Visits by source', ['Source', 'People'], countBy(c.views.filter(e => e.data?.src === 'main' || !c.views.some(v => v.session_id === e.session_id && v.data?.src === 'main')), e => (e.data?.src === 'main' ? 'makeitstretch.org (entered a ZIP code in this city’s area there)' : e.data?.src || 'direct')), { total: c.visits.size }),
 };
 
 /**

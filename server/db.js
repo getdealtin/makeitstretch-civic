@@ -54,6 +54,7 @@ export function memoryDb() {
     async listReviews() { return [...reviews.values()].map(copy); },
     async insertEvent(ev) { events.push({ ...ev, created_at: now() }); },
     async listEvents(city, since) { return events.filter(e => e.city_id === city && e.created_at >= since).map(copy); },
+    async moveSession(sessionId, from, to, since) { for (const e of events) if (e.session_id === sessionId && e.city_id === from && e.created_at >= since) e.city_id = to; },
     async updateReview(lang, patch) { const r = reviews.get(lang); if (!r) return null; Object.assign(r, patch); return copy(r); },
     async getPriceCache(region) { return copy(priceCache.get(region)); },
     async savePriceCache(region, prices, fetchedAt) { priceCache.set(region, { region, prices, fetched_at: fetchedAt }); },
@@ -90,6 +91,8 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
     listInvites: city => call(`invites?city_id=eq.${enc(city)}&order=created_at.desc`),
     listReviews: () => call('translation_reviews?order=lang'),
     insertEvent: ev => call('events', { method: 'POST', body: ev, prefer: 'return=minimal' }),
+    // One site: a visit's events since its plan or box started move from the main site to a partner city.
+    moveSession: (sessionId, from, to, since) => call(`events?session_id=eq.${enc(sessionId)}&city_id=eq.${enc(from)}&created_at=gte.${enc(since)}`, { method: 'PATCH', body: { city_id: to }, prefer: 'return=minimal' }),
     // PostgREST returns at most 1,000 rows per request, so page through.
     listEvents: async (city, since) => {
       const out = [];

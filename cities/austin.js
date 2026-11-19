@@ -60,7 +60,9 @@ export default {
   // Add a tag here before using it on a flyer or partner link.
   // Needs offered after the plan ("Need help with anything else?"). 2-1-1 is shown for every need.
   needs: ['rent', 'health', 'childcare', 'jobs'],
-  sources: ['library', 'ctfb', 'pantry', 'partner', 'flyer', 'qr', 'social', 'city', 'packet'],
+  // 'main': people who started on makeitstretch.org and entered an Austin ZIP code (sent by the site itself,
+  // not offered on /share).
+  sources: ['library', 'ctfb', 'pantry', 'partner', 'flyer', 'qr', 'social', 'city', 'packet', 'main'],
   // Names for this city's own partner tags on the /share page (general tags like 'library' are named there).
   source_labels: { ctfb: 'Central Texas Food Bank', city: 'City of Austin office or program' },
 
@@ -84,6 +86,16 @@ export default {
     transit_trip_url: 'https://www.capmetro.org/ride/plan/trip-planner?destination_search={dest}',
     sample_zip: '78702',
   },
+
+  // One site (owner decision, Nov 19 2026): on makeitstretch.org, these ZIP codes switch a person onto
+  // Austin's card (local listings, City help, Austin's report). They are every ZIP code with any 2020
+  // residents inside Austin city limits (data/zip-districts.json, where "outside" is below 100%), the same
+  // ZIP codes the City report already places in council districts. Change this list to change who counts.
+  zips: ['78610', '78613', '78617', '78652', '78653', '78660', '78701', '78702', '78703', '78704', '78705',
+    '78712', '78717', '78719', '78721', '78722', '78723', '78724', '78725', '78726', '78727', '78728', '78729',
+    '78730', '78731', '78732', '78733', '78734', '78735', '78736', '78737', '78739', '78741', '78742', '78744',
+    '78745', '78746', '78747', '78748', '78749', '78750', '78751', '78752', '78753', '78754', '78756', '78757',
+    '78758', '78759'],
 
   focus_area: 'Council Districts 1–4 (eastern crescent)',
   // ZIP codes used to approximate the focus area in the City report's food-retail findings.

@@ -20,8 +20,31 @@ export function resolveCity(host = '', override, fallback = 'national') {
   return CITIES[fallback] || national;
 }
 
-/** The subset of a config card that is safe to send to the browser. */
-export function publicConfig(c) {
+/** Partner cities: cities whose card lists the ZIP codes that switch the main site onto them. */
+export const PARTNERS = Object.values(CITIES).filter(c => c.place && Array.isArray(c.zips) && c.zips.length);
+
+/**
+ * One site (owner decision, Nov 19 2026): on the main site (makeitstretch.org, the national card), a
+ * partner city's ZIP code switches the visitor onto that city's card. The browser then asks for it with
+ * ?city=<id>, which is honored only from the main site and only for partner cities.
+ * @param {object} siteCity  the city the request's host picked
+ * @param {unknown} asked    the ?city= query value
+ */
+export function partnerFor(siteCity, asked) {
+  if (siteCity.id !== 'national' || typeof asked !== 'string') return null;
+  return PARTNERS.find(c => c.id === asked) || null;
+}
+
+/**
+ * The subset of a config card that is safe to send to the browser.
+ * @param {object} c
+ * @param {{oneSite?: boolean}} [opts]  oneSite: the main site lists partner cities and their ZIP codes
+ */
+export function publicConfig(c, { oneSite = false } = {}) {
+  const partnerInfo = oneSite && c.id === 'national' ? {
+    partners: PARTNERS.map(p => ({ id: p.id, place: p.place, region: p.region || null })),
+    partner_zips: Object.fromEntries(PARTNERS.flatMap(p => p.zips.map(z => [z, p.id]))),
+  } : {};
   return {
     id: c.id, name: c.name, place: c.place, tagline: c.tagline, maker: c.maker,
     disclaimer: c.disclaimer, branding: c.branding, price_region: c.price_region,
@@ -35,5 +58,6 @@ export function publicConfig(c) {
     transit_trip_url: c.local?.transit_trip_url || null,
     sample_zip: c.local?.sample_zip || null,
     wic_finder_url: c.wic_finder_url || null,
+    ...partnerInfo,
   };
 }

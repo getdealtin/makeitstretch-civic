@@ -232,10 +232,11 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
     next();
   });
 
-  // Admin picks the city (one admin page for every city).
+  // Admin picks the city (one admin page for every city). "national" is makeitstretch.org itself:
+  // everyone outside a partner city (owner decision Nov 19 2026: count it, for the owner only).
   const cityOf = req => {
     const id = req.query.city || req.body?.city;
-    return CITIES[id] && id !== 'national' ? id : (req.city.id !== 'national' ? req.city.id : Object.keys(CITIES).find(c => c !== 'national'));
+    return CITIES[id] ? id : (req.city.id !== 'national' ? req.city.id : Object.keys(CITIES).find(c => c !== 'national'));
   };
 
   const inviteLink = (city, req, token) => {
@@ -257,7 +258,7 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
       const [all, invites, reviews] = await Promise.all([db().listProviders(city), db().listInvites(city), db().listReviews()]);
       const byInvite = Object.fromEntries(all.filter(p => p.invite_id).map(p => [p.invite_id, { id: p.id, name: p.name, status: p.status }]));
       res.json({
-        city, cities: Object.values(CITIES).filter(c => c.id !== 'national').map(c => ({ id: c.id, place: c.place })),
+        city, cities: Object.values(CITIES).map(c => ({ id: c.id, place: c.place || 'Everywhere else (makeitstretch.org)' })),
         db: db().kind,
         pending: all.filter(p => p.status === 'pending'),
         overdue: all.filter(isOverdue),

@@ -55,14 +55,15 @@ async function check(p, screen, { spacing = true } = {}) {
 async function budgetFlow(p, tag, cap) {
   await p.goto(URL + '/'); await p.waitForSelector('#door-budget'); cap.titles.push(await p.title());
   await check(p, tag + ' intro');
-  await p.click('#door-budget'); await check(p, tag + ' step budget'); cap.titles.push(await p.title());
+  // ZIP code first (Nov 19 2026)
+  await p.click('#door-budget'); await check(p, tag + ' step zip'); cap.titles.push(await p.title());
+  await p.fill('#zip', '78702'); await p.click('button[type=submit]');
+  await check(p, tag + ' step budget');
   await p.fill('#budget', '60'); await p.keyboard.press('Enter');
   await check(p, tag + ' step days');
   await p.click('[data-group=days][data-value="7"]'); await p.click('button[type=submit]');
   await check(p, tag + ' step people');
   await p.click('[data-group=people][data-value="2"]'); await p.click('button[type=submit]');
-  await check(p, tag + ' step zip');
-  await p.fill('#zip', '78702'); await p.click('button[type=submit]');
   await check(p, tag + ' step prefs'); cap.titles.push(await p.title());
   await p.click('button[type=submit]'); await p.waitForSelector('#k-save', { timeout: 20000 });
   await check(p, tag + ' results', { spacing: true }); cap.titles.push(await p.title());
@@ -74,9 +75,13 @@ async function budgetFlow(p, tag, cap) {
   }
 }
 async function boxFlow(p, tag) {
-  await p.goto(URL + '/'); await p.click('#door-box'); await check(p, tag + ' box');
+  await p.goto(URL + '/'); await p.click('#door-box'); await check(p, tag + ' box zip');
+  await p.fill('#zip', '78702'); await p.click('#boxzip button[type=submit]'); await p.waitForSelector('#boxform'); await check(p, tag + ' box');
   for (const id of ['rice', 'drybeans', 'tuna', 'oats']) { const b = await p.$(`[data-item=${id}]`); if (b) await b.click(); }
-  await p.click('#boxform button[type=submit]'); await p.waitForSelector('.hub', { timeout: 20000 });
+  await p.click('#boxform button[type=submit]');
+  // The "Anything in your box you won't use?" step (Nov 17) comes before the meals: audit it, then go on.
+  await p.waitForSelector('#cantform', { timeout: 20000 }); await check(p, tag + ' box won\'t-use step');
+  await p.click('#cantform button[type=submit]'); await p.waitForSelector('.hub', { timeout: 20000 });
   await check(p, tag + ' box results');
   for (const id of await p.$$eval('[data-open-panel]', b => b.map(x => x.dataset.openPanel))) {
     await p.click(`[data-open-panel="${id}"]`); await p.waitForTimeout(300);
@@ -124,6 +129,7 @@ async function boxFlow(p, tag) {
   const where = () => kp.evaluate(() => document.activeElement?.id || document.activeElement?.tagName);
   kb.steps.push(['reach budget door', await tabTo(() => document.activeElement?.id === 'door-budget')]);
   await kp.keyboard.press('Enter'); await kp.waitForTimeout(200); kb.focusAfterView.push(await where());
+  await kp.keyboard.type('78702'); await kp.keyboard.press('Enter'); await kp.waitForTimeout(300); kb.focusAfterView.push(await where());
   kb.steps.push(['reach budget input', await tabTo(() => document.activeElement?.id === 'budget')]);
   await kp.keyboard.type('60'); await kp.keyboard.press('Enter'); await kp.waitForTimeout(200); kb.focusAfterView.push(await where());
   for (const [grp, val] of [['days', '7'], ['people', '2']]) {
@@ -134,12 +140,12 @@ async function boxFlow(p, tag) {
   const k2 = await b.newContext({ viewport: { width: 1280, height: 900 } }); const k2p = await k2.newPage();
   await k2p.addInitScript(() => { try { localStorage.setItem('mis:test', '1'); } catch {} });
   await k2p.goto(URL + '/'); await k2p.waitForSelector('#door-budget'); await k2p.focus('#door-budget'); await k2p.keyboard.press('Enter');
-  await k2p.waitForTimeout(150); await k2p.focus('#budget'); await k2p.keyboard.type('60'); await k2p.keyboard.press('Enter'); await k2p.waitForTimeout(200);
+  await k2p.waitForTimeout(150); kb.zipFocus = await k2p.evaluate(() => document.activeElement?.id); await k2p.focus('#skip'); await k2p.keyboard.press('Enter'); await k2p.waitForTimeout(250);
+  await k2p.focus('#budget'); await k2p.keyboard.type('60'); await k2p.keyboard.press('Enter'); await k2p.waitForTimeout(200);
   const kbOpt = async (group, value) => { for (let i = 0; i < 30; i++) { await k2p.keyboard.press('Tab'); const hit = await k2p.evaluate(([g, v]) => { const e = document.activeElement; return e?.dataset?.group === g || e?.name === g ? (e.dataset.value === v || e.value === v) : false; }, [group, value]); if (hit) { await k2p.keyboard.press('Space'); return true; } } return false; };
   const kbSubmit = async () => { await k2p.keyboard.press('Enter'); await k2p.waitForTimeout(250); };
   kb.days = await kbOpt('days', '7'); await k2p.focus('button[type=submit]'); await kbSubmit();
   kb.people = await kbOpt('people', '2'); await k2p.focus('button[type=submit]'); await kbSubmit();
-  kb.zipFocus = await k2p.evaluate(() => document.activeElement?.id); await k2p.focus('#skip'); await k2p.keyboard.press('Enter'); await k2p.waitForTimeout(250);
   await k2p.focus('button[type=submit]'); await k2p.keyboard.press('Enter');
   kb.results = !!(await k2p.waitForSelector('#k-save', { timeout: 20000 }).catch(() => null));
   kb.resultsFocus = await k2p.evaluate(() => document.activeElement?.id || document.activeElement?.tagName);
