@@ -1,0 +1,472 @@
+{
+ "_about": "Owner decision Nov 19 2026: the original 161 recipes (data/seed-recipes.json) keep every dish name and get their real ingredients. Main ingredients are on the shopping list with a USDA price (engine/recipe-foods.js), using a store-bought shortcut where one is cheap and common; small seasonings with no government price are `extras`, shown as \"You'll also need\" and not counted in the total. Applied by scripts/apply-seed-recipe-fixes.py. Keys are recipe ids (1-161, the order in seed-recipes.json).",
+ "fixes": {
+  "4": {
+   "extras": [
+    "baking powder"
+   ],
+   "en": "Mix flour, 2 teaspoons baking powder and a pinch of salt. Whisk in eggs and milk until smooth. Heat a buttered pan. Pour 1/4 cup batter per pancake. Cook until bubbles form, flip, cook 1 more minute.",
+   "es": "Mezcle la harina, 2 cucharaditas de polvo para hornear y una pizca de sal. Agregue los huevos y la leche y bata hasta que no haya grumos. Caliente un sartén con mantequilla. Vierta 1/4 de taza de mezcla por panqueque. Cocine hasta que salgan burbujas, voltee y cocine 1 minuto más.",
+   "vi": "Trộn bột mì, 2 muỗng cà phê bột nở và một nhúm muối. Cho trứng và sữa vào, đánh đến khi mịn. Làm nóng chảo với bơ. Đổ 1/4 cốc bột cho mỗi cái bánh. Chiên đến khi nổi bọt, lật mặt, chiên thêm 1 phút.",
+   "zh": "把面粉、2 茶匙泡打粉和一小撮盐混合。加入鸡蛋和牛奶搅拌至顺滑。平底锅抹黄油烧热。每个饼倒 1/4 杯面糊。煎到表面起泡后翻面，再煎 1 分钟。"
+  },
+  "34": {
+   "ingredients": [
+    "plantains",
+    "eggs",
+    "oil",
+    "salt"
+   ],
+   "en": "Peel a ripe plantain (yellow with black spots) and slice it thick on a slant. Fry in oil over medium heat until golden on both sides, about 3 minutes a side. Fry eggs alongside. Serve together with a pinch of salt.",
+   "es": "Pele el plátano macho maduro (amarillo con manchas negras) y córtelo en rodajas gruesas y en diagonal. Fríalo en aceite a fuego medio hasta que dore por ambos lados, unos 3 minutos por lado. Fría los huevos al lado. Sirva todo junto con una pizca de sal.",
+   "vi": "Bóc vỏ chuối plantain chín (vỏ vàng có đốm đen) và cắt lát dày, xéo. Chiên trong dầu lửa vừa đến khi vàng hai mặt, khoảng 3 phút mỗi mặt. Chiên trứng bên cạnh. Dọn chung với một nhúm muối.",
+   "zh": "把熟大蕉（黄皮带黑斑）去皮，斜切成厚片。用中火在油里煎至两面金黄，每面约 3 分钟。同时在旁边煎鸡蛋。撒少许盐，一起上桌。"
+  },
+  "56": {
+   "extras": [
+    "turmeric",
+    "cumin"
+   ],
+   "en": "Fry onion until golden. Add garlic, 1/2 teaspoon turmeric and 1 teaspoon cumin, cook 1 minute. Add lentils, tomatoes and water to cover. Simmer 20 minutes until lentils dissolve into sauce. Season. Serve over rice.",
+   "es": "Fría la cebolla hasta que dore. Agregue el ajo, 1/2 cucharadita de cúrcuma y 1 cucharadita de comino, y cocine 1 minuto. Agregue las lentejas, los tomates y agua hasta cubrir. Deje hervir a fuego lento 20 minutos, hasta que las lentejas se deshagan en la salsa. Sazone. Sirva sobre arroz.",
+   "vi": "Phi hành tây đến khi vàng. Cho tỏi, 1/2 muỗng cà phê nghệ và 1 muỗng cà phê thì là Ai Cập (cumin) vào, nấu 1 phút. Cho đậu lăng, cà chua và nước ngập vào. Đun nhỏ lửa 20 phút đến khi đậu lăng nhừ thành sốt. Nêm nếm. Ăn với cơm.",
+   "zh": "洋葱炒至金黄。加入大蒜、1/2 茶匙姜黄和 1 茶匙孜然，炒 1 分钟。加入扁豆、番茄和没过食材的水。小火煮 20 分钟，至扁豆化开成酱。调味。浇在米饭上吃。"
+  },
+  "61": {
+   "extras": [
+    "turmeric",
+    "cumin"
+   ],
+   "en": "Wash rice and lentils together. Fry onion and garlic in oil until golden, then stir in 1 teaspoon cumin and 1/2 teaspoon turmeric. Add rice and lentils, stir to coat. Add 4 cups water and salt. Cover and cook on low 25 minutes.",
+   "es": "Lave el arroz y las lentejas juntos. Fría la cebolla y el ajo en aceite hasta que doren y luego agregue 1 cucharadita de comino y 1/2 cucharadita de cúrcuma. Agregue el arroz y las lentejas y revuelva para cubrirlos. Agregue 4 tazas de agua y sal. Tape y cocine a fuego bajo 25 minutos.",
+   "vi": "Vo gạo và đậu lăng chung. Phi hành tây và tỏi với dầu đến khi vàng, rồi cho 1 muỗng cà phê thì là Ai Cập (cumin) và 1/2 muỗng cà phê nghệ vào. Cho gạo và đậu lăng vào, đảo đều. Thêm 4 cốc nước và muối. Đậy nắp, nấu lửa nhỏ 25 phút.",
+   "zh": "大米和扁豆一起淘洗。洋葱和大蒜用油炒至金黄，再拌入 1 茶匙孜然和 1/2 茶匙姜黄。加入大米和扁豆翻炒均匀。加 4 杯水和盐。盖上锅盖，小火煮 25 分钟。"
+  },
+  "63": {
+   "extras": [
+    "curry powder"
+   ],
+   "en": "Fry onion and garlic until golden. Stir in 1 tablespoon curry powder, cook 1 minute. Add tomatoes, cook 5 minutes. Add lentils and coconut milk. Simmer 20 minutes. Season generously. Serve with rice.",
+   "es": "Fría la cebolla y el ajo hasta que doren. Agregue 1 cucharada de curry en polvo y cocine 1 minuto. Agregue los tomates y cocine 5 minutos. Agregue las lentejas y la leche de coco. Deje hervir a fuego lento 20 minutos. Sazone bien. Sirva con arroz.",
+   "vi": "Phi hành tây và tỏi đến khi vàng. Cho 1 muỗng canh bột cà ri vào, nấu 1 phút. Cho cà chua vào, nấu 5 phút. Cho đậu lăng và nước cốt dừa vào. Đun nhỏ lửa 20 phút. Nêm nếm đậm đà. Ăn với cơm.",
+   "zh": "洋葱和大蒜炒至金黄。拌入 1 汤匙咖喱粉，炒 1 分钟。加番茄煮 5 分钟。加入扁豆和椰奶，小火煮 20 分钟。多调些味。配米饭吃。"
+  },
+  "67": {
+   "extras": [
+    "turmeric",
+    "cumin"
+   ],
+   "en": "Fry onion and garlic until golden. Stir in 1 teaspoon cumin and 1/2 teaspoon turmeric. Add diced potato, stir to coat. Add tomatoes and a small amount of water. Cover and cook 20 minutes until potatoes are tender. Season well.",
+   "es": "Fría la cebolla y el ajo hasta que doren. Agregue 1 cucharadita de comino y 1/2 cucharadita de cúrcuma. Agregue la papa en cubitos y revuelva para cubrirla. Agregue los tomates y un poco de agua. Tape y cocine 20 minutos, hasta que las papas estén suaves. Sazone bien.",
+   "vi": "Phi hành tây và tỏi đến khi vàng. Cho 1 muỗng cà phê thì là Ai Cập (cumin) và 1/2 muỗng cà phê nghệ vào. Cho khoai tây cắt hạt lựu vào, đảo đều. Thêm cà chua và một ít nước. Đậy nắp, nấu 20 phút đến khi khoai mềm. Nêm nếm vừa ăn.",
+   "zh": "洋葱和大蒜炒至金黄。拌入 1 茶匙孜然和 1/2 茶匙姜黄。加入土豆丁翻炒均匀。加番茄和少量水。盖上锅盖煮 20 分钟，至土豆软烂。调味。"
+  },
+  "68": {
+   "extras": [
+    "turmeric",
+    "cumin"
+   ],
+   "en": "Fry onion and garlic, then stir in 1 teaspoon cumin and 1/2 teaspoon turmeric. Add cubed sweet potato and lentils. Cover with water. Simmer 20 minutes. Stir in coconut milk. Simmer 5 more minutes. Season. Serve with rice.",
+   "es": "Fría la cebolla y el ajo y luego agregue 1 cucharadita de comino y 1/2 cucharadita de cúrcuma. Agregue el camote en cubos y las lentejas. Cubra con agua. Deje hervir a fuego lento 20 minutos. Agregue la leche de coco. Cocine 5 minutos más. Sazone. Sirva con arroz.",
+   "vi": "Phi hành tây và tỏi, rồi cho 1 muỗng cà phê thì là Ai Cập (cumin) và 1/2 muỗng cà phê nghệ vào. Cho khoai lang cắt khối và đậu lăng vào. Đổ nước ngập. Đun nhỏ lửa 20 phút. Cho nước cốt dừa vào. Đun thêm 5 phút. Nêm nếm. Ăn với cơm.",
+   "zh": "洋葱和大蒜炒香，再拌入 1 茶匙孜然和 1/2 茶匙姜黄。加入红薯块和扁豆，加水没过。小火煮 20 分钟。拌入椰奶，再煮 5 分钟。调味。配米饭吃。"
+  },
+  "76": {
+   "extras": [
+    "baking powder"
+   ],
+   "en": "Make cornbread: mix cornmeal, 2 teaspoons baking powder and a pinch of salt, then stir in egg and milk. Pour into an oiled pan and bake at 400F about 20 minutes, until golden. Warm beans with fried onion. Serve together.",
+   "es": "Haga el pan de maíz: mezcle la harina de maíz, 2 cucharaditas de polvo para hornear y una pizca de sal, y luego agregue el huevo y la leche. Vierta en un molde engrasado y hornee a 400 °F unos 20 minutos, hasta que dore. Caliente los frijoles con cebolla frita. Sirva todo junto.",
+   "vi": "Làm bánh bột bắp: trộn bột bắp, 2 muỗng cà phê bột nở và một nhúm muối, rồi cho trứng và sữa vào khuấy đều. Đổ vào khuôn đã thoa dầu, nướng ở 400°F khoảng 20 phút đến khi vàng. Hâm nóng đậu với hành phi. Dọn chung.",
+   "zh": "做玉米面包：把玉米面、2 茶匙泡打粉和一小撮盐混合，再拌入鸡蛋和牛奶。倒入抹油的烤盘，400°F 烤约 20 分钟，至表面金黄。豆子和炒香的洋葱一起加热。一起上桌。"
+  },
+  "78": {
+   "extras": [
+    "baking powder"
+   ],
+   "en": "Season and bake chicken at 400F for 35 minutes. Mix cornmeal, 2 teaspoons baking powder and a pinch of salt, then stir in egg and milk. Pour into an oiled pan and bake alongside for the last 20 minutes.",
+   "es": "Sazone el pollo y hornéelo a 400 °F por 35 minutos. Mezcle la harina de maíz, 2 cucharaditas de polvo para hornear y una pizca de sal, y luego agregue el huevo y la leche. Vierta en un molde engrasado y hornéelo junto al pollo los últimos 20 minutos.",
+   "vi": "Ướp gà và nướng ở 400°F trong 35 phút. Trộn bột bắp, 2 muỗng cà phê bột nở và một nhúm muối, rồi cho trứng và sữa vào khuấy đều. Đổ vào khuôn đã thoa dầu và nướng cùng gà trong 20 phút cuối.",
+   "zh": "鸡肉调味，400°F 烤 35 分钟。把玉米面、2 茶匙泡打粉和一小撮盐混合，再拌入鸡蛋和牛奶。倒入抹油的烤盘，在最后 20 分钟和鸡肉一起烤。"
+  },
+  "79": {
+   "ingredients": [
+    "black-eyed peas",
+    "rice",
+    "onions",
+    "garlic",
+    "oil",
+    "salt"
+   ],
+   "en": "Rinse black-eyed peas (no soaking needed). Fry onion and garlic in oil, add the peas and water to cover by 2 inches. Simmer until tender, about 1 hour. Season. Serve the peas and some of their liquid over cooked rice.",
+   "es": "Enjuague los frijoles carita (no hace falta remojarlos). Fría la cebolla y el ajo en aceite, agregue los frijoles y agua que los cubra por 2 pulgadas. Deje hervir a fuego lento hasta que estén suaves, como 1 hora. Sazone. Sirva los frijoles con un poco de su caldo sobre arroz cocido.",
+   "vi": "Rửa sạch đậu mắt đen (không cần ngâm). Phi hành tây và tỏi với dầu, cho đậu vào và đổ nước ngập hơn 5 cm. Đun nhỏ lửa đến khi mềm, khoảng 1 giờ. Nêm nếm. Múc đậu cùng một ít nước đậu lên cơm.",
+   "zh": "把黑眼豆冲洗干净（不用泡）。用油把洋葱和大蒜炒香，加入黑眼豆和高出豆子约 5 厘米的水。小火煮到软，约 1 小时。调味。把豆子连同一些汤汁浇在米饭上。"
+  },
+  "80": {
+   "ingredients": [
+    "catfish",
+    "cornmeal",
+    "oil",
+    "milk",
+    "butter",
+    "salt",
+    "water"
+   ],
+   "en": "Make creamy grits: whisk cornmeal slowly into simmering salted milk and water, stir often for 15 to 20 minutes, then stir in butter. Season catfish fillets with salt and coat in cornmeal. Fry in oil over medium heat 3 to 4 minutes a side, until golden and the fish flakes easily. Serve over the grits.",
+   "es": "Haga grits cremosos: agregue la harina de maíz poco a poco a leche y agua con sal que estén hirviendo suavemente, revuelva seguido de 15 a 20 minutos y luego agregue la mantequilla. Sazone los filetes de bagre con sal y cúbralos con harina de maíz. Fríalos en aceite a fuego medio de 3 a 4 minutos por lado, hasta que doren y el pescado se deshaga fácilmente. Sirva sobre los grits.",
+   "vi": "Nấu grits mịn: rắc từ từ bột bắp vào sữa và nước có muối đang sôi nhẹ, khuấy thường xuyên 15 đến 20 phút, rồi cho bơ vào. Ướp phi lê cá trê với muối và lăn qua bột bắp. Chiên trong dầu lửa vừa mỗi mặt 3 đến 4 phút, đến khi vàng và thịt cá tách ra dễ dàng. Dọn cá trên grits.",
+   "zh": "先煮玉米糊（grits）：把玉米面慢慢撒进微滚的加盐牛奶和水里，常搅拌，煮 15 到 20 分钟，再拌入黄油。鲶鱼片抹盐，裹上玉米面。中火用油煎，每面 3 到 4 分钟，至金黄、鱼肉一拨就散。盛在玉米糊上。"
+  },
+  "95": {
+   "ingredients": [
+    "fish",
+    "lemon",
+    "garlic",
+    "olive oil",
+    "canned tomatoes",
+    "salt"
+   ],
+   "en": "Place fish fillets in a baking dish. Top with tomatoes and garlic, drizzle with olive oil and season. Bake at 375F for 15 to 20 minutes, until the fish flakes easily. Squeeze lemon over to serve.",
+   "es": "Ponga los filetes de pescado en un refractario. Cúbralos con los tomates y el ajo, rocíe aceite de oliva y sazone. Hornee a 375 °F de 15 a 20 minutos, hasta que el pescado se deshaga fácilmente. Exprima limón encima al servir.",
+   "vi": "Xếp phi lê cá vào khay nướng. Phủ cà chua và tỏi lên, rưới dầu ô liu và nêm nếm. Nướng ở 375°F từ 15 đến 20 phút, đến khi thịt cá tách ra dễ dàng. Vắt chanh lên khi ăn.",
+   "zh": "把鱼片放进烤盘。铺上番茄和大蒜，淋橄榄油并调味。375°F 烤 15 到 20 分钟，至鱼肉一拨就散。上桌前挤上柠檬汁。"
+  },
+  "100": {
+   "extras": [
+    "cumin",
+    "paprika"
+   ],
+   "en": "Fry onion and garlic in oil until soft. Stir in 1 teaspoon each cumin and paprika. Add tomatoes, season, simmer 10 minutes until thick. Make wells in the sauce. Crack eggs into the wells. Cover and cook until whites are set but yolks are still runny. Serve from the pan with bread.",
+   "es": "Fría la cebolla y el ajo en aceite hasta que se ablanden. Agregue 1 cucharadita de comino y 1 de pimentón. Agregue los tomates, sazone y deje hervir a fuego lento 10 minutos, hasta que espese. Haga huecos en la salsa. Rompa los huevos en los huecos. Tape y cocine hasta que las claras cuajen y las yemas sigan suaves. Sirva en el sartén con pan.",
+   "vi": "Phi hành tây và tỏi với dầu đến khi mềm. Cho mỗi thứ 1 muỗng cà phê thì là Ai Cập (cumin) và ớt bột paprika vào. Cho cà chua vào, nêm nếm, đun nhỏ lửa 10 phút đến khi sệt. Tạo các lỗ trong sốt. Đập trứng vào các lỗ. Đậy nắp, nấu đến khi lòng trắng chín mà lòng đỏ còn lòng đào. Dọn nguyên chảo với bánh mì.",
+   "zh": "洋葱和大蒜用油炒软。拌入孜然和红椒粉各 1 茶匙。加入番茄，调味，小火煮 10 分钟至浓稠。在酱里压出几个小坑，把鸡蛋打进坑里。盖上锅盖，煮到蛋白凝固、蛋黄还流心。连锅上桌，配面包吃。"
+  },
+  "112": {
+   "extras": [
+    "sugar"
+   ],
+   "en": "Cook rice in milk slowly 20 minutes, stirring often. Stir in sugar to taste, cinnamon and a small pinch of salt. Top with sliced banana.",
+   "es": "Cocine el arroz en la leche a fuego lento 20 minutos, revolviendo seguido. Agregue azúcar al gusto, canela y una pizca de sal. Sirva con rodajas de plátano encima.",
+   "vi": "Nấu gạo với sữa ở lửa nhỏ 20 phút, khuấy thường xuyên. Cho đường vừa ăn, quế và một nhúm muối nhỏ. Rắc chuối cắt lát lên trên.",
+   "zh": "大米用牛奶小火慢煮 20 分钟，常搅拌。按口味加糖、肉桂和一小撮盐。铺上香蕉片。"
+  },
+  "117": {
+   "ingredients": [
+    "chicken",
+    "chickpeas",
+    "carrots",
+    "onions",
+    "garlic",
+    "canned tomatoes",
+    "salt"
+   ],
+   "extras": [
+    "chipotle peppers in adobo"
+   ],
+   "en": "Simmer chicken with onion, garlic and salt 30 minutes. Remove and shred. Blend tomatoes with 1 or 2 chipotle peppers and stir into the broth. Add chickpeas and carrots. Cook 15 minutes. Return chicken. Season well.",
+   "es": "Hierva el pollo a fuego lento con cebolla, ajo y sal por 30 minutos. Sáquelo y desmenúcelo. Licúe los tomates con 1 o 2 chiles chipotles y agréguelos al caldo. Agregue los garbanzos y las zanahorias. Cocine 15 minutos. Regrese el pollo. Sazone bien.",
+   "vi": "Hầm gà với hành, tỏi và muối 30 phút. Vớt gà ra và xé nhỏ. Xay cà chua với 1 hoặc 2 quả ớt chipotle rồi khuấy vào nước dùng. Cho đậu gà và cà rốt vào. Nấu 15 phút. Cho gà trở lại nồi. Nêm nếm vừa ăn.",
+   "zh": "鸡肉和洋葱、大蒜、盐一起小火炖 30 分钟。捞出撕成丝。番茄和 1 到 2 个烟熏辣椒（chipotle）一起打碎，拌进汤里。加入鹰嘴豆和胡萝卜，煮 15 分钟。放回鸡肉。调味。"
+  },
+  "120": {
+   "extras": [
+    "miso"
+   ],
+   "en": "Simmer water with diced onion 5 minutes. Lower the heat and stir in miso until dissolved (don't let it boil hard). Beat eggs and pour slowly into the hot broth while stirring to make ribbons. Add a splash of soy sauce to taste.",
+   "es": "Hierva agua con cebolla picada a fuego lento 5 minutos. Baje el fuego y disuelva el miso (que no hierva fuerte). Bata los huevos y viértalos poco a poco en el caldo caliente, revolviendo, para que se formen hebras. Agregue un chorrito de salsa de soya al gusto.",
+   "vi": "Đun nhỏ lửa nước với hành tây thái hạt lựu 5 phút. Hạ lửa và khuấy tan miso (đừng để sôi mạnh). Đánh trứng rồi đổ từ từ vào nước dùng nóng, vừa đổ vừa khuấy để tạo sợi trứng. Thêm chút nước tương vừa ăn.",
+   "zh": "水里加洋葱丁小火煮 5 分钟。转小火，拌入味噌至化开（别让汤大滚）。鸡蛋打散，边搅边慢慢倒进热汤里，形成蛋花。按口味加少许酱油。"
+  },
+  "121": {
+   "ingredients": [
+    "eggs",
+    "soy sauce",
+    "water",
+    "oil",
+    "salt"
+   ],
+   "en": "Beat eggs with a pinch of salt and about 1½ times as much warm water. Strain into a heatproof bowl. Steam over gently simmering water about 12 minutes, until just set. Drizzle with soy sauce and a little oil to serve.",
+   "es": "Bata los huevos con una pizca de sal y como una vez y media su volumen de agua tibia. Cuélelos en un tazón resistente al calor. Cocínelos al vapor sobre agua que hierva suavemente unos 12 minutos, hasta que apenas cuajen. Sirva con un chorrito de salsa de soya y un poco de aceite.",
+   "vi": "Đánh trứng với một nhúm muối và lượng nước ấm gấp khoảng 1,5 lần lượng trứng. Lọc vào tô chịu nhiệt. Hấp trên nước sôi nhẹ khoảng 12 phút, đến khi trứng vừa đông. Rưới nước tương và một ít dầu khi ăn.",
+   "zh": "鸡蛋加一小撮盐和约 1.5 倍的温水打匀。过滤到耐热碗里。在微滚的水上蒸约 12 分钟，至刚好凝固。吃时淋上酱油和少许油。"
+  },
+  "122": {
+   "extras": [
+    "sugar"
+   ],
+   "en": "Mix soy sauce, 1 tablespoon sugar and garlic. Marinate chicken 30 minutes. Fry in oil on medium heat until cooked through, basting with the marinade until it caramelizes. Serve over rice with fried onion.",
+   "es": "Mezcle la salsa de soya, 1 cucharada de azúcar y el ajo. Marine el pollo 30 minutos. Fríalo en aceite a fuego medio hasta que esté bien cocido, bañándolo con la marinada hasta que se caramelice. Sirva sobre arroz con cebolla frita.",
+   "vi": "Trộn nước tương, 1 muỗng canh đường và tỏi. Ướp gà 30 phút. Chiên trong dầu ở lửa vừa đến khi chín, phết nước ướp lên cho đến khi gà bóng và sậm màu. Ăn với cơm và hành phi.",
+   "zh": "把酱油、1 汤匙糖和大蒜混合。鸡肉腌 30 分钟。中火用油煎熟，边煎边刷腌汁，直到裹上一层焦糖色。配米饭和炒洋葱吃。"
+  },
+  "125": {
+   "ingredients": [
+    "biscuits",
+    "ground pork",
+    "flour",
+    "milk",
+    "salt"
+   ],
+   "extras": [
+    "black pepper"
+   ],
+   "en": "Bake the biscuits as the can says. Brown ground pork in a pan, breaking it up. Sprinkle flour over and stir 1 minute. Whisk in milk slowly and simmer, stirring, until thick, about 5 minutes. Season well with salt and black pepper. Split the biscuits and spoon the gravy over.",
+   "es": "Hornee los biscuits como dice la lata. Dore la carne de cerdo molida en un sartén, desmenuzándola. Espolvoree la harina y revuelva 1 minuto. Incorpore la leche poco a poco, batiendo, y deje hervir suavemente, revolviendo, hasta que espese, unos 5 minutos. Sazone bien con sal y pimienta negra. Abra los biscuits y sírvales el gravy encima.",
+   "vi": "Nướng bánh biscuit theo hướng dẫn trên hộp. Xào thịt heo xay trong chảo cho săn, đánh tơi ra. Rắc bột mì lên và đảo 1 phút. Từ từ đổ sữa vào, vừa đổ vừa đánh, đun lửa nhỏ và khuấy đến khi sệt, khoảng 5 phút. Nêm muối và tiêu đen cho đậm. Tách đôi bánh và rưới sốt lên.",
+   "zh": "按罐头上的说明烤好饼干面包（biscuits）。猪肉末下锅炒散炒熟。撒上面粉翻炒 1 分钟。一边慢慢倒入牛奶一边搅打，小火煮并不停搅拌，至变稠，约 5 分钟。用盐和黑胡椒调味。把饼干面包掰开，浇上肉汁酱。",
+   "avoid": [
+    "gluten",
+    "dairy",
+    "meat"
+   ]
+  },
+  "128": {
+   "ingredients": [
+    "red beans",
+    "rice",
+    "onions",
+    "celery",
+    "bell peppers",
+    "garlic",
+    "oil",
+    "salt"
+   ],
+   "en": "Soak red beans overnight. Fry onion, celery, bell pepper and garlic in oil until soft. Add the drained beans and water to cover. Simmer about 2 hours until very tender, mashing some beans against the pot for a creamy sauce. Season. Serve over rice.",
+   "es": "Remoje los frijoles rojos toda la noche. Fría la cebolla, el apio, el pimiento y el ajo en aceite hasta que se ablanden. Agregue los frijoles escurridos y agua hasta cubrir. Deje hervir a fuego lento unas 2 horas, hasta que estén muy suaves, machacando algunos contra la olla para que la salsa quede cremosa. Sazone. Sirva sobre arroz.",
+   "vi": "Ngâm đậu đỏ qua đêm. Phi hành tây, cần tây, ớt chuông và tỏi với dầu đến khi mềm. Cho đậu đã để ráo và nước ngập vào. Đun nhỏ lửa khoảng 2 giờ đến khi đậu thật nhừ, dằm một ít đậu vào thành nồi cho sốt sánh. Nêm nếm. Ăn với cơm.",
+   "zh": "红芸豆提前泡一夜。洋葱、芹菜、甜椒和大蒜用油炒软。加入沥干的豆子和没过的水。小火煮约 2 小时至软烂，把一些豆子在锅边压碎，让汤汁变得浓稠。调味。浇在米饭上吃。"
+  },
+  "131": {
+   "ingredients": [
+    "pita",
+    "tomatoes",
+    "cucumber",
+    "onions",
+    "olive oil",
+    "lemon",
+    "garlic",
+    "salt"
+   ],
+   "extras": [
+    "sumac"
+   ],
+   "en": "Toast or fry pita until crisp and break it into pieces. Dice fresh tomato, cucumber and onion. Whisk olive oil, lemon juice, minced garlic, salt and a spoonful of sumac. Toss everything together just before eating.",
+   "es": "Tueste o fría el pan pita hasta que esté crujiente y pártalo en pedazos. Pique tomate fresco, pepino y cebolla. Bata aceite de oliva, jugo de limón, ajo picado, sal y una cucharada de zumaque (sumac). Mezcle todo justo antes de comer.",
+   "vi": "Nướng hoặc chiên bánh pita đến khi giòn rồi bẻ thành miếng. Cắt hạt lựu cà chua tươi, dưa leo và hành tây. Đánh đều dầu ô liu, nước cốt chanh, tỏi băm, muối và một muỗng sumac. Trộn tất cả ngay trước khi ăn.",
+   "zh": "把皮塔饼烤或煎到酥脆，掰成小块。新鲜番茄、黄瓜和洋葱切丁。把橄榄油、柠檬汁、蒜末、盐和一勺漆树粉（sumac）调匀。吃之前把所有材料拌在一起。"
+  },
+  "132": {
+   "ingredients": [
+    "fava beans",
+    "garlic",
+    "olive oil",
+    "lemon",
+    "salt"
+   ],
+   "extras": [
+    "cumin"
+   ],
+   "en": "Warm the fava beans in their liquid with garlic, mashing some. Season with cumin and salt. Finish with lemon juice and a generous drizzle of olive oil. Serve with bread. An Egyptian breakfast staple.",
+   "es": "Caliente las habas en su líquido con el ajo, machacando algunas. Sazone con comino y sal. Termine con jugo de limón y un buen chorro de aceite de oliva. Sirva con pan. Un desayuno básico en Egipto.",
+   "vi": "Hâm nóng đậu fava trong nước của nó cùng với tỏi, dằm một ít. Nêm thì là Ai Cập (cumin) và muối. Vắt chanh và rưới nhiều dầu ô liu. Ăn với bánh mì. Món ăn sáng quen thuộc của Ai Cập.",
+   "zh": "蚕豆连汤汁和大蒜一起加热，压碎一部分。用孜然和盐调味。最后挤上柠檬汁，多淋些橄榄油。配面包吃。这是埃及人常吃的早餐。"
+  },
+  "135": {
+   "ingredients": [
+    "eggs",
+    "spinach",
+    "feta",
+    "onions",
+    "garlic",
+    "olive oil",
+    "salt"
+   ],
+   "avoid": [
+    "eggs",
+    "dairy"
+   ],
+   "en": "Sauté onion and garlic in olive oil. Add thawed spinach, squeezed dry, and cook 2 minutes. Beat eggs and pour over. Cook slowly, stirring, until just set. Fold in crumbled feta. Spinach and feta are the flavors of spanakopita, the Greek pie.",
+   "es": "Sofría la cebolla y el ajo en aceite de oliva. Agregue la espinaca descongelada y bien exprimida, y cocine 2 minutos. Bata los huevos y viértalos encima. Cocine despacio, revolviendo, hasta que apenas cuajen. Agregue el queso feta desmoronado. Espinaca y feta son los sabores de la spanakopita, el pastel griego.",
+   "vi": "Phi hành tây và tỏi với dầu ô liu. Cho rau bina đã rã đông và vắt ráo vào, nấu 2 phút. Đánh trứng rồi đổ lên trên. Nấu chậm, vừa nấu vừa đảo, đến khi trứng vừa chín. Trộn phô mai feta vụn vào. Rau bina và feta là hương vị của spanakopita, món bánh nướng Hy Lạp.",
+   "zh": "用橄榄油把洋葱和大蒜炒香。加入解冻并挤干水的菠菜，炒 2 分钟。鸡蛋打散倒进去。小火慢慢翻炒，至刚好凝固。拌入捏碎的菲达奶酪。菠菜和菲达奶酪正是希腊菠菜派（spanakopita）的味道。"
+  },
+  "136": {
+   "ingredients": [
+    "lentils",
+    "red beans",
+    "canned tomatoes",
+    "onions",
+    "garlic",
+    "oil",
+    "butter"
+   ],
+   "extras": [
+    "garam masala"
+   ],
+   "en": "Soak red beans overnight, then cook with the lentils until very soft. Fry onion and garlic until deeply golden. Add tomatoes and 1 teaspoon garam masala, cook 10 minutes. Add lentils and beans, simmer 20 minutes. Stir in butter at the end for richness.",
+   "es": "Remoje los frijoles rojos toda la noche y cocínelos con las lentejas hasta que estén muy suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y 1 cucharadita de garam masala, y cocine 10 minutos. Agregue las lentejas y los frijoles, y deje hervir a fuego lento 20 minutos. Al final agregue la mantequilla para darle cremosidad.",
+   "vi": "Ngâm đậu đỏ qua đêm, rồi nấu chung với đậu lăng đến khi thật nhừ. Phi hành tây và tỏi đến khi vàng đậm. Cho cà chua và 1 muỗng cà phê garam masala vào, nấu 10 phút. Cho đậu lăng và đậu đỏ vào, đun nhỏ lửa 20 phút. Cuối cùng cho bơ vào cho béo.",
+   "zh": "红芸豆提前泡一夜，再和扁豆一起煮到非常软烂。洋葱和大蒜炒至深金黄色。加番茄和 1 茶匙印度综合香料（garam masala），煮 10 分钟。加入扁豆和红芸豆，小火煮 20 分钟。最后拌入黄油，更香浓。"
+  },
+  "137": {
+   "ingredients": [
+    "rice",
+    "carrots",
+    "spinach",
+    "onions",
+    "eggs",
+    "soy sauce",
+    "oil"
+   ],
+   "extras": [
+    "gochujang"
+   ],
+   "avoid": [
+    "eggs",
+    "gluten"
+   ],
+   "en": "Cook rice. Separately sauté carrots and onion, then thawed spinach with a little soy sauce. Fry an egg sunny side up. Arrange vegetables and egg over rice. Top with a spoonful of gochujang (Korean chili paste). Mix together before eating.",
+   "es": "Cocine el arroz. Aparte, sofría las zanahorias y la cebolla, y luego la espinaca descongelada con un poco de salsa de soya. Fría un huevo estrellado. Acomode las verduras y el huevo sobre el arroz. Ponga encima una cucharada de gochujang (pasta coreana de chile). Mezcle todo antes de comer.",
+   "vi": "Nấu cơm. Xào riêng cà rốt và hành tây, rồi xào rau bina đã rã đông với một ít nước tương. Ốp la một quả trứng. Xếp rau và trứng lên cơm. Cho một muỗng gochujang (tương ớt Hàn Quốc) lên trên. Trộn đều trước khi ăn.",
+   "zh": "煮好米饭。另起锅炒胡萝卜和洋葱，再加少许酱油炒解冻的菠菜。煎一个单面荷包蛋。把蔬菜和鸡蛋码在米饭上，加一勺韩式辣酱（gochujang）。吃之前拌匀。"
+  },
+  "138": {
+   "ingredients": [
+    "kimchi",
+    "rice",
+    "onions",
+    "soy sauce",
+    "oil",
+    "eggs"
+   ],
+   "avoid": [
+    "eggs",
+    "fish"
+   ],
+   "en": "Chop kimchi. Fry it with the onion in oil on high heat 2 minutes. Add cold rice and stir-fry, pressing down. Season with soy sauce and a little kimchi juice. Top with a fried egg.",
+   "es": "Pique el kimchi. Fríalo con la cebolla en aceite a fuego alto 2 minutos. Agregue arroz frío y saltee, presionando hacia abajo. Sazone con salsa de soya y un poco del jugo del kimchi. Ponga un huevo frito encima.",
+   "vi": "Cắt nhỏ kim chi. Xào kim chi với hành tây trong dầu ở lửa lớn 2 phút. Cho cơm nguội vào, đảo và ấn dẹt. Nêm nước tương và một ít nước kim chi. Cho trứng ốp la lên trên.",
+   "zh": "把泡菜切碎。和洋葱一起用油大火炒 2 分钟。加入冷米饭，边炒边压。用酱油和少许泡菜汁调味。放上一个煎蛋。"
+  },
+  "139": {
+   "extras": [
+    "garam masala"
+   ],
+   "en": "Fry onion and carrots in oil 3 minutes, then stir in 1/2 teaspoon garam masala. Add oats. Add water to cover. Cook 5 minutes until oats are tender and the mixture is thick. Season with salt.",
+   "es": "Fría la cebolla y las zanahorias en aceite 3 minutos y luego agregue 1/2 cucharadita de garam masala. Agregue la avena. Cubra con agua. Cocine 5 minutos, hasta que la avena esté suave y la mezcla espesa. Sazone con sal.",
+   "vi": "Xào hành tây và cà rốt với dầu 3 phút, rồi cho 1/2 muỗng cà phê garam masala vào. Cho yến mạch vào. Đổ nước ngập. Nấu 5 phút đến khi yến mạch mềm và hỗn hợp sệt lại. Nêm muối.",
+   "zh": "洋葱和胡萝卜用油炒 3 分钟，再拌入 1/2 茶匙印度综合香料（garam masala）。加入燕麦，加水没过。煮 5 分钟，至燕麦变软、变稠。加盐调味。"
+  },
+  "141": {
+   "extras": [
+    "curry powder"
+   ],
+   "en": "Fry onion and garlic until golden. Stir in 1 tablespoon curry powder, cook 1 minute. Add tomatoes, cook 8 minutes pressing down. Add chickpeas, cook 15 minutes until the sauce thickens and coats them. Season generously. Serve with rice or bread.",
+   "es": "Fría la cebolla y el ajo hasta que doren. Agregue 1 cucharada de curry en polvo y cocine 1 minuto. Agregue los tomates y cocine 8 minutos, aplastándolos. Agregue los garbanzos y cocine 15 minutos, hasta que la salsa espese y los cubra. Sazone bien. Sirva con arroz o pan.",
+   "vi": "Phi hành tây và tỏi đến khi vàng. Cho 1 muỗng canh bột cà ri vào, nấu 1 phút. Cho cà chua vào, nấu 8 phút, vừa nấu vừa ấn dập. Cho đậu gà vào, nấu 15 phút đến khi sốt sệt và bám đều. Nêm nếm đậm đà. Ăn với cơm hoặc bánh mì.",
+   "zh": "洋葱和大蒜炒至金黄。拌入 1 汤匙咖喱粉，炒 1 分钟。加番茄煮 8 分钟，边煮边压碎。加入鹰嘴豆煮 15 分钟，至酱汁变稠裹住豆子。多调些味。配米饭或面包吃。"
+  },
+  "142": {
+   "ingredients": [
+    "lentils",
+    "spinach",
+    "onions",
+    "garlic",
+    "oil",
+    "canned tomatoes",
+    "salt"
+   ],
+   "extras": [
+    "turmeric",
+    "cumin"
+   ],
+   "en": "Cook lentils with 1/2 teaspoon turmeric until soft. Fry onion and garlic with 1 teaspoon cumin until deeply golden. Add tomatoes, cook 5 minutes. Add thawed spinach and cook 2 minutes. Stir into the lentils. Simmer together 10 minutes. Season. Serve with rice or bread.",
+   "es": "Cocine las lentejas con 1/2 cucharadita de cúrcuma hasta que estén suaves. Fría la cebolla y el ajo con 1 cucharadita de comino hasta que estén bien dorados. Agregue los tomates y cocine 5 minutos. Agregue la espinaca descongelada y cocine 2 minutos. Mézclelo con las lentejas. Deje hervir todo junto a fuego lento 10 minutos. Sazone. Sirva con arroz o pan.",
+   "vi": "Nấu đậu lăng với 1/2 muỗng cà phê nghệ đến khi mềm. Phi hành tây và tỏi với 1 muỗng cà phê thì là Ai Cập (cumin) đến khi vàng đậm. Cho cà chua vào, nấu 5 phút. Cho rau bina đã rã đông vào, nấu 2 phút. Trộn vào đậu lăng. Đun nhỏ lửa chung 10 phút. Nêm nếm. Ăn với cơm hoặc bánh mì.",
+   "zh": "扁豆加 1/2 茶匙姜黄煮软。洋葱和大蒜加 1 茶匙孜然炒至深金黄色。加番茄煮 5 分钟。加入解冻的菠菜煮 2 分钟。拌进扁豆里，一起小火煮 10 分钟。调味。配米饭或面包吃。"
+  },
+  "144": {
+   "ingredients": [
+    "canned tomatoes",
+    "onions",
+    "garlic",
+    "zucchini",
+    "bell peppers",
+    "oil",
+    "salt",
+    "eggs"
+   ],
+   "en": "Fry onion, garlic and diced bell pepper in oil until soft, about 8 minutes. Add diced zucchini and cook 5 minutes. Add tomatoes and simmer 15 minutes until thick. Season. Serve as is, or crack eggs into the stew and cook until set.",
+   "es": "Sofría la cebolla, el ajo y el pimiento en cubitos en aceite hasta que se ablanden, unos 8 minutos. Agregue la calabacita en cubitos y cocine 5 minutos. Agregue los tomates y deje hervir a fuego lento 15 minutos hasta que espese. Sazone. Sírvalo así, o rompa huevos encima y cocine hasta que cuajen.",
+   "vi": "Phi hành tây, tỏi và ớt chuông cắt hạt lựu với dầu đến khi mềm, khoảng 8 phút. Cho bí ngòi cắt hạt lựu vào, nấu 5 phút. Cho cà chua vào, đun nhỏ lửa 15 phút đến khi sệt. Nêm nếm. Ăn ngay, hoặc đập trứng vào và nấu đến khi trứng chín.",
+   "zh": "用油把洋葱、大蒜和切丁的甜椒炒软，约 8 分钟。加入切丁的西葫芦炒 5 分钟。加番茄，小火煮 15 分钟至浓稠。调味。直接吃，或打入鸡蛋煮到凝固。"
+  },
+  "146": {
+   "ingredients": [
+    "black-eyed peas",
+    "onions",
+    "garlic",
+    "canned tomatoes",
+    "oil",
+    "salt"
+   ],
+   "en": "Fry onion and garlic in oil until soft. Add tomatoes, cook 5 minutes. Add rinsed black-eyed peas (no soaking needed) and water to cover by 2 inches. Simmer about 1 hour, until tender and the soup is thick and creamy. Season generously.",
+   "es": "Fría la cebolla y el ajo en aceite hasta que se ablanden. Agregue los tomates y cocine 5 minutos. Agregue los frijoles carita enjuagados (no hace falta remojarlos) y agua que los cubra por 2 pulgadas. Deje hervir a fuego lento como 1 hora, hasta que estén suaves y la sopa quede espesa y cremosa. Sazone bien.",
+   "vi": "Phi hành tây và tỏi với dầu đến khi mềm. Cho cà chua vào, nấu 5 phút. Cho đậu mắt đen đã rửa (không cần ngâm) và nước ngập hơn 5 cm. Đun nhỏ lửa khoảng 1 giờ, đến khi đậu mềm và súp sánh mịn. Nêm nếm đậm đà.",
+   "zh": "洋葱和大蒜用油炒软。加番茄煮 5 分钟。加入冲洗过的黑眼豆（不用泡）和高出豆子约 5 厘米的水。小火煮约 1 小时，至豆子软、汤浓稠。多调些味。"
+  },
+  "149": {
+   "ingredients": [
+    "black-eyed peas",
+    "rice",
+    "onions",
+    "garlic",
+    "oil",
+    "salt"
+   ],
+   "en": "Fry onion and garlic in oil until golden. Add rinsed black-eyed peas (no soaking needed) and water to cover by 2 inches. Simmer about 1 hour, until tender. Add cooked rice and enough water to make a thick soup. Season generously. The rice thickens the broth as it sits.",
+   "es": "Fría la cebolla y el ajo en aceite hasta que doren. Agregue los frijoles carita enjuagados (no hace falta remojarlos) y agua que los cubra por 2 pulgadas. Deje hervir a fuego lento como 1 hora, hasta que estén suaves. Agregue arroz cocido y agua suficiente para una sopa espesa. Sazone bien. El arroz espesa el caldo mientras reposa.",
+   "vi": "Phi hành tây và tỏi với dầu đến khi vàng. Cho đậu mắt đen đã rửa (không cần ngâm) và nước ngập hơn 5 cm. Đun nhỏ lửa khoảng 1 giờ đến khi đậu mềm. Cho cơm đã nấu và đủ nước để thành súp đặc. Nêm nếm đậm đà. Cơm sẽ làm nước dùng sánh lại khi để một lúc.",
+   "zh": "洋葱和大蒜用油炒至金黄。加入冲洗过的黑眼豆（不用泡）和高出豆子约 5 厘米的水。小火煮约 1 小时至软。加入煮好的米饭和足够的水，煮成浓汤。多调些味。放一会儿，米饭会让汤更稠。"
+  },
+  "160": {
+   "ingredients": [
+    "tofu",
+    "onions",
+    "eggs",
+    "rice"
+   ],
+   "extras": [
+    "miso"
+   ],
+   "en": "Simmer water with diced onion 5 minutes. Add cubed tofu. Lower the heat and stir in miso until dissolved (don't let it boil hard). Beat eggs and stir in slowly to make ribbons. Serve with steamed rice.",
+   "es": "Hierva agua con cebolla picada a fuego lento 5 minutos. Agregue el tofu en cubos. Baje el fuego y disuelva el miso (que no hierva fuerte). Bata los huevos y agréguelos poco a poco, revolviendo, para que se formen hebras. Sirva con arroz al vapor.",
+   "vi": "Đun nhỏ lửa nước với hành tây thái hạt lựu 5 phút. Cho đậu phụ cắt khối vào. Hạ lửa và khuấy tan miso (đừng để sôi mạnh). Đánh trứng và khuấy từ từ vào để tạo sợi trứng. Ăn với cơm trắng.",
+   "zh": "水里加洋葱丁小火煮 5 分钟。加入豆腐块。转小火，拌入味噌至化开（别让汤大滚）。鸡蛋打散，慢慢搅进汤里形成蛋花。配白米饭吃。"
+  },
+  "161": {
+   "ingredients": [
+    "pasta",
+    "ground pork",
+    "peanut butter",
+    "soy sauce",
+    "garlic",
+    "oil"
+   ],
+   "extras": [
+    "chili oil",
+    "Sichuan peppercorns"
+   ],
+   "avoid": [
+    "peanuts",
+    "gluten",
+    "meat"
+   ],
+   "en": "Brown ground pork with garlic and a splash of soy sauce until crispy. Cook noodles. Stir peanut butter, soy sauce, chili oil and a pinch of ground Sichuan peppercorns with a little hot noodle water into a sauce. Toss the noodles in the sauce and top with the pork. Peanut butter stands in for Chinese sesame paste.",
+   "es": "Dore la carne de cerdo molida con ajo y un chorrito de salsa de soya hasta que quede crujiente. Cocine los fideos. Mezcle la crema de cacahuate, la salsa de soya, el aceite de chile y una pizca de pimienta de Sichuan molida con un poco del agua caliente de los fideos para hacer la salsa. Mezcle los fideos con la salsa y ponga la carne encima. La crema de cacahuate reemplaza la pasta de ajonjolí china.",
+   "vi": "Xào thịt heo xay với tỏi và chút nước tương đến khi xém giòn. Luộc mì. Khuấy bơ đậu phộng, nước tương, dầu ớt và một nhúm tiêu Tứ Xuyên xay với một ít nước luộc mì nóng thành sốt. Trộn mì với sốt và rắc thịt lên trên. Bơ đậu phộng dùng thay cho tương mè của Trung Quốc.",
+   "zh": "猪肉末加大蒜和少许酱油炒到焦香。煮好面条。把花生酱、酱油、辣椒油和一小撮花椒粉，加少许煮面的热水调成酱。面条拌上酱，铺上肉末。这里用花生酱代替中式芝麻酱。"
+  }
+ }
+}

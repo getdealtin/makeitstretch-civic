@@ -164,6 +164,7 @@ app.get('/api/prices', async (req, res) => {
 const RECIPES_JSON = JSON.stringify(RECIPES.map(r => ({
   id: r.id, title: r.title, slot: r.slot, cuisine: r.cuisine, ingredients: r.ingredients,
   instructions: r.instructions, tags: r.tags, avoid: r.avoid, srv: r.srv,
+  ...(r.extras?.length ? { extras: r.extras } : {}), // seasonings under "You'll also need" (Nov 19 2026)
   ...(r.uses ? { uses: r.uses, lines: r.lines, note: r.note, steps: r.steps, extra: r.extra, source: r.source } : {}),
 })));
 app.get('/api/recipes', (req, res) => res.type('json').set('Cache-Control', 'public, max-age=3600').send(RECIPES_JSON));

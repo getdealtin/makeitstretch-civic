@@ -8,6 +8,7 @@
 // Split peas: SR Legacy has no raw entry, so the cooked entry is used at its cooked weight
 // (1 lb dry ≈ 1,316 g cooked).
 import { EXTRA_NUTRITION } from './extra-foods.js';
+import { RECIPE_NUTRITION } from './recipe-foods.js';
 
 const CORE_NUTRITION = {
   rice: { fdc: 168877, g: 907, kcal: 3311, protein: 64.7, fiber: 11.8 }, // Rice, white, long-grain, regular, raw, enriched
@@ -70,5 +71,5 @@ const CORE_NUTRITION = {
   salsa: { fdc: 174524, g: 454, kcal: 132, protein: 6.9, fiber: 8.6 }, // Sauce, salsa, ready-to-serve
 };
 
-/** Core foods plus the foods the NHLBI recipes need (engine/extra-foods.js, same sources). */
-export const NUTRITION = { ...CORE_NUTRITION, ...EXTRA_NUTRITION };
+/** Core foods plus the foods the NHLBI recipes and the original recipes need (engine/extra-foods.js, engine/recipe-foods.js, same sources). */
+export const NUTRITION = { ...CORE_NUTRITION, ...EXTRA_NUTRITION, ...RECIPE_NUTRITION };

@@ -248,7 +248,7 @@
   "soy": {
    "name": "Nước tương",
    "full": "Nước tương (10 oz)",
-   "note": "Làm món cơm hay mì nào cũng ngon ngay."
+   "note": "Làm món cơm hay mì nào cũng ngon. Đa số nước tương có lúa mì; tamari là loại không có lúa mì."
   },
   "hotsauce": {
    "name": "Tương ớt",
@@ -414,6 +414,56 @@
    "name": "Thịt gà tây xay ít mỡ",
    "full": "Thịt gà tây xay ít mỡ (1 lb)",
    "note": "Ít mỡ. Dùng thay thịt bò xay trong mọi món."
+  },
+  "catfish": {
+   "name": "Cá trê",
+   "full": "Phi lê cá trê đông lạnh (1 lb)",
+   "note": "Thịt mềm, nấu nhanh. Lăn bột bắp rồi chiên, hoặc nướng."
+  },
+  "kimchi": {
+   "name": "Kim chi",
+   "full": "Kim chi (hũ 16 oz)",
+   "note": "Bắp cải lên men cay. Đa số có nước mắm; kim chi chay có ghi trên nhãn."
+  },
+  "feta": {
+   "name": "Phô mai feta",
+   "full": "Phô mai feta vụn (6 oz)",
+   "note": "Mặn và chua nhẹ. Dùng một ít là đủ."
+  },
+  "tofu": {
+   "name": "Đậu phụ cứng",
+   "full": "Đậu phụ cứng (14 oz)",
+   "note": "Ép bớt nước rồi chiên hoặc xào. Đạm thực vật rẻ."
+  },
+  "favabeans": {
+   "name": "Đậu fava đóng hộp",
+   "full": "Đậu fava đóng hộp (15 oz)",
+   "note": "Còn gọi là “ful”. Nguyên liệu chính của món ful medames."
+  },
+  "blackeyedpeas": {
+   "name": "Đậu mắt đen",
+   "full": "Đậu mắt đen khô (1 lb)",
+   "note": "Không cần ngâm. Nấu khoảng một giờ là mềm."
+  },
+  "biscuits": {
+   "name": "Bánh biscuit làm lạnh",
+   "full": "Bánh biscuit làm lạnh (hộp 16 oz, 8 cái)",
+   "note": "Nướng thẳng từ hộp khoảng 15 phút."
+  },
+  "pita": {
+   "name": "Bánh mì pita",
+   "full": "Bánh mì pita (6 cái)",
+   "note": "Hâm nóng hoặc nướng giòn. Ăn với đậu hoặc trộn gỏi."
+  },
+  "lemons": {
+   "name": "Chanh vàng",
+   "full": "Chanh vàng (2 quả)",
+   "note": "Vắt một ít cho cá, đậu và gỏi thêm tươi."
+  },
+  "groundpork": {
+   "name": "Thịt heo xay",
+   "full": "Thịt heo xay (1 lb)",
+   "note": "Xào với tỏi để ăn mì, hoặc nêm làm xúc xích ăn sáng."
   }
  },
  "tips": {
@@ -500,7 +550,85 @@
   "avocado": "bơ",
   "raisins": "nho khô",
   "cornflakes": "ngũ cốc bắp",
-  "bread crumbs": "vụn bánh mì"
+  "bread crumbs": "vụn bánh mì",
+  "catfish": "cá trê",
+  "kimchi": "kim chi",
+  "feta": "phô mai feta",
+  "fava beans": "đậu fava",
+  "black-eyed peas": "đậu mắt đen",
+  "biscuits": "bánh biscuit làm lạnh",
+  "pita": "bánh mì pita",
+  "lemon": "chanh vàng",
+  "ground pork": "thịt heo xay",
+  "red beans": "đậu đỏ",
+  "spinach": "rau bina",
+  "cucumber": "dưa leo",
+  "zucchini": "bí ngòi",
+  "baking powder": "bột nở",
+  "turmeric": "nghệ",
+  "cumin": "thì là Ai Cập (cumin)",
+  "curry powder": "bột cà ri",
+  "paprika": "ớt bột paprika",
+  "sugar": "đường",
+  "chipotle peppers in adobo": "ớt chipotle ngâm sốt adobo",
+  "miso": "miso",
+  "black pepper": "tiêu đen",
+  "sumac": "sumac",
+  "garam masala": "garam masala",
+  "gochujang": "gochujang (tương ớt Hàn Quốc)",
+  "chili oil": "dầu ớt",
+  "Sichuan peppercorns": "tiêu Tứ Xuyên",
+  "ajicitos": "ớt ngọt ajicitos",
+  "allspice": "tiêu Jamaica (allspice)",
+  "annatto paste": "bột điều màu (achiote)",
+  "basil": "húng quế",
+  "bay leaves": "lá nguyệt quế",
+  "beef broth": "nước dùng bò",
+  "black peppercorns": "tiêu đen nguyên hạt",
+  "brown sugar": "đường nâu",
+  "capers": "nụ bạch hoa (capers)",
+  "cayenne pepper": "ớt cayenne",
+  "chicken bouillon": "hạt nêm gà",
+  "chicken broth": "nước dùng gà",
+  "chili powder": "bột ớt",
+  "cilantro": "ngò rí",
+  "cooking spray": "dầu xịt nấu ăn",
+  "coriander": "hạt ngò (rau mùi)",
+  "dried hot pepper": "ớt khô",
+  "dry mustard": "bột mù tạt",
+  "garlic powder": "bột tỏi",
+  "ginger": "gừng",
+  "green chilis": "ớt xanh",
+  "green onions": "hành lá",
+  "ground ginger": "bột gừng",
+  "honey": "mật ong",
+  "hot pepper": "ớt cay",
+  "hot sauce": "tương ớt",
+  "ketchup": "tương cà",
+  "lemon juice": "nước cốt chanh vàng",
+  "lime": "chanh",
+  "lime juice": "nước cốt chanh",
+  "molasses": "mật mía",
+  "mustard": "mù tạt",
+  "nutmeg": "nhục đậu khấu",
+  "olives": "ô liu",
+  "onion powder": "bột hành",
+  "orange rind": "vỏ cam",
+  "oregano": "lá oregano",
+  "parsley": "ngò tây",
+  "pepper": "tiêu",
+  "poultry seasoning": "gia vị ướp gà",
+  "red pepper flakes": "ớt bột vảy",
+  "red wine vinegar": "giấm rượu vang đỏ",
+  "scallion": "hành lá",
+  "scallions": "hành lá",
+  "thyme": "cỏ xạ hương",
+  "tomato paste": "cà chua cô đặc",
+  "vegetable bouillon": "hạt nêm rau củ",
+  "vegetable broth": "nước dùng rau củ",
+  "vinegar": "giấm",
+  "white pepper": "tiêu trắng",
+  "worcestershire sauce": "sốt Worcestershire"
  },
  "recipes": {
   "1": {
@@ -517,7 +645,7 @@
   },
   "4": {
    "title": "Bánh kếp (pancake)",
-   "instructions": "Trộn bột mì, trứng, sữa và một chút muối thành bột mịn. Làm nóng chảo đã quét bơ. Đổ 1/4 cốc bột cho mỗi cái bánh. Nấu đến khi nổi bọt, lật lại, nấu thêm 1 phút."
+   "instructions": "Trộn bột mì, 2 muỗng cà phê bột nở và một nhúm muối. Cho trứng và sữa vào, đánh đến khi mịn. Làm nóng chảo với bơ. Đổ 1/4 cốc bột cho mỗi cái bánh. Chiên đến khi nổi bọt, lật mặt, chiên thêm 1 phút."
   },
   "5": {
    "title": "Trứng chiên và khoai tây bào chiên",
@@ -637,7 +765,7 @@
   },
   "34": {
    "title": "Chuối chiên với trứng",
-   "instructions": "Cắt chuối lát dày. Chiên trong dầu đến khi vàng. Chiên trứng bên cạnh. Ăn cùng nhau."
+   "instructions": "Bóc vỏ chuối plantain chín (vỏ vàng có đốm đen) và cắt lát dày, xéo. Chiên trong dầu lửa vừa đến khi vàng hai mặt, khoảng 3 phút mỗi mặt. Chiên trứng bên cạnh. Dọn chung với một nhúm muối."
   },
   "35": {
    "title": "Bánh tortilla bắp với đậu",
@@ -725,7 +853,7 @@
   },
   "56": {
    "title": "Đậu lăng nấu kiểu Ấn (dal)",
-   "instructions": "Phi hành tây đến khi vàng. Cho tỏi vào, nấu 1 phút. Cho đậu lăng, cà chua và nước ngập vào. Nấu nhỏ lửa 20 phút đến khi đậu lăng nhừ thành sốt. Nêm nếm. Ăn với cơm."
+   "instructions": "Phi hành tây đến khi vàng. Cho tỏi, 1/2 muỗng cà phê nghệ và 1 muỗng cà phê thì là Ai Cập (cumin) vào, nấu 1 phút. Cho đậu lăng, cà chua và nước ngập vào. Đun nhỏ lửa 20 phút đến khi đậu lăng nhừ thành sốt. Nêm nếm. Ăn với cơm."
   },
   "57": {
    "title": "Bắp cải xào trứng",
@@ -745,7 +873,7 @@
   },
   "61": {
    "title": "Cơm đậu lăng kiểu Ấn (khichdi)",
-   "instructions": "Vo gạo và đậu lăng cùng nhau. Phi hành tây và tỏi với dầu đến khi vàng. Cho gạo và đậu lăng vào, đảo đều. Thêm 4 cốc nước và muối. Đậy nắp nấu lửa nhỏ 25 phút."
+   "instructions": "Vo gạo và đậu lăng chung. Phi hành tây và tỏi với dầu đến khi vàng, rồi cho 1 muỗng cà phê thì là Ai Cập (cumin) và 1/2 muỗng cà phê nghệ vào. Cho gạo và đậu lăng vào, đảo đều. Thêm 4 cốc nước và muối. Đậy nắp, nấu lửa nhỏ 25 phút."
   },
   "62": {
    "title": "Gà rim nước tương tỏi",
@@ -753,7 +881,7 @@
   },
   "63": {
    "title": "Cà ri đậu lăng nước cốt dừa",
-   "instructions": "Phi hành tây và tỏi đến khi vàng. Cho cà chua vào, nấu 5 phút. Cho đậu lăng và nước cốt dừa vào. Nấu nhỏ lửa 20 phút. Nêm đậm vị. Ăn với cơm."
+   "instructions": "Phi hành tây và tỏi đến khi vàng. Cho 1 muỗng canh bột cà ri vào, nấu 1 phút. Cho cà chua vào, nấu 5 phút. Cho đậu lăng và nước cốt dừa vào. Đun nhỏ lửa 20 phút. Nêm nếm đậm đà. Ăn với cơm."
   },
   "64": {
    "title": "Mì nước",
@@ -769,11 +897,11 @@
   },
   "67": {
    "title": "Khoai tây nấu kiểu Ấn (aloo sabzi)",
-   "instructions": "Phi hành tây và tỏi đến khi vàng. Cho khoai tây cắt hạt lựu vào, đảo đều. Thêm cà chua và một ít nước. Đậy nắp nấu 20 phút đến khi khoai mềm. Nêm vừa ăn."
+   "instructions": "Phi hành tây và tỏi đến khi vàng. Cho 1 muỗng cà phê thì là Ai Cập (cumin) và 1/2 muỗng cà phê nghệ vào. Cho khoai tây cắt hạt lựu vào, đảo đều. Thêm cà chua và một ít nước. Đậy nắp, nấu 20 phút đến khi khoai mềm. Nêm nếm vừa ăn."
   },
   "68": {
    "title": "Đậu lăng nấu khoai lang",
-   "instructions": "Phi hành tây và tỏi. Cho khoai lang cắt khối và đậu lăng vào. Đổ nước ngập. Nấu nhỏ lửa 20 phút. Khuấy nước cốt dừa vào. Nấu thêm 5 phút. Ăn với cơm."
+   "instructions": "Phi hành tây và tỏi, rồi cho 1 muỗng cà phê thì là Ai Cập (cumin) và 1/2 muỗng cà phê nghệ vào. Cho khoai lang cắt khối và đậu lăng vào. Đổ nước ngập. Đun nhỏ lửa 20 phút. Cho nước cốt dừa vào. Đun thêm 5 phút. Nêm nếm. Ăn với cơm."
   },
   "69": {
    "title": "Cháo bắp (grits) với trứng",
@@ -805,7 +933,7 @@
   },
   "76": {
    "title": "Bánh bắp với đậu",
-   "instructions": "Làm bánh bắp: trộn bột bắp, trứng, sữa. Đổ vào khuôn đã thoa dầu, nướng ở 400°F trong 20 phút. Đun nóng đậu với hành phi. Ăn cùng nhau."
+   "instructions": "Làm bánh bột bắp: trộn bột bắp, 2 muỗng cà phê bột nở và một nhúm muối, rồi cho trứng và sữa vào khuấy đều. Đổ vào khuôn đã thoa dầu, nướng ở 400°F khoảng 20 phút đến khi vàng. Hâm nóng đậu với hành phi. Dọn chung."
   },
   "77": {
    "title": "Thịt heo hầm đậu",
@@ -813,15 +941,15 @@
   },
   "78": {
    "title": "Gà nướng với bánh bắp",
-   "instructions": "Ướp gà và nướng ở 400°F trong 35 phút. Trộn bột bánh bắp gồm bột bắp, trứng, sữa. Cho vào khuôn đã thoa dầu, nướng cùng lò trong 20 phút cuối."
+   "instructions": "Ướp gà và nướng ở 400°F trong 35 phút. Trộn bột bắp, 2 muỗng cà phê bột nở và một nhúm muối, rồi cho trứng và sữa vào khuấy đều. Đổ vào khuôn đã thoa dầu và nướng cùng gà trong 20 phút cuối."
   },
   "79": {
    "title": "Đậu với cơm kiểu miền Nam nước Mỹ (Hoppin' John)",
-   "instructions": "Ngâm đậu qua đêm. Chắt nước. Nấu với hành tây và tỏi đến khi thật mềm, khoảng 90 phút. Nêm nếm. Múc đậu và nước đậu lên cơm."
+   "instructions": "Rửa sạch đậu mắt đen (không cần ngâm). Phi hành tây và tỏi với dầu, cho đậu vào và đổ nước ngập hơn 5 cm. Đun nhỏ lửa đến khi mềm, khoảng 1 giờ. Nêm nếm. Múc đậu cùng một ít nước đậu lên cơm."
   },
   "80": {
    "title": "Cá trê chiên với cháo bắp",
-   "instructions": "Nấu cháo bắp với sữa và bơ cho mịn. Ướp phi lê cá. Lăn qua bột bắp. Chiên trong dầu đến khi vàng và chín. Đặt lên cháo bắp."
+   "instructions": "Nấu grits mịn: rắc từ từ bột bắp vào sữa và nước có muối đang sôi nhẹ, khuấy thường xuyên 15 đến 20 phút, rồi cho bơ vào. Ướp phi lê cá trê với muối và lăn qua bột bắp. Chiên trong dầu lửa vừa mỗi mặt 3 đến 4 phút, đến khi vàng và thịt cá tách ra dễ dàng. Dọn cá trên grits."
   },
   "81": {
    "title": "Gà nướng khoai lang",
@@ -881,7 +1009,7 @@
   },
   "95": {
    "title": "Cá nướng chanh",
-   "instructions": "Đặt cá vào khay nướng. Rưới cà chua và tỏi lên. Rưới dầu ô liu. Nêm nếm. Nướng ở 375°F trong 20 phút đến khi thịt cá dễ tách."
+   "instructions": "Xếp phi lê cá vào khay nướng. Phủ cà chua và tỏi lên, rưới dầu ô liu và nêm nếm. Nướng ở 375°F từ 15 đến 20 phút, đến khi thịt cá tách ra dễ dàng. Vắt chanh lên khi ăn."
   },
   "96": {
    "title": "Đậu gà nướng rau củ",
@@ -901,7 +1029,7 @@
   },
   "100": {
    "title": "Trứng sốt cà chua kiểu Trung Đông (shakshuka)",
-   "instructions": "Phi hành tây và tỏi với dầu đến khi mềm. Cho cà chua vào, nêm nếm, nấu nhỏ lửa 10 phút đến khi sệt. Tạo vài lỗ trong sốt. Đập trứng vào. Đậy nắp nấu đến khi lòng trắng chín nhưng lòng đỏ còn lòng đào. Ăn ngay trong chảo với bánh mì."
+   "instructions": "Phi hành tây và tỏi với dầu đến khi mềm. Cho mỗi thứ 1 muỗng cà phê thì là Ai Cập (cumin) và ớt bột paprika vào. Cho cà chua vào, nêm nếm, đun nhỏ lửa 10 phút đến khi sệt. Tạo các lỗ trong sốt. Đập trứng vào các lỗ. Đậy nắp, nấu đến khi lòng trắng chín mà lòng đỏ còn lòng đào. Dọn nguyên chảo với bánh mì."
   },
   "101": {
    "title": "Yến mạch đơn giản",
@@ -949,7 +1077,7 @@
   },
   "112": {
    "title": "Cơm nấu sữa (arroz con leche)",
-   "instructions": "Nấu gạo với sữa ở lửa nhỏ 20 phút, khuấy thường xuyên. Cho chuối thái lát vào. Rắc quế và một chút muối cho hài hòa."
+   "instructions": "Nấu gạo với sữa ở lửa nhỏ 20 phút, khuấy thường xuyên. Cho đường vừa ăn, quế và một nhúm muối nhỏ. Rắc chuối cắt lát lên trên."
   },
   "113": {
    "title": "Đậu với trứng",
@@ -969,7 +1097,7 @@
   },
   "117": {
    "title": "Súp gà kiểu Mexico (caldo tlalpeño)",
-   "instructions": "Hầm gà với hành tây, tỏi và muối 30 phút. Vớt ra, xé nhỏ. Cho đậu và cà rốt vào nước dùng. Nấu 15 phút. Cho gà trở lại. Nêm vừa ăn."
+   "instructions": "Hầm gà với hành, tỏi và muối 30 phút. Vớt gà ra và xé nhỏ. Xay cà chua với 1 hoặc 2 quả ớt chipotle rồi khuấy vào nước dùng. Cho đậu gà và cà rốt vào. Nấu 15 phút. Cho gà trở lại nồi. Nêm nếm vừa ăn."
   },
   "118": {
    "title": "Đậu hầm thịt heo kiểu Mexico (frijoles charros)",
@@ -981,15 +1109,15 @@
   },
   "120": {
    "title": "Canh trứng kiểu súp miso",
-   "instructions": "Đun sôi nước với hành tây thái hạt lựu và nước tương để làm nước dùng. Đánh trứng. Từ từ đổ trứng vào nồi nước dùng đang sôi nhẹ, vừa đổ vừa khuấy để trứng thành sợi. Nêm nếm."
+   "instructions": "Đun nhỏ lửa nước với hành tây thái hạt lựu 5 phút. Hạ lửa và khuấy tan miso (đừng để sôi mạnh). Đánh trứng rồi đổ từ từ vào nước dùng nóng, vừa đổ vừa khuấy để tạo sợi trứng. Thêm chút nước tương vừa ăn."
   },
   "121": {
    "title": "Trứng hấp",
-   "instructions": "Đánh trứng với lượng nước bằng trứng và nước tương. Lọc vào bát. Hấp trên nồi nước sôi nhẹ 12 phút đến khi vừa đông. Rưới chút dầu khi ăn."
+   "instructions": "Đánh trứng với một nhúm muối và lượng nước ấm gấp khoảng 1,5 lần lượng trứng. Lọc vào tô chịu nhiệt. Hấp trên nước sôi nhẹ khoảng 12 phút, đến khi trứng vừa đông. Rưới nước tương và một ít dầu khi ăn."
   },
   "122": {
    "title": "Gà sốt kiểu teriyaki",
-   "instructions": "Trộn nước tương với tỏi. Ướp gà 30 phút. Chiên trong dầu ở lửa vừa đến khi chín, vừa chiên vừa rưới nước ướp. Gà lên màu caramel rất đẹp. Ăn với cơm và hành phi."
+   "instructions": "Trộn nước tương, 1 muỗng canh đường và tỏi. Ướp gà 30 phút. Chiên trong dầu ở lửa vừa đến khi chín, phết nước ướp lên cho đến khi gà bóng và sậm màu. Ăn với cơm và hành phi."
   },
   "123": {
    "title": "Cháo ăn kèm",
@@ -1001,7 +1129,7 @@
   },
   "125": {
    "title": "Bánh biscuit với nước sốt gravy",
-   "instructions": "Làm biscuit: trộn bột mì và muối, cắt bơ lạnh vào, thêm sữa, trộn vừa quyện. Vỗ dẹt, cắt thành hình tròn. Nướng ở 450°F trong 12 phút. Làm sốt gravy đơn giản: phi hành tây với dầu, cho bột mì vào, từ từ đánh sữa vào. Nêm nếm. Rưới nhiều sốt lên bánh."
+   "instructions": "Nướng bánh biscuit theo hướng dẫn trên hộp. Xào thịt heo xay trong chảo cho săn, đánh tơi ra. Rắc bột mì lên và đảo 1 phút. Từ từ đổ sữa vào, vừa đổ vừa đánh, đun lửa nhỏ và khuấy đến khi sệt, khoảng 5 phút. Nêm muối và tiêu đen cho đậm. Tách đôi bánh và rưới sốt lên."
   },
   "126": {
    "title": "Cháo bắp (grits)",
@@ -1013,7 +1141,7 @@
   },
   "128": {
    "title": "Đậu đỏ với cơm",
-   "instructions": "Phi hành tây và tỏi đến khi vàng. Cho đậu đã ngâm và chắt ráo vào, đổ nước ngập. Nấu 2 giờ đến khi thật mềm. Nêm nếm. Ăn với cơm. Nghiền một ít đậu vào thành nồi cho sốt sánh."
+   "instructions": "Ngâm đậu đỏ qua đêm. Phi hành tây, cần tây, ớt chuông và tỏi với dầu đến khi mềm. Cho đậu đã để ráo và nước ngập vào. Đun nhỏ lửa khoảng 2 giờ đến khi đậu thật nhừ, dằm một ít đậu vào thành nồi cho sốt sánh. Nêm nếm. Ăn với cơm."
   },
   "129": {
    "title": "Gà sốt kem gravy",
@@ -1025,11 +1153,11 @@
   },
   "131": {
    "title": "Salad bánh mì kiểu Trung Đông (fattoush)",
-   "instructions": "Nướng hoặc chiên bánh mì cũ đến khi giòn. Trộn với cà chua và hành tây thái hạt lựu. Rưới nhiều dầu và tỏi. Để bánh ngấm một chút trước khi ăn."
+   "instructions": "Nướng hoặc chiên bánh pita đến khi giòn rồi bẻ thành miếng. Cắt hạt lựu cà chua tươi, dưa leo và hành tây. Đánh đều dầu ô liu, nước cốt chanh, tỏi băm, muối và một muỗng sumac. Trộn tất cả ngay trước khi ăn."
   },
   "132": {
    "title": "Đậu tằm hầm kiểu Ai Cập (ful medames)",
-   "instructions": "Hầm nhỏ lửa đậu tằm đã nấu chín với tỏi và cà chua đến khi thật sệt. Nêm đậm vị. Rưới dầu ô liu. Ăn với bánh mì. Món ăn sáng quen thuộc của người Ai Cập."
+   "instructions": "Hâm nóng đậu fava trong nước của nó cùng với tỏi, dằm một ít. Nêm thì là Ai Cập (cumin) và muối. Vắt chanh và rưới nhiều dầu ô liu. Ăn với bánh mì. Món ăn sáng quen thuộc của Ai Cập."
   },
   "133": {
    "title": "Mì Ý nấu đậu gà",
@@ -1041,23 +1169,23 @@
   },
   "135": {
    "title": "Trứng bác rau xanh",
-   "instructions": "Phi hành tây và tỏi. Cho rau xanh có sẵn vào. Đánh trứng, đổ lên trên. Nấu chậm, đảo đến khi vừa chín. Nêm nếm. Trứng bác kiểu Địa Trung Hải."
+   "instructions": "Phi hành tây và tỏi với dầu ô liu. Cho rau bina đã rã đông và vắt ráo vào, nấu 2 phút. Đánh trứng rồi đổ lên trên. Nấu chậm, vừa nấu vừa đảo, đến khi trứng vừa chín. Trộn phô mai feta vụn vào. Rau bina và feta là hương vị của spanakopita, món bánh nướng Hy Lạp."
   },
   "136": {
    "title": "Đậu lăng kiểu dal makhani",
-   "instructions": "Nấu đậu lăng đến khi thật nhừ. Phi hành tây và tỏi đến khi vàng sẫm. Cho cà chua vào, nấu 10 phút. Cho đậu lăng vào, nấu nhỏ lửa 20 phút. Cuối cùng khuấy bơ vào cho béo."
+   "instructions": "Ngâm đậu đỏ qua đêm, rồi nấu chung với đậu lăng đến khi thật nhừ. Phi hành tây và tỏi đến khi vàng đậm. Cho cà chua và 1 muỗng cà phê garam masala vào, nấu 10 phút. Cho đậu lăng và đậu đỏ vào, đun nhỏ lửa 20 phút. Cuối cùng cho bơ vào cho béo."
   },
   "137": {
    "title": "Cơm trộn kiểu bibimbap",
-   "instructions": "Nấu cơm. Xào riêng cà rốt và hành tây. Chiên trứng ốp la. Xếp rau củ và trứng lên cơm. Rưới nước tương. Trộn đều trước khi ăn."
+   "instructions": "Nấu cơm. Xào riêng cà rốt và hành tây, rồi xào rau bina đã rã đông với một ít nước tương. Ốp la một quả trứng. Xếp rau và trứng lên cơm. Cho một muỗng gochujang (tương ớt Hàn Quốc) lên trên. Trộn đều trước khi ăn."
   },
   "138": {
    "title": "Cơm chiên kiểu kim chi",
-   "instructions": "Xào bắp cải thái sợi với dầu ở lửa lớn đến khi mềm và hơi xém. Cho cơm nguội vào, đảo và ấn dẹt. Nêm nhiều nước tương. Đặt trứng chiên lên trên."
+   "instructions": "Cắt nhỏ kim chi. Xào kim chi với hành tây trong dầu ở lửa lớn 2 phút. Cho cơm nguội vào, đảo và ấn dẹt. Nêm nước tương và một ít nước kim chi. Cho trứng ốp la lên trên."
   },
   "139": {
    "title": "Yến mạch mặn kiểu Ấn (masala oats)",
-   "instructions": "Xào hành tây và cà rốt với dầu 3 phút. Cho yến mạch vào. Đổ nước ngập. Nấu 5 phút đến khi yến mạch mềm và sệt. Nêm muối và gia vị có sẵn."
+   "instructions": "Xào hành tây và cà rốt với dầu 3 phút, rồi cho 1/2 muỗng cà phê garam masala vào. Cho yến mạch vào. Đổ nước ngập. Nấu 5 phút đến khi yến mạch mềm và hỗn hợp sệt lại. Nêm muối."
   },
   "140": {
    "title": "Cháo bột kiểu Ấn (upma)",
@@ -1065,11 +1193,11 @@
   },
   "141": {
    "title": "Cà ri đậu gà",
-   "instructions": "Phi hành tây và tỏi đến khi vàng. Cho cà chua vào, nấu 8 phút và ấn nát. Cho đậu gà vào, nấu 15 phút đến khi sốt sệt và bám vào đậu. Nêm đậm vị. Ăn với cơm hoặc bánh mì."
+   "instructions": "Phi hành tây và tỏi đến khi vàng. Cho 1 muỗng canh bột cà ri vào, nấu 1 phút. Cho cà chua vào, nấu 8 phút, vừa nấu vừa ấn dập. Cho đậu gà vào, nấu 15 phút đến khi sốt sệt và bám đều. Nêm nếm đậm đà. Ăn với cơm hoặc bánh mì."
   },
   "142": {
    "title": "Đậu lăng nấu rau bina (palak dal)",
-   "instructions": "Nấu đậu lăng đến khi mềm. Phi hành tây và tỏi đến khi vàng sẫm. Cho cà chua vào, nấu 5 phút. Đổ lên đậu lăng. Nấu nhỏ lửa cùng nhau 10 phút. Nêm nếm. Thêm rau xanh nếu có."
+   "instructions": "Nấu đậu lăng với 1/2 muỗng cà phê nghệ đến khi mềm. Phi hành tây và tỏi với 1 muỗng cà phê thì là Ai Cập (cumin) đến khi vàng đậm. Cho cà chua vào, nấu 5 phút. Cho rau bina đã rã đông vào, nấu 2 phút. Trộn vào đậu lăng. Đun nhỏ lửa chung 10 phút. Nêm nếm. Ăn với cơm hoặc bánh mì."
   },
   "143": {
    "title": "Trứng chiên khoai tây kiểu Tây Ban Nha",
@@ -1077,7 +1205,7 @@
   },
   "144": {
    "title": "Cà chua hầm kiểu Tây Ban Nha (pisto)",
-   "instructions": "Phi hành tây và tỏi. Cho cà chua vào, nấu nhỏ lửa 20 phút đến khi sệt. Nêm nếm. Dùng làm sốt, hoặc đập trứng vào sốt và nấu đến khi chín."
+   "instructions": "Phi hành tây, tỏi và ớt chuông cắt hạt lựu với dầu đến khi mềm, khoảng 8 phút. Cho bí ngòi cắt hạt lựu vào, nấu 5 phút. Cho cà chua vào, đun nhỏ lửa 15 phút đến khi sệt. Nêm nếm. Ăn ngay, hoặc đập trứng vào và nấu đến khi trứng chín."
   },
   "145": {
    "title": "Súp cà chua bánh mì trứng kiểu Ý (acquacotta)",
@@ -1085,7 +1213,7 @@
   },
   "146": {
    "title": "Súp đậu mắt đen",
-   "instructions": "Phi hành tây và tỏi với dầu đến khi mềm. Cho cà chua vào, nấu 5 phút. Cho đậu mắt đen và nước ngập vào. Nấu nhỏ lửa 20 phút đến khi sệt và bùi. Nêm đậm muối và tiêu. Ăn với bánh bắp nếu có."
+   "instructions": "Phi hành tây và tỏi với dầu đến khi mềm. Cho cà chua vào, nấu 5 phút. Cho đậu mắt đen đã rửa (không cần ngâm) và nước ngập hơn 5 cm. Đun nhỏ lửa khoảng 1 giờ, đến khi đậu mềm và súp sánh mịn. Nêm nếm đậm đà."
   },
   "147": {
    "title": "Súp khoai lang",
@@ -1097,7 +1225,7 @@
   },
   "149": {
    "title": "Súp đậu mắt đen với cơm (Hoppin' John)",
-   "instructions": "Phi hành tây và tỏi với dầu đến khi vàng. Cho đậu mắt đen và nước ngập vào. Nấu nhỏ lửa 15 phút. Cho cơm đã nấu và đủ nước để thành súp sệt. Nêm đậm vị. Cơm sẽ làm nước súp sánh lại khi để một lúc."
+   "instructions": "Phi hành tây và tỏi với dầu đến khi vàng. Cho đậu mắt đen đã rửa (không cần ngâm) và nước ngập hơn 5 cm. Đun nhỏ lửa khoảng 1 giờ đến khi đậu mềm. Cho cơm đã nấu và đủ nước để thành súp đặc. Nêm nếm đậm đà. Cơm sẽ làm nước dùng sánh lại khi để một lúc."
   },
   "150": {
    "title": "Khoai tây sốt kem",
@@ -1141,11 +1269,11 @@
   },
   "160": {
    "title": "Canh kiểu miso với cơm",
-   "instructions": "Đun nước sôi nhẹ với nước tương làm nước dùng. Cho hành tây thái hạt lựu vào, nấu 5 phút. Nếu có đậu phụ, cắt khối cho vào. Đánh trứng, từ từ khuấy vào nồi nước dùng đang sôi nhẹ để trứng thành sợi. Ăn chan cơm hoặc ăn kèm cơm. Nêm nếm."
+   "instructions": "Đun nhỏ lửa nước với hành tây thái hạt lựu 5 phút. Cho đậu phụ cắt khối vào. Hạ lửa và khuấy tan miso (đừng để sôi mạnh). Đánh trứng và khuấy từ từ vào để tạo sợi trứng. Ăn với cơm trắng."
   },
   "161": {
    "title": "Mì dan dan",
-   "instructions": "Luộc mì đến khi mềm. Trộn bơ đậu phộng, nước tương, tỏi và dầu với nước nóng thành sốt sệt. Bào cà rốt. Chắt mì. Trộn mì với sốt và cà rốt. Thêm nước nóng nếu sốt quá đặc. Ăn ấm hoặc để nguội."
+   "instructions": "Xào thịt heo xay với tỏi và chút nước tương đến khi xém giòn. Luộc mì. Khuấy bơ đậu phộng, nước tương, dầu ớt và một nhúm tiêu Tứ Xuyên xay với một ít nước luộc mì nóng thành sốt. Trộn mì với sốt và rắc thịt lên trên. Bơ đậu phộng dùng thay cho tương mè của Trung Quốc."
   },
   "1001": {
    "title": "Bánh bột bắp nhân kiểu El Salvador (pupusa)",

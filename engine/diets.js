@@ -13,15 +13,22 @@ const FOOD_BY_ID = Object.fromEntries(FOOD_DB.map(f => [f.id, f]));
 export const LEAVE_OUT = ['gluten', 'dairy', 'meat', 'pork', 'eggs', 'peanuts', 'fish'];
 export const DIETS = ['halal', 'kosher', 'diabetic', 'low_sodium'];
 
-const PORK_FOODS = ['porkchops'];
-const PORK_WORDS = ['pork'];
-const MEAT_FOODS = ['chicken', 'groundbeef', 'porkchops', 'cannedchili', 'cannedbroth', 'chickenbreast', 'drumsticks', 'sirloin', 'roundroast', 'groundturkey', 'kielbasa'];
-const MEAT_WORDS = ['chicken', 'ground beef', 'pork', 'beef', 'chicken breast', 'chicken drumsticks', 'ground turkey', 'turkey kielbasa', 'beef broth', 'chicken broth', 'chicken bouillon'];
-const DAIRY_FOODS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporatedmilk', 'mozzarella', 'sourcream', 'buttermilk'];
-const DAIRY_WORDS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporated milk', 'mozzarella', 'sour cream', 'buttermilk'];
+const PORK_FOODS = ['porkchops', 'groundpork'];
+const PORK_WORDS = ['pork', 'ground pork'];
+const MEAT_FOODS = ['chicken', 'groundbeef', 'porkchops', 'groundpork', 'cannedchili', 'cannedbroth', 'chickenbreast', 'drumsticks', 'sirloin', 'roundroast', 'groundturkey', 'kielbasa'];
+const MEAT_WORDS = ['chicken', 'ground beef', 'pork', 'ground pork', 'beef', 'chicken breast', 'chicken drumsticks', 'ground turkey', 'turkey kielbasa', 'beef broth', 'chicken broth', 'chicken bouillon'];
+const DAIRY_FOODS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporatedmilk', 'mozzarella', 'sourcream', 'buttermilk', 'feta', 'biscuits'];
+const DAIRY_WORDS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporated milk', 'mozzarella', 'sour cream', 'buttermilk', 'feta', 'biscuits'];
 // Low sodium: packaged foods that are high in salt. Recipes with soy sauce are left out too.
-const SALTY_FOODS = ['soy', 'hotsauce', 'cannedsoups', 'cannedchili', 'cannedbroth', 'salsa', 'kielbasa'];
-const SALTY_WORDS = ['soy sauce', 'vegetable bouillon', 'chicken bouillon', 'ketchup', 'worcestershire sauce'];
+const SALTY_FOODS = ['soy', 'hotsauce', 'cannedsoups', 'cannedchili', 'cannedbroth', 'salsa', 'kielbasa', 'kimchi', 'feta', 'biscuits'];
+const SALTY_WORDS = ['soy sauce', 'vegetable bouillon', 'chicken bouillon', 'ketchup', 'worcestershire sauce',
+  // seasonings under "You'll also need" (a recipe's extras) that are high in salt
+  'miso', 'gochujang', 'chipotle peppers in adobo'];
+// Kosher: fish without fins and scales is not kosher (catfish). Pork is handled above.
+const NOT_KOSHER_FOODS = ['catfish'];
+// Gluten: recipe words for things made with wheat that aren't foods on the list (Nov 19 2026: soy sauce is brewed with wheat;
+// the soy sauce food itself is tagged gluten in food-db.js).
+const GLUTEN_WORDS = ['soy sauce', 'gochujang'];
 // Diabetic: concentrated sugar (dried fruit, fruit canned in syrup).
 const SUGARY_FOODS = ['driedmango', 'cannedpeaches'];
 
@@ -34,12 +41,14 @@ export function foodAllowed(food, avoid = []) {
   if (noPork(avoid) && PORK_FOODS.includes(food.id)) return false;
   if (avoid.includes('low_sodium') && SALTY_FOODS.includes(food.id)) return false;
   if (avoid.includes('diabetic') && SUGARY_FOODS.includes(food.id)) return false;
+  if (avoid.includes('kosher') && NOT_KOSHER_FOODS.includes(food.id)) return false;
   return true;
 }
 
 /** May this recipe be suggested? */
 export function recipeAllowed(r, avoid = []) {
-  const words = (r.ingredients || []).map(w => String(w).toLowerCase());
+  // Ingredients and the seasonings under "You'll also need" (extras) both count for diets.
+  const words = [...(r.ingredients || []), ...(r.extras || [])].map(w => String(w).toLowerCase());
   const ids = (r.uses || []).map(u => u.id);
   if ((r.avoid || []).some(a => avoid.includes(a))) return false;
   if (ids.some(id => !foodAllowed(FOOD_BY_ID[id] || { id }, avoid))) return false;
@@ -49,10 +58,11 @@ export function recipeAllowed(r, avoid = []) {
   // Kosher: no meat and dairy in the same dish.
   if (avoid.includes('kosher') && words.some(w => MEAT_WORDS.includes(w)) && words.some(w => DAIRY_WORDS.includes(w))) return false;
   if (avoid.includes('low_sodium') && words.some(w => SALTY_WORDS.includes(w))) return false;
+  if (avoid.includes('gluten') && words.some(w => GLUTEN_WORDS.includes(w))) return false;
   return true;
 }
 
 /** Notes shown with a plan for each diet chosen: what was done, and what to check yourself. */
 export const DIET_NOTE_KEYS = { halal: 'diet_note_halal', kosher: 'diet_note_kosher', diabetic: 'diet_note_diabetic', low_sodium: 'diet_note_low_sodium' };
 
-export const _test = { PORK_FOODS, MEAT_FOODS, DAIRY_FOODS, SALTY_FOODS, SUGARY_FOODS };
+export const _test = { PORK_FOODS, MEAT_FOODS, DAIRY_FOODS, SALTY_FOODS, SUGARY_FOODS, NOT_KOSHER_FOODS };

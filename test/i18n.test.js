@@ -35,6 +35,10 @@ for (const code of LANGS) {
     for (const tip of ALL_TIPS) assert.ok(d.tips?.[tip.text], `${code} tip "${tip.text.slice(0, 40)}"`);
     for (const id of TWIST_IDS) assert.ok(d.twists?.[id], `${code} twist ${id}`);
     for (const w of [...Object.keys(INGREDIENT_FOODS), ...PANTRY_BASICS]) assert.ok(d.ingredients?.[w], `${code} ingredient "${w}"`);
+    // Seasonings under "You'll also need" (a recipe's extras, Nov 19 2026)
+    for (const r of recipes) for (const w of r.extras || []) assert.ok(d.ingredients?.[w], `${code} seasoning "${w}" (${r.title})`);
+    // The NHLBI recipes' kitchen basics, now also listed under the shopping list
+    for (const r of nih) for (const l of r.lines) if (l.p) assert.ok(d.ingredients?.[l.p], `${code} kitchen basic "${l.p}" (${r.title})`);
     for (const r of [...recipes, ...simple]) {
       assert.ok(d.recipes?.[r.id]?.title, `${code} recipe ${r.id} title (${r.title})`);
       assert.ok(d.recipes?.[r.id]?.instructions, `${code} recipe ${r.id} steps (${r.title})`);

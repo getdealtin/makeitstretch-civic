@@ -18,7 +18,7 @@ export const INGREDIENT_FOODS = {
   'bread': ['bread'], 'oats': ['oats'], 'banana': ['bananas'], 'tortillas': ['tortillas'],
   'cornmeal': ['cornmeal'], 'sweet potatoes': ['sweetpotatoes'], 'cabbage': ['cabbage'],
   'peanut butter': ['peanutbutter'], 'chickpeas': ['chickpeas'], 'flour': ['flour'],
-  'tuna': ['tuna'], 'coconut milk': ['coconutmilk'], 'tofu': [], 'ground beef': ['groundbeef'],
+  'tuna': ['tuna'], 'coconut milk': ['coconutmilk'], 'tofu': ['tofu'], 'ground beef': ['groundbeef'],
   'pork': ['porkchops'], 'applesauce': ['applesauce'],
   // Words the NHLBI recipes use (their amounts come from the recipe, not from these).
   'chicken breast': ['chickenbreast'], 'chicken drumsticks': ['drumsticks'], 'beef': ['sirloin', 'roundroast'],
@@ -28,6 +28,10 @@ export const INGREDIENT_FOODS = {
   'cheese': ['cheese'], 'mozzarella': ['mozzarella'], 'sour cream': ['sourcream'], 'black beans': ['blackbeans'], 'green beans': ['greenbeans'],
   'peas': ['frozenpeas'], 'corn': ['frozencorn', 'corn'], 'corn on the cob': ['cornears'], 'summer squash': ['zucchini'], 'plantains': ['plantains'],
   'avocado': ['avocado'], 'raisins': ['raisins'], 'cornflakes': ['cornflakes'], 'bread crumbs': ['breadcrumbs'],
+  // The original recipes' real ingredients (Nov 19 2026; engine/recipe-foods.js for the new foods).
+  'catfish': ['catfish'], 'kimchi': ['kimchi'], 'feta': ['feta'], 'fava beans': ['favabeans'], 'black-eyed peas': ['blackeyedpeas'],
+  'biscuits': ['biscuits'], 'pita': ['pita'], 'lemon': ['lemons'], 'ground pork': ['groundpork'], 'red beans': ['kidneybean'],
+  'spinach': ['spinach'], 'cucumber': ['cucumber'], 'zucchini': ['zucchini'],
 };
 
 /** Assumed to be in any kitchen; never listed as "you'll also need". */

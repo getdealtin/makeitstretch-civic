@@ -65,6 +65,15 @@ test('a plan link round-trips exactly, with swaps and checkmarks', () => {
   assert.deepEqual(back.state.checked, ['rice', 'onions']);
 });
 
+test('variety across plans: the draw and the last plan’s meals travel with the link; bad values are dropped', () => {
+  const a = { ...answers, seed: 123456789, recent: [12, 80, 1003] };
+  assert.deepEqual(readHash(planHash(packPlan(a))).state.answers, a);
+  const bad = unpackPlan({ ...packPlan(answers), x: -5, y: ['<script>', 4.5, 7] });
+  assert.equal(bad.answers.seed, undefined);
+  assert.deepEqual(bad.answers.recent, [7]);
+  assert.equal(unpackPlan(packPlan(answers)).answers.seed, undefined); // links from before: no draw
+});
+
 test('the shorter/full list choice travels with the link; old links open the full list', () => {
   assert.equal(readHash(planHash(packPlan({ ...answers, list: 'full' }))).state.answers.list, 'full');
   const { list, ...old } = answers; // a link made before the choice existed

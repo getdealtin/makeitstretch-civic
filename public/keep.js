@@ -41,6 +41,10 @@ export function packPlan(a, { swaps = [], checked = [] } = {}) {
     l: a.leftover, s: a.store, c: a.cuisine, a: a.avoid, h: a.have,
     w: swaps.length ? swaps : undefined, k: checked.length ? checked : undefined,
     f: a.list === 'short' ? 's' : undefined,
+    // Variety across plans (Nov 19 2026): x = the draw among equally good meals, y = meals from the last saved
+    // plan that went to the back of each tie. Both are needed so the plan opens the same anywhere, any time.
+    x: Number.isInteger(a.seed) ? a.seed : undefined,
+    y: a.recent?.length ? a.recent : undefined,
   };
 }
 
@@ -55,6 +59,9 @@ export function unpackPlan(o) {
       leftover: one(o.l, 'leftover', 'sometimes'), store: one(o.s, 'store', 'full'),
       cuisine: pick(o.c, 'cuisine'), avoid: pick(o.a, 'avoid'), have: pick(o.h, 'have'),
       list: o.f === 's' ? 'short' : 'full',
+      // No x (links from before Nov 19): no draw, the plan as it was made then.
+      ...(Number.isInteger(o.x) && o.x >= 0 && o.x < 2 ** 31 ? { seed: o.x } : {}),
+      ...(Array.isArray(o.y) && o.y.length ? { recent: o.y.filter(n => Number.isInteger(n) && n > 0 && n < 100000).slice(0, 30) } : {}),
     },
     swaps: (Array.isArray(o.w) ? o.w : []).filter(k => /^\d{1,2}-\d-(breakfast|lunch|dinner)$/.test(k)),
     checked: (Array.isArray(o.k) ? o.k : []).filter(k => /^[a-z]{2,20}(\.\d{1,2})?$/.test(k)), // week 2+ items: id.week
@@ -104,12 +111,13 @@ export const boxHash = packed => '#b=' + encodeState(packed);
 const money = n => Number(n).toFixed(2);
 
 /** Shopping list (+ week 1 meals for email) as plain text. */
-export function planText({ title, shopping, weeks, choice = {}, total, url, labels, full = false, titleOf = r => r.title, dayOf = d => d }) {
+export function planText({ title, shopping, weeks, choice = {}, total, url, labels, full = false, titleOf = r => r.title, dayOf = d => d, extras = '' }) {
   const lines = [title, '', `${labels.list} ($${money(total)})`];
   for (const g of shopping) {
     if (g.head) lines.push('', g.head);
     for (const i of g.items) lines.push(`☐ ${i.label} ×${i.qty}  $${money(i.subtotal)}`);
   }
+  if (extras) lines.push('', extras); // seasonings the meals use, not in the total
   if (full && weeks.length) {
     lines.push('', labels.week1);
     weeks[0].forEach((d, di) => {

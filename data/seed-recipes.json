@@ -60,14 +60,17 @@
       "butter",
       "salt"
     ],
-    "instructions": "Mix flour, eggs, milk and pinch of salt into smooth batter. Heat buttered pan. Pour 1/4 cup batter per pancake. Cook until bubbles form, flip, cook 1 more minute.",
+    "instructions": "Mix flour, 2 teaspoons baking powder and a pinch of salt. Whisk in eggs and milk until smooth. Heat a buttered pan. Pour 1/4 cup batter per pancake. Cook until bubbles form, flip, cook 1 more minute.",
     "tags": "weekend,family",
     "avoid": [
       "eggs",
       "gluten",
       "dairy"
     ],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "baking powder"
+    ]
   },
   {
     "title": "Fried Egg and Hash Browns",
@@ -592,12 +595,12 @@
     "slot": "breakfast",
     "cuisine": "latin",
     "ingredients": [
-      "banana",
+      "plantains",
       "eggs",
       "oil",
       "salt"
     ],
-    "instructions": "Slice banana thick. Fry in oil until golden. Fry eggs alongside. Serve together.",
+    "instructions": "Peel a ripe plantain (yellow with black spots) and slice it thick on a slant. Fry in oil over medium heat until golden on both sides, about 3 minutes a side. Fry eggs alongside. Serve together with a pinch of salt.",
     "tags": "sweet-savory,simple",
     "avoid": [
       "eggs"
@@ -986,10 +989,14 @@
       "canned tomatoes",
       "salt"
     ],
-    "instructions": "Fry onion until golden. Add garlic, cook 1 minute. Add lentils, tomatoes and water to cover. Simmer 20 minutes until lentils dissolve into sauce. Season. Serve over rice.",
+    "instructions": "Fry onion until golden. Add garlic, 1/2 teaspoon turmeric and 1 teaspoon cumin, cook 1 minute. Add lentils, tomatoes and water to cover. Simmer 20 minutes until lentils dissolve into sauce. Season. Serve over rice.",
     "tags": "classic,filling",
     "avoid": [],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "turmeric",
+      "cumin"
+    ]
   },
   {
     "title": "Stir-Fried Cabbage and Egg",
@@ -1075,10 +1082,14 @@
       "salt",
       "garlic"
     ],
-    "instructions": "Wash rice and lentils together. Fry onion and garlic in oil until golden. Add rice and lentils, stir to coat. Add 4 cups water and salt. Cover and cook on low 25 minutes.",
+    "instructions": "Wash rice and lentils together. Fry onion and garlic in oil until golden, then stir in 1 teaspoon cumin and 1/2 teaspoon turmeric. Add rice and lentils, stir to coat. Add 4 cups water and salt. Cover and cook on low 25 minutes.",
     "tags": "one-pot,comfort",
     "avoid": [],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "turmeric",
+      "cumin"
+    ]
   },
   {
     "title": "Chicken with Soy and Garlic",
@@ -1111,10 +1122,13 @@
       "canned tomatoes",
       "oil"
     ],
-    "instructions": "Fry onion and garlic until golden. Add tomatoes, cook 5 minutes. Add lentils and coconut milk. Simmer 20 minutes. Season generously. Serve with rice.",
+    "instructions": "Fry onion and garlic until golden. Stir in 1 tablespoon curry powder, cook 1 minute. Add tomatoes, cook 5 minutes. Add lentils and coconut milk. Simmer 20 minutes. Season generously. Serve with rice.",
     "tags": "creamy,vegan",
     "avoid": [],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "curry powder"
+    ]
   },
   {
     "title": "Noodle Soup",
@@ -1180,10 +1194,14 @@
       "canned tomatoes",
       "salt"
     ],
-    "instructions": "Fry onion and garlic until golden. Add diced potato, stir to coat. Add tomatoes and small amount of water. Cover and cook 20 minutes until potatoes are tender. Season well.",
+    "instructions": "Fry onion and garlic until golden. Stir in 1 teaspoon cumin and 1/2 teaspoon turmeric. Add diced potato, stir to coat. Add tomatoes and a small amount of water. Cover and cook 20 minutes until potatoes are tender. Season well.",
     "tags": "indian-style,vegan",
     "avoid": [],
-    "srv": 3
+    "srv": 3,
+    "extras": [
+      "turmeric",
+      "cumin"
+    ]
   },
   {
     "title": "Sweet Potato and Lentil Dal",
@@ -1197,10 +1215,14 @@
       "coconut milk",
       "oil"
     ],
-    "instructions": "Fry onion and garlic. Add cubed sweet potato and lentils. Cover with water. Simmer 20 minutes. Stir in coconut milk. Simmer 5 more minutes. Serve with rice.",
+    "instructions": "Fry onion and garlic, then stir in 1 teaspoon cumin and 1/2 teaspoon turmeric. Add cubed sweet potato and lentils. Cover with water. Simmer 20 minutes. Stir in coconut milk. Simmer 5 more minutes. Season. Serve with rice.",
     "tags": "creamy,vegan",
     "avoid": [],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "turmeric",
+      "cumin"
+    ]
   },
   {
     "title": "Grits with Egg",
@@ -1336,13 +1358,16 @@
       "eggs",
       "oil"
     ],
-    "instructions": "Make cornbread: mix cornmeal, egg, milk. Pour into oiled pan, bake 400F 20 minutes. Warm beans with fried onion. Serve together.",
+    "instructions": "Make cornbread: mix cornmeal, 2 teaspoons baking powder and a pinch of salt, then stir in egg and milk. Pour into an oiled pan and bake at 400F about 20 minutes, until golden. Warm beans with fried onion. Serve together.",
     "tags": "classic,filling",
     "avoid": [
       "eggs",
       "dairy"
     ],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "baking powder"
+    ]
   },
   {
     "title": "Pork and Bean Stew",
@@ -1375,28 +1400,31 @@
       "oil",
       "salt"
     ],
-    "instructions": "Season and bake chicken at 400F for 35 minutes. Make cornbread batter with cornmeal, egg, milk. Bake alongside in oiled pan for last 20 minutes.",
+    "instructions": "Season and bake chicken at 400F for 35 minutes. Mix cornmeal, 2 teaspoons baking powder and a pinch of salt, then stir in egg and milk. Pour into an oiled pan and bake alongside for the last 20 minutes.",
     "tags": "classic,filling",
     "avoid": [
       "meat",
       "eggs",
       "dairy"
     ],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "baking powder"
+    ]
   },
   {
     "title": "Hoppin John",
     "slot": "dinner",
     "cuisine": "southern",
     "ingredients": [
-      "beans",
+      "black-eyed peas",
       "rice",
       "onions",
       "garlic",
       "oil",
       "salt"
     ],
-    "instructions": "Soak beans overnight. Drain. Cook with onion and garlic until very tender, about 90 minutes. Season. Serve beans and their liquid over cooked rice.",
+    "instructions": "Rinse black-eyed peas (no soaking needed). Fry onion and garlic in oil, add the peas and water to cover by 2 inches. Simmer until tender, about 1 hour. Season. Serve the peas and some of their liquid over cooked rice.",
     "tags": "new-years,classic",
     "avoid": [],
     "srv": 6
@@ -1406,14 +1434,15 @@
     "slot": "dinner",
     "cuisine": "southern",
     "ingredients": [
-      "tuna",
+      "catfish",
       "cornmeal",
       "oil",
       "milk",
       "butter",
-      "salt"
+      "salt",
+      "water"
     ],
-    "instructions": "Make creamy grits with milk and butter. Season fish fillet. Coat in cornmeal. Fry in oil until golden and cooked through. Serve over grits.",
+    "instructions": "Make creamy grits: whisk cornmeal slowly into simmering salted milk and water, stir often for 15 to 20 minutes, then stir in butter. Season catfish fillets with salt and coat in cornmeal. Fry in oil over medium heat 3 to 4 minutes a side, until golden and the fish flakes easily. Serve over the grits.",
     "tags": "classic,southern",
     "avoid": [
       "fish",
@@ -1667,13 +1696,14 @@
     "slot": "dinner",
     "cuisine": "mediterranean",
     "ingredients": [
-      "tuna",
+      "fish",
+      "lemon",
       "garlic",
       "olive oil",
       "canned tomatoes",
       "salt"
     ],
-    "instructions": "Place fish in baking dish. Pour over tomatoes and garlic. Drizzle olive oil. Season. Bake 375F for 20 minutes until fish flakes easily.",
+    "instructions": "Place fish fillets in a baking dish. Top with tomatoes and garlic, drizzle with olive oil and season. Bake at 375F for 15 to 20 minutes, until the fish flakes easily. Squeeze lemon over to serve.",
     "tags": "light,quick",
     "avoid": [
       "fish"
@@ -1759,12 +1789,16 @@
       "garlic",
       "oil"
     ],
-    "instructions": "Fry onion and garlic in oil until soft. Add tomatoes, season, simmer 10 minutes until thick. Create wells in sauce. Crack eggs into wells. Cover and cook until whites set but yolks still runny. Serve from pan with bread.",
+    "instructions": "Fry onion and garlic in oil until soft. Stir in 1 teaspoon each cumin and paprika. Add tomatoes, season, simmer 10 minutes until thick. Make wells in the sauce. Crack eggs into the wells. Cover and cook until whites are set but yolks are still runny. Serve from the pan with bread.",
     "tags": "classic,impressive",
     "avoid": [
       "eggs"
     ],
-    "srv": 2
+    "srv": 2,
+    "extras": [
+      "cumin",
+      "paprika"
+    ]
   },
   {
     "title": "Simple Oatmeal",
@@ -1958,12 +1992,15 @@
       "cinnamon",
       "salt"
     ],
-    "instructions": "Cook rice in milk slowly 20 minutes, stirring often. Add sliced banana. Season with cinnamon and small amount of salt to balance.",
+    "instructions": "Cook rice in milk slowly 20 minutes, stirring often. Stir in sugar to taste, cinnamon and a small pinch of salt. Top with sliced banana.",
     "tags": "sweet,creamy",
     "avoid": [
       "dairy"
     ],
-    "srv": 3
+    "srv": 3,
+    "extras": [
+      "sugar"
+    ]
   },
   {
     "title": "Bean and Egg Bowl",
@@ -2043,18 +2080,22 @@
     "cuisine": "latin",
     "ingredients": [
       "chicken",
-      "beans",
+      "chickpeas",
       "carrots",
       "onions",
       "garlic",
+      "canned tomatoes",
       "salt"
     ],
-    "instructions": "Simmer chicken with onion, garlic and salt 30 minutes. Remove and shred. Add beans and carrots to broth. Cook 15 minutes. Return chicken. Season well.",
+    "instructions": "Simmer chicken with onion, garlic and salt 30 minutes. Remove and shred. Blend tomatoes with 1 or 2 chipotle peppers and stir into the broth. Add chickpeas and carrots. Cook 15 minutes. Return chicken. Season well.",
     "tags": "hearty,traditional",
     "avoid": [
       "meat"
     ],
-    "srv": 6
+    "srv": 6,
+    "extras": [
+      "chipotle peppers in adobo"
+    ]
   },
   {
     "title": "Frijoles Charros",
@@ -2103,12 +2144,15 @@
       "oil",
       "salt"
     ],
-    "instructions": "Boil water with diced onion and soy sauce for broth. Beat eggs. Pour slowly into simmering broth while stirring to create egg ribbons. Season.",
+    "instructions": "Simmer water with diced onion 5 minutes. Lower the heat and stir in miso until dissolved (don't let it boil hard). Beat eggs and pour slowly into the hot broth while stirring to make ribbons. Add a splash of soy sauce to taste.",
     "tags": "light,warming",
     "avoid": [
       "eggs"
     ],
-    "srv": 2
+    "srv": 2,
+    "extras": [
+      "miso"
+    ]
   },
   {
     "title": "Steamed Egg Custard",
@@ -2118,9 +2162,10 @@
       "eggs",
       "soy sauce",
       "water",
-      "oil"
+      "oil",
+      "salt"
     ],
-    "instructions": "Beat eggs with equal amount of water and soy sauce. Strain into bowl. Steam over simmering water 12 minutes until just set. Drizzle oil to serve.",
+    "instructions": "Beat eggs with a pinch of salt and about 1\u00bd times as much warm water. Strain into a heatproof bowl. Steam over gently simmering water about 12 minutes, until just set. Drizzle with soy sauce and a little oil to serve.",
     "tags": "silky,soft",
     "avoid": [
       "eggs"
@@ -2139,12 +2184,15 @@
       "oil",
       "rice"
     ],
-    "instructions": "Mix soy sauce with garlic. Marinate chicken 30 minutes. Fry in oil on medium heat until cooked through, basting with marinade. Caramelizes beautifully. Serve over rice with fried onion.",
+    "instructions": "Mix soy sauce, 1 tablespoon sugar and garlic. Marinate chicken 30 minutes. Fry in oil on medium heat until cooked through, basting with the marinade until it caramelizes. Serve over rice with fried onion.",
     "tags": "sweet-savory,impressive",
     "avoid": [
       "meat"
     ],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "sugar"
+    ]
   },
   {
     "title": "Congee with Toppings",
@@ -2185,20 +2233,23 @@
     "slot": "breakfast",
     "cuisine": "southern",
     "ingredients": [
+      "biscuits",
+      "ground pork",
       "flour",
-      "butter",
       "milk",
-      "salt",
-      "oil",
-      "onions"
+      "salt"
     ],
-    "instructions": "Make biscuits: mix flour and salt, cut in cold butter, add milk, mix until just combined. Pat out, cut into rounds. Bake 450F for 12 minutes. Make simple gravy: fry onion in oil, add flour, whisk in milk slowly. Season. Serve biscuits smothered in gravy.",
+    "instructions": "Bake the biscuits as the can says. Brown ground pork in a pan, breaking it up. Sprinkle flour over and stir 1 minute. Whisk in milk slowly and simmer, stirring, until thick, about 5 minutes. Season well with salt and black pepper. Split the biscuits and spoon the gravy over.",
     "tags": "classic,filling,southern",
     "avoid": [
       "gluten",
-      "dairy"
+      "dairy",
+      "meat"
     ],
-    "srv": 8
+    "srv": 8,
+    "extras": [
+      "black pepper"
+    ]
   },
   {
     "title": "Grits Porridge",
@@ -2240,14 +2291,16 @@
     "slot": "dinner",
     "cuisine": "southern",
     "ingredients": [
-      "beans",
+      "red beans",
       "rice",
       "onions",
+      "celery",
+      "bell peppers",
       "garlic",
       "oil",
       "salt"
     ],
-    "instructions": "Fry onion and garlic until golden. Add soaked and drained beans with water to cover. Cook 2 hours until very tender. Season. Serve over rice. Mash some beans against the pot for creamy sauce.",
+    "instructions": "Soak red beans overnight. Fry onion, celery, bell pepper and garlic in oil until soft. Add the drained beans and water to cover. Simmer about 2 hours until very tender, mashing some beans against the pot for a creamy sauce. Season. Serve over rice.",
     "tags": "classic,slow-cooked",
     "avoid": [],
     "srv": 6
@@ -2298,35 +2351,43 @@
     "slot": "lunch",
     "cuisine": "mediterranean",
     "ingredients": [
-      "bread",
-      "canned tomatoes",
+      "pita",
+      "tomatoes",
+      "cucumber",
       "onions",
-      "oil",
-      "garlic"
+      "olive oil",
+      "lemon",
+      "garlic",
+      "salt"
     ],
-    "instructions": "Toast or fry stale bread until crispy. Mix with diced tomato and onion. Dress generously with oil and garlic. Let bread soak slightly before serving.",
+    "instructions": "Toast or fry pita until crisp and break it into pieces. Dice fresh tomato, cucumber and onion. Whisk olive oil, lemon juice, minced garlic, salt and a spoonful of sumac. Toss everything together just before eating.",
     "tags": "bread-using,refreshing",
     "avoid": [
       "gluten"
     ],
-    "srv": 3
+    "srv": 3,
+    "extras": [
+      "sumac"
+    ]
   },
   {
     "title": "Ful Medames",
     "slot": "breakfast",
     "cuisine": "mediterranean",
     "ingredients": [
-      "beans",
+      "fava beans",
       "garlic",
-      "oil",
-      "canned tomatoes",
-      "onions",
+      "olive oil",
+      "lemon",
       "salt"
     ],
-    "instructions": "Simmer cooked broad beans or fava beans with garlic and tomatoes until very thick. Season generously. Drizzle with olive oil. Serve with bread. Egyptian breakfast staple.",
+    "instructions": "Warm the fava beans in their liquid with garlic, mashing some. Season with cumin and salt. Finish with lemon juice and a generous drizzle of olive oil. Serve with bread. An Egyptian breakfast staple.",
     "tags": "protein,hearty",
     "avoid": [],
-    "srv": 3
+    "srv": 3,
+    "extras": [
+      "cumin"
+    ]
   },
   {
     "title": "Pasta e Ceci",
@@ -2373,15 +2434,18 @@
     "cuisine": "mediterranean",
     "ingredients": [
       "eggs",
+      "spinach",
+      "feta",
       "onions",
       "garlic",
-      "oil",
+      "olive oil",
       "salt"
     ],
-    "instructions": "Saut\u00e9 onion and garlic. Add any available greens. Beat eggs and pour over. Cook slowly, stirring until just set. Season. Mediterranean style scrambled eggs.",
+    "instructions": "Saut\u00e9 onion and garlic in olive oil. Add thawed spinach, squeezed dry, and cook 2 minutes. Beat eggs and pour over. Cook slowly, stirring, until just set. Fold in crumbled feta. Spinach and feta are the flavors of spanakopita, the Greek pie.",
     "tags": "quick,simple",
     "avoid": [
-      "eggs"
+      "eggs",
+      "dairy"
     ],
     "srv": 2
   },
@@ -2391,18 +2455,22 @@
     "cuisine": "asian",
     "ingredients": [
       "lentils",
+      "red beans",
       "canned tomatoes",
       "onions",
       "garlic",
       "oil",
       "butter"
     ],
-    "instructions": "Cook lentils until very soft. Fry onion and garlic until deeply golden. Add tomatoes, cook 10 minutes. Add lentils, simmer 20 minutes. Stir in butter at end for richness.",
+    "instructions": "Soak red beans overnight, then cook with the lentils until very soft. Fry onion and garlic until deeply golden. Add tomatoes and 1 teaspoon garam masala, cook 10 minutes. Add lentils and beans, simmer 20 minutes. Stir in butter at the end for richness.",
     "tags": "rich,comfort",
     "avoid": [
       "dairy"
     ],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "garam masala"
+    ]
   },
   {
     "title": "Bibimbap Style Bowl",
@@ -2411,34 +2479,40 @@
     "ingredients": [
       "rice",
       "carrots",
+      "spinach",
       "onions",
       "eggs",
       "soy sauce",
       "oil"
     ],
-    "instructions": "Cook rice. Separately saut\u00e9 carrots and onion. Fry egg sunny side up. Arrange vegetables and egg over rice. Drizzle with soy sauce. Mix together before eating.",
+    "instructions": "Cook rice. Separately saut\u00e9 carrots and onion, then thawed spinach with a little soy sauce. Fry an egg sunny side up. Arrange vegetables and egg over rice. Top with a spoonful of gochujang (Korean chili paste). Mix together before eating.",
     "tags": "colorful,assembly",
     "avoid": [
-      "eggs"
+      "eggs",
+      "gluten"
     ],
-    "srv": 2
+    "srv": 2,
+    "extras": [
+      "gochujang"
+    ]
   },
   {
     "title": "Kimchi-Style Fried Rice",
     "slot": "dinner",
     "cuisine": "asian",
     "ingredients": [
+      "kimchi",
       "rice",
-      "cabbage",
       "onions",
       "soy sauce",
       "oil",
       "eggs"
     ],
-    "instructions": "Fry shredded cabbage in oil on high heat until wilted and slightly charred. Add cold rice, stir-fry pressing down. Season heavily with soy sauce. Top with fried egg.",
+    "instructions": "Chop kimchi. Fry it with the onion in oil on high heat 2 minutes. Add cold rice and stir-fry, pressing down. Season with soy sauce and a little kimchi juice. Top with a fried egg.",
     "tags": "bold,quick",
     "avoid": [
-      "eggs"
+      "eggs",
+      "fish"
     ],
     "srv": 2
   },
@@ -2453,10 +2527,13 @@
       "oil",
       "salt"
     ],
-    "instructions": "Fry onion and carrots in oil 3 minutes. Add oats. Add water to cover. Cook 5 minutes until oats are tender and mixture is thick. Season with salt and any available spice.",
+    "instructions": "Fry onion and carrots in oil 3 minutes, then stir in 1/2 teaspoon garam masala. Add oats. Add water to cover. Cook 5 minutes until oats are tender and the mixture is thick. Season with salt.",
     "tags": "savory,indian-style",
     "avoid": [],
-    "srv": 2
+    "srv": 2,
+    "extras": [
+      "garam masala"
+    ]
   },
   {
     "title": "Upma",
@@ -2486,10 +2563,13 @@
       "oil",
       "salt"
     ],
-    "instructions": "Fry onion and garlic until golden. Add tomatoes, cook 8 minutes pressing down. Add chickpeas, cook 15 minutes until sauce thickens and coats chickpeas. Season generously. Serve with rice or bread.",
+    "instructions": "Fry onion and garlic until golden. Stir in 1 tablespoon curry powder, cook 1 minute. Add tomatoes, cook 8 minutes pressing down. Add chickpeas, cook 15 minutes until the sauce thickens and coats them. Season generously. Serve with rice or bread.",
     "tags": "warming,vegan",
     "avoid": [],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "curry powder"
+    ]
   },
   {
     "title": "Palak Dal",
@@ -2497,16 +2577,21 @@
     "cuisine": "asian",
     "ingredients": [
       "lentils",
+      "spinach",
       "onions",
       "garlic",
       "oil",
       "canned tomatoes",
       "salt"
     ],
-    "instructions": "Cook lentils until soft. Fry onion and garlic until deeply golden. Add tomatoes, cook 5 minutes. Pour over lentils. Simmer together 10 minutes. Season. Add any greens available.",
+    "instructions": "Cook lentils with 1/2 teaspoon turmeric until soft. Fry onion and garlic with 1 teaspoon cumin until deeply golden. Add tomatoes, cook 5 minutes. Add thawed spinach and cook 2 minutes. Stir into the lentils. Simmer together 10 minutes. Season. Serve with rice or bread.",
     "tags": "iron-rich,vegan",
     "avoid": [],
-    "srv": 4
+    "srv": 4,
+    "extras": [
+      "turmeric",
+      "cumin"
+    ]
   },
   {
     "title": "Tortilla Espa\u00f1ola",
@@ -2534,11 +2619,13 @@
       "canned tomatoes",
       "onions",
       "garlic",
+      "zucchini",
+      "bell peppers",
       "oil",
       "salt",
       "eggs"
     ],
-    "instructions": "Fry onion and garlic. Add tomatoes, simmer 20 minutes until thick. Season. Either serve as sauce or crack eggs into sauce and cook until set.",
+    "instructions": "Fry onion, garlic and diced bell pepper in oil until soft, about 8 minutes. Add diced zucchini and cook 5 minutes. Add tomatoes and simmer 15 minutes until thick. Season. Serve as is, or crack eggs into the stew and cook until set.",
     "tags": "spanish,vegan",
     "avoid": [
       "eggs"
@@ -2570,14 +2657,14 @@
     "slot": "lunch",
     "cuisine": "southern",
     "ingredients": [
-      "beans",
+      "black-eyed peas",
       "onions",
       "garlic",
       "canned tomatoes",
       "oil",
       "salt"
     ],
-    "instructions": "Fry onion and garlic in oil until soft. Add tomatoes, cook 5 minutes. Add black-eyed peas and water to cover. Simmer 20 minutes until thick and creamy. Season generously with salt and pepper. Serve with cornbread if available.",
+    "instructions": "Fry onion and garlic in oil until soft. Add tomatoes, cook 5 minutes. Add rinsed black-eyed peas (no soaking needed) and water to cover by 2 inches. Simmer about 1 hour, until tender and the soup is thick and creamy. Season generously.",
     "tags": "classic,hearty",
     "avoid": [],
     "srv": 4
@@ -2624,14 +2711,14 @@
     "slot": "lunch",
     "cuisine": "southern",
     "ingredients": [
-      "beans",
+      "black-eyed peas",
       "rice",
       "onions",
       "garlic",
       "oil",
       "salt"
     ],
-    "instructions": "Fry onion and garlic in oil until golden. Add black-eyed peas with water to cover. Simmer 15 minutes. Add cooked rice and enough water to make a thick soup. Season generously. The rice thickens the broth as it sits.",
+    "instructions": "Fry onion and garlic in oil until golden. Add rinsed black-eyed peas (no soaking needed) and water to cover by 2 inches. Simmer about 1 hour, until tender. Add cooked rice and enough water to make a thick soup. Season generously. The rice thickens the broth as it sits.",
     "tags": "classic,quick",
     "avoid": [],
     "srv": 4
@@ -2824,19 +2911,20 @@
     "slot": "lunch",
     "cuisine": "asian",
     "ingredients": [
-      "soy sauce",
       "tofu",
       "onions",
       "eggs",
-      "rice",
-      "oil"
+      "rice"
     ],
-    "instructions": "Bring water to simmer with soy sauce for broth. Add diced onion, cook 5 minutes. If using tofu, add cubed tofu. Beat eggs and stir slowly into simmering broth to form ribbons. Serve over or alongside steamed rice. Season.",
+    "instructions": "Simmer water with diced onion 5 minutes. Add cubed tofu. Lower the heat and stir in miso until dissolved (don't let it boil hard). Beat eggs and stir in slowly to make ribbons. Serve with steamed rice.",
     "tags": "light,warming",
     "avoid": [
       "eggs"
     ],
-    "srv": 2
+    "srv": 2,
+    "extras": [
+      "miso"
+    ]
   },
   {
     "title": "Dan Dan Noodles",
@@ -2844,18 +2932,23 @@
     "cuisine": "asian",
     "ingredients": [
       "pasta",
+      "ground pork",
       "peanut butter",
       "soy sauce",
       "garlic",
-      "oil",
-      "carrots"
+      "oil"
     ],
-    "instructions": "Cook noodles until tender. Mix peanut butter, soy sauce, garlic and oil with hot water to make a thick sauce. Grate carrots. Drain noodles. Toss noodles with sauce and carrots. Add more hot water if sauce is too thick. Serve warm or at room temperature.",
+    "instructions": "Brown ground pork with garlic and a splash of soy sauce until crispy. Cook noodles. Stir peanut butter, soy sauce, chili oil and a pinch of ground Sichuan peppercorns with a little hot noodle water into a sauce. Toss the noodles in the sauce and top with the pork. Peanut butter stands in for Chinese sesame paste.",
     "tags": "spicy-adaptable,filling",
     "avoid": [
       "peanuts",
-      "gluten"
+      "gluten",
+      "meat"
     ],
-    "srv": 2
+    "srv": 2,
+    "extras": [
+      "chili oil",
+      "Sichuan peppercorns"
+    ]
   }
 ]

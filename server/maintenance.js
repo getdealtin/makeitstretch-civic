@@ -5,6 +5,7 @@ import { BENCHMARKS } from '../engine/index.js';
 import { cityData } from './stores.js';
 import { BLS_CHECKED, BLS_ITEMS } from './prices.js';
 import { EXTRA_PRICES_AS_OF, PRICE_SOURCES } from '../engine/extra-foods.js';
+import { RECIPE_PRICES_AS_OF, RECIPE_PRICE_SOURCES } from '../engine/recipe-foods.js';
 import { HSDS_VERSION } from './hsds.js';
 import { OE } from './taxonomy.js';
 
@@ -33,6 +34,9 @@ export function maintenanceFor(city, now = new Date()) {
       what: (() => { const k = Object.values(PRICE_SOURCES).map(x => x.kind); const n = t => k.filter(x => x === t).length;
         return `Of the ${k.length} foods the NHLBI recipes added, ${n('live')} update live from BLS; ${n('estimate')} are USDA ERS estimates (Purchase to Plate 2017–18 and Fruit and Vegetable Prices 2023, brought up to date with the BLS food-at-home index); ${n('store')} are store prices you checked at H-E-B (masa harina, brown rice). USDA updates these about every two years.`; })(),
       how: 'Ask Claude: “update the recipe food prices” (scripts/build-nih-recipes.py: newer USDA files, the latest food-at-home index, or new store prices).' },
+    { id: 'recipefoods', title: 'Recipe food prices (original recipes)', last: RECIPE_PRICES_AS_OF, due: addMonths(RECIPE_PRICES_AS_OF, 12),
+      what: `${Object.keys(RECIPE_PRICE_SOURCES).length} foods the original recipes need for their real ingredients (catfish, kimchi, feta, tofu and others) are USDA ERS Purchase to Plate 2017–18 estimates, brought up to date with the BLS food-at-home index. USDA updates these about every two years.`,
+      how: 'Ask Claude: “update the recipe food prices” (scripts/build-recipe-foods.py, with the newest Purchase to Plate file and food-at-home index).' },
     { id: 'hsds', title: 'Open data feed format (HSDS and Open Eligibility)', last: OE.checked, due: addMonths(OE.checked, 12),
       what: `The open data feed at /api/hsds follows Open Referral’s HSDS ${HSDS_VERSION}, with Open Eligibility categories. Open Referral publishes new versions from time to time.`,
       how: 'Ask Claude: “check for a new HSDS version” (server/hsds.js, server/taxonomy.js, scripts/build-open-eligibility.py).' },

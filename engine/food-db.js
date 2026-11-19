@@ -7,6 +7,7 @@
 import { NUTRITION } from './nutrition.js';
 import { SATIETY } from './satiety.js';
 import { EXTRA_FOODS, EXTRA_PRICES } from './extra-foods.js';
+import { RECIPE_FOODS, RECIPE_PRICES } from './recipe-foods.js';
 
 const RAW_FOODS = [
   // GRAINS & STARCHES
@@ -71,7 +72,8 @@ const RAW_FOODS = [
   {id:'oliveoil',  name:'Olive Oil (16 oz)',           cal:1920,srv:24,cat:'fat',  tier:2,note:'Better flavor than veggie oil for finishing dishes.',avoid:[],hasProp:null},
 
   // PANTRY STAPLES
-  {id:'soy',       name:'Soy Sauce (10 oz)',           cal:60,  srv:20,cat:'pantry',tier:2,note:'Transforms any rice or noodle dish instantly.', avoid:[],hasProp:null},
+  // Most soy sauce is brewed with wheat, so it has gluten (owner decision Nov 19 2026); tamari is a wheat-free kind.
+  {id:'soy',       name:'Soy Sauce (10 oz)',           cal:60,  srv:20,cat:'pantry',tier:2,note:'Transforms any rice or noodle dish. Most soy sauce has wheat; tamari is a wheat-free kind.', avoid:['gluten'],hasProp:null},
   {id:'hotsauce',  name:'Hot Sauce (5 oz)',            cal:20,  srv:20,cat:'pantry',tier:2,note:'Free flavor. Makes any plain dish interesting.', avoid:[],hasProp:null},
   {id:'cannedbroth',name:'Chicken Broth (32 oz)',      cal:60,  srv:8, cat:'pantry',tier:2,note:'Better than water for rice and soups.',          avoid:['meat'],hasProp:null},
   {id:'vegbroth',  name:'Vegetable Broth (32 oz)',     cal:40,  srv:8, cat:'pantry',tier:2,note:'Stock base for soups and rice. Vegetarian.',     avoid:[],hasProp:null},
@@ -83,8 +85,9 @@ const RAW_FOODS = [
 ];
 
 /** Every food with USDA calories, protein and fiber per package, and its satiety weight. */
-// Plus the foods only the NHLBI recipes use (recipeOnly; engine/extra-foods.js). g = edible grams per package.
-export const FOOD_DB = [...RAW_FOODS, ...EXTRA_FOODS].map(f => {
+// Plus the foods only the NHLBI recipes use (engine/extra-foods.js) and the foods the original 161 recipes need for
+// their real ingredients (engine/recipe-foods.js, Nov 19 2026). g = edible grams per package.
+export const FOOD_DB = [...RAW_FOODS, ...EXTRA_FOODS, ...RECIPE_FOODS].map(f => {
   const n = NUTRITION[f.id];
   return n ? { ...f, cal: n.kcal, protein: n.protein, fiber: n.fiber, fdc: n.fdc, g: n.g, sat: SATIETY[f.id] } : { ...f, sat: 0.5 };
 });
@@ -98,7 +101,7 @@ const CORE_PRICES = {
   national:{rice:2.69,drybeans:1.79,oats:3.69,eggs:3.39,potatoes:4.09,bread:1.89,cabbage:1.39,onions:2.09,bananas:0.82,milk:3.99,cannedtomatoes:1.19,peanutbutter:3.09,chicken:5.39,pasta:1.29,lentils:2.09,oil:4.49,carrots:1.49,flour:2.99,frozenvegs:2.29,tuna:1.29,garlic:0.69,sweetpotatoes:2.99,applesauce:3.49,chickpeas:1.69,corn:0.99,greenbeans:1.09,sardines:1.89,cornmeal:2.19,barley:2.09,splitpeas:1.59,driedmango:3.19,tortillas:2.59,coconutmilk:1.89,groundbeef:5.19,porkchops:3.59,butter:4.39,cheese:3.09,yogurt:4.39,oliveoil:5.39,soy:1.89,hotsauce:1.79,cannedbroth:2.09,vegbroth:1.89,blackbeans:0.89,kidneybean:0.89,cannedchili:1.49,cannedsoups:1.09,salsa:2.59,cannedpeaches:1.29,oranges:2.59,apples:3.49,frozencorn:1.19,cannedpeas:0.79,spinach:1.79,bellpepper:2.59,celery:1.69,cucumber:1.19,evaporatedmilk:1.19}
 };
 /** Every region: its own estimates, plus the recipe foods' national prices (BLS updates five of them live). */
-export const FALLBACK_PRICES = Object.fromEntries(Object.entries(CORE_PRICES).map(([region, p]) => [region, { ...EXTRA_PRICES, ...p }]));
+export const FALLBACK_PRICES = Object.fromEntries(Object.entries(CORE_PRICES).map(([region, p]) => [region, { ...EXTRA_PRICES, ...RECIPE_PRICES, ...p }]));
 
 export const ALL_TIPS = [
   {text:'🥚 Eat eggs and bananas first — they spoil fastest. Rice, beans, oats, and peanut butter can last weeks.',needs:['eggs','bananas']},

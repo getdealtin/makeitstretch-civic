@@ -289,7 +289,13 @@ const engineInput = a => ({
   cuisine: a.cuisine, avoid: a.avoid, have: a.have,
   stores: a.store && a.store !== 'full' ? [a.store] : [], leftover: a.leftover,
   menu: a.list === 'short' ? 'short' : 'full',
+  seed: Number.isInteger(a.seed) ? a.seed : undefined, recent: a.recent || [],
 });
+// Variety across plans (owner decision, Nov 19 2026): each new plan draws among equally good meals (engine/meals.js
+// PRICE_MARGIN). The draw is kept in the plan's link, so a plan never changes once made.
+const newSeed = () => crypto.getRandomValues(new Uint32Array(1))[0] % 2147483647;
+/** Meals in the person's most recent saved plan (on this phone only): a new plan puts them last among equals. */
+const lastSavedMeals = () => (savedList(store, saveKey()).find(e => e.kind === 'plan' && Array.isArray(e.meals))?.meals || []).slice(0, 30);
 
 /** Run the meal planner in the browser: meals first, then the list from those meals (engine/meals.js). */
 async function computePlan(a) {
@@ -488,7 +494,7 @@ function renderIntro() {
       </div>
     </section>
     ${homeCity ? partnersSection() : ''}`;
-  app.querySelector('#door-budget').onclick = () => { answers = fresh(); startFlow(); go(0); };
+  app.querySelector('#door-budget').onclick = () => { answers = { ...fresh(), seed: newSeed(), recent: lastSavedMeals() }; startFlow(); go(0); };
   app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [], other: [], cant: [], zip: null }; startFlow(); renderBoxZip(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
     const e = findSaved(store, saveKey(), b.dataset.open);
@@ -1057,11 +1063,22 @@ function renderResults(plan, restore = {}) {
         <div class="more" id="more-${dom}" hidden><span class="size">${esc(fFull(i.id, i.name))}</span> ${esc(fNote(i.id, i.note))}${i.tip ? `<div class="shop-tip">${esc(fTip(i.tip))}</div>` : ''}</div>
       </li>`;
     }).join('')}</ul>`).join('');
+  // Seasonings the chosen meals call for that aren't priced (a recipe's extras, the NHLBI recipes' kitchen
+  // basics): listed under the shopping list, not in the total, so they aren't forgotten at the store.
+  const seasonings = () => {
+    const out = new Set();
+    weeks.forEach((wk, wi) => wk.forEach((d, di) => ['breakfast', 'lunch', 'dinner'].forEach(sl => {
+      const m = d[sl]?.[choice[`${wi}-${di}-${sl}`] || 0];
+      for (const x of [...(m?.extras || []), ...(m?.lines || []).filter(l => l.p).map(l => l.p)]) out.add(x);
+    })));
+    return [...out];
+  };
+  const seasoningsHtml = () => { const x = seasonings(); return x.length ? `<p class="extras-note">${esc(t('list_extras', { items: x.map(ing).join(t('list_sep')) }))}</p>` : ''; };
   const listHtml = () => (s.have?.length ? `<p class="have-note">${esc(t('have_note', { items: s.have.map(fName).join(t('list_sep')) }))}</p>` : '') +
     (s.byWeek?.length > 1
       ? s.byWeek.map(w => `<div class="week-list"><div class="week-list-head"><h3>${esc(t('list_week', { n: w.week }))}</h3><span>$${money(w.spent)}</span></div>
           ${rowsHtml(groupShoppingList(w.cart), w.week)}</div>`).join('')
-      : rowsHtml(shopping, 1));
+      : rowsHtml(shopping, 1)) + seasoningsHtml();
 
   // Meals first (owner choice, Nov 16: "C"): under the summary, a button per day of the first week and
   // that day's breakfast, lunch and dinner, each with Swap when there's another option, then a link to
@@ -1084,6 +1101,7 @@ function renderResults(plan, restore = {}) {
         id="day-tab-${di}" data-day="${di}" aria-selected="${di === glanceDay}" aria-controls="glance-day" aria-label="${esc(dayOf(d.dayName))}">${esc(dayShort(d.dayName))}</button>`).join('')}</div>
       <div class="glance-day" id="glance-day" role="tabpanel" aria-labelledby="day-tab-${glanceDay}">${glanceDayHtml(glanceDay)}</div>
       <button type="button" class="glance-all" data-open-panel="meals">${esc(input.days <= 7 ? t('glance_all_week') : t('glance_all_days', { days: input.days }))} ›</button>
+      ${Number.isInteger(answers.seed) ? `<p class="reroll-row"><button type="button" class="btn btn-ghost btn-sm" id="reroll">${esc(t('reroll_btn'))}</button></p>` : ''}
     </section>`;
 
   const weekPanel = (week, wi) => `
@@ -1185,12 +1203,16 @@ function renderResults(plan, restore = {}) {
     detail: `$${Math.round(input.budget)} · ${peopleLabel}`,
     kind: 'plan',
     hash: currentHash,
+    // The meals on the plan as it stands (with swaps), kept with a saved plan so the next new plan can vary.
+    meals: () => [...new Set(weeks.flatMap((wk, wi) => wk.flatMap((d, di) => ['breakfast', 'lunch', 'dinner']
+      .map(sl => d[sl]?.[choice[`${wi}-${di}-${sl}`] || 0]?.id)).filter(Number.isInteger)))].slice(0, 30),
     text: full => planText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
       shopping: s.byWeek?.length > 1
         ? s.byWeek.map(w => ({ head: `${t('list_week', { n: w.week })} ($${money(w.spent)})`, items: w.cart.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) }))
         : shopping.map(g => ({ items: g.items.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) })),
       weeks, choice, total: s.spent, url: linkFor(currentHash()), full, titleOf: rTitle, dayOf,
+      extras: seasonings().length ? t('list_extras', { items: seasonings().map(ing).join(t('list_sep')) }) : '',
       labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), uncovered: t('day_uncovered'), link: t('full_plan_link') },
     }),
   });
@@ -1288,6 +1310,13 @@ function renderResults(plan, restore = {}) {
     box.querySelectorAll('.meal-pick').forEach(b => b.addEventListener('click', () => showMeal(b)));
     box.querySelectorAll('[data-swap]').forEach(b => b.addEventListener('click', () => doSwap(b.dataset.swap)));
   };
+  // A different set of equally good meals, same answers (a new draw). A new plan: swaps and ticks start fresh,
+  // and a saved copy isn't overwritten.
+  app.querySelector('#reroll')?.addEventListener('click', () => {
+    answers = { ...answers, seed: newSeed() };
+    openedSavedId = null; logNext = null;
+    showResults({ rerolled: true });
+  });
   app.querySelectorAll('.day-tab').forEach(tab => tab.addEventListener('click', () => {
     glanceDay = Number(tab.dataset.day);
     app.querySelectorAll('.day-tab').forEach(x => x.setAttribute('aria-selected', x === tab));
@@ -1354,7 +1383,7 @@ function keepBar() {
 }
 
 /** Wires the keep bar. Returns sync(), to call whenever the plan changes. */
-function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
+function wireKeep({ title, savedTitle, detail, kind, hash, text, meals = () => undefined }) {
   const saveBtn = app.querySelector('#k-save');
   const status = app.querySelector('#k-status');
   const key = saveKey();
@@ -1370,7 +1399,7 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
   const sync = () => {
     const h = hash();
     setHash(h);
-    if (isSaved()) updateSaved(store, key, savedId, { hash: h });
+    if (isSaved()) updateSaved(store, key, savedId, { hash: h, meals: meals() });
     app.querySelector('#k-text').href = smsHref(text(false));
     app.querySelector('#k-email').href = mailHref(title, text(true));
   };
@@ -1379,7 +1408,7 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text }) {
       removeSaved(store, key, savedId); savedId = null;
       status.textContent = t('keep_removed');
     } else {
-      const r = addSaved(store, key, { kind, hash: hash(), title: savedTitle, detail });
+      const r = addSaved(store, key, { kind, hash: hash(), title: savedTitle, detail, meals: meals() });
       if (r) {
         track('plan_kept', { how: 'save', kind });
         savedId = r.id;
@@ -1410,7 +1439,9 @@ function openRecipe(r, { alt, onSwap, missing, justSwapped, twists = '' } = {}) 
     ${justSwapped ? `<p class="swapped-note">${esc(t('in_your_plan'))}</p>` : ''}
     ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
     ${Array.isArray(r.lines) ? nihRecipeHtml(r, nihChip(missing)) : `<h3>${esc(t('ingredients'))}</h3>
-    <ul>${(r.ingredients || []).map(i => `<li>${esc(ing(i))}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}</ul>
+    <ul>${(r.ingredients || []).map(i => `<li>${esc(ing(i))}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}
+      ${(r.extras || []).map(x => `<li>${esc(ing(x))} <span class="need-tag">${esc(t('box_need'))}</span></li>`).join('')}</ul>
+    ${r.extras?.length ? `<p class="extras-note">${esc(t('extras_note'))}</p>` : ''}
     <h3>${esc(t('steps'))}</h3>
     <p>${esc(rSteps(r))}</p>`}
     ${twists}
@@ -1647,6 +1678,9 @@ function renderBoxCant() {
   focusTop('#q');
 }
 
+/** What a box meal still needs: foods not in the box, then its seasonings (extras). */
+const needOf = m => [...m.missing, ...(m.recipe.extras || [])];
+
 async function renderBoxResults() {
   if (box.zip) { siteZip = siteZip || box.zip; await useCityForZip(box.zip); }
   current = () => openFromHash(location.hash, openedSavedId);
@@ -1674,8 +1708,8 @@ async function renderBoxResults() {
   const boxRow = m => `<div class="glance-row box-row"><span class="glance-meal">
       <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
       <span class="box-line"><b>${esc(t('box_uses'))}${esc(t('label_colon'))}</b> ${esc(m.uses.map(ing).join(t('list_sep')))}</span>
-      <span class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
-        ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</span></span></div>`;
+      <span class="box-line ${needOf(m).length ? 'need' : 'have-all'}">${needOf(m).length
+        ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(needOf(m).map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</span></span></div>`;
   // A meal with nothing from this box says so, with the way to free food, instead of disappearing.
   const boxSlotHtml = sl => forSlot(sl).slice(0, 3).map(boxRow).join('') || `<p class="lo">${esc(t('box_none_slot', { meal: t(sl).toLocaleLowerCase(lang) }))}</p>
     ${residents().length ? `<p><button type="button" class="btn btn-primary btn-sm box-free">${esc(t('find_free_food'))}</button></p>` : ''}`;
@@ -1720,8 +1754,8 @@ async function renderBoxResults() {
               <span class="box-slot">${esc(t(m.recipe.slot))}</span>
               <button type="button" class="meal-pick box-title" data-id="${m.recipe.id}">${esc(rTitle(m.recipe))}</button>
               <p class="box-line"><b>${esc(t('box_uses'))}${esc(t('label_colon'))}</b> ${esc(m.uses.map(ing).join(t('list_sep')))}</p>
-              <p class="box-line ${m.missing.length ? 'need' : 'have-all'}">${m.missing.length
-                ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(m.missing.map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</p>
+              <p class="box-line ${needOf(m).length ? 'need' : 'have-all'}">${needOf(m).length
+                ? `<b>${esc(t('box_need'))}${esc(t('label_colon'))}</b> ${esc(needOf(m).map(ing).join(t('list_sep')))}` : esc(t('box_have_all'))}</p>
             </li>`).join('')}</ul>` : `<p class="box-none">${esc(t('box_none'))}</p>`}
         </section>` },
         // ("Can't use" moved to its own step before the meals: renderBoxCant.)

@@ -577,3 +577,9 @@ html { scroll-padding-bottom: 110px; }
 .zip-where { margin: 12px 0 0; font: 500 15px/1.45 var(--font-label); color: var(--text); }
 .zip-where:empty { display: none; }
 .site-none { border-style: dashed; background: var(--tint-light); }
+
+/* Seasonings the recipes call for that aren't priced (Nov 19 2026): not on the list or in the total. */
+.extras-note { font-size: 15px; color: var(--text-muted); margin: 10px 0 0; }
+
+/* "Show me different meals" (Nov 19 2026) */
+.reroll-row { margin: 10px 0 0; }

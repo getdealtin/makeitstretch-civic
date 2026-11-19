@@ -30,7 +30,7 @@ import { SIDE_DISH_BLOCKLIST, NOT_BREAKFAST } from './recipes.js';
 import { foodAllowed, recipeAllowed } from './diets.js';
 
 /** Part of a standard serving these foods add to one serving of a recipe (they flavor, not fill). */
-export const LIGHT = { onions: 0.5, garlic: 0.25, oil: 0.5, oliveoil: 0.5, butter: 0.5, soy: 0.5 };
+export const LIGHT = { onions: 0.5, garlic: 0.25, oil: 0.5, oliveoil: 0.5, butter: 0.5, soy: 0.5, lemons: 0.25, feta: 0.5 };
 const NOT_A_VEGETABLE_SERVING = new Set(['onions', 'garlic']);
 /** Different recipes per meal slot across the plan: enough variety, a list that stays short. */
 export const MENU_SIZE = { breakfast: 3, lunch: 4, dinner: 5 };
@@ -204,6 +204,21 @@ export function topUp(kitchen, assigned, { people, days, budget }, balance = {})
  * dollar than repeating a meal.
  */
 export const VARIETY_KCAL_GIVE = 0.10;
+/**
+ * Variety across plans (owner decision, Nov 19 2026). Our prices are estimates: the built-in estimates differ
+ * from live BLS prices for the same food by a median of 10.3% (18 foods × 4 regions, Nov 19 2026), and one
+ * region's live price is typically 10.5% from the four-region average. So meals whose cost per calorie is
+ * within PRICE_MARGIN of the cheapest are equally good as far as our data can tell, and which one a plan gets
+ * is drawn at random (input.seed, kept in the plan's link so a plan never changes once made). The person's
+ * answers and their ZIP code never decide the draw. Without a seed (links from before) nothing is drawn.
+ */
+export const PRICE_MARGIN = 0.10;
+/** A stable number in [0, 1) for a recipe and a seed: the random order of equally good meals. */
+export const drawOrder = (seed, id) => {
+  let t = (Math.imul(seed | 0, 0x9E3779B1) ^ Math.imul(id | 0, 0x85EBCA77)) >>> 0;
+  t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
 /** Whole-list pass limits: rounds of swaps, and the cheapest candidates tried per meal. */
 const SWAP_PASSES = 6, SWAP_CANDIDATES = 12;
 /** Meals that add a new food, tried per slot when adding variety (cheapest new foods first). */
@@ -248,7 +263,7 @@ export function acceptableVariety({ pools, plan, menu, current, haveIds }, sl, b
     .filter(c => c.t.cost <= budget && c.t.kcal >= floor && c.excess <= excess && (c.t.fruit || !current.fruit));
 }
 
-function addVariety({ pools, plan, menu, current, budget, size, haveIds, target }) {
+function addVariety({ pools, plan, menu, current, budget, size, haveIds, target, tieRank = null }) {
   const floor = varietyFloor(plan, current, target);
   // Take turns, one meal per slot per round, until no slot can add one: a meal added to one slot can
   // put a food on the list that makes another slot's meal possible.
@@ -259,7 +274,8 @@ function addVariety({ pools, plan, menu, current, budget, size, haveIds, target 
       // A new meal never makes the ingredient spread worse than it is.
       const ok = acceptableVariety({ pools, plan, menu, current, haveIds }, sl, budget, floor)
         // Free first, then least ingredient repetition, then the better meal, then the cheaper one.
-        .sort((a, b) => Number(b.free) - Number(a.free) || a.excess - b.excess || b.rec.quality - a.rec.quality || a.t.cost - b.t.cost || a.rec.id - b.rec.id);
+        .sort((a, b) => Number(b.free) - Number(a.free) || a.excess - b.excess || b.rec.quality - a.rec.quality ||
+          (tieRank ? tieRank(a.rec) - tieRank(b.rec) : a.t.cost - b.t.cost || a.rec.id - b.rec.id));
       if (!ok.length) continue;
       menu = ok[0].trial; current = ok[0].t; added = true;
     }
@@ -277,6 +293,11 @@ export function planMeals(input, prices, recipes) {
   const { budget, people } = input;
   const days = Math.max(1, input.days || 7);
   const kitchen = setup(input, prices, recipes);
+  // Variety across plans: a seed draws among equally good meals; meals from the person's last saved plan
+  // (input.recent, read on their phone only) go to the back of each tie, so a returning family sees new meals.
+  const seed = Number.isInteger(input.seed) ? input.seed : null;
+  const recent = new Set(Array.isArray(input.recent) ? input.recent : []);
+  const tieRank = r => (recent.has(r.id) ? 1 : 0) + (seed === null ? 0 : drawOrder(seed, r.id));
   const pools = Object.fromEntries(SLOTS.map(sl => [sl, kitchen.prepared.filter(r => r.slots.includes(sl))
     // Cheapest calories first (the calorie floor comes before fullness, as in the original engine).
     .sort((a, b) => a.cost / Math.max(a.kcal, 1) - b.cost / Math.max(b.kcal, 1) || b.quality - a.quality || a.id - b.id)]));
@@ -286,7 +307,7 @@ export function planMeals(input, prices, recipes) {
   // Build for d days; if the cheapest menu costs more than the budget, cover fewer days.
   // cap: false skips the ingredient-spread swaps (used only when the spread can't be afforded).
   // fixed: use this menu as is (to stretch a chosen menu over more days).
-  const attempt = (d, size = MENU_SIZE, { cap = true, fixed = null } = {}) => {
+  const attempt = (d, size = MENU_SIZE, { cap = true, fixed = null, margin = 0 } = {}) => {
     const { occ, isLeftover } = schedule(d, people, input.leftover);
     const count = sl => occ.filter(o => o.slot === sl).length;
     const want = sl => Math.min(size[sl], count(sl));
@@ -311,12 +332,17 @@ export function planMeals(input, prices, recipes) {
         for (const sl of SLOTS) {
           if (menu[sl].length !== round || round >= want(sl)) continue;
           let best = null, bestScore = Infinity;
+          const scored = [];
           for (const r of pools[sl]) {
             // No recipe in two slots, and no two meals that are the same dish under another name (same foods).
             if (used.has(r.id) || sigs.has(r.sig)) continue;
             const s = priceIn(r, sl, basket);
             if (s < bestScore - 1e-12) { best = r; bestScore = s; }
+            if (margin) scored.push([r, s]);
           }
+          // Equally good (within the price margin): drawn at random, last saved plan's meals last.
+          if (margin && best) best = scored.filter(([, s]) => s <= bestScore * (1 + margin) + 1e-12)
+            .sort((a, b) => tieRank(a[0]) - tieRank(b[0]))[0][0];
           if (!best) continue;
           menu[sl].push(best); used.add(best.id); sigs.add(best.sig);
           for (const u of best.uses) basket.add(u.id);
@@ -358,8 +384,10 @@ export function planMeals(input, prices, recipes) {
         const t = topUp(kitchen, a, { people, days: d, budget });
         return [0, ex, Math.max(0, target - t.kcal), t.cost];
       };
+      // Cost differences within the price margin aren't real differences, so they don't undo the draw.
       const TOL = [1e-9, 0, 1, 0.005];
-      const better = (a, b) => { for (let k = 0; k < a.length; k++) { if (a[k] < b[k] - TOL[k]) return true; if (a[k] > b[k] + TOL[k]) return false; } return false; };
+      const tol = (k, b) => (k === 3 && margin ? Math.max(TOL[3], b[3] * margin) : TOL[k]);
+      const better = (a, b) => { for (let k = 0; k < a.length; k++) { if (a[k] < b[k] - tol(k, b)) return true; if (a[k] > b[k] + tol(k, b)) return false; } return false; };
       let cur = score(menu);
       for (let pass = 0; pass < SWAP_PASSES; pass++) {
         let best = null;
@@ -393,7 +421,9 @@ export function planMeals(input, prices, recipes) {
   const fit = dd => {
     const target = FLOOR_KCAL * people * dd, fits = [];
     search: for (const size of SMALLER) for (const cap of [true, false]) {
-      const p = attempt(dd, size, { cap });
+      // The draw among equal meals first; if that menu doesn't fit the budget, the cheapest choice (value first).
+      let p = attempt(dd, size, { cap, margin: seed === null ? 0 : PRICE_MARGIN });
+      if (p.base > budget && seed !== null) p = attempt(dd, size, { cap });
       if (p.base > budget) continue;
       p.kcal = p.total(p.menu).kcal;
       fits.push(p);
@@ -439,16 +469,21 @@ export function planMeals(input, prices, recipes) {
       if (t.cost > budget || t.kcal < Math.min(current.kcal, FLOOR_KCAL * people * d)) continue;
       if (current.fruit && !t.fruit) continue; // a better meal never costs the daily fruit
       const gain = (mealQuality(trial) - q0) / Math.max(t.cost - current.cost, 0.25);
+      if (seed !== null) { (best ||= { all: [] }).all.push({ trial, t, gain, rank: tieRank(cand) }); continue; }
       if (!best || gain > best.gain) best = { trial, t, gain };
     }
     if (!best) break;
+    if (seed !== null) {
+      const top = Math.max(...best.all.map(x => x.gain));
+      best = best.all.filter(x => x.gain >= top * (1 - PRICE_MARGIN)).sort((a, b) => a.rank - b.rank)[0];
+    }
     menu = best.trial; current = best.t;
   }
 
   // Free variety (principle 6): if a smaller menu was needed, add back meals made only from foods already
   // on the list or at home, best first, while the plan stays within budget and keeps its calories
   // (within VARIETY_KCAL_GIVE). Rotation means no meal on two days running in a slot with 2+ meals.
-  ({ menu, current } = addVariety({ pools, plan, menu, current, budget, size: first, haveIds, target: FLOOR_KCAL * people * d }));
+  ({ menu, current } = addVariety({ pools, plan, menu, current, budget, size: first, haveIds, target: FLOOR_KCAL * people * d, tieRank: seed === null ? null : tieRank }));
   const varietyEnd = { pools, plan, menu, current, haveIds, size: first, target: FLOOR_KCAL * people * d };
 
   let assigned = plan.assign(menu);
@@ -472,7 +507,8 @@ export function planMeals(input, prices, recipes) {
   const inMenu = new Set(SLOTS.flatMap(sl => menu[sl].map(r => r.id)));
   const altFor = {};
   for (const sl of SLOTS) for (const r of menu[sl]) {
-    const others = pools[sl].filter(c => c.id !== r.id).sort((a, b) => Number(inMenu.has(a.id)) - Number(inMenu.has(b.id)) || b.quality - a.quality || a.cost - b.cost);
+    const others = pools[sl].filter(c => c.id !== r.id).sort((a, b) => Number(inMenu.has(a.id)) - Number(inMenu.has(b.id)) || b.quality - a.quality ||
+      (seed === null ? a.cost - b.cost : tieRank(a) - tieRank(b)));
     for (const c of others) {
       const swapped = assigned.map(x => (x.slot === sl && x.rec.id === r.id ? { ...x, rec: c } : x));
       if (capExcess(swapped).excess > capExcess(assigned).excess) continue;

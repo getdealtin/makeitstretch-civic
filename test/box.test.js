@@ -21,7 +21,7 @@ test('the box picker only offers real foods that some recipe can use', () => {
 });
 
 test('multi-word ingredients match (canned tomatoes, peanut butter)', () => {
-  const m = matchBox(RECIPES, ['cannedtomatoes', 'peanutbutter'], { limit: 100 });
+  const m = matchBox(RECIPES, ['cannedtomatoes', 'onions', 'garlic', 'oil', 'peanutbutter'], { limit: 100 });
   assert.ok(m.some(x => x.uses.includes('canned tomatoes')));
   assert.ok(m.some(x => x.uses.includes('peanut butter')));
 });

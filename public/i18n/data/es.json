@@ -248,7 +248,7 @@
   "soy": {
    "name": "Salsa de soya",
    "full": "Salsa de soya (10 oz)",
-   "note": "Transforma cualquier plato de arroz o fideos al instante."
+   "note": "Transforma cualquier plato de arroz o fideos. La mayoría de la salsa de soya tiene trigo; el tamari es un tipo sin trigo."
   },
   "hotsauce": {
    "name": "Salsa picante",
@@ -414,6 +414,56 @@
    "name": "Carne molida de pavo magra",
    "full": "Carne molida de pavo magra (1 lb)",
    "note": "Magra. Sirve para todo lo que haría con carne molida de res."
+  },
+  "catfish": {
+   "name": "Bagre",
+   "full": "Filetes de bagre congelados (1 lb)",
+   "note": "Suave y rápido. Cúbralo con harina de maíz y fríalo, o al horno."
+  },
+  "kimchi": {
+   "name": "Kimchi",
+   "full": "Kimchi (frasco de 16 oz)",
+   "note": "Repollo fermentado picante. La mayoría lleva salsa de pescado; el kimchi vegano lo dice en la etiqueta."
+  },
+  "feta": {
+   "name": "Queso feta",
+   "full": "Queso feta desmoronado (6 oz)",
+   "note": "Salado y ácido. Con poquito basta."
+  },
+  "tofu": {
+   "name": "Tofu firme",
+   "full": "Tofu firme (14 oz)",
+   "note": "Quítele el agua apretándolo y fríalo o saltéelo. Una proteína vegetal barata."
+  },
+  "favabeans": {
+   "name": "Habas en lata",
+   "full": "Habas en lata (15 oz)",
+   "note": "También se venden como “ful”. La base del ful medames."
+  },
+  "blackeyedpeas": {
+   "name": "Frijoles carita",
+   "full": "Frijoles carita secos (1 lb)",
+   "note": "No hace falta remojarlos. Se cuecen en como una hora."
+  },
+  "biscuits": {
+   "name": "Biscuits refrigerados",
+   "full": "Biscuits refrigerados (lata de 16 oz, 8 piezas)",
+   "note": "Se hornean directo de la lata en unos 15 minutos."
+  },
+  "pita": {
+   "name": "Pan pita",
+   "full": "Pan pita (6 piezas)",
+   "note": "Caliéntelo o tuéstelo. Bueno para comer frijoles y en ensaladas."
+  },
+  "lemons": {
+   "name": "Limones amarillos",
+   "full": "Limones amarillos (2)",
+   "note": "Un chorrito le da vida al pescado, los frijoles y las ensaladas."
+  },
+  "groundpork": {
+   "name": "Carne de cerdo molida",
+   "full": "Carne de cerdo molida (1 lb)",
+   "note": "Dórela con ajo para fideos, o sazónela como chorizo para el desayuno."
   }
  },
  "tips": {
@@ -500,7 +550,85 @@
   "avocado": "aguacate",
   "raisins": "pasas",
   "cornflakes": "hojuelas de maíz",
-  "bread crumbs": "pan molido"
+  "bread crumbs": "pan molido",
+  "catfish": "bagre",
+  "kimchi": "kimchi",
+  "feta": "queso feta",
+  "fava beans": "habas",
+  "black-eyed peas": "frijoles carita",
+  "biscuits": "biscuits refrigerados",
+  "pita": "pan pita",
+  "lemon": "limón amarillo",
+  "ground pork": "carne de cerdo molida",
+  "red beans": "frijoles rojos",
+  "spinach": "espinacas",
+  "cucumber": "pepino",
+  "zucchini": "calabacita",
+  "baking powder": "polvo para hornear",
+  "turmeric": "cúrcuma",
+  "cumin": "comino",
+  "curry powder": "curry en polvo",
+  "paprika": "pimentón",
+  "sugar": "azúcar",
+  "chipotle peppers in adobo": "chiles chipotles en adobo",
+  "miso": "miso",
+  "black pepper": "pimienta negra",
+  "sumac": "zumaque (sumac)",
+  "garam masala": "garam masala",
+  "gochujang": "gochujang (pasta coreana de chile)",
+  "chili oil": "aceite de chile",
+  "Sichuan peppercorns": "pimienta de Sichuan",
+  "ajicitos": "ajicitos (ajíes dulces)",
+  "allspice": "pimienta gorda",
+  "annatto paste": "pasta de achiote",
+  "basil": "albahaca",
+  "bay leaves": "hojas de laurel",
+  "beef broth": "caldo de res",
+  "black peppercorns": "pimienta negra en grano",
+  "brown sugar": "azúcar morena",
+  "capers": "alcaparras",
+  "cayenne pepper": "pimienta de cayena",
+  "chicken bouillon": "consomé de pollo en polvo",
+  "chicken broth": "caldo de pollo",
+  "chili powder": "chile en polvo",
+  "cilantro": "cilantro",
+  "cooking spray": "aceite en aerosol",
+  "coriander": "cilantro en polvo (coriandro)",
+  "dried hot pepper": "chile seco",
+  "dry mustard": "mostaza en polvo",
+  "garlic powder": "ajo en polvo",
+  "ginger": "jengibre",
+  "green chilis": "chiles verdes",
+  "green onions": "cebollitas de cambray",
+  "ground ginger": "jengibre en polvo",
+  "honey": "miel",
+  "hot pepper": "chile picante",
+  "hot sauce": "salsa picante",
+  "ketchup": "cátsup",
+  "lemon juice": "jugo de limón amarillo",
+  "lime": "limón",
+  "lime juice": "jugo de limón",
+  "molasses": "melaza",
+  "mustard": "mostaza",
+  "nutmeg": "nuez moscada",
+  "olives": "aceitunas",
+  "onion powder": "cebolla en polvo",
+  "orange rind": "cáscara de naranja",
+  "oregano": "orégano",
+  "parsley": "perejil",
+  "pepper": "pimienta",
+  "poultry seasoning": "sazonador para aves",
+  "red pepper flakes": "hojuelas de chile rojo",
+  "red wine vinegar": "vinagre de vino tinto",
+  "scallion": "cebollita de cambray",
+  "scallions": "cebollitas de cambray",
+  "thyme": "tomillo",
+  "tomato paste": "pasta de tomate",
+  "vegetable bouillon": "consomé de verduras en polvo",
+  "vegetable broth": "caldo de verduras",
+  "vinegar": "vinagre",
+  "white pepper": "pimienta blanca",
+  "worcestershire sauce": "salsa inglesa"
  },
  "recipes": {
   "1": {
@@ -517,7 +645,7 @@
   },
   "4": {
    "title": "Panqueques",
-   "instructions": "Mezcle harina, huevos, leche y una pizca de sal hasta tener una masa lisa. Caliente un sartén con mantequilla. Vierta 1/4 de taza de masa por panqueque. Cocine hasta que salgan burbujas, voltee y cocine 1 minuto más."
+   "instructions": "Mezcle la harina, 2 cucharaditas de polvo para hornear y una pizca de sal. Agregue los huevos y la leche y bata hasta que no haya grumos. Caliente un sartén con mantequilla. Vierta 1/4 de taza de mezcla por panqueque. Cocine hasta que salgan burbujas, voltee y cocine 1 minuto más."
   },
   "5": {
    "title": "Huevo frito con papas ralladas doradas",
@@ -637,7 +765,7 @@
   },
   "34": {
    "title": "Plátano frito con huevo",
-   "instructions": "Corte el plátano en rodajas gruesas. Fríalo en aceite hasta que dore. Fría los huevos al lado. Sirva juntos."
+   "instructions": "Pele el plátano macho maduro (amarillo con manchas negras) y córtelo en rodajas gruesas y en diagonal. Fríalo en aceite a fuego medio hasta que dore por ambos lados, unos 3 minutos por lado. Fría los huevos al lado. Sirva todo junto con una pizca de sal."
   },
   "35": {
    "title": "Tortilla de maíz con frijoles",
@@ -725,7 +853,7 @@
   },
   "56": {
    "title": "Dal de lentejas",
-   "instructions": "Fría la cebolla hasta que dore. Agregue el ajo y cocine 1 minuto. Agregue lentejas, tomates y agua hasta cubrir. Cocine a fuego lento 20 minutos hasta que las lentejas se deshagan en la salsa. Sazone. Sirva sobre arroz."
+   "instructions": "Fría la cebolla hasta que dore. Agregue el ajo, 1/2 cucharadita de cúrcuma y 1 cucharadita de comino, y cocine 1 minuto. Agregue las lentejas, los tomates y agua hasta cubrir. Deje hervir a fuego lento 20 minutos, hasta que las lentejas se deshagan en la salsa. Sazone. Sirva sobre arroz."
   },
   "57": {
    "title": "Repollo salteado con huevo",
@@ -745,7 +873,7 @@
   },
   "61": {
    "title": "Khichdi (arroz con lentejas)",
-   "instructions": "Lave juntos el arroz y las lentejas. Fría la cebolla y el ajo en aceite hasta que doren. Agregue el arroz y las lentejas y revuelva. Agregue 4 tazas de agua y sal. Tape y cocine a fuego bajo 25 minutos."
+   "instructions": "Lave el arroz y las lentejas juntos. Fría la cebolla y el ajo en aceite hasta que doren y luego agregue 1 cucharadita de comino y 1/2 cucharadita de cúrcuma. Agregue el arroz y las lentejas y revuelva para cubrirlos. Agregue 4 tazas de agua y sal. Tape y cocine a fuego bajo 25 minutos."
   },
   "62": {
    "title": "Pollo con soya y ajo",
@@ -753,7 +881,7 @@
   },
   "63": {
    "title": "Curry de lentejas con coco",
-   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue los tomates y cocine 5 minutos. Agregue las lentejas y la leche de coco. Cocine a fuego lento 20 minutos. Sazone bien. Sirva con arroz."
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue 1 cucharada de curry en polvo y cocine 1 minuto. Agregue los tomates y cocine 5 minutos. Agregue las lentejas y la leche de coco. Deje hervir a fuego lento 20 minutos. Sazone bien. Sirva con arroz."
   },
   "64": {
    "title": "Sopa de fideos",
@@ -769,11 +897,11 @@
   },
   "67": {
    "title": "Aloo sabzi (papas al estilo indio)",
-   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue la papa en cubitos y revuelva. Agregue tomates y un poco de agua. Tape y cocine 20 minutos hasta que las papas estén suaves. Sazone bien."
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue 1 cucharadita de comino y 1/2 cucharadita de cúrcuma. Agregue la papa en cubitos y revuelva para cubrirla. Agregue los tomates y un poco de agua. Tape y cocine 20 minutos, hasta que las papas estén suaves. Sazone bien."
   },
   "68": {
    "title": "Dal de camote y lentejas",
-   "instructions": "Fría la cebolla y el ajo. Agregue el camote en cubos y las lentejas. Cubra con agua. Cocine a fuego lento 20 minutos. Agregue la leche de coco. Cocine 5 minutos más. Sirva con arroz."
+   "instructions": "Fría la cebolla y el ajo y luego agregue 1 cucharadita de comino y 1/2 cucharadita de cúrcuma. Agregue el camote en cubos y las lentejas. Cubra con agua. Deje hervir a fuego lento 20 minutos. Agregue la leche de coco. Cocine 5 minutos más. Sazone. Sirva con arroz."
   },
   "69": {
    "title": "Grits con huevo",
@@ -805,7 +933,7 @@
   },
   "76": {
    "title": "Pan de maíz con frijoles",
-   "instructions": "Haga el pan de maíz: mezcle harina de maíz, huevo y leche. Vierta en un molde con aceite y hornee a 400 °F por 20 minutos. Caliente los frijoles con cebolla frita. Sirva juntos."
+   "instructions": "Haga el pan de maíz: mezcle la harina de maíz, 2 cucharaditas de polvo para hornear y una pizca de sal, y luego agregue el huevo y la leche. Vierta en un molde engrasado y hornee a 400 °F unos 20 minutos, hasta que dore. Caliente los frijoles con cebolla frita. Sirva todo junto."
   },
   "77": {
    "title": "Guiso de cerdo con frijoles",
@@ -813,15 +941,15 @@
   },
   "78": {
    "title": "Pollo con pan de maíz",
-   "instructions": "Sazone el pollo y hornéelo a 400 °F por 35 minutos. Haga la masa del pan de maíz con harina de maíz, huevo y leche. Hornéela al lado en un molde con aceite los últimos 20 minutos."
+   "instructions": "Sazone el pollo y hornéelo a 400 °F por 35 minutos. Mezcle la harina de maíz, 2 cucharaditas de polvo para hornear y una pizca de sal, y luego agregue el huevo y la leche. Vierta en un molde engrasado y hornéelo junto al pollo los últimos 20 minutos."
   },
   "79": {
    "title": "Hoppin' John (frijoles con arroz del sur)",
-   "instructions": "Remoje los frijoles toda la noche. Escúrralos. Cocínelos con cebolla y ajo hasta que estén muy suaves, unos 90 minutos. Sazone. Sirva los frijoles con su caldo sobre arroz cocido."
+   "instructions": "Enjuague los frijoles carita (no hace falta remojarlos). Fría la cebolla y el ajo en aceite, agregue los frijoles y agua que los cubra por 2 pulgadas. Deje hervir a fuego lento hasta que estén suaves, como 1 hora. Sazone. Sirva los frijoles con un poco de su caldo sobre arroz cocido."
   },
   "80": {
    "title": "Bagre frito con grits",
-   "instructions": "Prepare grits cremosos con leche y mantequilla. Sazone el filete de pescado. Cúbralo con harina de maíz. Fríalo en aceite hasta que esté dorado y bien cocido. Sirva sobre los grits."
+   "instructions": "Haga grits cremosos: agregue la harina de maíz poco a poco a leche y agua con sal que estén hirviendo suavemente, revuelva seguido de 15 a 20 minutos y luego agregue la mantequilla. Sazone los filetes de bagre con sal y cúbralos con harina de maíz. Fríalos en aceite a fuego medio de 3 a 4 minutos por lado, hasta que doren y el pescado se deshaga fácilmente. Sirva sobre los grits."
   },
   "81": {
    "title": "Pollo con camote al horno",
@@ -881,7 +1009,7 @@
   },
   "95": {
    "title": "Pescado al horno con limón",
-   "instructions": "Ponga el pescado en un molde. Vierta encima tomates y ajo. Rocíe aceite de oliva. Sazone. Hornee a 375 °F por 20 minutos hasta que el pescado se deshaga fácilmente."
+   "instructions": "Ponga los filetes de pescado en un refractario. Cúbralos con los tomates y el ajo, rocíe aceite de oliva y sazone. Hornee a 375 °F de 15 a 20 minutos, hasta que el pescado se deshaga fácilmente. Exprima limón encima al servir."
   },
   "96": {
    "title": "Garbanzos con verduras al horno",
@@ -901,7 +1029,7 @@
   },
   "100": {
    "title": "Shakshuka (huevos en salsa de tomate)",
-   "instructions": "Fría la cebolla y el ajo en aceite hasta que estén suaves. Agregue los tomates, sazone y cocine a fuego lento 10 minutos hasta que espese. Haga huecos en la salsa. Rompa los huevos en los huecos. Tape y cocine hasta que cuajen las claras pero las yemas sigan suaves. Sirva en el sartén con pan."
+   "instructions": "Fría la cebolla y el ajo en aceite hasta que se ablanden. Agregue 1 cucharadita de comino y 1 de pimentón. Agregue los tomates, sazone y deje hervir a fuego lento 10 minutos, hasta que espese. Haga huecos en la salsa. Rompa los huevos en los huecos. Tape y cocine hasta que las claras cuajen y las yemas sigan suaves. Sirva en el sartén con pan."
   },
   "101": {
    "title": "Avena sencilla",
@@ -949,7 +1077,7 @@
   },
   "112": {
    "title": "Arroz con leche",
-   "instructions": "Cocine el arroz en leche a fuego lento 20 minutos, revolviendo seguido. Agregue plátano en rodajas. Sazone con canela y una pizca de sal para equilibrar."
+   "instructions": "Cocine el arroz en la leche a fuego lento 20 minutos, revolviendo seguido. Agregue azúcar al gusto, canela y una pizca de sal. Sirva con rodajas de plátano encima."
   },
   "113": {
    "title": "Tazón de frijoles con huevo",
@@ -969,7 +1097,7 @@
   },
   "117": {
    "title": "Caldo tlalpeño",
-   "instructions": "Cocine el pollo a fuego lento con cebolla, ajo y sal 30 minutos. Sáquelo y deshébrelo. Agregue frijoles y zanahorias al caldo. Cocine 15 minutos. Regrese el pollo. Sazone bien."
+   "instructions": "Hierva el pollo a fuego lento con cebolla, ajo y sal por 30 minutos. Sáquelo y desmenúcelo. Licúe los tomates con 1 o 2 chiles chipotles y agréguelos al caldo. Agregue los garbanzos y las zanahorias. Cocine 15 minutos. Regrese el pollo. Sazone bien."
   },
   "118": {
    "title": "Frijoles charros",
@@ -981,15 +1109,15 @@
   },
   "120": {
    "title": "Sopa de huevo estilo miso",
-   "instructions": "Hierva agua con cebolla picada y salsa de soya para hacer el caldo. Bata los huevos. Viértalos despacio en el caldo hirviendo a fuego lento mientras revuelve para formar hebras de huevo. Sazone."
+   "instructions": "Hierva agua con cebolla picada a fuego lento 5 minutos. Baje el fuego y disuelva el miso (que no hierva fuerte). Bata los huevos y viértalos poco a poco en el caldo caliente, revolviendo, para que se formen hebras. Agregue un chorrito de salsa de soya al gusto."
   },
   "121": {
    "title": "Flan salado de huevo al vapor",
-   "instructions": "Bata los huevos con la misma cantidad de agua y salsa de soya. Cuélelos en un tazón. Cocínelos al vapor sobre agua hirviendo a fuego lento 12 minutos hasta que apenas cuajen. Rocíe aceite al servir."
+   "instructions": "Bata los huevos con una pizca de sal y como una vez y media su volumen de agua tibia. Cuélelos en un tazón resistente al calor. Cocínelos al vapor sobre agua que hierva suavemente unos 12 minutos, hasta que apenas cuajen. Sirva con un chorrito de salsa de soya y un poco de aceite."
   },
   "122": {
    "title": "Pollo estilo teriyaki",
-   "instructions": "Mezcle salsa de soya con ajo. Marine el pollo 30 minutos. Fríalo en aceite a fuego medio hasta que esté bien cocido, bañándolo con la marinada. Se carameliza muy bonito. Sirva sobre arroz con cebolla frita."
+   "instructions": "Mezcle la salsa de soya, 1 cucharada de azúcar y el ajo. Marine el pollo 30 minutos. Fríalo en aceite a fuego medio hasta que esté bien cocido, bañándolo con la marinada hasta que se caramelice. Sirva sobre arroz con cebolla frita."
   },
   "123": {
    "title": "Congee con acompañamientos",
@@ -1001,7 +1129,7 @@
   },
   "125": {
    "title": "Biscuits con gravy",
-   "instructions": "Haga los biscuits: mezcle harina y sal, integre mantequilla fría en pedacitos, agregue leche y mezcle apenas. Aplane la masa y córtela en círculos. Hornee a 450 °F por 12 minutos. Haga un gravy sencillo: fría la cebolla en aceite, agregue harina y luego leche poco a poco, batiendo. Sazone. Sirva los biscuits bañados en gravy."
+   "instructions": "Hornee los biscuits como dice la lata. Dore la carne de cerdo molida en un sartén, desmenuzándola. Espolvoree la harina y revuelva 1 minuto. Incorpore la leche poco a poco, batiendo, y deje hervir suavemente, revolviendo, hasta que espese, unos 5 minutos. Sazone bien con sal y pimienta negra. Abra los biscuits y sírvales el gravy encima."
   },
   "126": {
    "title": "Atole de grits",
@@ -1013,7 +1141,7 @@
   },
   "128": {
    "title": "Frijoles rojos con arroz",
-   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue los frijoles remojados y escurridos, y agua hasta cubrir. Cocine 2 horas hasta que estén muy suaves. Sazone. Sirva sobre arroz. Machaque algunos frijoles contra la olla para una salsa cremosa."
+   "instructions": "Remoje los frijoles rojos toda la noche. Fría la cebolla, el apio, el pimiento y el ajo en aceite hasta que se ablanden. Agregue los frijoles escurridos y agua hasta cubrir. Deje hervir a fuego lento unas 2 horas, hasta que estén muy suaves, machacando algunos contra la olla para que la salsa quede cremosa. Sazone. Sirva sobre arroz."
   },
   "129": {
    "title": "Pollo en gravy",
@@ -1025,11 +1153,11 @@
   },
   "131": {
    "title": "Fattoush (ensalada con pan tostado)",
-   "instructions": "Tueste o fría pan duro hasta que esté crujiente. Mézclelo con tomate y cebolla en cubitos. Aderece con bastante aceite y ajo. Deje que el pan se remoje un poco antes de servir."
+   "instructions": "Tueste o fría el pan pita hasta que esté crujiente y pártalo en pedazos. Pique tomate fresco, pepino y cebolla. Bata aceite de oliva, jugo de limón, ajo picado, sal y una cucharada de zumaque (sumac). Mezcle todo justo antes de comer."
   },
   "132": {
    "title": "Ful medames (habas al estilo egipcio)",
-   "instructions": "Cocine habas cocidas a fuego lento con ajo y tomates hasta que espesen mucho. Sazone bien. Rocíe con aceite de oliva. Sirva con pan. Es un desayuno típico de Egipto."
+   "instructions": "Caliente las habas en su líquido con el ajo, machacando algunas. Sazone con comino y sal. Termine con jugo de limón y un buen chorro de aceite de oliva. Sirva con pan. Un desayuno básico en Egipto."
   },
   "133": {
    "title": "Pasta con garbanzos",
@@ -1041,23 +1169,23 @@
   },
   "135": {
    "title": "Huevos revueltos con verduras de hoja",
-   "instructions": "Sofría la cebolla y el ajo. Agregue las verduras de hoja que tenga. Bata los huevos y viértalos encima. Cocine despacio, revolviendo hasta que apenas cuajen. Sazone. Huevos revueltos al estilo mediterráneo."
+   "instructions": "Sofría la cebolla y el ajo en aceite de oliva. Agregue la espinaca descongelada y bien exprimida, y cocine 2 minutos. Bata los huevos y viértalos encima. Cocine despacio, revolviendo, hasta que apenas cuajen. Agregue el queso feta desmoronado. Espinaca y feta son los sabores de la spanakopita, el pastel griego."
   },
   "136": {
    "title": "Lentejas estilo dal makhani",
-   "instructions": "Cocine las lentejas hasta que estén muy suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y cocine 10 minutos. Agregue las lentejas y cocine a fuego lento 20 minutos. Al final agregue mantequilla para darle cremosidad."
+   "instructions": "Remoje los frijoles rojos toda la noche y cocínelos con las lentejas hasta que estén muy suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y 1 cucharadita de garam masala, y cocine 10 minutos. Agregue las lentejas y los frijoles, y deje hervir a fuego lento 20 minutos. Al final agregue la mantequilla para darle cremosidad."
   },
   "137": {
    "title": "Tazón estilo bibimbap",
-   "instructions": "Cocine el arroz. Aparte, sofría zanahorias y cebolla. Fría un huevo estrellado. Acomode las verduras y el huevo sobre el arroz. Rocíe salsa de soya. Mezcle todo antes de comer."
+   "instructions": "Cocine el arroz. Aparte, sofría las zanahorias y la cebolla, y luego la espinaca descongelada con un poco de salsa de soya. Fría un huevo estrellado. Acomode las verduras y el huevo sobre el arroz. Ponga encima una cucharada de gochujang (pasta coreana de chile). Mezcle todo antes de comer."
   },
   "138": {
    "title": "Arroz frito estilo kimchi",
-   "instructions": "Fría repollo en tiras en aceite a fuego alto hasta que se ablande y se dore un poco. Agregue arroz frío y saltéelo aplastándolo. Sazone con bastante salsa de soya. Cubra con un huevo frito."
+   "instructions": "Pique el kimchi. Fríalo con la cebolla en aceite a fuego alto 2 minutos. Agregue arroz frío y saltee, presionando hacia abajo. Sazone con salsa de soya y un poco del jugo del kimchi. Ponga un huevo frito encima."
   },
   "139": {
    "title": "Avena masala (salada, estilo indio)",
-   "instructions": "Fría la cebolla y las zanahorias en aceite 3 minutos. Agregue la avena. Cubra con agua. Cocine 5 minutos hasta que la avena esté suave y la mezcla espesa. Sazone con sal y la especia que tenga."
+   "instructions": "Fría la cebolla y las zanahorias en aceite 3 minutos y luego agregue 1/2 cucharadita de garam masala. Agregue la avena. Cubra con agua. Cocine 5 minutos, hasta que la avena esté suave y la mezcla espesa. Sazone con sal."
   },
   "140": {
    "title": "Upma (estilo indio)",
@@ -1065,11 +1193,11 @@
   },
   "141": {
    "title": "Curry de garbanzos",
-   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue los tomates y cocine 8 minutos aplastándolos. Agregue los garbanzos y cocine 15 minutos hasta que la salsa espese y los cubra. Sazone bien. Sirva con arroz o pan."
+   "instructions": "Fría la cebolla y el ajo hasta que doren. Agregue 1 cucharada de curry en polvo y cocine 1 minuto. Agregue los tomates y cocine 8 minutos, aplastándolos. Agregue los garbanzos y cocine 15 minutos, hasta que la salsa espese y los cubra. Sazone bien. Sirva con arroz o pan."
   },
   "142": {
    "title": "Dal con espinaca (palak dal)",
-   "instructions": "Cocine las lentejas hasta que estén suaves. Fría la cebolla y el ajo hasta que estén bien dorados. Agregue los tomates y cocine 5 minutos. Viértalo sobre las lentejas. Cocine todo junto a fuego lento 10 minutos. Sazone. Agregue las verduras de hoja que tenga."
+   "instructions": "Cocine las lentejas con 1/2 cucharadita de cúrcuma hasta que estén suaves. Fría la cebolla y el ajo con 1 cucharadita de comino hasta que estén bien dorados. Agregue los tomates y cocine 5 minutos. Agregue la espinaca descongelada y cocine 2 minutos. Mézclelo con las lentejas. Deje hervir todo junto a fuego lento 10 minutos. Sazone. Sirva con arroz o pan."
   },
   "143": {
    "title": "Tortilla española",
@@ -1077,7 +1205,7 @@
   },
   "144": {
    "title": "Pisto (guiso español de tomate)",
-   "instructions": "Fría la cebolla y el ajo. Agregue los tomates y cocine a fuego lento 20 minutos hasta que espese. Sazone. Sírvalo como salsa o rompa huevos en la salsa y cocínelos hasta que cuajen."
+   "instructions": "Sofría la cebolla, el ajo y el pimiento en cubitos en aceite hasta que se ablanden, unos 8 minutos. Agregue la calabacita en cubitos y cocine 5 minutos. Agregue los tomates y deje hervir a fuego lento 15 minutos hasta que espese. Sazone. Sírvalo así, o rompa huevos encima y cocine hasta que cuajen."
   },
   "145": {
    "title": "Acquacotta (sopa italiana con pan y huevo)",
@@ -1085,7 +1213,7 @@
   },
   "146": {
    "title": "Sopa de frijol de ojo negro",
-   "instructions": "Fría la cebolla y el ajo en aceite hasta que estén suaves. Agregue los tomates y cocine 5 minutos. Agregue frijoles de ojo negro y agua hasta cubrir. Cocine a fuego lento 20 minutos hasta que espese y quede cremosa. Sazone bien con sal y pimienta. Sirva con pan de maíz si tiene."
+   "instructions": "Fría la cebolla y el ajo en aceite hasta que se ablanden. Agregue los tomates y cocine 5 minutos. Agregue los frijoles carita enjuagados (no hace falta remojarlos) y agua que los cubra por 2 pulgadas. Deje hervir a fuego lento como 1 hora, hasta que estén suaves y la sopa quede espesa y cremosa. Sazone bien."
   },
   "147": {
    "title": "Sopa de camote",
@@ -1097,7 +1225,7 @@
   },
   "149": {
    "title": "Sopa Hoppin' John",
-   "instructions": "Fría la cebolla y el ajo en aceite hasta que doren. Agregue frijoles de ojo negro y agua hasta cubrir. Cocine a fuego lento 15 minutos. Agregue arroz cocido y suficiente agua para una sopa espesa. Sazone bien. El arroz espesa el caldo al reposar."
+   "instructions": "Fría la cebolla y el ajo en aceite hasta que doren. Agregue los frijoles carita enjuagados (no hace falta remojarlos) y agua que los cubra por 2 pulgadas. Deje hervir a fuego lento como 1 hora, hasta que estén suaves. Agregue arroz cocido y agua suficiente para una sopa espesa. Sazone bien. El arroz espesa el caldo mientras reposa."
   },
   "150": {
    "title": "Papas en gravy",
@@ -1141,11 +1269,11 @@
   },
   "160": {
    "title": "Sopa estilo miso con arroz",
-   "instructions": "Caliente agua con salsa de soya para hacer el caldo. Agregue cebolla picada y cocine 5 minutos. Si usa tofu, agréguelo en cubos. Bata los huevos y viértalos despacio en el caldo hirviendo a fuego lento, revolviendo para formar hebras. Sirva sobre arroz al vapor o al lado. Sazone."
+   "instructions": "Hierva agua con cebolla picada a fuego lento 5 minutos. Agregue el tofu en cubos. Baje el fuego y disuelva el miso (que no hierva fuerte). Bata los huevos y agréguelos poco a poco, revolviendo, para que se formen hebras. Sirva con arroz al vapor."
   },
   "161": {
    "title": "Fideos dan dan",
-   "instructions": "Cocine los fideos hasta que estén suaves. Mezcle crema de cacahuate, salsa de soya, ajo y aceite con agua caliente para hacer una salsa espesa. Ralle las zanahorias. Escurra los fideos. Mézclelos con la salsa y las zanahorias. Agregue más agua caliente si la salsa queda muy espesa. Sirva tibio o a temperatura ambiente."
+   "instructions": "Dore la carne de cerdo molida con ajo y un chorrito de salsa de soya hasta que quede crujiente. Cocine los fideos. Mezcle la crema de cacahuate, la salsa de soya, el aceite de chile y una pizca de pimienta de Sichuan molida con un poco del agua caliente de los fideos para hacer la salsa. Mezcle los fideos con la salsa y ponga la carne encima. La crema de cacahuate reemplaza la pasta de ajonjolí china."
   },
   "1001": {
    "title": "Pupusas revueltas",
