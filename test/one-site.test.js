@@ -47,7 +47,7 @@ test('the main site\'s help links and every language are filled in', () => {
 test('rollback: ONE_SITE=off shows the old landing page on the bare domain', async () => {
   const child = spawn(process.execPath, ['--input-type=module', '-e',
     "const { default: app } = await import('./server.js'); const s = app.listen(0, () => console.log('PORT ' + s.address().port));"],
-  { env: { ...process.env, ONE_SITE: 'off' }, stdio: ['ignore', 'pipe', 'inherit'] });
+  { env: { ...process.env, ONE_SITE: 'off', DEFAULT_CITY: 'austin', NODE_ENV: 'production' }, stdio: ['ignore', 'pipe', 'inherit'] });
   try {
     const port = await new Promise((ok, no) => {
       let out = '';
@@ -61,6 +61,7 @@ test('rollback: ONE_SITE=off shows the old landing page on the bare domain', asy
     assert.match(await get('austin.makeitstretch.org'), /id="app"/);
     const cfg = JSON.parse(await get('makeitstretch.org', '/api/config'));
     assert.equal(cfg.partner_zips, undefined);
+    assert.equal(cfg.id, 'austin'); // as before Nov 19: the main site's pages used the default city
     assert.equal(JSON.parse(await get('makeitstretch.org', '/api/health')).one_site, false);
   } finally { child.kill(); }
 });
@@ -96,4 +97,29 @@ test('a ZIP code typed later moves that plan\'s or box\'s activity from the main
     assert.deepEqual(austin.map(e => e.event).sort(), ['box_built', 'cant_use']); // this box and its answer moved
     assert.deepEqual(main.map(e => `${e.event}:${e.session_id}`).sort(), [`box_built:${other}`, `page_view:${sid}`]); // the visit before it, and other visits, stay
   } finally { server.close(); }
+});
+
+test('live settings (production, DEFAULT_CITY=austin): makeitstretch.org is the main site, austin. is Austin', async () => {
+  const child = spawn(process.execPath, ['--input-type=module', '-e',
+    "const { default: app } = await import('./server.js'); const s = app.listen(0, () => console.log('PORT ' + s.address().port));"],
+  { env: { ...process.env, ONE_SITE: '', DEFAULT_CITY: 'austin', NODE_ENV: 'production', ALLOW_CITY_OVERRIDE: '' }, stdio: ['ignore', 'pipe', 'inherit'] });
+  try {
+    const port = await new Promise((ok, no) => {
+      let out = '';
+      child.stdout.on('data', d => { out += d; const m = out.match(/PORT (\d+)/); if (m) ok(Number(m[1])); });
+      child.on('exit', () => no(new Error('server exited')));
+    });
+    const get = (host, path) => new Promise((ok, no) => http.get({ port, path, headers: { host } }, res => {
+      let b = ''; res.on('data', c => { b += c; }); res.on('end', () => ok(JSON.parse(b)));
+    }).on('error', no));
+    for (const host of ['makeitstretch.org', 'www.makeitstretch.org']) {
+      const cfg = await get(host, '/api/config');
+      assert.equal(cfg.id, 'national', host);
+      assert.equal(cfg.partner_zips['78702'], 'austin');
+      assert.equal((await get(host, '/api/config?city=austin')).id, 'austin'); // switched by ZIP code
+      assert.equal((await get(host, '/api/config?city=national')).id, 'national');
+    }
+    assert.equal((await get('austin.makeitstretch.org', '/api/config')).id, 'austin');
+    assert.equal((await get('austin.makeitstretch.org', '/api/config?city=national')).id, 'austin'); // no switching on a city's own site
+  } finally { child.kill(); }
 });

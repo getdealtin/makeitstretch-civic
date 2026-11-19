@@ -5,7 +5,9 @@
 // in Render to go back to the old landing page (see README "One site").
 export default {
   id: 'national',
-  hosts: [],
+  // The main site's own addresses (so it is never mistaken for DEFAULT_CITY). With ONE_SITE=off, server.js
+  // gives these hosts DEFAULT_CITY again, exactly as before Nov 19.
+  hosts: ['makeitstretch.org', 'www.makeitstretch.org'],
   name: 'Make It Stretch',
   place: null,
   tagline: 'Turn the grocery money you have into a week of real meals.',

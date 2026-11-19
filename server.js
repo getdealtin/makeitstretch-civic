@@ -46,9 +46,12 @@ app.use(express.json({ limit: '10kb' }));
 
 // Attach the city to every request.
 app.use((req, res, next) => {
-  req.city = resolveCity(req.headers.host, ALLOW_CITY_OVERRIDE ? req.query.city : undefined, DEFAULT_CITY);
+  const override = ALLOW_CITY_OVERRIDE ? req.query.city : undefined;
+  req.city = resolveCity(req.headers.host, override, DEFAULT_CITY);
   // On the main site, a partner city the browser switched to by ZIP code (?city=austin).
   if (ONE_SITE) req.city = partnerFor(req.city, req.query.city) || req.city;
+  // Rollback (ONE_SITE=off): the main site's addresses get DEFAULT_CITY again, as before Nov 19.
+  else if (req.city.id === 'national' && !override) req.city = CITIES[DEFAULT_CITY] || req.city;
   next();
 });
 
