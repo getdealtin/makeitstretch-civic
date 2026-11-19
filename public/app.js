@@ -111,10 +111,11 @@ let city = null;
 
 // ── Install on a phone (owner request, Nov 11 2026) ─────────────
 // The offline helper (/sw.js) keeps what's been opened, so an installed site works without a signal.
-// The "Add to your phone" tip shows once a plan exists (when it's clearly useful), on phones only,
-// never once installed, and never again after "No thanks" (fewer decisions: one small card, once).
+// The "Add to your phone" tip shows inside "Keep this plan" right after "Save on this phone" (owner decision,
+// Nov 19 2026: two "on this phone" cards side by side were confusing), on phones only, never once installed,
+// and never again after "No thanks" (fewer decisions: one small card, once).
 if ('serviceWorker' in navigator && !TESTING) navigator.serviceWorker.register('/sw.js').catch(() => {});
-let installPrompt = null; // Android/Chrome: the browser's own install prompt, saved for our button
+let installPrompt = null, installAfterSave = false; // Android/Chrome: the browser's own install prompt, saved for our button
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; document.querySelector('#install-tip')?.replaceChildren(...installTipNodes()); });
 const INSTALL_DONE = 'mis:install-tip';
 const isInstalled = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
@@ -123,12 +124,11 @@ const installDismissed = () => { try { return localStorage.getItem(INSTALL_DONE)
 // The Share icon (a box with an arrow), drawn for the project.
 const SHARE_ICON = '<svg class="share-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10M6 6l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9H4v9h12V9h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
 function installTipNodes() {
-  if (PACKET || isInstalled() || installDismissed() || !(installPrompt || isIOS())) return [];
+  if (!installAfterSave || PACKET || isInstalled() || installDismissed() || !(installPrompt || isIOS())) return [];
   const box = document.createElement('div');
   box.className = 'install-tip no-print';
   box.innerHTML = `<img src="/icons/icon-192.png" alt="" width="48" height="48">
     <div><p class="install-title">${esc(t('install_title'))}</p>
-      <p class="muted">${esc(t('install_body'))}</p>
       ${installPrompt ? `<button type="button" class="btn btn-primary btn-sm" data-install="go">${esc(t('install_btn'))}</button>`
         : `<p class="install-ios">${esc(t('install_ios', { share: '\u0000' })).replace('\u0000', SHARE_ICON)}</p>`}
       <button type="button" class="btn btn-ghost btn-sm" data-install="no">${esc(t('install_dismiss'))}</button></div>`;
@@ -1045,6 +1045,19 @@ function renderResults(plan, restore = {}) {
     const [w, d, sl] = k.split('-');
     if (weeks[w]?.[d]?.[sl]?.[1]) choice[k] = 1;
   }
+  // The meals on the plan as it stands (with swaps).
+  const planMealIds = () => [...new Set(weeks.flatMap((wk, wi) => wk.flatMap((d, di) => ['breakfast', 'lunch', 'dinner']
+    .map(sl => d[sl]?.[choice[`${wi}-${di}-${sl}`] || 0]?.id)).filter(Number.isInteger)))];
+  // After "Show me different meals" (owner decision, Nov 19 2026): say plainly what changed. Meals that weren't
+  // on the last plan are marked "New"; at a tight budget only a few meals fit, and the page says so.
+  const prevMeals = restore.prevMeals ? new Set(restore.prevMeals) : null;
+  const newTag = r => (prevMeals && r && !prevMeals.has(r.id) ? ` <span class="need-tag new-tag no-print">${esc(t('new_tag'))}</span>` : '');
+  const rerollNote = () => {
+    if (!prevMeals) return '';
+    const ids = planMealIds(), n = ids.filter(id => !prevMeals.has(id)).length;
+    if (!n) return t('reroll_none');
+    return (n === 1 ? t('reroll_new_one') : t('reroll_new', { n })) + (n * 2 < ids.length ? ' ' + t('reroll_few') : '');
+  };
   const checked = new Set(restore.checked || []);
   const recipes = new Map();
   weeks.flat().forEach(d => { if (!d.leftover && !d.uncovered) ['breakfast', 'lunch', 'dinner'].forEach(sl => d[sl].forEach(r => recipes.set(String(r.id), r))); });
@@ -1091,7 +1104,7 @@ function renderResults(plan, restore = {}) {
     return ['breakfast', 'lunch', 'dinner'].filter(sl => d[sl].length).map(sl => {
       const key = `0-${di}-${sl}`;
       return `<div class="glance-row"><span class="glance-meal"><span class="glance-slot">${esc(t(sl))}</span>
-        <button type="button" class="meal-pick" data-key="${key}">${esc(rTitle(d[sl][choice[key] || 0]))}</button></span>
+        <button type="button" class="meal-pick" data-key="${key}">${esc(rTitle(d[sl][choice[key] || 0]))}${newTag(d[sl][choice[key] || 0])}</button></span>
         ${d[sl][1] ? `<button type="button" class="btn btn-ghost btn-sm glance-swap" data-swap="${key}">${esc(t('swap_btn'))}</button>` : ''}</div>`;
     }).join('');
   };
@@ -1101,7 +1114,8 @@ function renderResults(plan, restore = {}) {
         id="day-tab-${di}" data-day="${di}" aria-selected="${di === glanceDay}" aria-controls="glance-day" aria-label="${esc(dayOf(d.dayName))}">${esc(dayShort(d.dayName))}</button>`).join('')}</div>
       <div class="glance-day" id="glance-day" role="tabpanel" aria-labelledby="day-tab-${glanceDay}">${glanceDayHtml(glanceDay)}</div>
       <button type="button" class="glance-all" data-open-panel="meals">${esc(input.days <= 7 ? t('glance_all_week') : t('glance_all_days', { days: input.days }))} ›</button>
-      ${Number.isInteger(answers.seed) ? `<p class="reroll-row"><button type="button" class="btn btn-ghost btn-sm" id="reroll">${esc(t('reroll_btn'))}</button></p>` : ''}
+      ${Number.isInteger(answers.seed) ? `<p class="reroll-row"><button type="button" class="btn btn-ghost btn-sm" id="reroll">${esc(t('reroll_btn'))}</button></p>
+        ${rerollNote() ? `<p class="reroll-note">${esc(rerollNote())}</p>` : ''}` : ''}
     </section>`;
 
   const weekPanel = (week, wi) => `
@@ -1114,7 +1128,7 @@ function renderResults(plan, restore = {}) {
         : `<div class="d"><div class="day-name">${esc(dayOf(d.dayName))}</div>
             ${['breakfast', 'lunch', 'dinner'].map(sl => d[sl].length ? `
               <div class="m"><span>${esc(t(sl))}</span>
-                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(rTitle(d[sl][choice[`${wi}-${di}-${sl}`] || 0]))}</button></div>` : '').join('')}
+                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(rTitle(d[sl][choice[`${wi}-${di}-${sl}`] || 0]))}${newTag(d[sl][choice[`${wi}-${di}-${sl}`] || 0])}</button></div>` : '').join('')}
           </div>`).join('')}
     </div>`;
 
@@ -1140,7 +1154,7 @@ function renderResults(plan, restore = {}) {
         ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
         ...((city.needs || []).length ? [{ id: 'needs', icon: '💬', title: t('needs_title'), sub: esc(t('hub_needs_sub')) }] : []),
       ],
-      homeBottom: `<div id="install-tip"></div>${keepBar()}
+      homeBottom: `${keepBar()}
         <div class="nav no-print">
           <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
           <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
@@ -1178,7 +1192,7 @@ function renderResults(plan, restore = {}) {
     <dialog id="recipe" aria-labelledby="recipe-title"><div class="dialog-body"></div></dialog>`;
 
   focusTop('#res-title');
-  showInstallTip();
+  if (prevMeals) app.querySelector('#announce').textContent = rerollNote();
   wireHub({}, restore.switched ? 'list' : null);
   wireNeeds();
   loadSites(answers.zip || siteZip);
@@ -1204,8 +1218,7 @@ function renderResults(plan, restore = {}) {
     kind: 'plan',
     hash: currentHash,
     // The meals on the plan as it stands (with swaps), kept with a saved plan so the next new plan can vary.
-    meals: () => [...new Set(weeks.flatMap((wk, wi) => wk.flatMap((d, di) => ['breakfast', 'lunch', 'dinner']
-      .map(sl => d[sl]?.[choice[`${wi}-${di}-${sl}`] || 0]?.id)).filter(Number.isInteger)))].slice(0, 30),
+    meals: () => planMealIds().slice(0, 30),
     text: full => planText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${title}`,
       shopping: s.byWeek?.length > 1
@@ -1313,9 +1326,10 @@ function renderResults(plan, restore = {}) {
   // A different set of equally good meals, same answers (a new draw). A new plan: swaps and ticks start fresh,
   // and a saved copy isn't overwritten.
   app.querySelector('#reroll')?.addEventListener('click', () => {
+    const prevMeals = planMealIds();
     answers = { ...answers, seed: newSeed() };
     openedSavedId = null; logNext = null;
-    showResults({ rerolled: true });
+    showResults({ rerolled: true, prevMeals });
   });
   app.querySelectorAll('.day-tab').forEach(tab => tab.addEventListener('click', () => {
     glanceDay = Number(tab.dataset.day);
@@ -1370,6 +1384,7 @@ let printFill = null; // fills the print-only extras for whatever plan is on scr
 
 // ── Keep this plan (no account) ─────────────────────────────────
 function keepBar() {
+  installAfterSave = false; // a new plan or box: the tip waits for its own save
   return `<section class="keep no-print" aria-labelledby="h-keep">
     <h2 id="h-keep" class="keep-title">${esc(t('keep_title'))}</h2>
     <div class="keep-actions">
@@ -1379,6 +1394,7 @@ function keepBar() {
       <button type="button" class="keep-btn" id="k-copy">${esc(t('keep_copy'))}</button>
     </div>
     <p class="keep-status" id="k-status" aria-live="polite"></p>
+    <div id="install-tip"></div>
   </section>`;
 }
 
@@ -1413,6 +1429,7 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text, meals = () => u
         track('plan_kept', { how: 'save', kind });
         savedId = r.id;
         status.textContent = t('keep_saved_msg') + (r.dropped ? ' ' + t('keep_dropped', { max: 12 }) : '');
+        installAfterSave = true; showInstallTip();
       } else status.textContent = t('keep_save_failed');
     }
     paintSave();

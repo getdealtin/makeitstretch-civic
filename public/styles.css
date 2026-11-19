@@ -579,7 +579,10 @@ html { scroll-padding-bottom: 110px; }
 .site-none { border-style: dashed; background: var(--tint-light); }
 
 /* Seasonings the recipes call for that aren't priced (Nov 19 2026): not on the list or in the total. */
-.extras-note { font-size: 15px; color: var(--text-muted); margin: 10px 0 0; }
+.extras-note { font-size: 15px; color: var(--text-muted); margin: 10px 0 1.25em; }
 
 /* "Show me different meals" (Nov 19 2026) */
 .reroll-row { margin: 10px 0 0; }
+.reroll-note { font-size: 15px; color: var(--text-muted); margin: 6px 0 0; }
+.keep #install-tip:empty { display: none; }
+.keep .install-tip { margin: 14px 0 0; background: #fff; }
