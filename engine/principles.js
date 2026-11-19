@@ -29,7 +29,7 @@ export const PRINCIPLES = [
   { id: 'household', text: 'Every amount is for the number of people chosen, and the plan never breaks a food the household leaves out or a diet it follows.' },
   { id: 'no_piles', text: 'Only what the meals and capped sides use is bought; leftover money is shown, never spent on piles of one food.' },
   { id: 'honest', text: 'The plan says plainly how many days it covers and what share of the calories it gives, so no one is told a plan is enough when it isn\'t. Whenever money can\'t cover it, the plan points to free food (food banks and nearby sites) and SNAP.' },
-  { id: 'same_plan', text: 'The same answers always give the same plan (no randomness), so a plan can be shared, printed and checked.' },
+  { id: 'same_plan', text: 'The same link always opens the same plan, so a plan can be shared, printed and checked. A new plan draws at random among equally good meals (owner decision, Nov 19 2026), and the draw is kept in its link.' },
 ];
 
 /**
