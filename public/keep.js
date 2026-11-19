@@ -61,6 +61,18 @@ export function unpackPlan(o) {
   };
 }
 
+/**
+ * A food box as the page holds it, and what a box link or saved box keeps.
+ * @typedef {object} BoxState
+ * @property {string[]} items   food ids picked from the box list ('rice', 'drybeans', ...)
+ * @property {string[]} avoid   foods to leave out and diets ('peanuts', 'halal', ...)
+ * @property {string[]} other   foods typed in that aren't on the list (cleaned: letters only, at most 5)
+ * @property {Array<{id?:string, word?:string, reason:?string}>} cant  foods the person won't use; reasons
+ *   are counted but never kept in links
+ * @property {?string} zip      the box's ZIP code (asked first since Nov 19 2026), or null if skipped
+ */
+
+/** @param {BoxState} b */
 export const packBox = b => ({ v: 1, t: 'b', i: b.items, a: b.avoid.length ? b.avoid : undefined, o: b.other?.length ? b.other : undefined,
   z: /^\d{5}$/.test(b.zip || '') ? b.zip : undefined, // z: the box's ZIP code (asked first since Nov 19)
   u: b.cant?.some(c => c.id) ? b.cant.filter(c => c.id).map(c => c.id) : undefined, // u: foods left out ("won't use")

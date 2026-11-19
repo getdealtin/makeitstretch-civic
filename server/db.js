@@ -54,6 +54,7 @@ export function memoryDb() {
     async listReviews() { return [...reviews.values()].map(copy); },
     async insertEvent(ev) { events.push({ ...ev, created_at: now() }); },
     async listEvents(city, since) { return events.filter(e => e.city_id === city && e.created_at >= since).map(copy); },
+    /** One site: move a visit's events since `since` from one city to another (see /api/event/move). */
     async moveSession(sessionId, from, to, since) { for (const e of events) if (e.session_id === sessionId && e.city_id === from && e.created_at >= since) e.city_id = to; },
     async updateReview(lang, patch) { const r = reviews.get(lang); if (!r) return null; Object.assign(r, patch); return copy(r); },
     async getPriceCache(region) { return copy(priceCache.get(region)); },

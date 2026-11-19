@@ -29,6 +29,18 @@ const LANGS = ['en', 'es', 'vi', 'zh-Hans'];
 // Foods typed in that aren't on the box list: letters only, 2–30 characters, at most 5. Anything else is dropped.
 const foodWords = v => (Array.isArray(v) ? [...new Set(v.map(cleanFoodWord).filter(Boolean))].slice(0, 5) : undefined);
 
+/**
+ * One anonymous event as stored (table public.events, db/phase4-events.sql).
+ * @typedef {object} EventRow
+ * @property {string} city_id     'austin', 'national' (the main site); a later partner ZIP can move it (see below)
+ * @property {string} session_id  random 12-character code for one visit, held only in the browser's memory
+ * @property {string} event       one of SCHEMA's keys
+ * @property {string} lang        'en', 'es', 'vi', 'zh-Hans'
+ * @property {object} data        only the fields SCHEMA allows for that event, each checked
+ * @property {string} created_at  server time (ISO)
+ */
+
+/** Allowed events and, for each, the only fields kept (anything else is dropped). */
 export const SCHEMA = {
   page_view: { src: slug },  // source tag; checked against the city's list in the route
   step_completed: { step: oneOf(['budget', 'days', 'people', 'zip', 'prefs']) },
@@ -140,13 +152,18 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
 }
 
 // ── Routes ──────────────────────────────────────────────────────
+/**
+ * @param {import('express').Express} app
+ * @param {{getDb: () => object, oneSite?: boolean}} opts  oneSite: the main site switches cities by ZIP code
+ */
 export function mountEvents(app, { getDb, oneSite = false }) {
+  // Spam limit only: 300 requests per visitor per 10 minutes. The IP is used in memory here and never stored.
   const hits = new Map();
   setInterval(() => hits.clear(), 10 * 60e3).unref();
+  const overLimit = req => { const n = (hits.get(req.ip) || 0) + 1; hits.set(req.ip, n); return n > 300; };
+
   app.post('/api/event', async (req, res) => {
-    // Spam limit only: the IP is used in memory here and never stored.
-    const n = (hits.get(req.ip) || 0) + 1; hits.set(req.ip, n);
-    if (n > 300) return res.status(429).end();
+    if (overLimit(req)) return res.status(429).end();
     const ev = cleanEvent(req.body);
     if (!ev) return res.status(400).end();
     if (ev.data.src && !(req.city.sources || []).includes(ev.data.src)) delete ev.data.src;
@@ -159,9 +176,10 @@ export function mountEvents(app, { getDb, oneSite = false }) {
   // and everything they did since starting it, moves from the main site's totals to the city's, so it is
   // counted once, in the right place. Only from the main site, only to the partner city that ZIP code
   // belongs to, only that visit's own events (its random visit code), and only since the plan or box began.
+  // Body: { session_id: 12-character visit code, zip: '78702', since: ISO time the plan or box began (within
+  // the last day) }. Anything else is refused with 400; nothing about the person is sent or stored.
   app.post('/api/event/move', async (req, res) => {
-    const n = (hits.get(req.ip) || 0) + 1; hits.set(req.ip, n);
-    if (n > 300) return res.status(429).end();
+    if (overLimit(req)) return res.status(429).end();
     const b = req.body || {};
     const sinceMs = Date.parse(b.since);
     const to = PARTNERS.find(c => c.zips.includes(String(b.zip)));

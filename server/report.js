@@ -199,7 +199,14 @@ export const METRICS = {
   outcome: c => c.table('“Did you use this plan?”', ['Answer', 'People'], lab(LABEL.answer, countBy(c.outcome, e => e.data.answer))),
   returns: c => c.table('Return visits', ['How', 'People'], lab({ saved: 'Reopened a saved plan', link: 'Opened a shared link' }, countBy(c.events.filter(e => e.event === 'plan_reopened'), e => e.data.source))),
   directory: c => ({ title: 'Food sites in the directory', head: ['Type', 'Organizations'], rows: Object.entries(c.providers.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {})), note: 'Organizations, not people: not suppressed.', organizations: true }),
-  sources: c => c.table('Visits by source', ['Source', 'People'], countBy(c.views.filter(e => e.data?.src === 'main' || !c.views.some(v => v.session_id === e.session_id && v.data?.src === 'main')), e => (e.data?.src === 'main' ? 'makeitstretch.org (entered a ZIP code in this city’s area there)' : e.data?.src || 'direct')), { total: c.visits.size }),
+  // A visit that came through makeitstretch.org counts under that source only, even if it also has an
+  // untagged page view (one site, Nov 19 2026).
+  sources: c => {
+    const viaMain = new Set(c.views.filter(e => e.data?.src === 'main').map(e => e.session_id));
+    const views = c.views.filter(e => e.data?.src === 'main' || !viaMain.has(e.session_id));
+    const label = e => (e.data?.src === 'main' ? 'makeitstretch.org (entered a ZIP code in this city’s area there)' : e.data?.src || 'direct');
+    return c.table('Visits by source', ['Source', 'People'], countBy(views, label), { total: c.visits.size });
+  },
 };
 
 /**

@@ -162,12 +162,16 @@ const regionFor = (zip, c = city) => (c?.price_region ? null : zipToInfo(zip || 
 // name in the header, and its report (the browser adds ?city=<id> to every request; the server honors it
 // only from the main site and only for partner cities). Another ZIP switches back. On a city's own site
 // (austin.makeitstretch.org) nothing switches. Rollback: ONE_SITE=off on the server (README "One site").
-let homeCity = null; // the main site's own config; null on a city's own site
+const isZip = z => /^\d{5}$/.test(z || '');
+/** @type {?object} the main site's own config (has partners and partner_zips); null on a city's own site */
+let homeCity = null;
 // When this plan or box began, in the server's time (its Date header sets the offset; 2 seconds' slack), so a
 // later ZIP code moves only this plan's or box's activity to the partner city, not an earlier one's.
 let clockOffset = 0, flowStart = null;
 const startFlow = () => { flowStart = new Date(Date.now() + clockOffset - 2000).toISOString(); };
+/** Configs already fetched, by city id, so switching back and forth asks the server once. */
 const cityConfigs = {};
+/** This page's query string with ?city= set to `id` (or removed for the main site), other params kept. */
 const cityQs = id => {
   const p = new URLSearchParams(location.search);
   if (id) p.set('city', id); else p.delete('city');
@@ -175,10 +179,10 @@ const cityQs = id => {
   return s ? '?' + s : '';
 };
 /** The partner city for a ZIP code typed on the main site, or null. */
-const partnerOf = zip => (homeCity && /^\d{5}$/.test(zip || '') ? (homeCity.partners || []).find(p => p.id === homeCity.partner_zips?.[zip]) || null : null);
+const partnerOf = zip => (homeCity && isZip(zip) ? (homeCity.partners || []).find(p => p.id === homeCity.partner_zips?.[zip]) || null : null);
 /** Switch to the city this ZIP code belongs to (or back to the main site). true if the city changed. */
 async function useCityForZip(zip) {
-  if (!homeCity || !/^\d{5}$/.test(zip || '')) return false;
+  if (!homeCity || !isZip(zip)) return false;
   const want = partnerOf(zip)?.id || homeCity.id;
   if (city.id === want) return false;
   let next = homeCity;
@@ -217,14 +221,54 @@ function showCity() {
 // A panel to reopen after the page is redrawn for a new city (the person was in "Free food & help").
 let reopenPanel = null;
 
+/** The line under the ZIP question on the main site: a partner city, or the region whose prices are used. */
+function zipWhere(zip) {
+  if (!isZip(zip)) return '';
+  const p = partnerOf(zip);
+  if (p) return esc(t('zip_partner', { place: p.place }));
+  const info = zipToInfo(zip);
+  return info ? esc(t('zip_national', { state: info.state, region: t('region_' + info.region) })) : '';
+}
+/** The ZIP question (budget plan step 1 and the food box's first screen), with the main site's line under it. */
+const zipFieldHtml = value => `
+  <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_zip'))}</h1>
+  <p class="hint" id="h">${esc(t('q_zip_hint'))}</p>
+  <input class="field" id="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5"
+    pattern="[0-9]{5}" placeholder="${esc(city.sample_zip || '12345')}" aria-labelledby="q" aria-describedby="h" value="${esc(value ?? '')}">
+  ${homeCity ? `<p class="zip-where" id="zip-where" role="status">${zipWhere(value)}</p>` : ''}`;
+/** Keep that line in step with what's typed. */
+const wireZipWhere = form => {
+  const input = form.querySelector('#zip'), where = form.querySelector('#zip-where');
+  if (where) input.addEventListener('input', () => { where.innerHTML = zipWhere(input.value.trim()); });
+};
+/** The prices label under the shopping list: the city's own, else the region's in the reader's language. */
+const priceLabel = priced => cityText('price_region_label')
+  || (S['price_region_' + priced.region] || en['price_region_' + priced.region] ? t('price_region_' + priced.region) : priced.label);
+
 // ── State ───────────────────────────────────────────────────────
+/**
+ * A budget plan's answers (also what a plan link keeps, public/keep.js).
+ * @typedef {object} Answers
+ * @property {?number} budget   dollars, 1–9,999
+ * @property {?number} days     4, 7, 14 or 30 (links may hold 1–31)
+ * @property {?number} people   1–20
+ * @property {?string} zip      5 digits, or null if skipped (asked first since Nov 19 2026)
+ * @property {'yes'|'sometimes'|'no'} leftover
+ * @property {'full'|'dollar'|'corner'} store
+ * @property {string[]} cuisine
+ * @property {string[]} avoid   foods to leave out and diets
+ * @property {string[]} have    staples already at home
+ * @property {'full'|'short'} list  full variety, or a shorter list that repeats fewer meals
+ */
+/** @returns {Answers} */
 const fresh = () => ({
   budget: null, days: null, people: null, zip: null,
   leftover: 'sometimes', store: 'full', cuisine: [], avoid: [], have: [],
   list: 'full', // plans open on full variety; "Show a shorter list" repeats fewer different meals
 });
 let answers = fresh();
-let box = { items: [], avoid: [], other: [] };
+/** @type {import('./keep.js').BoxState} */
+let box = { items: [], avoid: [], other: [], cant: [], zip: null };
 // ZIP code first (owner decision, Nov 19 2026): on makeitstretch.org it picks the city, so every answer after it
 // counts in that city's report. Still skippable.
 const STEPS = ['zip', 'budget', 'days', 'people', 'prefs'];
@@ -265,8 +309,12 @@ async function computePlan(a) {
 
 // ── Boot ────────────────────────────────────────────────────────
 async function boot() {
-  try { const r = await fetch('/api/config' + qs); const d = Date.parse(r.headers.get('date')); if (Number.isFinite(d)) clockOffset = d - Date.now(); city = await r.json(); }
-  catch { city = { name: 'Make It Stretch', languages: ['en'], resources: [] }; }
+  try {
+    const r = await fetch('/api/config' + qs);
+    const serverNow = Date.parse(r.headers.get('date')); // for flowStart: "since" must be in the server's time
+    if (Number.isFinite(serverNow)) clockOffset = serverNow - Date.now();
+    city = await r.json();
+  } catch { city = { name: 'Make It Stretch', languages: ['en'], resources: [] }; }
   if (city.partner_zips) { homeCity = city; cityConfigs[city.id] = city; }
   const available = LANGS.map(l => l.code).filter(c => (city.languages || ['en']).includes(c));
   await setLang(pickLang(available), { render: false });
@@ -351,17 +399,11 @@ function focusTop(sel) {
 }
 
 // ── Start screen: two doors ─────────────────────────────────────
-/** The line under the ZIP question on the main site: a partner city, or the region whose prices are used. */
-function zipWhere(zip) {
-  if (!/^\d{5}$/.test(zip || '')) return '';
-  const p = partnerOf(zip);
-  if (p) return esc(t('zip_partner', { place: p.place }));
-  const info = zipToInfo(zip);
-  return info ? esc(t('zip_national', { state: info.state, region: t('region_' + info.region) })) : '';
-}
+// Same address as the privacy page's "Contact us" and the old landing page.
+const CONTACT_EMAIL = 'getdealtin.hq@gmail.com';
 /** Main site only: food sites, partners and cities (was the old landing page's "Bring it to your community"). */
 function partnersSection() {
-  const mail = s => 'mailto:getdealtin.hq@gmail.com?subject=' + encodeURIComponent(s);
+  const mail = s => `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(s)}`;
   return `<section class="partners-sec bleed" aria-labelledby="partners-title">
     <p class="pill">${esc(t('partners_eyebrow'))}</p>
     <h2 id="partners-title">${accent(t('partners_title'))}</h2>
@@ -596,12 +638,7 @@ const STEP_VIEWS = {
       <input class="field field-sm" id="people-exact" type="number" inputmode="numeric" min="1" max="20"
         value="${answers.people && ![1, 2, 3, 5].includes(answers.people) ? answers.people : ''}"></p>`,
 
-  zip: () => `
-    <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_zip'))}</h1>
-    <p class="hint" id="h">${esc(t('q_zip_hint'))}</p>
-    <input class="field" id="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5"
-      pattern="[0-9]{5}" placeholder="${esc(city.sample_zip || '12345')}" aria-labelledby="q" aria-describedby="h" value="${answers.zip ?? ''}">
-    ${homeCity ? `<p class="zip-where" id="zip-where" role="status">${zipWhere(answers.zip)}</p>` : ''}`,
+  zip: () => zipFieldHtml(answers.zip),
 
   prefs: () => `
     <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_prefs'))}</h1>
@@ -639,11 +676,10 @@ const STEP_WIRE = {
       if (n >= 1 && n <= 20) { answers.people = n; refresh(); }
     });
   },
-  zip: (f, refresh) => f.querySelector('#zip').addEventListener('input', e => {
-    const where = f.querySelector('#zip-where');
-    if (where) where.innerHTML = zipWhere(e.target.value);
-    if (/^\d{5}$/.test(e.target.value)) { answers.zip = e.target.value; refresh(); }
-  }),
+  zip: (f, refresh) => {
+    wireZipWhere(f);
+    f.querySelector('#zip').addEventListener('input', e => { if (isZip(e.target.value)) { answers.zip = e.target.value; refresh(); } });
+  },
   prefs: (f, refresh) => f.querySelectorAll('[data-pref]').forEach(b => b.addEventListener('click', () => {
     const g = PREFS.find(p => p.key === b.dataset.pref);
     const v = b.dataset.value;
@@ -938,7 +974,7 @@ async function loadSites(zip) {
   // The server sends only sites within 10 miles of the ZIP, so no ZIP means none yet: the box asks for one.
   const shown = sites.slice(0, NEARBY_SHOWN);
   const descOf = p => (p.resource_id ? resText({ id: p.resource_id, description: p.description }, 'description') : p.description);
-  const none = !shown.length && /^\d{5}$/.test(zip || '');
+  const none = !shown.length && isZip(zip);
   box.querySelector('#sites-list').innerHTML = (none && homeCity && city.id === homeCity.id
     ? `<article class="help-card site-none"><h3>${esc(t('sites_none_here', { zip }))}</h3><p>${esc(t('sites_none_here_body'))}</p>
         <div class="help-actions"><a href="/add-site">${esc(t('sites_none_here_cta'))}</a></div></article>`
@@ -1102,7 +1138,7 @@ function renderResults(plan, restore = {}) {
             <p class="list-intro">${esc(t('list_from_meals'))}</p>
             <div id="list-rows">${listHtml()}</div>
             <div class="shop-total"><span>${esc(t('total'))}</span><span id="list-total">$${money(s.spent)}</span></div>
-            <p class="price-note">${esc(t('price_note', { label: cityText('price_region_label') || (S['price_region_' + priced.region] || en['price_region_' + priced.region] ? t('price_region_' + priced.region) : priced.label) }))}</p>
+            <p class="price-note">${esc(t('price_note', { label: priceLabel(priced) }))}</p>
             <p class="health-note">${esc(t('health_note'))}</p>
           </section>` },
         { id: 'meals', html: `<section class="section" id="meals" aria-labelledby="h-plan">
@@ -1398,11 +1434,7 @@ function renderBoxZip() {
   openedSavedId = null;
   app.innerHTML = `
     <form class="step" id="boxzip" novalidate>
-      <h1 id="q" class="q-head" tabindex="-1">${esc(t('q_zip'))}</h1>
-      <p class="hint" id="h">${esc(t('q_zip_hint'))}</p>
-      <input class="field" id="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5"
-        pattern="[0-9]{5}" placeholder="${esc(city.sample_zip || '12345')}" aria-labelledby="q" aria-describedby="h" value="${box.zip ?? ''}">
-      ${homeCity ? `<p class="zip-where" id="zip-where" role="status">${zipWhere(box.zip)}</p>` : ''}
+      ${zipFieldHtml(box.zip)}
       <p class="error" id="err" role="alert"></p>
       <div class="nav">
         <button type="button" class="btn btn-ghost" id="back">${esc(t('back'))}</button>
@@ -1412,7 +1444,7 @@ function renderBoxZip() {
     </form>`;
   const f = app.querySelector('#boxzip');
   const input = f.querySelector('#zip');
-  input.addEventListener('input', () => { const w = f.querySelector('#zip-where'); if (w) w.innerHTML = zipWhere(input.value.trim()); });
+  wireZipWhere(f);
   const next = async zip => {
     box.zip = zip;
     if (zip) siteZip = zip;
@@ -1422,7 +1454,7 @@ function renderBoxZip() {
   f.onsubmit = e => {
     e.preventDefault();
     const z = input.value.trim();
-    if (z && !/^\d{5}$/.test(z)) { f.querySelector('#err').textContent = t('err_zip'); return; }
+    if (z && !isZip(z)) { f.querySelector('#err').textContent = t('err_zip'); return; }
     next(z || null);
   };
   f.querySelector('#skip').onclick = () => next(null);
