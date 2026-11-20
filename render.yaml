@@ -4,7 +4,7 @@ services:
   - type: web
     name: makeitstretch-civic
     runtime: node
-    plan: free
+    plan: starter   # paid instance ($7/month): free instances share 750 hours a month per workspace and were suspended Nov 20 2026
     buildCommand: npm ci --omit=dev
     startCommand: npm start
     healthCheckPath: /api/health
