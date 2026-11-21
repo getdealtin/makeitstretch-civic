@@ -252,6 +252,20 @@ const table = (rows, head = ['', 'Count'], fmt = v => v) => rows.length
   ? `<table class="act-table"><thead><tr>${head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(([k, v]) => `<tr><td>${esc(fmt(k))}</td><td>${esc(v)}</td></tr>`).join('')}</tbody></table>`
   : '<p class="empty">None yet.</p>';
 
+// ── Recent visits (owner request, Nov 21 2026, laid out like the food.getdealtin.com dashboard) ──
+// One row per visit, newest first, in Austin time. Private to this page: only what the site records.
+const dayFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric' });
+const timeFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' });
+function recentHtml(visits) {
+  const row = v => `<tr><td class="v-when">${esc(dayFmt.format(new Date(v.at)))}<br>${esc(timeFmt.format(new Date(v.at)))}</td><td>${esc(v.city || '—')}</td><td>${esc(v.zip || '—')}</td>
+    <td class="v-num">${esc(v.events)}</td><td class="v-made">${v.made === 'plan' ? '✓' : v.made === 'box' ? 'Box' : ''}</td></tr>`;
+  return `<h3 class="visits-title">Recent visits <small>is anyone using it?</small></h3>
+    <p class="a-hint">Each row is one visit, newest first, in Austin time. — = they didn't enter a ZIP. Plan: ✓ = made a grocery plan, Box = made meals from a food box.</p>
+    ${visits.length ? `<div class="visits-wrap"><table class="visits-table"><thead><tr><th scope="col">When</th><th scope="col">City</th><th scope="col">ZIP</th><th scope="col" class="v-num">Events</th><th scope="col" class="v-made">Plan</th></tr></thead>
+      <tbody>${visits.map(row).join('')}</tbody></table></div>`
+      : '<p class="empty">No visits in this range yet.</p>'}`;
+}
+
 function activityHtml(a) {
   const head = `<h2 id="h-act">Activity <small>last ${days} days</small></h2>
     <div class="actions" role="group" aria-label="Date range" style="margin:8px 0 14px">${[7, 30, 90, 365].map(n =>
@@ -262,6 +276,7 @@ function activityHtml(a) {
   const steps = a.steps.map(([s, n]) => [s, `${n} (${pct(n, a.visits)} of visits)`]);
   const cu = a.cant_use;
   return `<section class="a-section" id="activity" aria-labelledby="h-act">${head}
+    ${recentHtml(a.recent_visits || [])}
     <div class="counts">
       <div class="count"><b>${a.visits}</b><span>Visits</span></div>
       <div class="count"><b>${a.plans}</b><span>Grocery plans built</span></div>

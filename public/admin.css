@@ -73,3 +73,14 @@ a.btn-xs { display: inline-flex; align-items: center; text-decoration: none; }
 
 .rep-table.is-indicator { border-left: 4px solid var(--violet); padding-left: 12px; }
 .rep-indicator { font: 600 12px var(--font-label); letter-spacing: .04em; color: var(--violet); margin: 0 0 4px; text-transform: uppercase; }
+/* Recent visits (Nov 21 2026): one row per visit, like the food.getdealtin.com dashboard */
+.visits-title { font-size: 19px; margin: 4px 0 4px; }
+.visits-title small { font: 13px var(--font-label); color: var(--text-muted); }
+.visits-wrap { max-height: 600px; overflow: auto; border: 1px solid var(--rule); border-radius: 12px; margin-bottom: 18px; }
+.visits-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.visits-table th { position: sticky; top: 0; background: var(--tint-light, #fff); text-align: left; font: 600 12px var(--font-label); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); padding: 8px 6px; border-bottom: 2px solid var(--rule); }
+.visits-table td { padding: 8px 6px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.visits-table tr:last-child td { border-bottom: 0; }
+.v-when { white-space: nowrap; }
+.v-num { text-align: right; font-variant-numeric: tabular-nums; }
+.v-made { white-space: nowrap; text-align: center; }

@@ -6,6 +6,7 @@
 import { BOX_GROUPS, cleanFoodWord } from '../engine/box.js';
 import { BENCHMARKS } from '../engine/index.js';
 import { PARTNERS } from '../cities/index.js';
+import { zipToInfo } from '../engine/zip-map.js';
 
 const BOX_ITEMS = BOX_GROUPS.flatMap(g => g.items);
 export const AVOID = ['gluten', 'dairy', 'meat', 'pork', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'];
@@ -188,4 +189,82 @@ export function mountEvents(app, { getDb, oneSite = false }) {
     try { await getDb().moveSession(b.session_id, 'national', to.id, new Date(sinceMs).toISOString()); } catch (e) { console.error(e.message); }
     res.status(204).end();
   });
+}
+
+// ── Recent visits for /admin (owner request, Nov 21 2026): one row per visit, newest first ─────────
+// The operator's private view, behind the admin sign-in; never in the City report or its downloads, which
+// stay totals only with small numbers hidden. Only what the site already records: no name, contact, IP or
+// device. A visit is one random visit code; when it started on makeitstretch.org and moved to a partner
+// city, both parts are shown as one visit.
+const STEPS = ['zip', 'budget', 'days', 'people', 'prefs'];
+/**
+ * @param {Array<{session_id:string, city_id:string, event:string, lang:string, data:object, created_at:string}>} events
+ *   every event of the visits to show (any city)
+ * @param {object} names  resource id → name, for help taps
+ * @param {number} limit
+ */
+export function recentVisits(events, names = {}, limit = 50) {
+  const bySession = new Map();
+  for (const e of [...events].sort((a, b) => a.created_at.localeCompare(b.created_at))) {
+    if (!bySession.has(e.session_id)) bySession.set(e.session_id, []);
+    bySession.get(e.session_id).push(e);
+  }
+  const rows = [...bySession.values()].map(ev => {
+    const of = name => ev.filter(e => e.event === name);
+    const last = name => of(name).at(-1);
+    const zip = [...ev].reverse().find(e => e.data?.zip)?.data.zip || null;
+    const partner = zip && PARTNERS.find(c => c.zips.includes(zip));
+    const plan = last('plan_built'), box = last('box_built'), reopened = last('plan_reopened');
+    const steps = new Set(of('step_completed').map(e => e.data.step).filter(s => STEPS.includes(s))).size;
+    let got = 'Just looked';
+    if (plan) got = `Made a plan: $${plan.data.budget}, ${plan.data.people} ${plan.data.people === 1 ? 'person' : 'people'}, ${plan.data.days} ${plan.data.days === 1 ? 'day' : 'days'}`;
+    else if (box) got = `Made meals from a food box (${(box.data.items?.length || 0) + (box.data.other?.length || 0)} foods)`;
+    else if (reopened) got = reopened.data.source === 'link' ? 'Opened a shared link' : 'Came back to a saved plan';
+    else if (steps) got = `Answered ${steps} of ${STEPS.length} questions, then stopped`;
+    const after = [];
+    const n = (name, one, many) => { const k = of(name).length; if (k) after.push(k === 1 ? one : many.replace('{n}', k)); };
+    n('recipe_opened', 'opened a recipe', 'opened {n} recipes');
+    n('meal_swapped', 'swapped a meal', 'swapped {n} meals');
+    n('list_switched', 'switched the list length', 'switched the list length {n} times');
+    for (const h of of('help_clicked')) after.push(`tapped ${names[h.data.target] || h.data.target}${h.data.action ? ` (${h.data.action})` : ''}`);
+    for (const t of of('need_tapped')) after.push(`asked about ${t.data.need === 'childcare' ? 'child care' : t.data.need}`);
+    for (const k of of('plan_kept')) after.push({ save: 'saved it on the phone', text: 'texted it', email: 'emailed it', copy: 'copied the link' }[k.data.how] || 'kept it');
+    const cant = of('cant_use').length;
+    if (cant) after.push(`said ${cant} ${cant === 1 ? 'food' : 'foods'} won't be used`);
+    const outcome = last('plan_outcome');
+    if (outcome) after.push(`said the last plan worked: ${outcome.data.answer}`);
+    const langs = [ev[0].lang, ...of('language_changed').map(e => e.data.to)].filter((l, i, a) => l && l !== a[i - 1]);
+    const sites = [...new Set(ev.map(e => e.city_id).filter(Boolean))];
+    return {
+      at: ev[0].created_at,
+      sites,
+      zip,
+      area: partner ? partner.place : zip ? (zipToInfo(zip)?.state || null) : null,
+      langs,
+      src: ev.find(e => e.data?.src)?.data.src || null,
+      got,
+      events: ev.length,
+      made: plan ? 'plan' : box ? 'box' : null,
+      // the same thing done twice shows once, with a count
+      after: [...new Set(after)].map(x => { const k = after.filter(y => y === x).length; return k > 1 ? `${x} (${k} times)` : x; }),
+    };
+  });
+  return rows.sort((a, b) => b.at.localeCompare(a.at)).slice(0, limit);
+}
+
+// City names for the ZIP codes in Recent visits, from the free zippopotam.us lookup (the same one the
+// food.getdealtin.com dashboard uses). Only the ZIP code is sent, from the server; answers are kept for a
+// week. If the lookup fails, the row shows the partner city or the state instead.
+const cityCache = new Map();
+export async function cityForZip(zip, fetchImpl = fetch) {
+  if (!/^\d{5}$/.test(zip || '')) return null;
+  const hit = cityCache.get(zip);
+  if (hit && hit.at > Date.now() - 7 * 864e5) return hit.name;
+  try {
+    const r = await fetchImpl(`https://api.zippopotam.us/us/${zip}`, { signal: AbortSignal.timeout(4000) });
+    const p = r.ok ? (await r.json()).places?.[0] : null;
+    const name = p ? `${p['place name']}, ${p['state abbreviation']}` : null;
+    cityCache.set(zip, { name, at: Date.now() });
+    return name;
+  } catch { return null; }
 }

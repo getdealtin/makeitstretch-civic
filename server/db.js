@@ -54,6 +54,8 @@ export function memoryDb() {
     async listReviews() { return [...reviews.values()].map(copy); },
     async insertEvent(ev) { events.push({ ...ev, created_at: now() }); },
     async listEvents(city, since) { return events.filter(e => e.city_id === city && e.created_at >= since).map(copy); },
+    /** Every event of these visits, in any city (a visit can start on the main site and move to a partner city). */
+    async listEventsForSessions(ids) { const set = new Set(ids); return events.filter(e => set.has(e.session_id)).map(copy); },
     /** One site: move a visit's events since `since` from one city to another (see /api/event/move). */
     async moveSession(sessionId, from, to, since) { for (const e of events) if (e.session_id === sessionId && e.city_id === from && e.created_at >= since) e.city_id = to; },
     async updateReview(lang, patch) { const r = reviews.get(lang); if (!r) return null; Object.assign(r, patch); return copy(r); },
@@ -101,6 +103,15 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
         const page = await call(`events?select=session_id,event,lang,data,created_at&city_id=eq.${enc(city)}&created_at=gte.${enc(since)}&order=created_at.asc&limit=1000&offset=${off}`);
         out.push(...page);
         if (page.length < 1000) break;
+      }
+      return out;
+    },
+    // Every event of these visits, in any city; ids are 12-character visit codes (checked when stored), 100 per request.
+    listEventsForSessions: async ids => {
+      const out = [];
+      const safe = ids.filter(id => /^[a-z0-9]{12}$/.test(id));
+      for (let i = 0; i < safe.length; i += 100) {
+        out.push(...await call(`events?select=session_id,city_id,event,lang,data,created_at&session_id=in.(${safe.slice(i, i + 100).join(',')})&order=created_at.asc&limit=5000`));
       }
       return out;
     },

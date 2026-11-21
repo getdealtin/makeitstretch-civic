@@ -131,3 +131,30 @@ test('every event the site sends is allowed by the database schema file', async 
   const list = sql.match(/event in \(([\s\S]*?)\)\)/)[1];
   for (const e of Object.keys(SCHEMA)) assert.ok(list.includes(`'${e}'`), `${e} missing from db/phase4-events.sql`);
 });
+
+test('recent visits (admin only): one entry per visit, joined across sites, in plain words', async () => {
+  const { recentVisits } = await import('../server/events.js');
+  const t = s => `2026-11-21T1${s}:00:00.000Z`;
+  const ev = [
+    { session_id: 'aaaaaaaaaaaa', city_id: 'national', event: 'page_view', lang: 'en', data: {}, created_at: t(0) },
+    { session_id: 'aaaaaaaaaaaa', city_id: 'austin', event: 'step_completed', lang: 'en', data: { step: 'zip' }, created_at: t(1) },
+    { session_id: 'aaaaaaaaaaaa', city_id: 'austin', event: 'plan_built', lang: 'en', data: { budget: 35, people: 1, days: 7, zip: '78728' }, created_at: t(2) },
+    { session_id: 'aaaaaaaaaaaa', city_id: 'austin', event: 'recipe_opened', lang: 'en', data: { recipe: 5 }, created_at: t(3) },
+    { session_id: 'aaaaaaaaaaaa', city_id: 'austin', event: 'help_clicked', lang: 'en', data: { target: 'ctfb-find-food', action: 'website' }, created_at: t(4) },
+    { session_id: 'bbbbbbbbbbbb', city_id: 'austin', event: 'page_view', lang: 'es', data: {}, created_at: t(5) },
+    { session_id: 'cccccccccccc', city_id: 'national', event: 'page_view', lang: 'en', data: {}, created_at: t(6) },
+    { session_id: 'cccccccccccc', city_id: 'national', event: 'step_completed', lang: 'en', data: { step: 'zip' }, created_at: t(7) },
+    { session_id: 'cccccccccccc', city_id: 'national', event: 'step_completed', lang: 'en', data: { step: 'budget' }, created_at: t(8) },
+    { session_id: 'cccccccccccc', city_id: 'national', event: 'zip_added_later', lang: 'en', data: { zip: '58102' }, created_at: t(9) },
+  ];
+  const [c, b, a] = recentVisits(ev, { 'ctfb-find-food': 'Central Texas Food Bank: Find Food Now' });
+  assert.deepEqual(a.sites, ['national', 'austin']);
+  assert.equal(a.area, 'Austin');
+  assert.equal(a.got, 'Made a plan: $35, 1 person, 7 days');
+  assert.deepEqual(a.after, ['opened a recipe', 'tapped Central Texas Food Bank: Find Food Now (website)']);
+  assert.equal(b.got, 'Just looked');
+  assert.deepEqual(b.langs, ['es']);
+  assert.equal(c.got, 'Answered 2 of 5 questions, then stopped');
+  assert.equal(c.area, 'ND');
+  assert.equal(recentVisits(ev, {}, 2).length, 2, 'limited');
+});
