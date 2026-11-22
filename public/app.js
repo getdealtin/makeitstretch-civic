@@ -9,7 +9,7 @@ import { LANGS, pickLang, rememberLang, loadLang } from './i18n/index.js';
 import {
   planMeals, rebuildList, LEAVE_OUT, DIETS, DIET_NOTE_KEYS, groupShoppingList, zipToInfo,
   matchBox, BOX_GROUPS, foodLabel, findBoxFood, cleanFoodWord, INGREDIENT_FOODS, PANTRY_BASICS,
-  twistsFor, TWIST_REPEATS,
+  twistsFor, TWIST_REPEATS, BENCHMARKS,
 } from '/engine/index.js';
 import {
   packPlan, packBox, planHash, boxHash, readHash, planText, boxText, smsHref, mailHref, store,
@@ -84,6 +84,14 @@ const TESTING = (() => { try { return localStorage.getItem('mis:test') === '1'; 
 // Source tag from links and printed QR codes (?src=library); the server keeps only the city's allowed tags.
 const SRC = new URLSearchParams(location.search).get('src');
 const PACKET = location.pathname === '/packet'; // library/pantry staff printing packets
+// The website that sent this visit (owner decision, Nov 22 2026): its name only (threads.net), never the page
+// or anything after it, and nothing when it's our own site or there is none.
+const REF = (() => {
+  try {
+    const h = new URL(document.referrer).hostname.toLowerCase().replace(/^(www|m|l|lm|mobile|out)\./, '');
+    return h && !h.endsWith('makeitstretch.org') && h !== location.hostname && /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(h) ? h.slice(0, 60) : null;
+  } catch { return null; }
+})();
 function track(event, data = {}) {
   if (TESTING || PACKET) return;
   try {
@@ -335,7 +343,7 @@ async function boot() {
   if (qs) document.querySelector('link[href="/theme.css"]').href = '/theme.css' + qs;
 
   getRecipes(); getPrices(null); // warm up in the background
-  track('page_view', SRC && (city.sources || []).includes(SRC) ? { src: SRC } : {});
+  track('page_view', { ...(SRC && (city.sources || []).includes(SRC) ? { src: SRC } : {}), ...(REF ? { ref: REF } : {}) });
   if (!openFromHash(location.hash, null, 'link')) (PACKET ? renderPacket() : renderIntro());
   // A different plan link opened in this same tab only changes the #part: no reload happens.
   // (Our own updates use replaceState, which doesn't fire this.)
@@ -1039,6 +1047,14 @@ function renderResults(plan, restore = {}) {
     <p class="cal-legend" aria-hidden="true"><span>${hi(t('cal_each', { kcal: kcal() }))}</span><span>${esc(t('cal_goal', { goal: (2000).toLocaleString(lang) }))}</span></p>
     ${calNote() ? `<p class="sum-note">${esc(calNote())}</p>` : ''}
     <p class="sum-costs"><b>$${money(s.pppd)}</b> ${esc(t('per_person_day'))} · <b>$${money(s.ppmeal)}</b> ${esc(t('a_meal'))}${s.remaining > 1 ? ` · ${esc(t('res_left', { remaining: money(s.remaining) }))}` : ''}</p>`;
+  // Below the average SNAP benefit per person per day: point to SNAP right under the summary, with the
+  // city's own SNAP link (Austin: Your Texas Benefits; elsewhere: USDA's state directory).
+  const snapRes = (city.resources || []).find(r => r.role === 'benefits' && /snap/i.test(r.id));
+  const snapPrompt = () => (snapRes && input.budget / input.people / input.days < BENCHMARKS.snapPerPersonDay ? `<div class="snap-prompt no-print">
+      <p class="snap-t">${esc(t('snap_prompt_t'))}</p>
+      <p>${esc(t('snap_prompt_p', { amount: money(BENCHMARKS.snapPerPersonDay) }))}</p>
+      <a class="btn btn-primary btn-sm" href="${esc(snapRes.url)}" target="_blank" rel="noopener" data-track="resource" data-target="${esc(snapRes.id)}" data-action="website">${esc(t('snap_prompt_btn'))}<span class="sr-only"> (${esc(resText(snapRes, 'name'))})</span></a>
+    </div>` : '');
   const dietNotes = DIETS.filter(d => (input.avoid || []).includes(d)).map(d => DIET_NOTE_KEYS[d]);
   let nItems = s.cart.length;
 
@@ -1147,6 +1163,7 @@ function renderResults(plan, restore = {}) {
         <h1 id="res-title" class="sum-headline" tabindex="-1">${headline()}</h1>
         <div id="sum-body">${sumBody()}</div>
         ${s.repeats ? `<p class="cover-note">${esc(t('repeat_note'))}</p>` : ''}
+        ${snapPrompt()}
         ${(s.coveredDays < input.days || s.repeats || s.calPct < 80) && residents().length ? `<p class="no-print sum-help"><button type="button" class="btn btn-primary btn-sm" data-open-panel="help">${esc(t('find_free_food'))}</button></p>` : ''}
         <p class="cover-note" id="over-note" role="status"${s.overBudget > 0 ? '' : ' hidden'}>${s.overBudget > 0 ? esc(t('over_note', { amount: money(s.overBudget) })) : ''}</p>
         ${dietNotes.length ? `<ul class="diet-notes">${dietNotes.map(k => `<li>${esc(t(k))}</li>`).join('')}</ul>` : ''}
@@ -1204,6 +1221,7 @@ function renderResults(plan, restore = {}) {
     budget: input.budget, days: input.days, people: input.people, zip: answers.zip, store: answers.store,
     cuisine: input.cuisine, avoid: input.avoid, have: input.have, leftover: input.leftover,
     pppd: s.pppd, cal_pct: s.calPct, items: s.cart.length, spent: s.spent,
+    meals: planMealIds().slice(0, 20), foods: s.cart.map(i => i.id).slice(0, 45),
   });
   else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'plan' }); askOutcome('plan'); }
   logNext = null;
@@ -1288,7 +1306,7 @@ function renderResults(plan, restore = {}) {
     const opts = weeks[w][d][sl];
     const ci = 1 - (choice[key] || 0);
     choice[key] = ci;
-    track('meal_swapped', { recipe: opts[ci].id });
+    track('meal_swapped', { recipe: opts[ci].id, from: opts[1 - ci].id });
     app.querySelectorAll(`.meal-pick[data-key="${key}"]`).forEach(x => { x.innerHTML = esc(rTitle(opts[ci])) + commTag(opts[ci]); });
     refreshList();
     app.querySelector('#announce').textContent = t('swapped_list', { title: rTitle(opts[ci]) });

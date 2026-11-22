@@ -9,6 +9,7 @@ export default {
     { h: 'Information we collect', p: [
       'You do not need to give us your name, email address, phone number or home address to use the tool. We do not use advertising or tracking cookies.',
       'We collect information about how the tool is used, in a form that does not identify you. This includes the answers you provide (such as budget, household size, ZIP code, food preferences and dietary needs), the plans and meal suggestions created for you, and how you interact with them (such as recipes you view, help resources you select, and food-box items you tell us you cannot use).',
+      'If another website sent you here, we note only that website’s name (for example, threads.net), not the page you came from.',
       'As with most websites, our servers receive technical information, such as your IP address, when you connect. We use it only to operate the service and protect it from abuse, and we do not store it with usage information.',
       'If you sign up to stay connected or send us a message, we keep the email address and message you give us, only to reply to you or send you updates. You can ask us to remove them at any time.',
     ] },

@@ -424,6 +424,12 @@ function activityHtml(a) {
       <div><h3>Dietary needs</h3>${table(a.avoid, ['Can’t eat', 'Plans and boxes'])}
         <h4>Food style</h4>${table(a.cuisine, ['Cuisine', 'Plans'])}</div>
       <div><h3>Help and food sites tapped</h3>${table(a.help, ['Resource or site id', 'Taps'])}</div>
+      <div><h3>Meals in plans</h3>
+        <p class="a-hint">How many plans included each meal${a.plans_with_meals < a.plans ? ` (plans made since Nov 22: ${a.plans_with_meals} of ${a.plans})` : ''}.</p>
+        ${table(a.meals_in_plans || [], ['Meal', 'Plans'])}</div>
+      <div><h3>Foods on shopping lists</h3>${table(a.foods_on_lists || [], ['Food', 'Plans'])}</div>
+      <div><h3>Swaps</h3><p class="a-hint">The meal people swapped away from → the one they chose.</p>${table(a.swaps || [], ['Swap', 'Times'])}</div>
+      <div><h3>Websites that sent visitors</h3><p class="a-hint">The site's name only, when there was one. Most visits come from apps, texts or typed links, which don't send one.</p>${table(a.referrers || [], ['Website', 'Visits'])}</div>
       <div><h3>Languages</h3>${table(Object.entries(a.languages), ['Language', 'Visits'])}
         <h4>Plans kept</h4>${table(Object.entries(a.kept), ['How', 'Count'], k => PRETTY.how[k] || k)}
         <h4>Return visits</h4>${table(Object.entries(a.returns), ['How', 'Count'], k => PRETTY.source[k] || k)}</div>

@@ -13,7 +13,7 @@ export default {
       'Erin Relford, quien fundó y dirige Margin Ventures, creó Make It Stretch a partir de su propia experiencia: estirar un presupuesto de $35 para comida durante dos semanas, por un año, mientras trabajaba tiempo completo en la universidad. La lógica de la herramienta, primero suficiente comida y luego cada dólar restante bien usado, es esa matemática de supervivencia convertida en software.',
     ] },
     { h: 'Margin Ventures', p: [
-      'Margin Ventures LLC crea herramientas gratuitas que acortan la distancia entre las personas y los sistemas que tienen que navegar. La idea es sencilla: las personas merecen el manual que nunca les dieron. Nuestra meta es crear margen para avanzar.',
+      'Margin Ventures LLC crea herramientas que acortan la distancia entre las personas y los sistemas que tienen que navegar. La idea es sencilla: las personas merecen el manual que nunca les dieron. Nuestra meta es crear margen para avanzar.',
     ] },
     { h: 'Cómo llegó a Austin', p: [
       'En 2026, la Ciudad de Austin nombró a Margin Ventures una de las 34 organizaciones financiadas por sus subvenciones de Equidad Alimentaria y Climática (FACE), de la Oficina de Acción Climática y Resiliencia. La subvención trae Make It Stretch a las familias de Austin, con los lugares de comida gratis y la ayuda local de Austin, en inglés, español, vietnamita y chino.',

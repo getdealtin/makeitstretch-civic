@@ -7,6 +7,9 @@ import { BOX_GROUPS, cleanFoodWord } from '../engine/box.js';
 import { BENCHMARKS } from '../engine/index.js';
 import { PARTNERS } from '../cities/index.js';
 import { zipToInfo } from '../engine/zip-map.js';
+import { FOOD_DB } from '../engine/food-db.js';
+
+const FOOD_IDS = FOOD_DB.map(f => f.id);
 
 const BOX_ITEMS = BOX_GROUPS.flatMap(g => g.items);
 export const AVOID = ['gluten', 'dairy', 'meat', 'pork', 'eggs', 'peanuts', 'fish', 'halal', 'kosher', 'diabetic', 'low_sodium'];
@@ -25,6 +28,10 @@ const int = (min, max) => v => { const n = Number(v); return Number.isInteger(n)
 const oneOf = list => v => (list.includes(v) ? v : undefined);
 const listOf = (list, max = 20) => v => (Array.isArray(v) ? [...new Set(v.filter(x => list.includes(x)))].slice(0, max) : undefined);
 const zip = v => (/^\d{5}$/.test(String(v ?? '')) ? String(v) : undefined);
+// Recipe numbers (meals in a plan), at most `max`, whole numbers only.
+const ids = max => v => (Array.isArray(v) ? [...new Set(v.filter(x => Number.isInteger(x) && x >= 1 && x <= 100000))].slice(0, max) : undefined);
+// The website that sent a visit: a site name only (threads.net), never a page or anything after it.
+const site = v => { const h = String(v ?? '').toLowerCase(); return /^[a-z0-9-]{1,40}(\.[a-z0-9-]{1,40}){1,4}$/.test(h) && h.length <= 60 && !h.endsWith('makeitstretch.org') ? h : undefined; };
 const slug = v => (/^[a-z0-9][a-z0-9_-]{0,59}$/i.test(String(v ?? '')) ? String(v) : undefined);
 const LANGS = ['en', 'es', 'vi', 'zh-Hans'];
 // Foods typed in that aren't on the box list: letters only, 2–30 characters, at most 5. Anything else is dropped.
@@ -43,7 +50,7 @@ const foodWords = v => (Array.isArray(v) ? [...new Set(v.map(cleanFoodWord).filt
 
 /** Allowed events and, for each, the only fields kept (anything else is dropped). */
 export const SCHEMA = {
-  page_view: { src: slug },  // source tag; checked against the city's list in the route
+  page_view: { src: slug, ref: site },  // source tag (checked against the city's list in the route); referring site's name
   step_completed: { step: oneOf(['budget', 'days', 'people', 'zip', 'prefs']) },
   plan_built: {
     budget: num(1, 9999), days: int(1, 31), people: int(1, 20), zip,
@@ -53,11 +60,13 @@ export const SCHEMA = {
     have: listOf(['rice', 'beans', 'oats', 'eggs', 'potatoes', 'bread', 'pasta', 'oil']),
     leftover: oneOf(['yes', 'sometimes', 'no']),
     pppd: num(0, 9999), cal_pct: int(0, 1000), items: int(0, 200), spent: num(0, 9999),
+    // What's in the plan (owner decision, Nov 22 2026): recipe numbers and the foods on the list.
+    meals: ids(20), foods: listOf(FOOD_IDS, 45), // capped so an event stays under the 2,000-byte limit (db/phase4-events.sql)
   },
   box_built: { items: listOf(BOX_ITEMS, 60), other: foodWords, avoid: listOf(AVOID), meals: int(0, 200), zip, value: num(0, 9999),
     cant_step: oneOf(['picked', 'none', 'skipped']), cant: int(0, 60) }, // the "won't use" step: what the person did, how many foods
   recipe_opened: { recipe: int(1, 100000), flow: oneOf(['plan', 'box']) },
-  meal_swapped: { recipe: int(1, 100000) },
+  meal_swapped: { recipe: int(1, 100000), from: int(1, 100000) },  // the meal chosen, and the one it replaced
   help_clicked: { target: slug, kind: oneOf(['resource', 'site', 'store']), action: oneOf(['call', 'directions', 'website', 'bus', 'wic_finder']) },
   zip_added_later: { zip },
   plan_kept: { how: oneOf(['save', 'text', 'email', 'copy']), kind: oneOf(['plan', 'box']) },
@@ -89,7 +98,7 @@ export function cleanEvent(b) {
 const { tfpPerPersonDay: TFP, snapPerPersonDay: SNAP } = BENCHMARKS;
 
 /** @param {{benefits:string[], food_help:string[]}} roles  resource ids by role (from the city's resources) */
-export function summarize(events, roles = { benefits: [], food_help: [] }) {
+export function summarize(events, roles = { benefits: [], food_help: [] }, names = { recipes: {}, foods: {} }) {
   const by = e => events.filter(x => x.event === e);
   const count = (rows, f) => rows.reduce((m, r) => { for (const k of [].concat(f(r) ?? [])) m[k] = (m[k] || 0) + 1; return m; }, {});
   const top = (m, n = 15) => Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n);
@@ -149,6 +158,12 @@ export function summarize(events, roles = { benefits: [], food_help: [] }) {
     languages: count(events.filter(e => e.event === 'page_view'), e => e.lang),
     kept: count(by('plan_kept'), e => e.data.how),
     by_zip_session: Object.keys(zipOf).length,
+    // Owner decision, Nov 22 2026 (plans made since then carry these).
+    meals_in_plans: top(count(plans.filter(p => p.data.meals), p => p.data.meals.map(id => names.recipes[id] || `Recipe ${id}`)), 20),
+    foods_on_lists: top(count(plans.filter(p => p.data.foods), p => p.data.foods.map(id => names.foods[id] || id)), 20),
+    plans_with_meals: plans.filter(p => p.data.meals).length,
+    swaps: top(count(by('meal_swapped').filter(e => e.data.from), e => `${names.recipes[e.data.from] || e.data.from} → ${names.recipes[e.data.recipe] || e.data.recipe}`), 15),
+    referrers: top(count(by('page_view').filter(e => e.data.ref), e => e.data.ref), 15),
   };
 }
 

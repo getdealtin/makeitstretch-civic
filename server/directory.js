@@ -9,7 +9,8 @@ import express from 'express';
 import { PUBLIC_FIELDS, EDITABLE_FIELDS } from './db.js';
 import { CITIES } from '../cities/index.js';
 import { summarize, recentVisits, cityForZip } from './events.js';
-import { mountCommunityAdmin } from './community.js';
+import { mountCommunityAdmin, allRecipes } from './community.js';
+import { FOOD_DB } from '../engine/food-db.js';
 import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
 import { retailFindings } from './stores.js';
 import { BLS_ITEMS } from './prices.js';
@@ -258,7 +259,9 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
       const visits = newest.length ? recentVisits(await db().listEventsForSessions(newest), names, 50) : [];
       const cityNames = Object.fromEntries(await Promise.all([...new Set(visits.map(v => v.zip).filter(Boolean))].map(async z => [z, await cityForZip(z)])));
       for (const v of visits) v.city = (v.zip && cityNames[v.zip]) || v.area || null;
-      return { available: true, days, recent_visits: visits, ...summarize(events, rolesOf(CITIES[city].resources)) };
+      const recipeNames = Object.fromEntries(allRecipes().map(r => [r.id, r.title]));
+      const foodNames = Object.fromEntries(FOOD_DB.map(f => [f.id, f.name.replace(/\s*\(.*\)\s*$/, '')]));
+      return { available: true, days, recent_visits: visits, ...summarize(events, rolesOf(CITIES[city].resources), { recipes: recipeNames, foods: foodNames }) };
     }
     catch (e) { console.error(e.message); return { available: false, error: true, days }; }
   };

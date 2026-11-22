@@ -8,6 +8,7 @@ export default {
     { h: 'Información que recopilamos', p: [
       'No necesita darnos su nombre, correo electrónico, teléfono ni domicilio para usar la herramienta. No usamos publicidad ni cookies de rastreo.',
       'Recopilamos información sobre cómo se usa la herramienta, de una forma que no lo identifica. Esto incluye las respuestas que da (como el presupuesto, el número de personas en su hogar, el código postal, las preferencias de comida y las necesidades de dieta), los planes y sugerencias de comidas creados para usted y cómo los usa (como las recetas que ve, los recursos de ayuda que elige y los productos de una caja de comida que nos indica que no puede usar).',
+      'Si otro sitio web lo trajo aquí, anotamos solo el nombre de ese sitio (por ejemplo, threads.net), no la página de donde vino.',
       'Como en la mayoría de los sitios web, nuestros servidores reciben información técnica, como su dirección IP, cuando se conecta. Solo la usamos para operar el servicio y protegerlo contra abusos, y no la guardamos junto con la información de uso.',
       'Si se inscribe para mantenerse en contacto o nos envía un mensaje, guardamos el correo electrónico y el mensaje que nos da, solo para responderle o enviarle novedades. Puede pedirnos que los borremos en cualquier momento.',
     ] },

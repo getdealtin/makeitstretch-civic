@@ -647,3 +647,9 @@ button.pill-choice:hover { border-color: var(--violet); }
 .share-meal-card .smc-icon { width: 52px; height: 52px; border-radius: 12px; background: #DCEFE3; display: flex; align-items: center; justify-content: center; flex: none; }
 .share-meal-card b { display: block; font-family: var(--font-display); font-size: 20px; color: var(--indigo-ink); }
 .share-meal-card span.smc-sub { color: var(--text-muted); font-size: 16px; }
+
+/* SNAP prompt (Nov 22 2026): plans below the average SNAP benefit */
+.snap-prompt { margin: 18px 0 4px; padding: 16px; border-radius: 14px; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .25); }
+.snap-prompt p { margin: 0 0 10px; font-size: 16px; line-height: 1.5; }
+.snap-prompt .snap-t { font: 700 18px var(--font-label); color: #FFFFFF; margin-bottom: 6px; }
+.snap-prompt .btn { margin-top: 2px; }

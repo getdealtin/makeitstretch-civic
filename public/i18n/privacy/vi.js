@@ -8,6 +8,7 @@ export default {
     { h: 'Thông tin chúng tôi thu thập', p: [
       'Bạn không cần cung cấp tên, địa chỉ email, số điện thoại hay địa chỉ nhà để dùng công cụ. Chúng tôi không dùng quảng cáo hay cookie theo dõi.',
       'Chúng tôi thu thập thông tin về cách công cụ được sử dụng, ở dạng không nhận dạng được bạn. Bao gồm các câu trả lời bạn cung cấp (như ngân sách, số người trong nhà, mã bưu điện, sở thích món ăn và nhu cầu ăn kiêng), các kế hoạch và gợi ý món ăn được tạo cho bạn, và cách bạn sử dụng chúng (như công thức bạn xem, nguồn trợ giúp bạn chọn, và những món trong thùng thực phẩm mà bạn cho biết không dùng được).',
+      'Nếu một trang web khác đưa bạn đến đây, chúng tôi chỉ ghi lại tên trang web đó (ví dụ: threads.net), không ghi trang cụ thể bạn đến từ.',
       'Giống hầu hết các trang web, máy chủ của chúng tôi nhận thông tin kỹ thuật, như địa chỉ IP, khi bạn kết nối. Chúng tôi chỉ dùng thông tin này để vận hành dịch vụ và bảo vệ khỏi lạm dụng, và không lưu cùng với thông tin sử dụng.',
       'Nếu bạn đăng ký giữ liên lạc hoặc gửi lời nhắn cho chúng tôi, chúng tôi giữ địa chỉ email và lời nhắn bạn cung cấp, chỉ để trả lời bạn hoặc gửi tin mới. Bạn có thể yêu cầu chúng tôi xóa bất cứ lúc nào.',
     ] },

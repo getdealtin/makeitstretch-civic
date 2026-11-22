@@ -158,3 +158,38 @@ test('recent visits (admin only): one entry per visit, joined across sites, in p
   assert.equal(c.area, 'ND');
   assert.equal(recentVisits(ev, {}, 2).length, 2, 'limited');
 });
+
+test('what is in a plan (Nov 22 2026): meal numbers and list foods are kept, anything else dropped; swaps record from → to', async () => {
+  const { cleanEvent: ce, summarize: sum } = await import('../server/events.js');
+  const e = ce({ event: 'plan_built', session_id: 'abc123def456', data: { budget: 50, days: 7, people: 1, meals: [12, 12, 50001, 'x', -4, 1.5], foods: ['rice', 'drybeans', 'gold bars'] } });
+  assert.deepEqual(e.data.meals, [12, 50001]);
+  assert.deepEqual(e.data.foods, ['rice', 'drybeans']);
+  assert.deepEqual(ce({ event: 'meal_swapped', session_id: 'abc123def456', data: { recipe: 9, from: 6 } }).data, { recipe: 9, from: 6 });
+  const t = new Date().toISOString();
+  const s = sum([
+    { session_id: 'aaaaaaaaaaaa', event: 'page_view', data: { ref: 'threads.net' }, created_at: t },
+    { session_id: 'aaaaaaaaaaaa', event: 'plan_built', data: e.data, created_at: t },
+    { session_id: 'aaaaaaaaaaaa', event: 'meal_swapped', data: { recipe: 9, from: 6 }, created_at: t },
+  ], undefined, { recipes: { 12: 'Garlic Fried Rice', 9: 'Peanut Butter and Oat Bowl', 6: 'Banana Oat Porridge' }, foods: { rice: 'White Rice' } });
+  assert.deepEqual(s.meals_in_plans[0], ['Garlic Fried Rice', 1]);
+  assert.deepEqual(s.foods_on_lists[0], ['White Rice', 1]);
+  assert.deepEqual(s.swaps[0], ['Banana Oat Porridge → Peanut Butter and Oat Bowl', 1]);
+  assert.deepEqual(s.referrers[0], ['threads.net', 1]);
+});
+
+test('referring site: a site name only; pages, our own site and junk are dropped', async () => {
+  const { cleanEvent: ce } = await import('../server/events.js');
+  const ref = r => ce({ event: 'page_view', session_id: 'abc123def456', data: { ref: r } }).data.ref;
+  assert.equal(ref('threads.net'), 'threads.net');
+  assert.equal(ref('www.makeitstretch.org'), undefined);
+  assert.equal(ref('https://evil.example/path?x=1'), undefined);
+  assert.equal(ref('me@example.com'), undefined);
+  assert.equal(ref('localhost'), undefined);
+});
+
+test('privacy policy names the referring site rule in all four languages', async () => {
+  for (const code of ['en', 'es', 'vi', 'zh-Hans']) {
+    const P = (await import(`../public/i18n/privacy/${code}.js`)).default;
+    assert.match(JSON.stringify(P.sections[1]), /threads\.net/, code);
+  }
+});
