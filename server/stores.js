@@ -4,6 +4,9 @@
 // Each city names its own data files in its config (`local.stores`, `local.food_access`; built by
 // scripts/build-snap-stores.py and scripts/build-food-access.py). A city without them simply has no
 // "Where to shop" panel and no store tables in its report: nothing falls back to another city's data.
+// makeitstretch.org's card names the national list (snap-stores-us.json, owner decision Nov 22 2026): every
+// U.S. grocery store and farmers market that takes SNAP, in compact rows (`cols`), indexed on a grid.
+// store-mix-by-zip.json (same build) holds each ZIP code's store mix, for the admin insights.
 //
 // Only facts we can show are verified:
 //   • "Takes SNAP": every store here is on USDA's SNAP-authorized list (as of the file's date).
@@ -13,14 +16,46 @@ import { readFileSync } from 'node:fs';
 
 const readData = file => JSON.parse(readFileSync(new URL(`../data/${file}`, import.meta.url), 'utf8'));
 const ZIP_CENTERS = readData('zip-centroids.json');
+const GROUP = { 'Supermarket': 'grocery', 'Super Store': 'grocery', 'Large Grocery Store': 'grocery',
+  'Medium Grocery Store': 'grocery', 'Small Grocery Store': 'grocery', "Farmers' Market": 'market', 'Convenience Store': 'convenience' };
+const FULL = new Set(['Supermarket', 'Super Store', 'Large Grocery Store']);
+const MEMBERSHIP = new Set(['Costco', "Sam's Club"]);
+/** The national file's compact rows → the same store objects a city's own file has. */
+function expand(file) {
+  if (!file.cols) return file.stores;
+  return file.stores.map(([id, name, type, addr, city, state, zip, lat, lon]) => {
+    const t = file.types[type];
+    return { id, name, usda_name: name, type: t, group: GROUP[t] || 'other', full: FULL.has(t), membership: MEMBERSHIP.has(name),
+      addr, city, state, zip, lat, lon };
+  });
+}
+/** Stores bucketed into 0.25° cells, so a search looks at the cells near a point, not every store. */
+const CELL = 0.25;
+function gridOf(stores) {
+  const g = new Map();
+  for (const s of stores) {
+    const k = `${Math.floor(s.lat / CELL)},${Math.floor(s.lon / CELL)}`;
+    if (!g.has(k)) g.set(k, []);
+    g.get(k).push(s);
+  }
+  return g;
+}
+function within(grid, c, maxMiles) {
+  const dy = Math.ceil(maxMiles / 69 / CELL), dx = Math.ceil(maxMiles / (69 * Math.max(0.2, Math.cos(rad(Math.abs(c[0]) + 1)))) / CELL);
+  const y0 = Math.floor(c[0] / CELL), x0 = Math.floor(c[1] / CELL), out = [];
+  for (let y = y0 - dy; y <= y0 + dy; y++) for (let x = x0 - dx; x <= x0 + dx; x++) out.push(...(grid.get(`${y},${x}`) || []));
+  return out;
+}
 
 /** A city's store list and food-access data, read once per city. null parts mean the city has none. */
 const cache = new Map();
 export function cityData(city) {
   if (!cache.has(city.id)) {
     const stores = city.local?.stores ? readData(city.local.stores) : null;
+    const list = stores ? expand(stores).filter(s => s.lat && s.lon) : null;
     cache.set(city.id, {
-      stores: stores?.stores || null,
+      stores: list,
+      grid: list ? gridOf(list.filter(s => s.group === 'grocery' || s.group === 'market')) : null,
       storesAsOf: stores?.as_of || null,
       access: city.local?.food_access ? readData(city.local.food_access) : null,
     });
@@ -39,28 +74,52 @@ export function miles(p, q) {
 /**
  * Nearest grocery stores and farmers markets to a ZIP code's center, for a city.
  * Notes come from the city config: { [usda store name]: { wic?: true, double?: string, hours?: string } }.
+ * Rural ZIP codes (owner decision, Nov 22 2026): with no grocery store within `maxMiles`, the nearest few
+ * within `farMiles` are shown instead, marked `far` ("the closest we found").
  * Returns null when the city has no store list or the ZIP code is unknown.
  */
-export function storesNear(city, zip, { grocery = 5, markets = 3, maxMiles = 10 } = {}) {
-  const { stores, storesAsOf } = cityData(city);
+const nearCache = new Map();
+export function storesNear(city, zip, { grocery = 5, markets = 3, maxMiles = 10, farMiles = 30, farShown = 3 } = {}) {
+  const { stores, storesAsOf, grid } = cityData(city);
   const c = ZIP_CENTERS[zip];
   if (!stores || !c) return null;
+  const key = `${city.id}:${zip}`;
+  if (nearCache.has(key)) return nearCache.get(key);
   const notes = city.store_notes || {};
-  const withDist = stores.filter(s => s.group === 'grocery' || s.group === 'market')
+  const near = limit => within(grid, c, limit)
     .map(s => ({ ...s, miles: +miles(c, [s.lat, s.lon]).toFixed(1) }))
-    .filter(s => s.miles <= maxMiles)
+    .filter(s => s.miles <= limit)
     .sort((a, b) => a.miles - b.miles || a.id - b.id);
   const pick = s => {
     const n = notes[s.usda_name] || {};
-    return { id: s.id, name: s.name, addr: s.addr, zip: s.zip, miles: s.miles, type: s.group, full: s.full,
-      membership: s.membership, wic: !!n.wic, double: n.double || null, hours: n.hours || null };
+    return { id: s.id, name: s.name, addr: s.addr, city: s.city || null, state: s.state || null, zip: s.zip, miles: s.miles,
+      type: s.group, full: s.full, membership: s.membership, wic: !!n.wic, double: n.double || null, hours: n.hours || null };
   };
-  return {
-    as_of: storesAsOf, zip,
-    grocery: withDist.filter(s => s.group === 'grocery').slice(0, grocery).map(pick),
+  let withDist = near(maxMiles), far = false;
+  let groceries = withDist.filter(s => s.group === 'grocery').slice(0, grocery);
+  if (!groceries.length) {
+    groceries = near(farMiles).filter(s => s.group === 'grocery').slice(0, farShown);
+    far = groceries.length > 0;
+  }
+  const out = {
+    as_of: storesAsOf, zip, far, far_miles: farMiles, max_miles: maxMiles,
+    grocery: groceries.map(pick),
     markets: withDist.filter(s => s.group === 'market').slice(0, markets).map(pick),
   };
+  if (nearCache.size > 5000) nearCache.clear();
+  nearCache.set(key, out);
+  return out;
 }
+
+/** A ZIP code's store mix (every U.S. ZIP code, USDA list): nearest full grocery and SNAP stores inside it. */
+let MIX = null;
+export function storeMix(zip) {
+  MIX ||= readData('store-mix-by-zip.json');
+  const m = MIX.zips[zip];
+  if (!m) return null;
+  return Object.fromEntries(MIX.cols.map((k, i) => [k, m[i]]));
+}
+export const storeMixAsOf = () => (MIX ||= readData('store-mix-by-zip.json')).as_of;
 
 /** Counts of SNAP-authorized stores by kind for a set of ZIP codes, and distance to the nearest full grocery. */
 function mix(stores, zips) {

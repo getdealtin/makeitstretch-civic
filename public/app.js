@@ -904,8 +904,11 @@ async function loadShop(zip, { quiet = false } = {}) {
   const doubler = d.markets.find(m => m.double);
   setHubSub('shop', [d.grocery[0] ? esc(t('hub_shop_near', { mi: Number(d.grocery[0].miles).toFixed(1) })) : '',
     doubler ? esc(t('hub_shop_double', { mi: Number(doubler.miles).toFixed(1) })) : ''].filter(Boolean).join(' · '));
-  // Full address for map and transit links, in the city's own place and state.
-  const where = st => [st.addr, [city.place, city.region].filter(Boolean).join(', '), st.zip].filter(Boolean).join(' ');
+  // Full address for map and transit links: the store's own town and state (national list), else the city's.
+  const where = st => [st.addr, [st.city || city.place, st.state || city.region].filter(Boolean).join(', '), st.zip].filter(Boolean).join(' ');
+  // Counted with each tap (owner decision, Nov 22 2026): the kind of store and about how far, never who.
+  const kindOf = st => (st.type === 'market' ? 'market' : st.full ? 'full' : 'grocery');
+  const tapData = st => `data-store="${kindOf(st)}" data-mi="${Number(st.miles).toFixed(1)}"`;
   const card = st => `<article class="store">
       <h3>${esc(st.name)}</h3>
       <p class="store-meta">${esc([st.addr, aboutMi(st.miles), st.hours ? t('hours_' + st.hours) : ''].filter(Boolean).join(' · '))}</p>
@@ -916,13 +919,14 @@ async function loadShop(zip, { quiet = false } = {}) {
         ${st.membership ? `<span class="chip-tag chip-plain">${esc(t('chip_member'))}</span>` : ''}
       </div>
       <div class="help-actions">
-        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(st.name + ', ' + where(st))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="directions">${esc(t('directions'))}<span class="sr-only"> (${esc(st.name)})</span></a>
-        ${city.transit_trip_url ? `<a href="${esc(city.transit_trip_url.replace('{dest}', encodeURIComponent(where(st))))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="bus">${esc(t('shop_bus'))}<span class="sr-only"> (${esc(st.name)})</span></a>` : ''}
+        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(st.name + ', ' + where(st))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="directions" ${tapData(st)}>${esc(t('directions'))}<span class="sr-only"> (${esc(st.name)})</span></a>
+        ${city.transit_trip_url ? `<a href="${esc(city.transit_trip_url.replace('{dest}', encodeURIComponent(where(st))))}" target="_blank" rel="noopener" data-track="store" data-target="snap-${st.id}" data-action="bus" ${tapData(st)}>${esc(t('shop_bus'))}<span class="sr-only"> (${esc(st.name)})</span></a>` : ''}
       </div></article>`;
   const asOf = new Date(d.as_of + 'T12:00:00Z').toLocaleDateString(lang, { month: 'long', year: 'numeric', timeZone: 'UTC' });
   body.innerHTML = `<p class="sites-sorted">${esc(t('shop_near', { zip }))}
       <button type="button" class="btn-link" id="shop-change">${esc(t('sites_zip_change'))}</button></p>
-    ${d.grocery.length ? `<h3 class="shop-group">${esc(t('shop_grocery'))}</h3>${d.grocery.map(card).join('')}` : ''}
+    ${d.grocery.length ? `<h3 class="shop-group">${esc(t('shop_grocery'))}</h3>
+      ${d.far ? `<p class="shop-far">${esc(t('shop_far', { mi: d.max_miles, zip }))}</p>` : ''}${d.grocery.map(card).join('')}` : ''}
     ${d.markets.length ? `<h3 class="shop-group">${esc(t('shop_markets'))}</h3>${d.markets.map(card).join('')}` : ''}
     ${city.wic_finder_url ? `<p><a href="${esc(city.wic_finder_url)}" target="_blank" rel="noopener" data-track="store" data-target="wic-finder" data-action="wic_finder">${esc(t('shop_wic'))}</a></p>` : ''}
     <p class="source-note">${esc(t('shop_source', { date: asOf }))}</p>`;
@@ -1881,7 +1885,8 @@ function askOutcome(kind) {
 // One listener for every help / food-site link on any page.
 app.addEventListener('click', e => {
   const a = e.target.closest('a[data-track]');
-  if (a) track('help_clicked', { target: a.dataset.target, kind: a.dataset.track, action: a.dataset.action });
+  if (a) track('help_clicked', { target: a.dataset.target, kind: a.dataset.track, action: a.dataset.action,
+    ...(a.dataset.store ? { store: a.dataset.store, mi: Number(a.dataset.mi) } : {}) });
 });
 
 // Print every week, not just the one on screen.

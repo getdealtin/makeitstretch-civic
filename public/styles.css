@@ -487,6 +487,7 @@ html { scroll-padding-bottom: 110px; }
 .chip-good { background: #E5F4E4; color: var(--green-text); }
 .chip-plain { background: transparent; border: 1px solid var(--rule); }
 .shop-group { font-size: 18px; margin: 18px 0 8px; }
+.shop-far { margin: 0 0 10px; color: var(--text-muted); }
 .source-note { font-size: 13px; color: var(--text-muted); margin-top: 12px; }
 @media print {
   #home .hub, #home .keep, .back-bar { display: none !important; }

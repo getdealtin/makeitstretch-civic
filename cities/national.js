@@ -31,6 +31,10 @@ export default {
   k_anon_threshold: 15,
   sources: [],
   focus_area: null,
+  // "Where to shop" everywhere (owner decision, Nov 22 2026): every U.S. grocery store and farmers market on
+  // USDA's SNAP list (scripts/build-snap-stores.py --national). No WIC, Double Up or hours notes: those are
+  // shown only where a city has checked them. No bus trip planner: Directions opens the person's maps app.
+  local: { stores: 'snap-stores-us.json' },
   // Links checked Nov 19, 2026. USDA's food agency now lives at fna.usda.gov (fns.usda.gov redirects there);
   // Benefits.gov closed in 2024, so SNAP points to USDA's state directory. Feeding America and 211.org were
   // confirmed by search (both block automated checks from the build workspace).

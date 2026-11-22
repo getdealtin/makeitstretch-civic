@@ -67,7 +67,9 @@ export const SCHEMA = {
     cant_step: oneOf(['picked', 'none', 'skipped']), cant: int(0, 60) }, // the "won't use" step: what the person did, how many foods
   recipe_opened: { recipe: int(1, 100000), flow: oneOf(['plan', 'box']) },
   meal_swapped: { recipe: int(1, 100000), from: int(1, 100000) },  // the meal chosen, and the one it replaced
-  help_clicked: { target: slug, kind: oneOf(['resource', 'site', 'store']), action: oneOf(['call', 'directions', 'website', 'bus', 'wic_finder']) },
+  help_clicked: { target: slug, kind: oneOf(['resource', 'site', 'store']), action: oneOf(['call', 'directions', 'website', 'bus', 'wic_finder']),
+    // Store taps (Nov 22 2026): USDA's kind of store (full grocery, other grocery, farmers market) and about how far.
+    store: oneOf(['full', 'grocery', 'market']), mi: num(0, 100) },
   zip_added_later: { zip },
   plan_kept: { how: oneOf(['save', 'text', 'email', 'copy']), kind: oneOf(['plan', 'box']) },
   language_changed: { from: oneOf(LANGS), to: oneOf(LANGS) },
@@ -97,8 +99,15 @@ export function cleanEvent(b) {
 // ── Totals for the admin Activity section (operator's private view: nothing hidden) ──
 const { tfpPerPersonDay: TFP, snapPerPersonDay: SNAP } = BENCHMARKS;
 
-/** @param {{benefits:string[], food_help:string[]}} roles  resource ids by role (from the city's resources) */
-export function summarize(events, roles = { benefits: [], food_help: [] }, names = { recipes: {}, foods: {} }) {
+const BANDS = [[1, 'Under 1 mi'], [3, '1 to 3 mi'], [10, '3 to 10 mi'], [Infinity, '10 mi or more']];
+const bandOf = mi => BANDS.find(([max]) => mi < max)[1];
+
+/**
+ * @param {{benefits:string[], food_help:string[]}} roles  resource ids by role (from the city's resources)
+ * @param {(zip: string) => ({nearest_full_miles:number|null, full:number, other_grocery:number, markets:number,
+ *   convenience:number, dollar_or_other:number}|null)} mixFor  a ZIP code's store mix (server/stores.js storeMix)
+ */
+export function summarize(events, roles = { benefits: [], food_help: [] }, names = { recipes: {}, foods: {} }, mixFor = () => null) {
   const by = e => events.filter(x => x.event === e);
   const count = (rows, f) => rows.reduce((m, r) => { for (const k of [].concat(f(r) ?? [])) m[k] = (m[k] || 0) + 1; return m; }, {});
   const top = (m, n = 15) => Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n);
@@ -164,6 +173,28 @@ export function summarize(events, roles = { benefits: [], food_help: [] }, names
     plans_with_meals: plans.filter(p => p.data.meals).length,
     swaps: top(count(by('meal_swapped').filter(e => e.data.from), e => `${names.recipes[e.data.from] || e.data.from} → ${names.recipes[e.data.recipe] || e.data.recipe}`), 15),
     referrers: top(count(by('page_view').filter(e => e.data.ref), e => e.data.ref), 15),
+    // Where to shop (owner decision, Nov 22 2026). Store taps: which kind of store people looked up, and how far.
+    store_taps: (() => {
+      const taps = helps.filter(h => h.data.kind === 'store' && h.data.store);
+      return { taps: taps.length, by_kind: count(taps, h => h.data.store),
+        by_distance: BANDS.map(([, b]) => [b, taps.filter(h => h.data.mi != null && bandOf(h.data.mi) === b).length]) };
+    })(),
+    // Food access where plans are made, from each plan's ZIP code (USDA's SNAP store list): how far its center
+    // is from a full grocery store, and how many plans there were below the average SNAP benefit.
+    access: (() => {
+      const rows = plans.filter(p => p.data.zip).map(p => ({ p, m: mixFor(p.data.zip) })).filter(x => x.m && x.m.nearest_full_miles != null);
+      const zips = [...new Set(rows.map(x => x.p.data.zip))].map(z => mixFor(z));
+      const sum = k => zips.reduce((n, m) => n + (m[k] || 0), 0);
+      return {
+        plans: rows.length,
+        by_distance: BANDS.map(([, b]) => {
+          const inBand = rows.filter(x => bandOf(x.m.nearest_full_miles) === b);
+          return [b, inBand.length, inBand.filter(x => x.p.data.pppd != null && x.p.data.pppd < SNAP).length];
+        }),
+        zips: zips.length,
+        mix: { full: sum('full'), other_grocery: sum('other_grocery'), markets: sum('markets'), convenience: sum('convenience'), dollar_or_other: sum('dollar_or_other') },
+      };
+    })(),
   };
 }
 

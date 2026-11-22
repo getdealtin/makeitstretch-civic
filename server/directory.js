@@ -12,7 +12,7 @@ import { summarize, recentVisits, cityForZip } from './events.js';
 import { mountCommunityAdmin, allRecipes } from './community.js';
 import { FOOD_DB } from '../engine/food-db.js';
 import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
-import { retailFindings } from './stores.js';
+import { retailFindings, storeMix, storeMixAsOf } from './stores.js';
 import { BLS_ITEMS } from './prices.js';
 import { maintenanceFor } from './maintenance.js';
 import { readFileSync } from 'node:fs';
@@ -260,7 +260,7 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
       for (const v of visits) v.city = (v.zip && cityNames[v.zip]) || v.area || null;
       const recipeNames = Object.fromEntries(allRecipes().map(r => [r.id, r.title]));
       const foodNames = Object.fromEntries(FOOD_DB.map(f => [f.id, f.name.replace(/\s*\(.*\)\s*$/, '')]));
-      return { available: true, days, recent_visits: visits, ...summarize(events, rolesOf(CITIES[city].resources), { recipes: recipeNames, foods: foodNames }) };
+      return { available: true, days, recent_visits: visits, ...summarize(events, rolesOf(CITIES[city].resources), { recipes: recipeNames, foods: foodNames }, storeMix), store_mix_as_of: storeMixAsOf() };
     }
     catch (e) { console.error(e.message); return { available: false, error: true, days }; }
   };

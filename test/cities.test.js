@@ -34,7 +34,7 @@ test('a new city with only the basics: no Austin data or wording anywhere', asyn
   const { cityReport, rolesOf } = await import('../server/report.js');
   const { maintenanceFor } = await import('../server/maintenance.js');
   const card = withSharedListings({ ...CITIES.national, id: 'springfield', hosts: ['springfield.makeitstretch.org'],
-    place: 'Springfield', region: 'IL', needs: ['health'], languages: ['en', 'es'], i18n: {},
+    place: 'Springfield', region: 'IL', needs: ['health'], languages: ['en', 'es'], i18n: {}, local: undefined,
     resources: [...CITIES.national.resources] });
   const austinish = /Austin|Travis|Texas|CapMetro|Council District|78702/;
 

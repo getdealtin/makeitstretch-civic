@@ -136,6 +136,7 @@ export default {
   shop_grocery: "Grocery stores that take SNAP",
   shop_markets: "Farmers markets that take SNAP",
   shop_none: "We couldn’t find grocery stores near this ZIP code in our list.",
+  shop_far: "USDA’s list has no grocery store within {mi} miles of the center of ZIP code {zip}. These are the closest we found.",
   chip_snap: "Takes SNAP",
   chip_wic: "Takes WIC",
   chip_double_up30: "Doubles SNAP & WIC up to $30 a week",

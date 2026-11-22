@@ -121,6 +121,7 @@ export default {
   shop_grocery: "接受 SNAP 的食品杂货店",
   shop_markets: "接受 SNAP 的农贸市场",
   shop_none: "我们的列表中没有找到这个邮政编码附近的食品杂货店。",
+  shop_far: "美国农业部的名单上，距邮政编码 {zip} 中心 {mi} 英里内没有食品杂货店。以下是我们找到的最近的几家。",
   chip_snap: "接受 SNAP",
   chip_wic: "接受 WIC",
   chip_double_up30: "SNAP 和 WIC 加倍，每周最多 $30",

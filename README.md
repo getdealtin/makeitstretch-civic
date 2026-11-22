@@ -171,6 +171,9 @@ before this change is kept on the branch `backup/before-one-site`.
    (never Austin's data in its place):
    - `stores`: `python3 -I scripts/build-snap-stores.py <USDA csv> --state XX --county Name`
      → "Where to shop", store tables in the report, and the store-list reminder.
+     makeitstretch.org uses `--national` instead: data/snap-stores-us.json (every U.S. grocery store and farmers
+     market that takes SNAP) and data/store-mix-by-zip.json (each ZIP code's nearest full grocery and store mix,
+     for /admin). Re-run once a year when USDA publishes a new list.
    - `food_access`: `scripts/build-food-access.py <dir> --state Name --county Name --fips 12345 --focus <focus_zips>`.
    - `districts`: a ZIP → district file like Austin's (`scripts/build-zip-districts.py` is Austin's version).
    - `county`, `focus_note`, `food_access_note`: report wording. `transit_trip_url` ({dest} = store address):
@@ -288,3 +291,6 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
       real ingredients and "You'll also need", a random draw among equally good meals ("Show me different meals"),
       Recent visits in /admin, the About page and "Stay connected", community recipes, what's in each plan,
       a SNAP prompt below the average SNAP benefit, and the referring site's name. Details: the build spec's change log
+- [x] Nov 22: Where to shop for every U.S. ZIP code (USDA's SNAP list: 67,104 grocery stores and farmers markets;
+      no grocery within 10 miles → the nearest 3 within 30, "the closest we found"). Store taps record the kind of
+      store and about how far; /admin shows them, and how far plans are from a full grocery store

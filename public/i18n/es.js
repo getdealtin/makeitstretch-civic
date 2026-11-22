@@ -122,6 +122,7 @@ export default {
   shop_grocery: "Tiendas de comestibles que aceptan SNAP",
   shop_markets: "Mercados de agricultores que aceptan SNAP",
   shop_none: "No encontramos tiendas de comestibles cerca de este código postal en nuestra lista.",
+  shop_far: "La lista del USDA no tiene ninguna tienda de comestibles a menos de {mi} millas del centro del código postal {zip}. Estas son las más cercanas que encontramos.",
   chip_snap: "Acepta SNAP",
   chip_wic: "Acepta WIC",
   chip_double_up30: "Duplica SNAP y WIC hasta $30 a la semana",

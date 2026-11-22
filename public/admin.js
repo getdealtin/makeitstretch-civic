@@ -348,6 +348,7 @@ function wireCopy(scope) {
 // ── Activity (Phase 4). The operator's private view: every zip and number shown.
 const money = n => '$' + Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
 const pct = (n, d) => (d ? Math.round((n / d) * 100) + '%' : '—');
+const STORE_KIND = { full: 'Supermarket, super store or large grocery', grocery: 'Medium or small grocery', market: 'Farmers market' };
 const PRETTY = {
   step: { budget: 'Budget', days: 'How long', people: 'People', zip: 'Zip', prefs: 'Preferences' },
   store: { full: 'Grocery store', dollar: 'Dollar store', corner: 'Corner store' },
@@ -424,6 +425,17 @@ function activityHtml(a) {
       <div><h3>Dietary needs</h3>${table(a.avoid, ['Can’t eat', 'Plans and boxes'])}
         <h4>Food style</h4>${table(a.cuisine, ['Cuisine', 'Plans'])}</div>
       <div><h3>Help and food sites tapped</h3>${table(a.help, ['Resource or site id', 'Taps'])}</div>
+      ${a.store_taps ? `<div><h3>Stores people looked up</h3>
+        <p class="a-hint">Taps on Directions or the bus planner in Where to shop (${a.store_taps.taps} since Nov 22). The kind of store and about how far from the center of the person's ZIP code, never who.</p>
+        ${table(Object.entries(a.store_taps.by_kind), ['Kind of store', 'Taps'], k => STORE_KIND[k] || k)}
+        <h4>How far</h4>${table(a.store_taps.by_distance, ['Distance', 'Taps'])}</div>` : ''}
+      ${a.access ? `<div><h3>How far plans are from a full grocery store</h3>
+        <p class="a-hint">From each plan's ZIP code: miles from its center to the nearest supermarket, super store or large grocery that takes SNAP (USDA list, as of ${esc(a.store_mix_as_of ? new Date(a.store_mix_as_of + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '')}). ${a.access.plans} plans with a ZIP code.</p>
+        ${table(a.access.by_distance.map(([b, n, low]) => [b, `${n} (${low} below SNAP${n ? `, ${pct(low, n)}` : ''})`]), ['Nearest full grocery', 'Plans'])}
+        <h4>Stores that take SNAP inside those ${a.access.zips} ZIP codes</h4>${table([
+          ['Supermarkets, super stores, large groceries', a.access.mix.full], ['Medium and small groceries', a.access.mix.other_grocery],
+          ['Farmers markets', a.access.mix.markets], ['Convenience stores', a.access.mix.convenience],
+          ['Dollar stores, pharmacies and other (USDA “combination”)', a.access.mix.dollar_or_other]], ['Kind', 'Stores'])}</div>` : ''}
       <div><h3>Meals in plans</h3>
         <p class="a-hint">How many plans included each meal${a.plans_with_meals < a.plans ? ` (plans made since Nov 22: ${a.plans_with_meals} of ${a.plans})` : ''}.</p>
         ${table(a.meals_in_plans || [], ['Meal', 'Plans'])}</div>

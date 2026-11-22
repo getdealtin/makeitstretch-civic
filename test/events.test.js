@@ -184,3 +184,19 @@ test('privacy policy names the referring site rule in all four languages', async
     assert.match(JSON.stringify(P.sections[1]), /threads\.net/, code);
   }
 });
+
+test('store taps and food access where plans are made (Nov 22 2026)', () => {
+  const ev = (event, data, sid = 'aaaaaaaaaaaa') => ({ event, data, session_id: sid, created_at: '2026-11-22T10:00:00Z', lang: 'en' });
+  const c = cleanEvent({ event: 'help_clicked', session_id: 'aaaaaaaaaaaa', data: { target: 'snap-1', kind: 'store', action: 'directions', store: 'full', mi: 2.4, name: 'x' } });
+  assert.deepEqual(c.data, { target: 'snap-1', kind: 'store', action: 'directions', store: 'full', mi: 2.4 });
+  const mix = z => ({ '11111': { nearest_full_miles: 0.4, full: 2, other_grocery: 1, markets: 0, convenience: 5, dollar_or_other: 1 },
+    '22222': { nearest_full_miles: 14, full: 0, other_grocery: 0, markets: 0, convenience: 2, dollar_or_other: 3 } })[z] || null;
+  const s = summarize([ev('help_clicked', c.data), ev('plan_built', { zip: '11111', pppd: 9 }), ev('plan_built', { zip: '22222', pppd: 4 }, 'bbbbbbbbbbbb'),
+    ev('plan_built', { zip: '22222', pppd: 5 }, 'cccccccccccc')], undefined, undefined, mix);
+  assert.deepEqual(s.store_taps.by_kind, { full: 1 });
+  assert.equal(s.store_taps.by_distance.find(([b]) => b === '1 to 3 mi')[1], 1);
+  assert.deepEqual(s.access.by_distance.find(([b]) => b === '10 mi or more'), ['10 mi or more', 2, 2]);
+  assert.deepEqual(s.access.by_distance.find(([b]) => b === 'Under 1 mi'), ['Under 1 mi', 1, 0]);
+  assert.equal(s.access.zips, 2);
+  assert.equal(s.access.mix.dollar_or_other, 4);
+});

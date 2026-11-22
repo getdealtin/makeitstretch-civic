@@ -121,6 +121,7 @@ export default {
   shop_grocery: "Cửa hàng thực phẩm nhận SNAP",
   shop_markets: "Chợ nông sản nhận SNAP",
   shop_none: "Chúng tôi không tìm thấy cửa hàng thực phẩm gần mã ZIP này trong danh sách.",
+  shop_far: "Danh sách của USDA không có cửa hàng thực phẩm nào trong vòng {mi} dặm tính từ trung tâm mã ZIP {zip}. Đây là những cửa hàng gần nhất mà chúng tôi tìm được.",
   chip_snap: "Nhận SNAP",
   chip_wic: "Nhận WIC",
   chip_double_up30: "Nhân đôi SNAP và WIC đến $30 mỗi tuần",
