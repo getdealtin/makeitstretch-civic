@@ -32,6 +32,8 @@ export const INGREDIENT_FOODS = {
   'catfish': ['catfish'], 'kimchi': ['kimchi'], 'feta': ['feta'], 'fava beans': ['favabeans'], 'black-eyed peas': ['blackeyedpeas'],
   'biscuits': ['biscuits'], 'pita': ['pita'], 'lemon': ['lemons'], 'ground pork': ['groundpork'], 'red beans': ['kidneybean'],
   'spinach': ['spinach'], 'cucumber': ['cucumber'], 'zucchini': ['zucchini'],
+  // Store-bought foods for community recipes (Nov 22 2026; canned chili was already priced, just not offered).
+  'canned chili': ['cannedchili'], 'frozen burritos': ['frozenburritos'], 'jalapeños': ['jalapenos'],
 };
 
 /** Assumed to be in any kitchen; never listed as "you'll also need". */

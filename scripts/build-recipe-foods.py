@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CPI_NOW, CPI_1718 = 321.758, 239.125
 F1718 = CPI_NOW / CPI_1718
 CPI_LABEL = 'brought to September 2026 with the BLS CPI-U food-at-home index'
-PRICES_AS_OF = '2026-11-19'
+PRICES_AS_OF = '2026-11-19'  # frozen burritos and jalapeños added Nov 22 2026, same 2017–18 file and CPI
 CHECKS = []  # (food_code, price per 100 g) to verify against USDA's file
 
 
@@ -103,6 +103,17 @@ FOODS = {
                   167902, 263, 16.9, 0,
                   cooked(1.000337, 297, 263, 454, '22002000', 'Pork, ground or patty, cooked',
                          ' Approximate: meat loses fat and water as it cooks, so this conversion is rougher than for packaged foods.')),
+  # Store-bought foods neighbors cook with (owner decision, Nov 22 2026: the first community recipe, a burrito
+  # casserole, used them; canned chili was already on the list). Tagged conservatively: brands vary.
+  'frozenburritos': ('Frozen Beef and Bean Burritos (8 pack)', 1134, 4, 'protein', ['meat', 'gluten', 'dairy'],
+                  'Ready in minutes. Two make a filling meal.',
+                  173335, 239, 7.26, 4.2,
+                  ppnap(0.72831, 1134, '58100120', 'Burrito with meat and beans; burrito, NFS',
+                        ' USDA has no price for frozen burritos; this is its price for a burrito with meat and beans, likely higher than a frozen multipack, so plans won’t come in under budget.')),
+  'jalapenos':   ('Pickled Jalapeño Slices (12 oz jar)', 340, 12, 'vegetable', [],
+                  'Adds heat to beans, eggs and casseroles.',
+                  170080, 27, 0.92, 2.6,
+                  ppnap(0.285019, 340, '75511040', 'Pepper, hot, pickled')),
 }
 
 

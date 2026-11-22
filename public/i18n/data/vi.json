@@ -464,6 +464,16 @@
    "name": "Thịt heo xay",
    "full": "Thịt heo xay (1 lb)",
    "note": "Xào với tỏi để ăn mì, hoặc nêm làm xúc xích ăn sáng."
+  },
+  "frozenburritos": {
+   "name": "Burrito bò và đậu đông lạnh",
+   "full": "Burrito bò và đậu đông lạnh (gói 8 cái)",
+   "note": "Có ngay trong vài phút. Hai cái là đủ một bữa no."
+  },
+  "jalapenos": {
+   "name": "Ớt jalapeño ngâm",
+   "full": "Ớt jalapeño ngâm cắt lát (hũ 12 oz)",
+   "note": "Thêm vị cay cho đậu, trứng và các món nướng."
   }
  },
  "tips": {
@@ -628,7 +638,10 @@
   "vegetable broth": "nước dùng rau củ",
   "vinegar": "giấm",
   "white pepper": "tiêu trắng",
-  "worcestershire sauce": "sốt Worcestershire"
+  "worcestershire sauce": "sốt Worcestershire",
+  "canned chili": "chili đóng hộp",
+  "frozen burritos": "burrito đông lạnh",
+  "jalapeños": "ớt jalapeño"
  },
  "recipes": {
   "1": {

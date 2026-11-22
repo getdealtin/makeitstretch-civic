@@ -16,7 +16,7 @@ before(() => new Promise(r => { server = app.listen(0, () => { base = `http://12
 after(() => server.close());
 
 test('every new food has USDA nutrition, a price and where the price comes from', () => {
-  assert.equal(RECIPE_FOODS.length, 10);
+  assert.equal(RECIPE_FOODS.length, 12); // + frozen burritos and pickled jalapeños for community recipes (Nov 22 2026)
   for (const f of RECIPE_FOODS) {
     assert.ok(NUTRITION[f.id]?.fdc > 0, f.id);
     assert.ok(RECIPE_PRICES[f.id] > 0 && RECIPE_PRICES[f.id] < 15, f.id);

@@ -3,7 +3,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import app from '../server.js';
 import { memoryDb } from '../server/db.js';
-import { cleanSubmission, tagsFor, toRecipe, COMMUNITY_ID_BASE, allRecipes } from '../server/community.js';
+import { cleanSubmission, tagsFor, toRecipe, COMMUNITY_ID_BASE, allRecipes, checksFor, extraTags } from '../server/community.js';
 
 let server, base, db, cookie = '';
 process.env.ADMIN_KEY = 'test-admin-key';
@@ -70,4 +70,28 @@ test('share → admin check → approve → in plans → taken out', async () =>
 
   assert.equal((await post(`/api/admin/community/${pending[0].id}`, { action: 'remove' })).status, 200);
   assert.equal((await inPlans()).length, 0, 'taken out of plans');
+});
+
+// Lessons from the first community recipe (Nov 22 2026): its main foods were under "You'll also need".
+test('main foods left unpriced block approval; known foods under "also need" must move to the foods', () => {
+  const base = { id: 'x', num: 99, title: 'Burrito Casserole', slot: 'dinner', serves: 4, lang: 'en', steps: 'Bake at 350°F for 20 minutes.' };
+  const asSent = checksFor({ ...base, ingredients: [{ word: 'cheese', amount: '3 cups' }], extras: ['frozen burritos', 'canned chili with meat', 'diced jalapeños'] });
+  assert.equal(asSent.blocked, true);
+  assert.equal(asSent.blocking.length, 2);
+  const priced = checksFor({ ...base, ingredients: [{ word: 'frozen burritos' }, { word: 'canned chili' }, { word: 'cheese' }, { word: 'jalapeños' }], extras: [] });
+  assert.equal(priced.blocked, false);
+  assert.ok(priced.perServing.calories > 600 && priced.perServing.cost > 2);
+});
+
+test('"You\'ll also need" foods count for diets; unknown meat is treated as possibly pork', () => {
+  assert.deepEqual(extraTags(['canned chili with meat']).sort(), ['meat', 'pork']);
+  assert.deepEqual(extraTags(['vegetable broth']), []);
+  assert.deepEqual(extraTags(['broth']), ['meat']); // plain broth may be meat-based: kept out of meat-free plans
+  assert.deepEqual(extraTags(['diced jalapeños', 'cumin']), []);
+  assert.ok(toRecipe({ num: 1, title: 't', slot: 'dinner', serves: 2, lang: 'en', steps: 's', ingredients: [{ word: 'cheese' }], extras: ['bacon bits'] }).avoid.includes('pork'));
+});
+
+test('a name typed as "Shared by …" keeps only the name', () => {
+  const { row } = cleanSubmission({ consent: true, title: 'Burrito Casserole', slot: 'dinner', serves: 4, steps: 'Bake it until hot and the cheese melts.', ingredients: [{ word: 'cheese' }], shared_by: 'Shared by her oldest daughter' });
+  assert.equal(row.shared_by, 'her oldest daughter');
 });

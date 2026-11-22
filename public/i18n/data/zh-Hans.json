@@ -464,6 +464,16 @@
    "name": "猪肉末",
    "full": "猪肉末（1 磅）",
    "note": "加蒜炒香拌面，或调味做早餐香肠。"
+  },
+  "frozenburritos": {
+   "name": "冷冻牛肉豆子卷饼",
+   "full": "冷冻牛肉豆子卷饼（8 个装）",
+   "note": "几分钟就能吃。两个就能吃饱一顿。"
+  },
+  "jalapenos": {
+   "name": "腌墨西哥辣椒片",
+   "full": "腌墨西哥辣椒片（12 盎司罐）",
+   "note": "给豆子、鸡蛋和焗菜加点辣。"
   }
  },
  "tips": {
@@ -628,7 +638,10 @@
   "vegetable broth": "蔬菜高汤",
   "vinegar": "醋",
   "white pepper": "白胡椒",
-  "worcestershire sauce": "伍斯特酱"
+  "worcestershire sauce": "伍斯特酱",
+  "canned chili": "罐头辣豆酱",
+  "frozen burritos": "冷冻卷饼",
+  "jalapeños": "墨西哥辣椒"
  },
  "recipes": {
   "1": {

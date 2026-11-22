@@ -133,13 +133,15 @@ async function loadChecks() {
     const ok = t => `<li><span class="ok" aria-hidden="true">✓</span> ${t}</li>`, warn = t => `<li><span class="warn" aria-hidden="true">!</span> <b>${esc(t)}</b></li>`;
     box.innerHTML = `${c.perServing ? `<div class="comm-stats"><div><b>$${c.perServing.cost.toFixed(2)}</b><span>a serving</span></div><div><b>${c.perServing.calories}</b><span>calories</span></div><div><b>${c.perServing.protein} g</b><span>protein</span></div></div>` : ''}
       <ul class="comm-list">
-        ${c.perServing ? ok('All foods are on the priced list') : ''}
+        ${c.perServing && !c.blocked ? ok('All foods are on the priced list') : ''}
         ${c.extras.length ? ok(`“You’ll also need”: ${esc(c.extras.join(', '))}`) : ''}
         ${ok(c.contains.length ? `Tagged from the foods: <b>${esc(c.contains.map(k => CONTAINS[k] || k).join(', '))}</b>` : 'Tagged from the foods: no gluten, dairy, meat, pork, eggs, peanuts or fish')}
+        ${(c.blocking || []).map(warn).join('')}
         ${c.flags.map(warn).join('')}
         ${c.shown ? ok(`Would show up in ${c.shown} of ${c.tried} sample plans`) : warn(`Would show up in 0 of ${c.tried} sample plans. Approving it still lets families swap to it.`)}
         <li><span class="muted">Shown as written in every language until it’s translated.</span></li>
-      </ul>`;
+      </ul>${c.blocked ? '<p class="a-hint"><b>Can’t be approved yet.</b> Its main foods need to be added to the priced list first.</p>' : ''}`;
+    if (c.blocked) root.querySelectorAll(`#act-${id} [data-comm-act="approve"], #edit-${id} [data-comm-save]`).forEach(b => { b.disabled = true; });
   }
 }
 
@@ -278,7 +280,7 @@ function wire() {
   // Community recipes: approve, reject, take out of plans, or edit then approve.
   const commDo = async (id, body, ok) => {
     const r = await api(`/community/${id}`, body);
-    toast(r.ok ? ok : (r.error === 'name' ? 'A name can only use letters.' : 'Couldn’t save that. Check the fields and try again.'));
+    toast(r.ok ? ok : r.error === 'name' ? 'A name can only use letters.' : r.error === 'unpriced' ? 'Can’t approve yet: its main foods aren’t priced.' : 'Couldn’t save that. Check the fields and try again.');
     if (r.ok) load();
   };
   root.querySelectorAll('[data-comm-act]').forEach(b => b.addEventListener('click', () => {

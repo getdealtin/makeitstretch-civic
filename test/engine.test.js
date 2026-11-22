@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { resolvePrices, applyStoreAdjustments, zipToInfo, FOOD_DB, NUTRITION, SATIETY, FLOOR_KCAL } from '../engine/index.js';
 
 test('every food has USDA nutrition and a satiety weight from it', () => {
-  assert.equal(FOOD_DB.length, 93); // 58 core foods + 25 the NHLBI recipes need + 10 the original recipes' real ingredients need
+  assert.equal(FOOD_DB.length, 95); // 58 core foods + 25 the NHLBI recipes need + 10 the original recipes' real ingredients need + 2 for community recipes (Nov 22)
   for (const f of FOOD_DB) {
     assert.ok(NUTRITION[f.id]?.fdc > 0, `${f.id} has no FoodData Central id`);
     assert.equal(f.cal, NUTRITION[f.id].kcal, f.id);

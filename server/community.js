@@ -31,7 +31,8 @@ export function cleanSubmission(b) {
   const steps = longText(b.steps, 1500);
   const serves = Number(b.serves);
   const origin = text(b.origin, 80) || null;
-  const sharedBy = text(b.shared_by, 40) || null;
+  // People sometimes type the whole phrase ("Shared by her oldest daughter"); the card already says "Shared by".
+  const sharedBy = text(String(b.shared_by ?? '').replace(/^\s*shared\s+by\s+/i, ''), 40) || null;
   if (sharedBy && !NAME.test(sharedBy)) return { error: 'name' };
   if (title.length < 3 || !slot || !ingredients.length || steps.length < 20 || !(Number.isInteger(serves) && serves >= 1 && serves <= 20)) return { error: 'invalid' };
   return { row: { title, slot, ingredients, extras, steps, serves, origin, shared_by: sharedBy, lang: LANGS.includes(b.lang) ? b.lang : 'en' } };
@@ -45,13 +46,26 @@ export function tagsFor(words) {
   }));
 }
 
+// Foods under "You'll also need" aren't priced, but they still count for diets (Nov 22 2026: the first community
+// recipe's "canned chili with meat" wasn't tagged as meat). Unknown meat could be pork, so it's tagged both.
+const EXTRA_TAGS = [
+  ['pork', /\b(pork|ham|bacon|sausage|chorizo|pepperoni|hot ?dogs?|lard|meat|chili with|burritos?|tamales?)\b/i],
+  ['meat', /\b(meat|beef|chicken|pork|ham|bacon|sausage|chorizo|turkey|pepperoni|hot ?dogs?|jerky|lard|steak|burritos?|tamales?|chili with|(?<!vegetable |veggie )(?:broth|bouillon)|gelatin)\b/i],
+  ['fish', /\b(fish|anchov\w*|tuna|salmon|sardines?|shrimp|crab|clams?|oyster sauce|fish sauce)\b/i],
+  ['dairy', /\b(cheese|milk|cream|butter|yogurt|queso|burritos?)\b/i],
+  ['gluten', /\b(flour|bread|tortillas?|pasta|noodles?|crackers?|burritos?|biscuits?|buns?|croutons?)\b/i],
+  ['eggs', /\beggs?\b/i],
+  ['peanuts', /\bpeanuts?\b/i],
+];
+export const extraTags = extras => EXTRA_TAGS.filter(([, re]) => extras.some(x => re.test(x))).map(([tag]) => tag);
+
 /** A stored row → a recipe the planner and the site use. */
 export function toRecipe(row) {
   const words = row.ingredients.map(i => i.word);
   return {
     id: COMMUNITY_ID_BASE + row.num, title: row.title, slot: row.slot, cuisine: 'any',
     ingredients: words, ...(row.extras?.length ? { extras: row.extras } : {}),
-    instructions: row.steps, srv: row.serves, avoid: tagsFor(words), tags: 'community',
+    instructions: row.steps, srv: row.serves, avoid: [...new Set([...tagsFor(words), ...extraTags(row.extras || [])])], tags: 'community',
     community: true, shared_by: row.shared_by || null, origin: row.origin || null, lang: row.lang,
     amounts: Object.fromEntries(row.ingredients.filter(i => i.amount).map(i => [i.word, i.amount])),
   };
@@ -90,6 +104,14 @@ export function checksFor(row, region = 'south') {
   if (same.length) flags.push(`Same foods as ${same.slice(0, 3).join(', ')}.`);
   if (CANNING.test(row.steps)) flags.push('The steps mention canning, preserving or fermenting. Check they are safe.');
   if (recipe.ingredients.some(w => RAW_RISK.includes(w)) && !COOK_WORDS.test(row.steps)) flags.push('It has meat, fish or eggs, but the steps don’t say to cook them.');
+  // Blocking (Nov 22 2026): a dish whose main foods sit under "You'll also need" would look nearly free and
+  // fall short on calories in every plan, so it can't be approved until those foods are priced.
+  const blocking = [];
+  const onList = (row.extras || []).filter(x => INGREDIENT_FOODS[String(x).toLowerCase()]);
+  if (onList.length) blocking.push(`${onList.join(', ')} ${onList.length > 1 ? 'are' : 'is'} on the priced list. Move ${onList.length > 1 ? 'them' : 'it'} into the foods.`);
+  const MIN_KCAL = { breakfast: 200, lunch: 300, dinner: 300 };
+  if (me && (row.extras || []).length && me.kcal < MIN_KCAL[row.slot])
+    blocking.push(`Most of this dish isn’t priced (${row.extras.join(', ')}), so a serving would count as $${me.cost.toFixed(2)} and ${Math.round(me.kcal)} calories. Price those foods before approving.`);
   const name = row.shared_by || '';
   if (name && !TITLES.test(name) && name.trim().split(/\s+/).length >= 2 && /^\p{Lu}/u.test(name.trim().split(/\s+/)[1] || '')) flags.push(`"${name}" could be a full name. You may want just a first name or nickname.`);
   // How often it would show up: 4 budgets × 5 random draws, with every approved community recipe in place.
@@ -102,7 +124,7 @@ export function checksFor(row, region = 'south') {
   return {
     recipeId: recipe.id,
     perServing: me ? { cost: +me.cost.toFixed(2), calories: Math.round(me.kcal), protein: Math.round(me.protein) } : null,
-    contains: recipe.avoid, extras: recipe.extras || [], flags, shown, tried, region,
+    contains: recipe.avoid, extras: recipe.extras || [], flags, blocking, blocked: blocking.length > 0, shown, tried, region,
   };
 }
 
@@ -150,6 +172,7 @@ export function mountCommunityAdmin(admin, { db, regionFor = () => 'south' }) {
       patch = Object.fromEntries(EDITABLE.map(k => [k, clean[k]]));
     }
     if (action && !STATUS[action]) return res.status(400).json({ ok: false });
+    if (action === 'approve' && checksFor({ ...row, ...patch }, regionFor(row.city_id)).blocked) return res.status(409).json({ ok: false, error: 'unpriced' });
     if (action) Object.assign(patch, { status: STATUS[action], reviewed_at: new Date().toISOString() });
     try {
       const updated = await db().updateCommunityRecipe(row.id, patch);

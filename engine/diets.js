@@ -13,14 +13,15 @@ const FOOD_BY_ID = Object.fromEntries(FOOD_DB.map(f => [f.id, f]));
 export const LEAVE_OUT = ['gluten', 'dairy', 'meat', 'pork', 'eggs', 'peanuts', 'fish'];
 export const DIETS = ['halal', 'kosher', 'diabetic', 'low_sodium'];
 
-const PORK_FOODS = ['porkchops', 'groundpork'];
+// Frozen burritos: brands vary and some use pork, so they're treated as possibly pork (Nov 22 2026).
+const PORK_FOODS = ['porkchops', 'groundpork', 'frozenburritos'];
 const PORK_WORDS = ['pork', 'ground pork'];
-const MEAT_FOODS = ['chicken', 'groundbeef', 'porkchops', 'groundpork', 'cannedchili', 'cannedbroth', 'chickenbreast', 'drumsticks', 'sirloin', 'roundroast', 'groundturkey', 'kielbasa'];
-const MEAT_WORDS = ['chicken', 'ground beef', 'pork', 'ground pork', 'beef', 'chicken breast', 'chicken drumsticks', 'ground turkey', 'turkey kielbasa', 'beef broth', 'chicken broth', 'chicken bouillon'];
+const MEAT_FOODS = ['chicken', 'groundbeef', 'porkchops', 'groundpork', 'cannedchili', 'frozenburritos', 'cannedbroth', 'chickenbreast', 'drumsticks', 'sirloin', 'roundroast', 'groundturkey', 'kielbasa'];
+const MEAT_WORDS = ['chicken', 'ground beef', 'pork', 'ground pork', 'beef', 'canned chili', 'frozen burritos', 'chicken breast', 'chicken drumsticks', 'ground turkey', 'turkey kielbasa', 'beef broth', 'chicken broth', 'chicken bouillon'];
 const DAIRY_FOODS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporatedmilk', 'mozzarella', 'sourcream', 'buttermilk', 'feta', 'biscuits'];
 const DAIRY_WORDS = ['milk', 'butter', 'cheese', 'yogurt', 'evaporated milk', 'mozzarella', 'sour cream', 'buttermilk', 'feta', 'biscuits'];
 // Low sodium: packaged foods that are high in salt. Recipes with soy sauce are left out too.
-const SALTY_FOODS = ['soy', 'hotsauce', 'cannedsoups', 'cannedchili', 'cannedbroth', 'salsa', 'kielbasa', 'kimchi', 'feta', 'biscuits'];
+const SALTY_FOODS = ['soy', 'hotsauce', 'cannedsoups', 'cannedchili', 'cannedbroth', 'salsa', 'kielbasa', 'kimchi', 'feta', 'biscuits', 'frozenburritos', 'jalapenos'];
 const SALTY_WORDS = ['soy sauce', 'vegetable bouillon', 'chicken bouillon', 'ketchup', 'worcestershire sauce',
   // seasonings under "You'll also need" (a recipe's extras) that are high in salt
   'miso', 'gochujang', 'chipotle peppers in adobo'];

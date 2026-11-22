@@ -464,6 +464,16 @@
    "name": "Carne de cerdo molida",
    "full": "Carne de cerdo molida (1 lb)",
    "note": "Dórela con ajo para fideos, o sazónela como chorizo para el desayuno."
+  },
+  "frozenburritos": {
+   "name": "Burritos congelados de res y frijoles",
+   "full": "Burritos congelados de res y frijoles (paquete de 8)",
+   "note": "Listos en minutos. Dos hacen una comida que llena."
+  },
+  "jalapenos": {
+   "name": "Jalapeños en escabeche",
+   "full": "Jalapeños en escabeche en rodajas (frasco de 12 oz)",
+   "note": "Le dan picante a los frijoles, los huevos y los guisos al horno."
   }
  },
  "tips": {
@@ -628,7 +638,10 @@
   "vegetable broth": "caldo de verduras",
   "vinegar": "vinagre",
   "white pepper": "pimienta blanca",
-  "worcestershire sauce": "salsa inglesa"
+  "worcestershire sauce": "salsa inglesa",
+  "canned chili": "chili en lata",
+  "frozen burritos": "burritos congelados",
+  "jalapeños": "jalapeños"
  },
  "recipes": {
   "1": {

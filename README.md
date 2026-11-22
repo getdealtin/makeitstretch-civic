@@ -26,9 +26,9 @@ Build spec and decisions: *The Enough Project: Austin Build Spec & Requirements*
 engine/      The shared math. No DOM, no network, no city names. Runs on the server and in the browser.
   meals.js     the meal-first planner: meals → shopping list → fit the budget (see below)
   pricing.js   region prices + store-type adjustments; the 2,000-calorie floor
-  food-db.js   93 foods (58 core + 25 the NHLBI recipes need + 10 the seed recipes need) with package sizes and regional estimates
+  food-db.js   95 foods (58 core + 25 the NHLBI recipes need + 10 the seed recipes need + 2 for community recipes) with package sizes and regional estimates
   extra-foods.js  the 25 NHLBI recipe foods: USDA nutrition and each price's source (generated)
-  recipe-foods.js the 10 seed-recipe foods (catfish, kimchi, biscuits…): USDA ERS prices and nutrition (generated)
+  recipe-foods.js the 12 recipe foods (catfish, kimchi, biscuits… and frozen burritos, pickled jalapeños): USDA ERS prices and nutrition (generated)
   nutrition.js USDA FoodData Central calories, protein and fiber per package
   satiety.js   how filling each food is per calorie (protein, fiber, water), from nutrition.js
   diets.js     foods to leave out and diets (halal, kosher, diabetic, low sodium)
