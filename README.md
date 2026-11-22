@@ -26,8 +26,9 @@ Build spec and decisions: *The Enough Project: Austin Build Spec & Requirements*
 engine/      The shared math. No DOM, no network, no city names. Runs on the server and in the browser.
   meals.js     the meal-first planner: meals → shopping list → fit the budget (see below)
   pricing.js   region prices + store-type adjustments; the 2,000-calorie floor
-  food-db.js   83 foods (58 core + 25 the NHLBI recipes need) with package sizes and regional estimates
-  extra-foods.js  the 25 recipe foods: USDA nutrition and each price's source (generated)
+  food-db.js   93 foods (58 core + 25 the NHLBI recipes need + 10 the seed recipes need) with package sizes and regional estimates
+  extra-foods.js  the 25 NHLBI recipe foods: USDA nutrition and each price's source (generated)
+  recipe-foods.js the 10 seed-recipe foods (catfish, kimchi, biscuits…): USDA ERS prices and nutrition (generated)
   nutrition.js USDA FoodData Central calories, protein and fiber per package
   satiety.js   how filling each food is per calorie (protein, fiber, water), from nutrition.js
   diets.js     foods to leave out and diets (halal, kosher, diabetic, low sodium)
@@ -42,10 +43,15 @@ cities/      One config card per city. Everything city-specific lives here.
   index.js     registry + host → city resolver
 server.js    Express: picks the city by Host. Serves /theme.css, /api/config, /api/plan, and
              /api/prices + /api/recipes + /engine/ so the engine also runs in the browser
-server/      prices (BLS), stores, events, City report, food directory, open data feed (HSDS), reminders
+server/      prices (BLS), stores, events, City report, food directory, open data feed (HSDS), reminders,
+             community recipes (community.js), "Stay connected" (connect.js)
 public/      The UI (plain HTML/CSS/ES modules, no build step)
   keep.js      save / text / email / link a plan without an account
-  i18n/        screen text per language; data/ holds food, recipe and tip translations
+  about.html   /about: the story, Margin Ventures and the FACE grant, and the "Stay connected" form
+  share-meal.html  /share-a-meal: neighbors share a meal (reviewed in /admin before it reaches plans)
+  footer.js    About · Stay connected · Privacy policy, on the site's own pages
+  i18n/        screen text per language; data/ holds food, recipe and tip translations; about/, share-meal/,
+               privacy/ and principles/ hold those pages' text
 data/        seed-recipes.json (161 recipes), nih-recipes.json (25 NHLBI main dishes), simple-meals.json (22 everyday staple meals), city data files
 scripts/     reproducible builders for every generated data file (each names its sources)
 test/        node:test, no dependencies; test/cities.test.js runs every city through the same checks
@@ -199,7 +205,19 @@ No engine or UI code changes. If a city needs one, that's a sign the city's feat
   City report shows people, below-SNAP plans and needs by district as estimates (grant area: Districts 1–4).
 - **Needs signal**: for each need, who asked and whether they opened a source shown for it (City/County program,
   directory site, or 2-1-1), gaps by ZIP and district, and how many sources are listed per need.
-- Database schema: `db/schema.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
+- **Community recipes** (`/share-a-meal`, `server/community.js`, Nov 22 2026): neighbors share a dish made from
+  foods on the priced list (anything else goes under "You'll also need"), with an optional name shown on the recipe.
+  `/admin` → **Recipes to review** checks each one first (cost, calories and protein at the region's prices, what it
+  contains, duplicates, canning or uncooked meat, a name that looks like a full name, and how often it would show up
+  in 20 sample plans), then Approve, Edit then approve, or Not this one; approved ones can be taken out later.
+  Approved recipes get ids 50000 + n, join `/api/recipes` within 10 minutes, and show as a green "Community recipe"
+  card. In new plans one gets a turn when it fits the budget and calories (engine/meals.js, option A).
+- **Stay connected** (`/about#connect`, `server/connect.js`): email, who you are, optional message; the only email
+  the site keeps. `/admin` → **Messages** to reply or delete on request.
+- **Activity** in `/admin`: Recent visits (one row per visit: when, city from the ZIP code, ZIP, events, plan or box),
+  totals, and since Nov 22 meals in plans, foods on lists, swaps (from → to) and the websites that sent visitors.
+- Database schema: `db/schema.sql`, `db/phase4-events.sql`, `db/price-cache.sql`, `db/messages.sql`,
+  `db/community-recipes.sql` (RLS on, public roles revoked; only the server's secret key can read or write).
 
 ## Languages
 
@@ -266,3 +284,7 @@ English, Español, Tiếng Việt and 中文 (Austin's top languages), with a sw
       gives shopping checklist + week of meals + every recipe + local help + QR back to the plan (~4 pages);
       /packet lets library and pantry staff print packets for a household and weekly budget in any language
       (staff visits aren't counted; scans from a packet count under the `packet` source tag)
+- [x] Nov 19–22: one site (makeitstretch.org runs the tool; a partner city's ZIP switches to it), recipes with their
+      real ingredients and "You'll also need", a random draw among equally good meals ("Show me different meals"),
+      Recent visits in /admin, the About page and "Stay connected", community recipes, what's in each plan,
+      a SNAP prompt below the average SNAP benefit, and the referring site's name. Details: the build spec's change log

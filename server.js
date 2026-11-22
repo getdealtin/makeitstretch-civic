@@ -177,7 +177,6 @@ app.get('/api/recipes', (req, res) => res.type('json').set('Cache-Control', 'pub
 app.use('/engine', express.static(path.join(__dirname, 'engine'), { maxAge: '1h' }));
 
 // ── The plan ────────────────────────────────────────────────────
-const LIST = /^[a-z,]{0,120}$/;
 const ALLOWED = {
   cuisine: ['american', 'latin', 'asian', 'southern', 'mediterranean'],
   avoid: AVOID,

@@ -255,8 +255,7 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
       // Recent visits (owner request, Nov 21 2026): the 50 newest visits with any activity here, each with
       // every event it had on any site (a visit can start on makeitstretch.org and move to a partner city).
       const newest = [...new Set([...events].reverse().map(e => e.session_id))].slice(0, 50);
-      const names = Object.fromEntries(Object.values(CITIES).flatMap(c => (c.resources || []).map(r => [r.id, r.name])));
-      const visits = newest.length ? recentVisits(await db().listEventsForSessions(newest), names, 50) : [];
+      const visits = newest.length ? recentVisits(await db().listEventsForSessions(newest), 50) : [];
       const cityNames = Object.fromEntries(await Promise.all([...new Set(visits.map(v => v.zip).filter(Boolean))].map(async z => [z, await cityForZip(z)])));
       for (const v of visits) v.city = (v.zip && cityNames[v.zip]) || v.area || null;
       const recipeNames = Object.fromEntries(allRecipes().map(r => [r.id, r.title]));

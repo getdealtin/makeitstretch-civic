@@ -80,8 +80,8 @@ export function checksFor(row, region = 'south') {
   const recipe = toRecipe(row);
   const others = allRecipes().filter(r => r.id !== recipe.id);
   const recipes = [...others, recipe];
-  const base = { leftover: 'sometimes', cuisine: [], avoid: [], have: [] };
-  const probe = planMeals({ ...base, budget: 100, days: 7, people: 1 }, prices, recipes);
+  const household = { leftover: 'sometimes', cuisine: [], avoid: [], have: [] }; // a plain household for the samples
+  const probe = planMeals({ ...household, budget: 100, days: 7, people: 1 }, prices, recipes);
   const prepared = probe.state?.kitchen?.prepared || [];
   const me = prepared.find(r => r.id === recipe.id);
   const flags = [];
@@ -96,7 +96,7 @@ export function checksFor(row, region = 'south') {
   let shown = 0, tried = 0;
   for (const [budget, people] of [[35, 1], [60, 1], [140, 4], [350, 4]]) for (let seed = 1; seed <= 5; seed++) {
     tried++;
-    const r = planMeals({ ...base, budget, days: 7, people, seed }, prices, recipes);
+    const r = planMeals({ ...household, budget, days: 7, people, seed }, prices, recipes);
     if (r.weeks.flat().some(d => SLOTS.some(sl => d[sl]?.some?.(x => x.id === recipe.id)))) shown++;
   }
   return {
