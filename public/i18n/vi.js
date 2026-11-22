@@ -411,6 +411,8 @@ export default {
   cu_spoiled: "Hỏng hoặc hết hạn",
   footer_privacy: "Không cần tài khoản. Không quảng cáo. Chúng tôi đếm hoạt động ẩn danh để cải thiện công cụ này.",
   privacy_link: "Chính sách quyền riêng tư",
+  about_link: "Giới thiệu",
+  connect_link: "Giữ liên lạc",
   outcome_q: "Chào mừng bạn quay lại. Bạn đã dùng kế hoạch này chưa?",
   outcome_yes: "Có",
   outcome_some: "Một phần",

@@ -411,6 +411,8 @@ export default {
   cu_spoiled: "变质或过期",
   footer_privacy: "无需账户，没有广告。我们会统计匿名使用情况来改进这个工具。",
   privacy_link: "隐私政策",
+  about_link: "关于我们",
+  connect_link: "保持联系",
   outcome_q: "欢迎回来。您用过这个计划吗？",
   outcome_yes: "用过",
   outcome_some: "用了一部分",

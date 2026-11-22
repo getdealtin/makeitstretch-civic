@@ -20,6 +20,7 @@ import { mountDirectory } from './server/directory.js';
 import { makeLivePrices } from './server/live-prices.js';
 import { mountHsds } from './server/hsds.js';
 import { mountEvents, AVOID } from './server/events.js';
+import { mountConnect } from './server/connect.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -244,6 +245,7 @@ app.locals.setDb = d => { db = d; };
 mountDirectory(app, { getDb: () => db, priceStatus: () => (BLS_KEY ? livePrices.status() : null) });
 mountHsds(app, { getProviders: city => db.listProviders(city, ['approved']) });
 mountEvents(app, { getDb: () => db, oneSite: ONE_SITE });
+mountConnect(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
 // ── Cities that are live, and share links / QR codes for partners (landing + /share) ──
 const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.length).map(c => ({
@@ -299,6 +301,7 @@ app.get('/add-site', page('provider.html'));
 app.get('/admin', page('admin.html'));
 app.get('/privacy', page('privacy.html'));
 app.get('/how-plans-work', page('principles.html'));
+app.get('/about', page('about.html'));
 
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', 'index.html')));

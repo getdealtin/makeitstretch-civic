@@ -1,6 +1,7 @@
 // "How your plan is made": the engine's principles in plain words (public/i18n/principles/), with the
 // same language switch as the rest of the site.
 import { LANGS, pickLang, rememberLang } from './i18n/index.js';
+import { setFooterLinks } from './footer.js';
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const qs = location.search;
@@ -17,6 +18,7 @@ async function render(code) {
     ${city?.id && city.id !== 'national' ? `<p><a class="btn btn-primary" href="/${esc(qs)}">${esc(P.back)}</a></p>` : ''}`;
   document.getElementById('disclaimer').textContent = city?.i18n?.[code]?.disclaimer || city?.disclaimer || '';
   document.querySelectorAll('.lang-switch button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === code));
+  setFooterLinks(code, qs);
 }
 
 (async () => {

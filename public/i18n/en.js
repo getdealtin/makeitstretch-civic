@@ -435,6 +435,8 @@ export default {
   cu_spoiled: "Spoiled or expired",
   footer_privacy: "No account. No ads. We count anonymous activity to improve this tool.",
   privacy_link: "Privacy policy",
+  about_link: "About",
+  connect_link: "Stay connected",
   outcome_q: "Welcome back. Did you use this plan?",
   outcome_yes: "Yes",
   outcome_some: "Some of it",

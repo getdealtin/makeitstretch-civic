@@ -78,6 +78,22 @@ const details = (p, { showPrivate = true } = {}) => `
 
 const btn = (label, act, id, cls = '') => `<button class="btn-xs ${cls}" data-act="${act}" data-id="${esc(id)}">${esc(label)}</button>`;
 
+// ── Messages (owner decision, Nov 22 2026): "Stay connected" sign-ups from the About page, every site ──
+const ROLE_NAME = { resident: 'Resident', partner: 'Partner or organization', press: 'Press or media', other: 'Something else' };
+function messagesHtml(list) {
+  const head = `<h2 id="h-msg">Messages <small>${(list || []).length}</small></h2>
+    <p class="a-hint">From "Stay connected" on the About page. Reply by email; delete one when you're done or when someone asks to be removed.</p>`;
+  if (list === null) return `<section class="a-section" id="messages" aria-labelledby="h-msg">${head}<p class="empty">Couldn’t load messages. Check the database connection.</p></section>`;
+  return `<section class="a-section" id="messages" aria-labelledby="h-msg">${head}
+    ${list.length ? list.map(m => `<article class="card msg">
+      <div class="card-head"><h3><a href="mailto:${esc(m.email)}">${esc(m.email)}</a></h3>
+        <span><span class="tag">${esc(ROLE_NAME[m.role] || m.role)}</span> <span class="muted" style="font:13px var(--font-label)">${day(m.created_at)}${m.lang && m.lang !== 'en' ? ` · ${esc(m.lang)}` : ''}</span></span></div>
+      ${m.message ? `<p class="msg-text">${esc(m.message)}</p>` : ''}
+      <div class="actions"><button class="btn-xs" data-del-msg="${esc(m.id)}">Delete</button></div>
+    </article>`).join('') : '<p class="empty">No messages yet.</p>'}
+  </section>`;
+}
+
 function render() {
   const d = data;
   const usedInvites = d.invites.filter(i => i.used_at).length;
@@ -99,8 +115,11 @@ function render() {
       <a class="count" href="#directory"><b>${d.approved.length}</b><span>Live listings</span></a>
       <a class="count" href="#invites"><b>${usedInvites}/${d.invites.length}</b><span>Invites used</span></a>
       ${(d.maintenance || []).some(m => m.status !== 'ok') ? `<a class="count alert" href="#updates"><b>${d.maintenance.filter(m => m.status !== 'ok').length}</b><span>Annual updates due</span></a>` : ''}
+      <a class="count" href="#messages"><b>${(d.messages || []).length}</b><span>Messages</span></a>
       <a class="count ${d.reviews.some(r => r.status !== 'approved') ? 'alert' : ''}" href="#translations"><b>${d.reviews.filter(r => r.status === 'approved').length}/${d.reviews.length}</b><span>Languages reviewed</span></a>
     </nav>
+
+    ${messagesHtml(d.messages)}
 
     <section class="a-section" id="review" aria-labelledby="h-review">
       <h2 id="h-review">Needs review <small>${d.pending.length}</small></h2>
@@ -189,6 +208,12 @@ function wire() {
     render();
   };
   root.querySelector('#logout').onclick = async () => { await api('/logout', {}); renderLogin(); };
+  root.querySelectorAll('[data-del-msg]').forEach(b => b.addEventListener('click', async () => {
+    if (!confirm('Delete this message? This can’t be undone.')) return;
+    const r = await api(`/messages/${b.dataset.delMsg}/delete`, {});
+    toast(r.ok ? 'Message deleted' : 'Couldn’t delete it. Try again.');
+    if (r.ok) load();
+  }));
 
   root.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', async () => {
     const { act, id } = b.dataset;

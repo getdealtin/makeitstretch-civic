@@ -586,3 +586,22 @@ html { scroll-padding-bottom: 110px; }
 .reroll-note { font-size: 15px; color: var(--text-muted); margin: 6px 0 0; }
 .keep #install-tip:empty { display: none; }
 .keep .install-tip { margin: 14px 0 0; background: #fff; }
+
+/* About page and "Stay connected" (Nov 22 2026) */
+.about .eyebrow { font-family: var(--font-label); font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 6px; }
+.connect { margin-top: 36px; padding: 20px; border-radius: 16px; background: var(--tint); }
+.connect h2 { margin-top: 0; }
+.connect form { display: flex; flex-direction: column; gap: 8px; }
+.connect label, .connect legend { font-family: var(--font-label); font-size: 15px; font-weight: 600; color: var(--indigo-ink); }
+.connect input[type=email], .connect textarea { font: inherit; font-size: 17px; padding: 12px; border: 2px solid var(--rule); border-radius: 10px; background: var(--page); color: var(--text); width: 100%; box-sizing: border-box; }
+.connect input[type=email]:focus, .connect textarea:focus { border-color: var(--violet); outline: none; }
+.connect-roles { border: 0; padding: 0; margin: 8px 0 4px; display: flex; flex-wrap: wrap; gap: 8px; }
+.connect-roles legend { margin-bottom: 8px; }
+.connect-role { display: inline-flex; align-items: center; gap: 8px; font-weight: 500 !important; padding: 10px 14px; border: 1.5px solid var(--rule); border-radius: 999px; background: var(--page); min-height: 44px; box-sizing: border-box; cursor: pointer; }
+.connect-role input { accent-color: var(--violet); width: 18px; height: 18px; margin: 0; }
+.connect .btn { align-self: flex-start; margin-top: 6px; }
+.connect-error { color: #A33A2A; font-family: var(--font-label); font-size: 15px; margin: 0; min-height: 0; }
+.connect-error:empty { display: none; }
+.connect-note { font-size: 15px; color: var(--text-muted); margin: 4px 0 0; }
+.connect-done { font-size: 19px; font-weight: 600; color: var(--green-text, #236B46); }
+.connect-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

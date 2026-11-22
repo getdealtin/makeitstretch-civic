@@ -412,6 +412,8 @@ export default {
   cu_spoiled: "Echado a perder o vencido",
   footer_privacy: "Sin cuenta. Sin anuncios. Contamos actividad anónima para mejorar esta herramienta.",
   privacy_link: "Política de privacidad",
+  about_link: "Acerca de",
+  connect_link: "Manténgase en contacto",
   outcome_q: "Bienvenido de nuevo. ¿Usó este plan?",
   outcome_yes: "Sí",
   outcome_some: "En parte",

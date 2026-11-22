@@ -20,7 +20,7 @@ export const newToken = () => crypto.randomBytes(18).toString('base64url');
 // ── In-memory ───────────────────────────────────────────────────
 export function memoryDb() {
   const providers = new Map(), invites = new Map(), priceCache = new Map();
-  const events = [];
+  const events = [], messages = [];
   const reviews = new Map(['es', 'vi', 'zh-Hans'].map(l => [l, { lang: l, status: 'pending', reviewer: null, reviewed_at: null, note: null }]));
   const now = () => new Date().toISOString();
   const copy = o => (o ? structuredClone(o) : null);
@@ -59,6 +59,10 @@ export function memoryDb() {
     /** One site: move a visit's events since `since` from one city to another (see /api/event/move). */
     async moveSession(sessionId, from, to, since) { for (const e of events) if (e.session_id === sessionId && e.city_id === from && e.created_at >= since) e.city_id = to; },
     async updateReview(lang, patch) { const r = reviews.get(lang); if (!r) return null; Object.assign(r, patch); return copy(r); },
+    // "Stay connected" (db/messages.sql): newest first.
+    async insertMessage(row) { const m = { ...row, id: crypto.randomUUID(), created_at: now() }; messages.push(m); return copy(m); },
+    async listMessages(limit = 200) { return [...messages].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, limit).map(copy); },
+    async deleteMessage(id) { const i = messages.findIndex(m => m.id === id); if (i >= 0) messages.splice(i, 1); },
     async getPriceCache(region) { return copy(priceCache.get(region)); },
     async savePriceCache(region, prices, fetchedAt) { priceCache.set(region, { region, prices, fetched_at: fetchedAt }); },
   };
@@ -116,6 +120,10 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
       return out;
     },
     updateReview: async (lang, patch) => one(await call(`translation_reviews?lang=eq.${enc(lang)}`, { method: 'PATCH', body: patch, prefer: 'return=representation' })),
+    // "Stay connected" (db/messages.sql): newest first.
+    insertMessage: async row => one(await call('messages', { method: 'POST', body: row, prefer: 'return=representation' })),
+    listMessages: (limit = 200) => call(`messages?order=created_at.desc&limit=${Number(limit) || 200}`),
+    deleteMessage: id => call(`messages?id=eq.${enc(id)}`, { method: 'DELETE', prefer: 'return=minimal' }),
     // Last good BLS prices per region (db/price-cache.sql), so a restart keeps them.
     getPriceCache: async region => one(await call(`price_cache?region=eq.${enc(region)}&select=region,prices,fetched_at`)),
     savePriceCache: (region, prices, fetchedAt) => call('price_cache?on_conflict=region', { method: 'POST', body: { region, prices, fetched_at: fetchedAt }, prefer: 'resolution=merge-duplicates,return=minimal' }),

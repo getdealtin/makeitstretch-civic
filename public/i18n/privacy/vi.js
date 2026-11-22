@@ -1,7 +1,7 @@
 // Chính sách quyền riêng tư. DRAFT translation, pending native-speaker review.
 export default {
   title: 'Chính sách quyền riêng tư',
-  updated: 'Có hiệu lực từ ngày 6 tháng 11 năm 2026',
+  updated: 'Có hiệu lực từ ngày 22 tháng 11 năm 2026',
   intro: 'Make It Stretch là công cụ miễn phí giúp mọi người lên kế hoạch đi chợ với ngân sách hạn chế và tìm thực phẩm miễn phí gần nhà. Không cần tài khoản. Chính sách này mô tả thông tin chúng tôi thu thập, cách chúng tôi sử dụng, và các lựa chọn của bạn.',
   sections: [
     { h: 'Chúng tôi là ai', p: ['Make It Stretch do Margin Ventures LLC (“chúng tôi”) vận hành. Đây là dịch vụ độc lập, không phải dịch vụ chính thức của Thành phố Austin.'] },
@@ -9,6 +9,7 @@ export default {
       'Bạn không cần cung cấp tên, địa chỉ email, số điện thoại hay địa chỉ nhà để dùng công cụ. Chúng tôi không dùng quảng cáo hay cookie theo dõi.',
       'Chúng tôi thu thập thông tin về cách công cụ được sử dụng, ở dạng không nhận dạng được bạn. Bao gồm các câu trả lời bạn cung cấp (như ngân sách, số người trong nhà, mã bưu điện, sở thích món ăn và nhu cầu ăn kiêng), các kế hoạch và gợi ý món ăn được tạo cho bạn, và cách bạn sử dụng chúng (như công thức bạn xem, nguồn trợ giúp bạn chọn, và những món trong thùng thực phẩm mà bạn cho biết không dùng được).',
       'Giống hầu hết các trang web, máy chủ của chúng tôi nhận thông tin kỹ thuật, như địa chỉ IP, khi bạn kết nối. Chúng tôi chỉ dùng thông tin này để vận hành dịch vụ và bảo vệ khỏi lạm dụng, và không lưu cùng với thông tin sử dụng.',
+      'Nếu bạn đăng ký giữ liên lạc hoặc gửi lời nhắn cho chúng tôi, chúng tôi giữ địa chỉ email và lời nhắn bạn cung cấp, chỉ để trả lời bạn hoặc gửi tin mới. Bạn có thể yêu cầu chúng tôi xóa bất cứ lúc nào.',
     ] },
     { h: 'Thông tin lưu trên thiết bị của bạn', p: ['Một số thông tin ở lại trên thiết bị của bạn và không gửi cho chúng tôi, như các kế hoạch bạn chọn lưu và ngôn ngữ bạn chọn. Bạn có thể xóa kế hoạch đã lưu bất cứ lúc nào từ màn hình bắt đầu.'] },
     { h: 'Cách chúng tôi sử dụng thông tin', list: [
@@ -16,7 +17,7 @@ export default {
       'Để hiểu nhu cầu thực phẩm trong cộng đồng và chia sẻ số liệu thống kê tổng hợp với Thành phố Austin và các đối tác hỗ trợ thực phẩm.',
       'Để bảo vệ công cụ khỏi thư rác, lạm dụng và các mối đe dọa bảo mật.',
     ] },
-    { h: 'Lựa chọn của bạn', p: ['Hầu hết các câu hỏi đều không bắt buộc, kể cả mã bưu điện và câu hỏi về món bạn không dùng được. Bạn có thể dùng công cụ mà không lưu gì trên thiết bị.'] },
+    { h: 'Lựa chọn của bạn', p: ['Hầu hết các câu hỏi đều không bắt buộc, kể cả mã bưu điện và câu hỏi về món bạn không dùng được. Bạn có thể dùng công cụ mà không lưu gì trên thiết bị.', 'Chia sẻ công thức nấu ăn là không bắt buộc. Nếu bạn thêm tên, tên sẽ hiện cùng công thức của bạn.'] },
     { h: 'Cách chúng tôi chia sẻ thông tin', p: ['Chúng tôi không bán thông tin. Chúng tôi chỉ chia sẻ thông tin trong các trường hợp sau:'], list: [
       'Số liệu thống kê tổng hợp: Chúng tôi chia sẻ số liệu thống kê tổng hợp không nhận dạng ai với Thành phố Austin và các đối tác hỗ trợ thực phẩm.',
       'Thông tin nơi phát thực phẩm: Chúng tôi đăng thông tin công khai của các nơi phát thực phẩm trong danh bạ trên trang này và trong một nguồn dữ liệu mở mà các danh bạ khác và đối tác hỗ trợ thực phẩm có thể dùng. Không bao giờ kèm thông tin liên lạc.',

@@ -279,8 +279,17 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
         reconfirm_days: RECONFIRM_DAYS,
         activity: await activityFor(city, req.query.days),
         maintenance: [...livePriceItems(priceStatus()), ...maintenanceFor(CITIES[city])],
+        // "Stay connected" sign-ups and messages, every site (db/messages.sql); empty if the table isn't there yet.
+        messages: await db().listMessages(200).catch(e => { console.error(e.message); return null; }),
       });
     } catch (e) { console.error(e.message); res.status(500).json({ ok: false, error: 'db' }); }
+  });
+
+  // Remove a "Stay connected" sign-up (when someone asks, or once answered).
+  admin.post('/messages/:id/delete', async (req, res) => {
+    if (!/^[0-9a-f-]{36}$/.test(req.params.id)) return res.status(400).json({ ok: false });
+    try { await db().deleteMessage(req.params.id); res.json({ ok: true }); }
+    catch (e) { console.error(e.message); res.status(500).json({ ok: false }); }
   });
 
   const STATUS_FOR = { approve: 'approved', reject: 'rejected', hide: 'hidden', restore: 'approved' };
