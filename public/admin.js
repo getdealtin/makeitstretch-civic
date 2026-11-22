@@ -1,7 +1,14 @@
 // Admin page: one page for review, overdue listings, invite links, the directory,
 // translation sign-off and (from Phase 4) activity. English only; for the operator.
 
+import EN from '/i18n/en.js';
+
 const root = document.getElementById('admin');
+// Plain-English names for the codes events store (the same words visitors see on the site).
+const label = (prefix, code, extra = {}) => extra[code] || EN[prefix + code] || code;
+const reasonName = code => label('cu_', code, { unsaid: 'Didn’t say' });
+const boxFoodName = code => label('box_food_', code);
+const avoidName = code => label('avoid_', code);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const day = iso => (iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—');
 const ago = iso => (iso ? Math.floor((Date.now() - new Date(iso)) / 864e5) : null);
@@ -413,8 +420,8 @@ function activityHtml(a) {
         <p class="a-hint">${cu.reports} reports out of ${cu.box_items} box items (${pct(cu.reports, cu.box_items)}). Recipient-reported; a proxy for Food Plan Goal 4, not a storage percentage.</p>
         ${cu.step ? `<h4>“Anything you won’t use?”</h4>${table(Object.entries(cu.step), ['Answer', 'Boxes'], k => PRETTY.cantStep[k] || k)}` : ''}
         ${table(Object.entries(cu.by_group), ['Reason group', 'Reports'], k => PRETTY.group[k] || k)}
-        <h4>By reason</h4>${table(cu.by_reason, ['Reason', 'Reports'])}
-        <h4>By item</h4>${table(cu.by_item, ['Item', 'Reports'])}
+        <h4>By reason</h4>${table(cu.by_reason, ['Reason', 'Reports'], reasonName)}
+        <h4>By item</h4>${table(cu.by_item, ['Item', 'Reports'], boxFoodName)}
         ${cu.by_typed?.length ? `<h4>Typed in</h4>${table(cu.by_typed, ['Food (as typed)', 'Reports'])}` : ''}</div>
       <div><h3>Other needs (after the plan)</h3>
         <p class="a-hint">Taps on "Need help with anything else?". Nobody is contacted.</p>
@@ -422,9 +429,9 @@ function activityHtml(a) {
       <div><h3>Foods not on our list</h3>
         <p class="a-hint">Typed in on the food-box screen. Candidates for new foods and recipes.</p>
         ${table(a.unlisted || [], ['Food (as typed)', 'Boxes'])}</div>
-      <div><h3>Dietary needs</h3>${table(a.avoid, ['Can’t eat', 'Plans and boxes'])}
-        <h4>Food style</h4>${table(a.cuisine, ['Cuisine', 'Plans'])}</div>
-      <div><h3>Help and food sites tapped</h3>${table(a.help, ['Resource or site id', 'Taps'])}</div>
+      <div><h3>Dietary needs</h3>${table(a.avoid, ['Can’t eat', 'Plans and boxes'], avoidName)}
+        <h4>Food style</h4>${table(a.cuisine, ['Cuisine', 'Plans'], k => label('cuisine_', k))}</div>
+      <div><h3>Help and food sites tapped</h3>${table(a.help, ['Help link, food site or store', 'Taps'])}</div>
       ${a.store_taps ? `<div><h3>Stores people looked up</h3>
         <p class="a-hint">Taps on Directions or the bus planner in Where to shop (${a.store_taps.taps} since Nov 22). The kind of store and about how far from the center of the person's ZIP code, never who.</p>
         ${table(Object.entries(a.store_taps.by_kind), ['Kind of store', 'Taps'], k => STORE_KIND[k] || k)}

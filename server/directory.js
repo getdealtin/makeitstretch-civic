@@ -12,7 +12,7 @@ import { summarize, recentVisits, cityForZip } from './events.js';
 import { mountCommunityAdmin, allRecipes } from './community.js';
 import { FOOD_DB } from '../engine/food-db.js';
 import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
-import { retailFindings, storeMix, storeMixAsOf } from './stores.js';
+import { retailFindings, storeMix, storeMixAsOf, storeLabel } from './stores.js';
 import { BLS_ITEMS } from './prices.js';
 import { maintenanceFor } from './maintenance.js';
 import { readFileSync } from 'node:fs';
@@ -247,6 +247,25 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
   };
 
   // Activity for the date range picked in /admin (7, 30, 90 or 365 days).
+  // "Help and food sites tapped" by name instead of code (owner request, Nov 22 2026): help links from the
+  // city's resources, food sites from the directory, stores from USDA's list ("Fry's, Tucson AZ (store)").
+  const nameHelp = async (city, rows) => {
+    const resources = Object.fromEntries((CITIES[city].resources || []).map(r => [r.id, r.name]));
+    const sites = Object.fromEntries([...await db().listProviders(city).catch(() => []), ...curatedSites(CITIES[city])].map(p => [p.id, p.name]));
+    const name = key => {
+      const [kind, target] = key.split(': ');
+      if (kind === 'store') {
+        if (target === 'wic-finder') return 'WIC store finder';
+        const id = Number((target || '').replace(/^snap-/, ''));
+        const s = id ? storeLabel(id, [CITIES[city], CITIES.national]) : null;
+        return s ? `${s} (store)` : key;
+      }
+      if (kind === 'site') return sites[target] ? `${sites[target]} (food site)` : key;
+      return resources[target] || key;
+    };
+    return rows.map(([k, v]) => [name(k), v]);
+  };
+
   const activityFor = async (city, daysParam) => {
     const days = [7, 30, 90, 365].includes(Number(daysParam)) ? Number(daysParam) : 30;
     const since = new Date(Date.now() - days * 864e5).toISOString();
@@ -260,7 +279,9 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
       for (const v of visits) v.city = (v.zip && cityNames[v.zip]) || v.area || null;
       const recipeNames = Object.fromEntries(allRecipes().map(r => [r.id, r.title]));
       const foodNames = Object.fromEntries(FOOD_DB.map(f => [f.id, f.name.replace(/\s*\(.*\)\s*$/, '')]));
-      return { available: true, days, recent_visits: visits, ...summarize(events, rolesOf(CITIES[city].resources), { recipes: recipeNames, foods: foodNames }, storeMix), store_mix_as_of: storeMixAsOf() };
+      const summary = summarize(events, rolesOf(CITIES[city].resources), { recipes: recipeNames, foods: foodNames }, storeMix);
+      summary.help = await nameHelp(city, summary.help);
+      return { available: true, days, recent_visits: visits, ...summary, store_mix_as_of: storeMixAsOf() };
     }
     catch (e) { console.error(e.message); return { available: false, error: true, days }; }
   };

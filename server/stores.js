@@ -111,6 +111,15 @@ export function storesNear(city, zip, { grocery = 5, markets = 3, maxMiles = 10,
   return out;
 }
 
+/** A store's name and town for /admin ("Fry's, Tucson AZ"), from any city's list or the national one; null if unknown. */
+export function storeLabel(id, cities) {
+  for (const c of cities) {
+    const s = cityData(c).stores?.find(x => x.id === id);
+    if (s) return [s.name, s.city ? `${s.city} ${s.state}` : s.addr].filter(Boolean).join(', ');
+  }
+  return null;
+}
+
 /** A ZIP code's store mix (every U.S. ZIP code, USDA list): nearest full grocery and SNAP stores inside it. */
 let MIX = null;
 export function storeMix(zip) {
