@@ -471,6 +471,7 @@ function renderIntro() {
             <span class="dc-text"><b>${esc(t('door_box'))}</b><span class="dc-sub">${esc(t('door_box_sub'))}</span><span class="dc-go" aria-hidden="true">${esc(t('band_box_btn'))}</span></span>
           </button>
         </div>
+        <p class="home-count" id="home-count" hidden></p>
       </div>
       <div class="collage" aria-hidden="true">
         <div class="tile t1">${ART.bag}<span class="tag">${esc(t('tag_list'))}</span></div>
@@ -505,6 +506,7 @@ function renderIntro() {
       </div>
     </section>
     ${homeCity ? partnersSection() : ''}`;
+  loadHomeCount();
   app.querySelector('#door-budget').onclick = () => { answers = { ...fresh(), seed: newSeed(), recent: lastSavedMeals() }; startFlow(); go(0); };
   app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [], other: [], cant: [], zip: null }; startFlow(); renderBoxZip(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
@@ -866,6 +868,17 @@ function wireHub(onOpen = {}, open = null) {
   if (history.state?.panel) history.replaceState(null, '', location.href); // a fresh plan always opens on its home
 }
 const setHubSub = (id, html) => { const el = app.querySelector('#hub-sub-' + id); if (el) el.innerHTML = html; };
+
+// ── Home count line: "1,100+ households have planned groceries here." (server/api/count; hidden when null) ──
+let homeCount;
+async function loadHomeCount() {
+  try { homeCount ??= (await (await fetch('/api/count' + (qs || ''))).json()).households; } catch { homeCount = null; }
+  const el = app.querySelector('#home-count');
+  if (!el || !homeCount) return;
+  const n = homeCount.toLocaleString(lang) + '+';
+  el.innerHTML = esc(t('home_count', { n: '\u0001' })).replace('\u0001', `<strong>${esc(n)}</strong>`);
+  el.hidden = false;
+}
 
 // ── Where to shop: nearest stores that take SNAP (USDA list), farmers markets, bus directions ──
 const aboutMi = mi => t('about_mi', { mi: Number(mi).toFixed(1) });

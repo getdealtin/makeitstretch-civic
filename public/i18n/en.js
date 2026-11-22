@@ -11,6 +11,7 @@ export default {
   // Start screen: two doors
   intro_title: "Make your grocery money *stretch*.",
   intro_body: "We’re here to help your grocery money go further. Food costs more than ever, so we do the math, find the savings, and give you the tools to feed yourself and your family.",
+  home_count: "{n} households have planned groceries here.",
   hero_eyebrow: "Free · No sign-up · About a minute",
   tag_list: "Shopping list",
   tag_meals: "A week of meals",

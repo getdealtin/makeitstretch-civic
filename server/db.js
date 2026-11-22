@@ -57,6 +57,8 @@ export function memoryDb() {
     async listEvents(city, since) { return events.filter(e => e.city_id === city && e.created_at >= since).map(copy); },
     /** Every event of these visits, in any city (a visit can start on the main site and move to a partner city). */
     async listEventsForSessions(ids) { const set = new Set(ids); return events.filter(e => set.has(e.session_id)).map(copy); },
+    /** Visits that made a plan (every city when city is null): the home page's count line. */
+    async countPlanVisits(city) { return new Set(events.filter(e => e.event === 'plan_built' && (!city || e.city_id === city)).map(e => e.session_id)).size; },
     /** One site: move a visit's events since `since` from one city to another (see /api/event/move). */
     async moveSession(sessionId, from, to, since) { for (const e of events) if (e.session_id === sessionId && e.city_id === from && e.created_at >= since) e.city_id = to; },
     async updateReview(lang, patch) { const r = reviews.get(lang); if (!r) return null; Object.assign(r, patch); return copy(r); },
@@ -115,6 +117,16 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
         if (page.length < 1000) break;
       }
       return out;
+    },
+    /** Visits that made a plan (every city when city is null): the home page's count line. Pages through session ids. */
+    countPlanVisits: async city => {
+      const seen = new Set();
+      for (let off = 0; off < 1000000; off += 1000) {
+        const page = await call(`events?select=session_id&event=eq.plan_built${city ? `&city_id=eq.${enc(city)}` : ''}&order=id.asc&limit=1000&offset=${off}`);
+        for (const r of page) seen.add(r.session_id);
+        if (page.length < 1000) break;
+      }
+      return seen.size;
     },
     // Every event of these visits, in any city; ids are 12-character visit codes (checked when stored), 100 per request.
     listEventsForSessions: async ids => {

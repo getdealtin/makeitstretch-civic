@@ -241,6 +241,26 @@ app.post('/api/plan', async (req, res) => {
 app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, one_site: ONE_SITE, recipes: allRecipes().length, bls: !!BLS_KEY, db: db.kind, admin: !!process.env.ADMIN_KEY }));
 app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
+// The home page's count line (owner decision, Nov 22 2026): "1,100+ households have planned groceries here."
+// Visits that made a plan, rounded DOWN to two significant figures so it is always true, worked out at most
+// once a day. makeitstretch.org counts every site; a partner city counts its own and shows it only from 500
+// (a small number undercuts trust). Anything else, including a database error, sends null and the line hides.
+const COUNT_MIN = 500, COUNT_TTL = 24 * 60 * 60e3;
+const counts = new Map();
+export const roundDown = n => { if (n < 100) return n; const p = 10 ** (Math.floor(Math.log10(n)) - 1); return Math.floor(n / p) * p; };
+app.get('/api/count', async (req, res) => {
+  const key = req.city.id;
+  let hit = counts.get(key);
+  if (!hit || Date.now() - hit.at > COUNT_TTL) {
+    try {
+      const n = await db.countPlanVisits(key === 'national' ? null : key);
+      hit = { at: Date.now(), households: n >= COUNT_MIN ? roundDown(n) : null };
+    } catch (e) { console.error('count:', e.message); hit = { at: Date.now() - COUNT_TTL + 10 * 60e3, households: null }; } // retry in 10 minutes
+    counts.set(key, hit);
+  }
+  res.set('Cache-Control', 'public, max-age=3600').json({ households: hit.households });
+});
+
 // ── Food directory + admin (server/directory.js) ────────────────
 // The database is chosen from env: Supabase when SUPABASE_URL + SUPABASE_SECRET_KEY are set,
 // otherwise in-memory (tests, local runs). Tests can swap it with app.locals.setDb().
