@@ -427,7 +427,7 @@ function activityHtml(a) {
         ${cu.by_typed?.length ? `<h4>Typed in</h4>${table(cu.by_typed, ['Food (as typed)', 'Reports'])}` : ''}</div>
       <div><h3>Other needs (after the plan)</h3>
         <p class="a-hint">Taps on "Need help with anything else?". Nobody is contacted.</p>
-        ${table(Object.entries(a.needs || {}), ['Need', 'Taps'])}</div>
+        ${table(Object.entries(a.needs || {}), ['Need', 'Taps'], k => label('need_', k))}</div>
       <div><h3>Foods not on our list</h3>
         <p class="a-hint">Typed in on the food-box screen. Candidates for new foods and recipes.</p>
         ${table(a.unlisted || [], ['Food (as typed)', 'Boxes'])}</div>

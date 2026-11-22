@@ -109,7 +109,7 @@ const LABEL = {
   reason: { halal: 'Not halal', kosher: 'Not kosher', unfamiliar: 'Not a familiar food', diabetic: 'Not OK for diabetes', low_sodium: 'Too much salt', allergy: 'Allergy', no_kitchen: 'No way to cook it', dont_know_how: 'Don’t know how to cook it', spoiled: 'Spoiled or expired', unsaid: 'Reason not given' },
   store: { full: 'Grocery store', dollar: 'Dollar store', corner: 'Corner store' },
   answer: { yes: 'Yes', some: 'Some of it', no: 'No' },
-  need: { rent: 'Rent & utilities', health: 'Health care', childcare: 'Child care & school', jobs: 'Jobs & transportation' },
+  need: { rent: 'Rent & utilities', health: 'Health care', childcare: 'Child care & school', jobs: 'Jobs & transportation', id: 'Replacing an ID' },
 };
 const langName = code => { try { return new Intl.DisplayNames(['en'], { type: 'language' }).of(code) || code; } catch { return code; } };
 const lab = (map, rows) => rows.map(([k, v]) => [map[k] || k, v]);

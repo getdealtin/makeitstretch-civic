@@ -12,7 +12,8 @@ for (const city of Object.values(CITIES)) {
       if (!s.needs.some(n => (city.needs || []).includes(n))) { assert.equal(got, undefined, `${s.id} without its need`); continue; }
       assert.ok(got, `${city.id} is missing ${s.id}`);
       assert.match(got.url, /^https:\/\//);
-      if (city.place) assert.ok(got.url.includes(encodeURIComponent(city.place)), `${s.id} link names ${city.place}`);
+      // Links built from the city (url takes the card) name its place; fixed national links (url takes nothing) don't.
+      if (city.place && s.url.length) assert.ok(got.url.includes(encodeURIComponent(city.place)), `${s.id} link names ${city.place}`);
       for (const lang of city.languages.filter(l => l !== 'en')) assert.ok(city.i18n?.[lang]?.resources?.[s.id]?.name, `${city.id} ${lang} ${s.id}`);
     }
   });
@@ -35,7 +36,7 @@ test('a new city with only the basics: no Austin data or wording anywhere', asyn
   const { maintenanceFor } = await import('../server/maintenance.js');
   const card = withSharedListings({ ...CITIES.national, id: 'springfield', hosts: ['springfield.makeitstretch.org'],
     place: 'Springfield', region: 'IL', needs: ['health'], languages: ['en', 'es'], i18n: {}, local: undefined,
-    resources: [...CITIES.national.resources] });
+    resources: CITIES.national.resources.filter(r => !SHARED_LISTINGS.some(s => s.id === r.id)) }); // its own, not the main site's shared copies
   const austinish = /Austin|Travis|Texas|CapMetro|Council District|78702/;
 
   const pub = publicConfig(card);

@@ -31,6 +31,9 @@ export default {
   k_anon_threshold: 15,
   sources: [],
   focus_area: null,
+  // "Need help with anything else?" on the main site (owner request, Nov 22 2026): national listings only
+  // (findhelp, HRSA health centers, free clinics, USA.gov ID replacement) plus 2-1-1.
+  needs: ['rent', 'health', 'childcare', 'jobs', 'id'],
   // "Where to shop" everywhere (owner decision, Nov 22 2026): every U.S. grocery store and farmers market on
   // USDA's SNAP list (scripts/build-snap-stores.py --national). No WIC, Double Up or hours notes: those are
   // shown only where a city has checked them. No bus trip planner: Directions opens the person's maps app.

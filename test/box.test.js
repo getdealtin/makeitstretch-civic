@@ -67,6 +67,8 @@ test('typed foods find box foods by other names, in other languages', async () =
   assert.equal(top('hamburger'), 'groundbeef');
   assert.equal(top('鸡蛋'), 'eggs');
   assert.equal(top('米'), 'rice');
-  assert.deepEqual(findBoxFood('canned salmon', words), []);
+  assert.equal(top('canned salmon'), 'salmon'); // offered since Nov 22 2026
+  assert.equal(top('green beens'), 'greenbeans'); // a common misspelling people typed
+  assert.deepEqual(findBoxFood('canned meatloaf', words), []);
   assert.deepEqual(findBoxFood('corn', words), [], 'corn is not cornmeal');
 });

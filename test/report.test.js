@@ -166,8 +166,8 @@ test('needs signal: opened a listed source vs opened none, gaps by ZIP, supply p
   assert.deepEqual(Object.fromEntries(ft.rows), { 'Child care & school · opened a listed source': 20, 'Child care & school · opened none': 20 });
   assert.deepEqual(tables.find(x => x.id === 'needs_gap_by_zip').rows, [['78702 · Child care & school', 20]]);
   const supply = Object.fromEntries(tables.find(x => x.id === 'needs_supply').rows);
-  assert.equal(supply['Child care & school'], 1);
-  assert.equal(supply['Rent & utilities'], 2);
+  assert.equal(supply['Child care & school'], 2); // Workforce Solutions + Findhelp (shared, Nov 22 2026)
+  assert.equal(supply['Rent & utilities'], 3); // utility discounts, Travis County, Findhelp
 });
 
 test('dollars stretched: latest box per person, hidden under the threshold', () => {

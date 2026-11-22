@@ -39,12 +39,14 @@ export const INGREDIENT_FOODS = {
 /** Assumed to be in any kitchen; never listed as "you'll also need". */
 export const PANTRY_BASICS = new Set(['salt', 'water', 'cinnamon']);
 
-/** What the box picker offers, grouped. Only foods that some recipe can use. */
+/** What the box picker offers, grouped. Only foods that some recipe can use.
+ *  Nov 22 2026: + quinoa, salmon, catfish, green beans, bell peppers, spinach, avocado (already priced; people
+ *  typed them into boxes). Canned soup was typed too but no recipe uses it, so it isn't offered. */
 export const BOX_GROUPS = [
-  { id: 'grains', items: ['rice', 'pasta', 'oats', 'bread', 'tortillas', 'cornmeal', 'flour'] },
-  { id: 'protein', items: ['drybeans', 'blackbeans', 'kidneybean', 'chickpeas', 'lentils', 'peanutbutter', 'tuna', 'eggs', 'chicken', 'groundbeef', 'porkchops'] },
-  { id: 'canned', items: ['cannedtomatoes', 'coconutmilk', 'applesauce', 'soy'] },
-  { id: 'produce', items: ['potatoes', 'sweetpotatoes', 'onions', 'carrots', 'cabbage', 'garlic', 'bananas'] },
+  { id: 'grains', items: ['rice', 'pasta', 'oats', 'bread', 'tortillas', 'cornmeal', 'flour', 'quinoa'] },
+  { id: 'protein', items: ['drybeans', 'blackbeans', 'kidneybean', 'chickpeas', 'lentils', 'peanutbutter', 'tuna', 'eggs', 'chicken', 'groundbeef', 'porkchops', 'salmon', 'catfish'] },
+  { id: 'canned', items: ['cannedtomatoes', 'coconutmilk', 'applesauce', 'soy', 'greenbeans'] },
+  { id: 'produce', items: ['potatoes', 'sweetpotatoes', 'onions', 'carrots', 'cabbage', 'garlic', 'bananas', 'bellpepper', 'spinach', 'avocado'] },
   { id: 'dairy', items: ['milk', 'evaporatedmilk', 'butter', 'oil', 'oliveoil'] },
 ];
 
@@ -63,6 +65,9 @@ export const BOX_SYNONYMS = {
   potatoes: ['potato'], sweetpotatoes: ['sweet potato', 'yams', 'yam'], onions: ['onion'], carrots: ['carrot'],
   cabbage: [], garlic: [], bananas: ['banana'], milk: ['powdered milk', 'shelf milk', 'dry milk'],
   evaporatedmilk: ['evaporated milk'], butter: ['margarine'], oil: ['vegetable oil', 'cooking oil', 'canola oil'], oliveoil: ['olive oil'],
+  quinoa: [], salmon: ['canned salmon', 'salmon fillets'], catfish: ['catfish fillets'],
+  greenbeans: ['green bean', 'string beans', 'canned green beans', 'green beens'],
+  bellpepper: ['bell pepper', 'green pepper', 'red pepper', 'sweet pepper'], spinach: ['frozen spinach'], avocado: ['avocados'],
 };
 
 const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\(.*?\)/g, ' ').replace(/[^\p{L}\p{N} ]/gu, ' ').replace(/\s+/g, ' ').trim();

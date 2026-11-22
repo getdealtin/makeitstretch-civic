@@ -20,6 +20,7 @@ export const NEED_TERMS = {
   health:    ['1206', '1199'],  // Health > Medical Care; Health > Help Pay for Healthcare
   childcare: ['1280'],          // Care > Daytime Care > Childcare
   jobs:      ['1357', '1172'],  // Work > Help Find Work; Transit > Help Pay for Transit
+  id:        ['1384'],          // Legal > Advocacy & Legal Aid > Identification Recovery (Nov 22 2026)
 };
 export const KIND_TERMS = {
   pantry: ['1130'],             // Food > Food Pantry

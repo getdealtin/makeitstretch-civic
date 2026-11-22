@@ -77,7 +77,7 @@ export const SCHEMA = {
   cant_use: { item: oneOf(BOX_ITEMS), food: v => cleanFoodWord(v) || undefined, reason: oneOf(REASONS) },
   plan_reopened: { source: oneOf(['saved', 'link']), kind: oneOf(['plan', 'box']) },
   plan_outcome: { answer: oneOf(['yes', 'some', 'no']), kind: oneOf(['plan', 'box']) },
-  need_tapped: { need: oneOf(['rent', 'health', 'childcare', 'jobs']) },
+  need_tapped: { need: oneOf(['rent', 'health', 'childcare', 'jobs', 'id']) },
   list_switched: { to: oneOf(['short', 'full']), short: int(0, 200), full: int(0, 200) },
 };
 

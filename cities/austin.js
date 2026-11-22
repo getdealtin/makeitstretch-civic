@@ -59,7 +59,7 @@ export default {
   // Source tags allowed on links and printed QR codes (?src=...). Anything else is ignored.
   // Add a tag here before using it on a flyer or partner link.
   // Needs offered after the plan ("Need help with anything else?"). 2-1-1 is shown for every need.
-  needs: ['rent', 'health', 'childcare', 'jobs'],
+  needs: ['rent', 'health', 'childcare', 'jobs', 'id'],
   // 'main': people who started on makeitstretch.org and entered an Austin ZIP code (sent by the site itself,
   // not offered on /share).
   sources: ['library', 'ctfb', 'pantry', 'partner', 'flyer', 'qr', 'social', 'city', 'packet', 'main'],
