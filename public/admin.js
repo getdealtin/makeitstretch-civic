@@ -78,6 +78,64 @@ const details = (p, { showPrivate = true } = {}) => `
 
 const btn = (label, act, id, cls = '') => `<button class="btn-xs ${cls}" data-act="${act}" data-id="${esc(id)}">${esc(label)}</button>`;
 
+// ── Community recipes (owner decisions, Nov 22 2026): review what neighbors shared at /share-a-meal ──
+// The site checks each one first (cost, calories, what it contains, duplicates, safety, the name shown and
+// how often it would show up in plans), so most are one tap. Nothing reaches plans until it's approved.
+const SLOT_NAME = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' };
+const CONTAINS = { gluten: 'gluten', dairy: 'dairy', meat: 'meat', pork: 'pork', eggs: 'eggs', peanuts: 'peanuts', fish: 'fish', halal: 'not halal', kosher: 'not kosher', diabetic: 'not for diabetic diets', low_sodium: 'not low sodium' };
+const LANG_NAME_SHORT = { en: 'English', es: 'Spanish', vi: 'Vietnamese', 'zh-Hans': 'Chinese' };
+function communityHtml(list) {
+  const pending = (list || []).filter(r => r.status === 'pending'), live = (list || []).filter(r => r.status === 'approved');
+  const head = `<h2 id="h-comm">Recipes to review <small>${pending.length}</small></h2>
+    <p class="a-hint">Shared at /share-a-meal. Nothing reaches plans until you approve it. Approved recipes join plans within 10 minutes.</p>`;
+  if (list === null) return `<section class="a-section" id="community" aria-labelledby="h-comm">${head}<p class="empty">Couldn’t load recipes. Check the database connection.</p></section>`;
+  const card = r => `<article class="card comm" data-comm="${esc(r.id)}">
+    <div class="card-head"><h3>${esc(r.title)}</h3><span class="muted" style="font:13px var(--font-label)">sent ${day(r.submitted_at)}</span></div>
+    <p class="muted" style="font:14px var(--font-label);margin:0 0 8px">${esc(SLOT_NAME[r.slot])} · serves ${esc(r.serves)}${r.origin ? ` · from “${esc(r.origin)}”` : ''} · ${r.shared_by ? `shared by ${esc(r.shared_by)}` : 'shared by a neighbor'}${r.lang !== 'en' ? ` · written in ${esc(LANG_NAME_SHORT[r.lang] || r.lang)}` : ''}</p>
+    <div class="comm-checks" id="check-${esc(r.id)}"><p class="muted">Checking cost, calories and how often it would show up…</p></div>
+    <details><summary>See the recipe</summary>
+      <ul>${r.ingredients.map(i => `<li>${esc(i.word)}${i.amount ? ` (${esc(i.amount)})` : ''}</li>`).join('')}${(r.extras || []).map(x => `<li>${esc(x)} <span class="tag">You’ll also need</span></li>`).join('')}</ul>
+      <p class="msg-text">${esc(r.steps)}</p></details>
+    <div class="comm-edit" id="edit-${esc(r.id)}" hidden>
+      <label>Name of the dish <input data-f="title" value="${esc(r.title)}" maxlength="80"></label>
+      <label>Steps <textarea data-f="steps" rows="5" maxlength="1500">${esc(r.steps)}</textarea></label>
+      <label>Serves <input data-f="serves" type="number" min="1" max="20" value="${esc(r.serves)}"></label>
+      <label>Meal <select data-f="slot">${Object.entries(SLOT_NAME).map(([k, v]) => `<option value="${k}" ${k === r.slot ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+      <label>Where it’s from <input data-f="origin" value="${esc(r.origin || '')}" maxlength="80"></label>
+      <label>Name shown (blank = “a neighbor”) <input data-f="shared_by" value="${esc(r.shared_by || '')}" maxlength="40"></label>
+      <div class="actions"><button class="btn-xs go" data-comm-save="${esc(r.id)}">Save and approve</button><button class="btn-xs" data-comm-cancel="${esc(r.id)}">Cancel</button></div>
+    </div>
+    <div class="actions comm-actions" id="act-${esc(r.id)}">
+      <button class="btn-xs go" data-comm-act="approve" data-id="${esc(r.id)}">Approve and add to plans</button>
+      <button class="btn-xs" data-comm-editopen="${esc(r.id)}">Edit, then approve</button>
+      <button class="btn-xs" data-comm-act="reject" data-id="${esc(r.id)}">Not this one</button>
+    </div>
+  </article>`;
+  return `<section class="a-section" id="community" aria-labelledby="h-comm">${head}
+    ${pending.length ? pending.map(card).join('') : '<p class="empty">Nothing to review.</p>'}
+    ${live.length ? `<details class="comm-live"><summary>In plans now (${live.length})</summary>
+      <ul>${live.map(r => `<li>${esc(r.title)} <span class="muted">· ${r.shared_by ? esc(r.shared_by) : 'a neighbor'} · approved ${day(r.reviewed_at)}</span>
+        <button class="btn-xs" data-comm-act="remove" data-id="${esc(r.id)}">Take out of plans</button></li>`).join('')}</ul></details>` : ''}
+  </section>`;
+}
+async function loadChecks() {
+  for (const el of root.querySelectorAll('[data-comm]')) {
+    const id = el.dataset.comm, box = root.querySelector(`#check-${id}`);
+    const c = await api(`/community/${id}/check`);
+    if (!c.ok) { box.innerHTML = '<p class="muted">Couldn’t run the checks.</p>'; continue; }
+    const ok = t => `<li><span class="ok" aria-hidden="true">✓</span> ${t}</li>`, warn = t => `<li><span class="warn" aria-hidden="true">!</span> <b>${esc(t)}</b></li>`;
+    box.innerHTML = `${c.perServing ? `<div class="comm-stats"><div><b>$${c.perServing.cost.toFixed(2)}</b><span>a serving</span></div><div><b>${c.perServing.calories}</b><span>calories</span></div><div><b>${c.perServing.protein} g</b><span>protein</span></div></div>` : ''}
+      <ul class="comm-list">
+        ${c.perServing ? ok('All foods are on the priced list') : ''}
+        ${c.extras.length ? ok(`“You’ll also need”: ${esc(c.extras.join(', '))}`) : ''}
+        ${ok(c.contains.length ? `Tagged from the foods: <b>${esc(c.contains.map(k => CONTAINS[k] || k).join(', '))}</b>` : 'Tagged from the foods: no gluten, dairy, meat, pork, eggs, peanuts or fish')}
+        ${c.flags.map(warn).join('')}
+        ${c.shown ? ok(`Would show up in ${c.shown} of ${c.tried} sample plans`) : warn(`Would show up in 0 of ${c.tried} sample plans. Approving it still lets families swap to it.`)}
+        <li><span class="muted">Shown as written in every language until it’s translated.</span></li>
+      </ul>`;
+  }
+}
+
 // ── Messages (owner decision, Nov 22 2026): "Stay connected" sign-ups from the About page, every site ──
 const ROLE_NAME = { resident: 'Resident', partner: 'Partner or organization', press: 'Press or media', other: 'Something else' };
 function messagesHtml(list) {
@@ -115,10 +173,12 @@ function render() {
       <a class="count" href="#directory"><b>${d.approved.length}</b><span>Live listings</span></a>
       <a class="count" href="#invites"><b>${usedInvites}/${d.invites.length}</b><span>Invites used</span></a>
       ${(d.maintenance || []).some(m => m.status !== 'ok') ? `<a class="count alert" href="#updates"><b>${d.maintenance.filter(m => m.status !== 'ok').length}</b><span>Annual updates due</span></a>` : ''}
+      <a class="count ${(d.community || []).some(r => r.status === 'pending') ? 'alert' : ''}" href="#community"><b>${(d.community || []).filter(r => r.status === 'pending').length}</b><span>Recipes to review</span></a>
       <a class="count" href="#messages"><b>${(d.messages || []).length}</b><span>Messages</span></a>
       <a class="count ${d.reviews.some(r => r.status !== 'approved') ? 'alert' : ''}" href="#translations"><b>${d.reviews.filter(r => r.status === 'approved').length}/${d.reviews.length}</b><span>Languages reviewed</span></a>
     </nav>
 
+    ${communityHtml(d.community)}
     ${messagesHtml(d.messages)}
 
     <section class="a-section" id="review" aria-labelledby="h-review">
@@ -208,6 +268,29 @@ function wire() {
     render();
   };
   root.querySelector('#logout').onclick = async () => { await api('/logout', {}); renderLogin(); };
+  // Community recipes: approve, reject, take out of plans, or edit then approve.
+  const commDo = async (id, body, ok) => {
+    const r = await api(`/community/${id}`, body);
+    toast(r.ok ? ok : (r.error === 'name' ? 'A name can only use letters.' : 'Couldn’t save that. Check the fields and try again.'));
+    if (r.ok) load();
+  };
+  root.querySelectorAll('[data-comm-act]').forEach(b => b.addEventListener('click', () => {
+    const msg = { approve: 'Approved. It joins plans within 10 minutes.', reject: 'Not added. Nothing was posted.', remove: 'Taken out of plans.' }[b.dataset.commAct];
+    if (b.dataset.commAct === 'remove' && !confirm('Take this recipe out of plans?')) return;
+    commDo(b.dataset.id, { action: b.dataset.commAct }, msg);
+  }));
+  root.querySelectorAll('[data-comm-editopen]').forEach(b => b.addEventListener('click', () => {
+    root.querySelector(`#edit-${b.dataset.commEditopen}`).hidden = false; root.querySelector(`#act-${b.dataset.commEditopen}`).hidden = true;
+  }));
+  root.querySelectorAll('[data-comm-cancel]').forEach(b => b.addEventListener('click', () => {
+    root.querySelector(`#edit-${b.dataset.commCancel}`).hidden = true; root.querySelector(`#act-${b.dataset.commCancel}`).hidden = false;
+  }));
+  root.querySelectorAll('[data-comm-save]').forEach(b => b.addEventListener('click', () => {
+    const box = root.querySelector(`#edit-${b.dataset.commSave}`);
+    const fields = Object.fromEntries([...box.querySelectorAll('[data-f]')].map(el => [el.dataset.f, el.value]));
+    commDo(b.dataset.commSave, { action: 'approve', fields }, 'Saved and approved. It joins plans within 10 minutes.');
+  }));
+  loadChecks();
   root.querySelectorAll('[data-del-msg]').forEach(b => b.addEventListener('click', async () => {
     if (!confirm('Delete this message? This can’t be undone.')) return;
     const r = await api(`/messages/${b.dataset.delMsg}/delete`, {});

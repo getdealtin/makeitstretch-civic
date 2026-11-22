@@ -36,6 +36,8 @@ const fTip = enTip => (enTip && D.tips?.[enTip]) || enTip;
 const ing = word => D.ingredients?.[word] || word;
 const rTitle = r => D.recipes?.[r.id]?.title || r.title;
 const rSteps = r => D.recipes?.[r.id]?.instructions || r.instructions;
+// Community recipes (Nov 22 2026): a small green label under the meal's name wherever it's listed.
+const commTag = r => (r?.community ? `<span class="community-tag">${esc(t('community_recipe'))}</span>` : '');
 // NHLBI recipes (ids 1001+) come word for word, line by line; translations line up with the English.
 const rTr = r => (Array.isArray(r.lines) && D.recipes?.[r.id]?.lines?.length === r.lines.length ? D.recipes[r.id] : null);
 const NIH_BOOK = { latino: 'nih_book_latino', aa: 'nih_book_aa' };
@@ -489,6 +491,7 @@ function renderIntro() {
           <h3 class="promises-h">${esc(t('plan_h'))}</h3>
           <ul class="promises">${[1, 2, 3].map(n => `<li>${esc(t('plan_p' + n))}</li>`).join('')}</ul>
           <p class="promises-link"><a href="/how-plans-work${location.search}">${esc(t('plan_link'))}</a></p>
+          <p class="promises-link"><a href="/share-a-meal${location.search}">${esc(t('share_meal_link'))} ›</a></p>
         </div>
         <div class="band-deco" aria-hidden="true">${ART.pin}</div>
       </div>
@@ -1104,7 +1107,7 @@ function renderResults(plan, restore = {}) {
     return ['breakfast', 'lunch', 'dinner'].filter(sl => d[sl].length).map(sl => {
       const key = `0-${di}-${sl}`;
       return `<div class="glance-row"><span class="glance-meal"><span class="glance-slot">${esc(t(sl))}</span>
-        <button type="button" class="meal-pick" data-key="${key}">${esc(rTitle(d[sl][choice[key] || 0]))}${newTag(d[sl][choice[key] || 0])}</button></span>
+        <button type="button" class="meal-pick" data-key="${key}">${esc(rTitle(d[sl][choice[key] || 0]))}${newTag(d[sl][choice[key] || 0])}${commTag(d[sl][choice[key] || 0])}</button></span>
         ${d[sl][1] ? `<button type="button" class="btn btn-ghost btn-sm glance-swap" data-swap="${key}">${esc(t('swap_btn'))}</button>` : ''}</div>`;
     }).join('');
   };
@@ -1128,7 +1131,7 @@ function renderResults(plan, restore = {}) {
         : `<div class="d"><div class="day-name">${esc(dayOf(d.dayName))}</div>
             ${['breakfast', 'lunch', 'dinner'].map(sl => d[sl].length ? `
               <div class="m"><span>${esc(t(sl))}</span>
-                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(rTitle(d[sl][choice[`${wi}-${di}-${sl}`] || 0]))}${newTag(d[sl][choice[`${wi}-${di}-${sl}`] || 0])}</button></div>` : '').join('')}
+                <button type="button" class="meal-pick" data-key="${wi}-${di}-${sl}">${esc(rTitle(d[sl][choice[`${wi}-${di}-${sl}`] || 0]))}${newTag(d[sl][choice[`${wi}-${di}-${sl}`] || 0])}${commTag(d[sl][choice[`${wi}-${di}-${sl}`] || 0])}</button></div>` : '').join('')}
           </div>`).join('')}
     </div>`;
 
@@ -1154,7 +1157,7 @@ function renderResults(plan, restore = {}) {
         ...(residents().length ? [{ id: 'help', icon: '🤝', title: t('sec_help'), sub: esc(t('hub_help_sub')) }] : []),
         ...((city.needs || []).length ? [{ id: 'needs', icon: '💬', title: t('needs_title'), sub: esc(t('hub_needs_sub')) }] : []),
       ],
-      homeBottom: `${keepBar()}
+      homeBottom: `${shareMealCard()}${keepBar()}
         <div class="nav no-print">
           <button type="button" class="btn btn-ghost" id="print">${esc(t('print'))}</button>
           <button type="button" class="btn btn-ghost" id="restart">${esc(t('start_over'))}</button>
@@ -1286,7 +1289,7 @@ function renderResults(plan, restore = {}) {
     const ci = 1 - (choice[key] || 0);
     choice[key] = ci;
     track('meal_swapped', { recipe: opts[ci].id });
-    app.querySelectorAll(`.meal-pick[data-key="${key}"]`).forEach(x => { x.textContent = rTitle(opts[ci]); });
+    app.querySelectorAll(`.meal-pick[data-key="${key}"]`).forEach(x => { x.innerHTML = esc(rTitle(opts[ci])) + commTag(opts[ci]); });
     refreshList();
     app.querySelector('#announce').textContent = t('swapped_list', { title: rTitle(opts[ci]) });
     sync();
@@ -1382,6 +1385,13 @@ function renderResults(plan, restore = {}) {
 }
 let printFill = null; // fills the print-only extras for whatever plan is on screen
 
+// ── Community recipes (owner decision, Nov 22 2026): the invite at the bottom of a plan ──
+function shareMealCard() {
+  return `<a class="share-meal-card no-print" href="/share-a-meal${esc(location.search)}">
+    <span class="smc-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#236B46" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7c0-1.5 1-2 1-3M12 7c0-1.5 1-2 1-3M16 7c0-1.5 1-2 1-3"/></svg></span>
+    <span><b>${esc(t('share_meal_t'))}</b><span class="smc-sub">${esc(t('share_meal_p'))}</span></span></a>`;
+}
+
 // ── Keep this plan (no account) ─────────────────────────────────
 function keepBar() {
   installAfterSave = false; // a new plan or box: the tip waits for its own save
@@ -1449,14 +1459,17 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text, meals = () => u
 
 function openRecipe(r, { alt, onSwap, missing, justSwapped, twists = '' } = {}) {
   const dlg = app.querySelector('#recipe');
+  dlg.querySelector('.dialog-body').classList.toggle('recipe-community', !!r.community); // the green card
   dlg.querySelector('.dialog-body').innerHTML = `
     <button type="button" class="btn btn-ghost dialog-close" id="close">${esc(t('close'))}</button>
     <p class="eyebrow">${esc(t('recipe'))}</p>
+    ${r.community ? `<p class="community-badge">${esc(t('community_recipe'))}</p>` : ''}
     <h2 id="recipe-title" tabindex="-1">${esc(rTitle(r))}</h2>
+    ${r.community ? `<p class="community-by">${esc(r.shared_by ? t('shared_by', { name: r.shared_by }) : t('shared_neighbor'))}${r.origin ? ` · “${esc(r.origin)}”` : ''}</p>` : ''}
     ${justSwapped ? `<p class="swapped-note">${esc(t('in_your_plan'))}</p>` : ''}
     ${r.srv ? `<p class="muted">${esc(t('serves', { n: r.srv }))}</p>` : ''}
     ${Array.isArray(r.lines) ? nihRecipeHtml(r, nihChip(missing)) : `<h3>${esc(t('ingredients'))}</h3>
-    <ul>${(r.ingredients || []).map(i => `<li>${esc(ing(i))}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}
+    <ul>${(r.ingredients || []).map(i => `<li>${esc(ing(i))}${r.amounts?.[i] ? ` (${esc(r.amounts[i])})` : ''}${missing?.includes(i) ? ` <span class="need-tag">${esc(t('box_need'))}</span>` : ''}</li>`).join('')}
       ${(r.extras || []).map(x => `<li>${esc(ing(x))} <span class="need-tag">${esc(t('box_need'))}</span></li>`).join('')}</ul>
     ${r.extras?.length ? `<p class="extras-note">${esc(t('extras_note'))}</p>` : ''}
     <h3>${esc(t('steps'))}</h3>

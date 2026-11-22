@@ -605,3 +605,45 @@ html { scroll-padding-bottom: 110px; }
 .connect-note { font-size: 15px; color: var(--text-muted); margin: 4px 0 0; }
 .connect-done { font-size: 19px; font-weight: 600; color: var(--green-text, #236B46); }
 .connect-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Share a meal (community recipes, Nov 22 2026) */
+.share-form { display: flex; flex-direction: column; gap: 8px; }
+.share-form > label, .share-form legend, .share-two label, .share-sub { font-family: var(--font-label); font-size: 15px; font-weight: 600; color: var(--indigo-ink); margin: 10px 0 0; }
+.share-form input:not([type=radio]):not([type=checkbox]), .share-form textarea { font: inherit; font-size: 17px; padding: 12px; border: 2px solid var(--rule); border-radius: 10px; background: var(--page); color: var(--text); width: 100%; box-sizing: border-box; }
+.share-form input:focus, .share-form textarea:focus { border-color: var(--violet); outline: none; }
+.share-form fieldset { border: 0; padding: 0; margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.share-form legend { margin-bottom: 8px; }
+.share-ing { flex-direction: column; flex-wrap: nowrap !important; }
+.share-hint { font-size: 15px; color: var(--text-muted); margin: 0; }
+.pill-choice { display: inline-flex; align-items: center; gap: 8px; font: 500 15px var(--font-label); padding: 10px 14px; border: 1.5px solid var(--rule); border-radius: 999px; background: var(--page); color: var(--indigo-ink); min-height: 44px; box-sizing: border-box; cursor: pointer; }
+.pill-choice input { accent-color: var(--violet); width: 18px; height: 18px; margin: 0; }
+button.pill-choice:hover { border-color: var(--violet); }
+.share-suggest { display: flex; flex-wrap: wrap; gap: 8px; }
+.share-picked { list-style: none; margin: 4px 0 0; padding: 0; border: 1px solid var(--rule); border-radius: 12px; }
+.share-picked:empty { display: none; }
+.share-picked li { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--rule); }
+.share-picked li:last-child { border-bottom: 0; }
+.share-food { flex: 1 1 40%; min-width: 0; }
+.share-picked input { flex: 1 1 45%; font-size: 15px !important; padding: 8px 10px !important; }
+.share-remove, .share-x { border: 0; background: none; font-size: 22px; line-height: 1; color: var(--text-muted); cursor: pointer; min-width: 44px; min-height: 44px; }
+.share-x { min-width: 28px; min-height: 28px; font-size: 16px; }
+.share-extras { background: var(--tint-light); border-radius: 12px; padding: 12px; margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.share-extras-row { display: flex; gap: 8px; }
+.share-extras-list:empty { display: none; }
+.share-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 12px; }
+.share-two > div { display: flex; flex-direction: column; gap: 8px; }
+.share-consent { display: flex; gap: 12px; align-items: flex-start; background: var(--tint); border-radius: 12px; padding: 14px; margin-top: 12px; font-size: 16px; }
+.share-consent input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--violet); flex: none; }
+.share-form .btn { align-self: stretch; margin-top: 8px; }
+.share-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Community recipes: the green card (owner decision, Nov 22 2026) */
+.community-preview, .recipe-community { background: #EEF7F1; border: 2px solid #BFDCCB; border-radius: 18px; padding: 16px; }
+.community-badge { display: inline-block; font: 600 12px var(--font-label); letter-spacing: .1em; text-transform: uppercase; color: #FFFFFF; background: #236B46; border-radius: 999px; padding: 5px 10px; margin: 0 0 8px; }
+.community-title { font-family: var(--font-display); font-weight: 700; font-size: 21px; color: var(--indigo-ink); margin: 0 0 4px; }
+.community-by { font: 500 15px var(--font-label); color: #236B46; margin: 0; }
+.community-tag { display: block; font: 600 13px var(--font-label); color: #236B46; margin-top: 2px; }
+.share-meal-card { display: flex; gap: 14px; align-items: center; text-decoration: none; border: 2px solid var(--indigo-ink); border-radius: 16px; padding: 16px; color: var(--text); margin: 20px 0; }
+.share-meal-card .smc-icon { width: 52px; height: 52px; border-radius: 12px; background: #DCEFE3; display: flex; align-items: center; justify-content: center; flex: none; }
+.share-meal-card b { display: block; font-family: var(--font-display); font-size: 20px; color: var(--indigo-ink); }
+.share-meal-card span.smc-sub { color: var(--text-muted); font-size: 16px; }

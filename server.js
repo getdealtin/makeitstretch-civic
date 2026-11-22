@@ -21,6 +21,7 @@ import { makeLivePrices } from './server/live-prices.js';
 import { mountHsds } from './server/hsds.js';
 import { mountEvents, AVOID } from './server/events.js';
 import { mountConnect } from './server/connect.js';
+import { mountCommunity, initRecipes, allRecipes, recipesJson } from './server/community.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -162,13 +163,16 @@ app.get('/api/prices', async (req, res) => {
   res.set('Cache-Control', 'public, max-age=3600').json(await pricesFor(req.city, zipRegion));
 });
 
-const RECIPES_JSON = JSON.stringify(RECIPES.map(r => ({
+// Every recipe the site uses: the built-in ones plus approved community recipes (server/community.js),
+// which join within 10 minutes of approval (browsers keep the list for 10 minutes).
+initRecipes(RECIPES, r => ({
   id: r.id, title: r.title, slot: r.slot, cuisine: r.cuisine, ingredients: r.ingredients,
   instructions: r.instructions, tags: r.tags, avoid: r.avoid, srv: r.srv,
   ...(r.extras?.length ? { extras: r.extras } : {}), // seasonings under "You'll also need" (Nov 19 2026)
   ...(r.uses ? { uses: r.uses, lines: r.lines, note: r.note, steps: r.steps, extra: r.extra, source: r.source } : {}),
-})));
-app.get('/api/recipes', (req, res) => res.type('json').set('Cache-Control', 'public, max-age=3600').send(RECIPES_JSON));
+  ...(r.community ? { community: true, shared_by: r.shared_by, origin: r.origin, amounts: r.amounts, lang: r.lang } : {}),
+}));
+app.get('/api/recipes', (req, res) => res.type('json').set('Cache-Control', 'public, max-age=600').send(recipesJson()));
 
 app.use('/engine', express.static(path.join(__dirname, 'engine'), { maxAge: '1h' }));
 
@@ -205,13 +209,14 @@ app.post('/api/plan', async (req, res) => {
   const { region, prices } = priced;
 
   // Meals first, then the list from those meals (engine/meals.js).
-  const result = planMeals(input, prices, RECIPES);
+  const result = planMeals(input, prices, allRecipes());
   // Every plan is checked against the engine's principles (engine/principles.js); a failure is a bug to fix.
   if (!result.principles.ok) console.warn('[principles]', JSON.stringify({ input: { budget, days, people, avoid: input.avoid, cuisine: input.cuisine }, failed: result.principles.failed }));
   const weeks = result.weeks;
 
   const slim = r => ({ id: r.id, title: r.title, cuisine: r.cuisine, ingredients: r.ingredients, instructions: r.instructions, tags: r.tags, srv: r.srv,
-    ...(r.uses ? { lines: r.lines, note: r.note, steps: r.steps, extra: r.extra, source: r.source } : {}) });
+    ...(r.uses ? { lines: r.lines, note: r.note, steps: r.steps, extra: r.extra, source: r.source } : {}),
+    ...(r.community ? { community: true, shared_by: r.shared_by, origin: r.origin, amounts: r.amounts, extras: r.extras } : {}) });
   res.json({
     input,
     summary: {
@@ -234,7 +239,7 @@ app.post('/api/plan', async (req, res) => {
 
 // ── Ops ─────────────────────────────────────────────────────────
 // Anonymous usage events live in server/events.js (strict schema, matching the privacy policy).
-app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, one_site: ONE_SITE, recipes: RECIPES.length, bls: !!BLS_KEY, db: db.kind, admin: !!process.env.ADMIN_KEY }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', city: req.city.id, one_site: ONE_SITE, recipes: allRecipes().length, bls: !!BLS_KEY, db: db.kind, admin: !!process.env.ADMIN_KEY }));
 app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
 // ── Food directory + admin (server/directory.js) ────────────────
@@ -246,6 +251,7 @@ mountDirectory(app, { getDb: () => db, priceStatus: () => (BLS_KEY ? livePrices.
 mountHsds(app, { getProviders: city => db.listProviders(city, ['approved']) });
 mountEvents(app, { getDb: () => db, oneSite: ONE_SITE });
 mountConnect(app, { getDb: () => db });
+mountCommunity(app, { getDb: () => db });
 const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
 // ── Cities that are live, and share links / QR codes for partners (landing + /share) ──
 const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.length).map(c => ({
@@ -302,6 +308,7 @@ app.get('/admin', page('admin.html'));
 app.get('/privacy', page('privacy.html'));
 app.get('/how-plans-work', page('principles.html'));
 app.get('/about', page('about.html'));
+app.get('/share-a-meal', page('share-meal.html'));
 
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', 'index.html')));

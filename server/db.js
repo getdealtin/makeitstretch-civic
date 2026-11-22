@@ -20,7 +20,8 @@ export const newToken = () => crypto.randomBytes(18).toString('base64url');
 // ── In-memory ───────────────────────────────────────────────────
 export function memoryDb() {
   const providers = new Map(), invites = new Map(), priceCache = new Map();
-  const events = [], messages = [];
+  const events = [], messages = [], community = [];
+  let communityNum = 0;
   const reviews = new Map(['es', 'vi', 'zh-Hans'].map(l => [l, { lang: l, status: 'pending', reviewer: null, reviewed_at: null, note: null }]));
   const now = () => new Date().toISOString();
   const copy = o => (o ? structuredClone(o) : null);
@@ -63,6 +64,11 @@ export function memoryDb() {
     async insertMessage(row) { const m = { ...row, id: crypto.randomUUID(), created_at: now() }; messages.push(m); return copy(m); },
     async listMessages(limit = 200) { return [...messages].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, limit).map(copy); },
     async deleteMessage(id) { const i = messages.findIndex(m => m.id === id); if (i >= 0) messages.splice(i, 1); },
+    // Community recipes (db/community-recipes.sql).
+    async insertCommunityRecipe(row) { const r = { extras: [], status: 'pending', reviewed_at: null, ...row, id: crypto.randomUUID(), num: ++communityNum, submitted_at: now() }; community.push(r); return copy(r); },
+    async listCommunityRecipes(statuses) { return community.filter(r => !statuses || statuses.includes(r.status)).sort((a, b) => b.submitted_at.localeCompare(a.submitted_at)).map(copy); },
+    async getCommunityRecipe(id) { return copy(community.find(r => r.id === id)); },
+    async updateCommunityRecipe(id, patch) { const r = community.find(x => x.id === id); if (!r) return null; Object.assign(r, patch); return copy(r); },
     async getPriceCache(region) { return copy(priceCache.get(region)); },
     async savePriceCache(region, prices, fetchedAt) { priceCache.set(region, { region, prices, fetched_at: fetchedAt }); },
   };
@@ -120,6 +126,11 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
       return out;
     },
     updateReview: async (lang, patch) => one(await call(`translation_reviews?lang=eq.${enc(lang)}`, { method: 'PATCH', body: patch, prefer: 'return=representation' })),
+    // Community recipes (db/community-recipes.sql).
+    insertCommunityRecipe: async row => one(await call('community_recipes', { method: 'POST', body: row, prefer: 'return=representation' })),
+    listCommunityRecipes: statuses => call(`community_recipes?order=submitted_at.desc${statuses ? `&status=in.(${statuses.map(enc).join(',')})` : ''}`),
+    getCommunityRecipe: async id => one(await call(`community_recipes?id=eq.${enc(id)}`)),
+    updateCommunityRecipe: async (id, patch) => one(await call(`community_recipes?id=eq.${enc(id)}`, { method: 'PATCH', body: patch, prefer: 'return=representation' })),
     // "Stay connected" (db/messages.sql): newest first.
     insertMessage: async row => one(await call('messages', { method: 'POST', body: row, prefer: 'return=representation' })),
     listMessages: (limit = 200) => call(`messages?order=created_at.desc&limit=${Number(limit) || 200}`),

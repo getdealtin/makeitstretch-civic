@@ -9,6 +9,7 @@ import express from 'express';
 import { PUBLIC_FIELDS, EDITABLE_FIELDS } from './db.js';
 import { CITIES } from '../cities/index.js';
 import { summarize, recentVisits, cityForZip } from './events.js';
+import { mountCommunityAdmin } from './community.js';
 import { cityReport, reportCsv, directoryCsv, rolesOf, DEFAULT_FRAMEWORK } from './report.js';
 import { retailFindings } from './stores.js';
 import { BLS_ITEMS } from './prices.js';
@@ -281,6 +282,8 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
         maintenance: [...livePriceItems(priceStatus()), ...maintenanceFor(CITIES[city])],
         // "Stay connected" sign-ups and messages, every site (db/messages.sql); empty if the table isn't there yet.
         messages: await db().listMessages(200).catch(e => { console.error(e.message); return null; }),
+        // Community recipes waiting for review, and the ones in plans (every site; db/community-recipes.sql).
+        community: await db().listCommunityRecipes(['pending', 'approved']).catch(e => { console.error(e.message); return null; }),
       });
     } catch (e) { console.error(e.message); res.status(500).json({ ok: false, error: 'db' }); }
   });
@@ -366,6 +369,9 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
     if (!r) return res.status(404).json({ ok: false });
     res.json({ ok: true, review: r });
   });
+
+  // Community recipes: checks and review (server/community.js).
+  mountCommunityAdmin(admin, { db, regionFor: id => CITIES[id]?.price_region || 'national' });
 
   app.use('/api/admin', admin);
 }
