@@ -30,3 +30,13 @@ test('/api/count sends null under 500, so the line stays hidden', async () => {
   const r = await (await fetch(base + '/api/count')).json();
   assert.deepEqual(r, { households: null });
 });
+
+// SNAP box "You're not alone" line (Nov 22 2026): Census ACS 2020–2024, table B22003.
+test('/api/snap-share: the ZIP code when SNAP use there is at least the U.S. share, else the U.S.', async () => {
+  const get = async zip => (await fetch(base + '/api/snap-share?zip=' + zip)).json();
+  assert.deepEqual(await get('60609'), { where: 'zip', zip: '60609', n: 4 }); // 6,395 of 22,884 households (28%)
+  assert.deepEqual(await get('10001'), { where: 'us', n: 8 });                 // below the U.S. share
+  assert.deepEqual(await get('00601'), { where: 'us', n: 8 });                 // Puerto Rico: no SNAP (NAP)
+  assert.deepEqual(await get(''), { where: 'us', n: 8 });                      // no ZIP given
+  assert.deepEqual(await get('abc'), { where: 'us', n: 8 });
+});

@@ -659,3 +659,7 @@ button.pill-choice:hover { border-color: var(--violet); }
 .home-count { margin: 20px 0 0; font-family: var(--font-label); font-size: 15px; color: var(--text-muted); }
 .home-count strong { color: var(--green-text); }
 @media (max-width: 700px) { .home-count { text-align: center; max-width: 36ch; margin: 18px auto 0; } }
+
+/* SNAP box "not alone" line (Nov 22 2026): light text, the number in yellow. */
+.snap-alone { font-family: var(--font-label); font-size: 17px; color: var(--on-violet); margin: 0 0 12px; min-height: 1.4em; }
+.snap-alone strong { color: #F2C94C; }

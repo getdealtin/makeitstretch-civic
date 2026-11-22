@@ -869,6 +869,24 @@ function wireHub(onOpen = {}, open = null) {
 }
 const setHubSub = (id, html) => { const el = app.querySelector('#hub-sub-' + id); if (el) el.innerHTML = html; };
 
+// ── SNAP box: "You're not alone: about 1 in 4 households in 60609 use SNAP." (Census, /api/snap-share) ──
+// Filled from a per-ZIP cache; the first time, the line is filled in as soon as the answer arrives.
+const snapShares = {};
+function snapAlone(zip) {
+  const key = zip || 'us', d = snapShares[key];
+  if (d === undefined) {
+    snapShares[key] = null;
+    fetch('/api/snap-share?zip=' + (zip || '')).then(r => r.json()).then(v => {
+      snapShares[key] = v;
+      document.querySelectorAll(`.snap-alone[data-zip="${key}"]`).forEach(p => { p.innerHTML = snapAlone(zip); });
+    }).catch(() => { snapShares[key] = false; });
+    return '';
+  }
+  if (!d) return '';
+  const msg = d.where === 'us' ? t('snap_alone_us', { n: d.n }) : d.most ? t('snap_alone_most', { zip: d.zip }) : t('snap_alone_zip', { n: d.n, zip: d.zip });
+  return esc(msg).replace(/\[([^\]]+)\]/, '<strong>$1</strong>'); // [bracketed] part is highlighted
+}
+
 // ── Home count line: "1,100+ households have planned groceries here." (server/api/count; hidden when null) ──
 let homeCount;
 async function loadHomeCount() {
@@ -1069,7 +1087,7 @@ function renderResults(plan, restore = {}) {
   const snapRes = (city.resources || []).find(r => r.role === 'benefits' && /snap/i.test(r.id));
   const snapPrompt = () => (snapRes && input.budget / input.people / input.days < BENCHMARKS.snapPerPersonDay ? `<div class="snap-prompt no-print">
       <p class="snap-t">${esc(t('snap_prompt_t'))}</p>
-      <p>${esc(t('snap_prompt_p', { amount: money(BENCHMARKS.snapPerPersonDay) }))}</p>
+      <p class="snap-alone" data-zip="${esc(answers?.zip || 'us')}">${snapAlone(answers?.zip)}</p>
       <a class="btn btn-primary btn-sm" href="${esc(snapRes.url)}" target="_blank" rel="noopener" data-track="resource" data-target="${esc(snapRes.id)}" data-action="website">${esc(t('snap_prompt_btn'))}<span class="sr-only"> (${esc(resText(snapRes, 'name'))})</span></a>
     </div>` : '');
   const dietNotes = DIETS.filter(d => (input.avoid || []).includes(d)).map(d => DIET_NOTE_KEYS[d]);

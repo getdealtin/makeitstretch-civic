@@ -248,6 +248,17 @@ app.get('/api/ping', (req, res) => res.json({ ok: true, ts: new Date().toISOStri
 const COUNT_MIN = 500, COUNT_TTL = 24 * 60 * 60e3;
 const counts = new Map();
 export const roundDown = n => { if (n < 100) return n; const p = 10 ** (Math.floor(Math.log10(n)) - 1); return Math.floor(n / p) * p; };
+// The SNAP box's "You're not alone" line (owner decision, Nov 22 2026): households that use SNAP in the
+// person's ZIP code (Census ACS, scripts/build-snap-share.py), or in the U.S. when the ZIP isn't in the file.
+const SNAP_SHARE = JSON.parse(readFileSync(new URL('./data/snap-share-by-zip.json', import.meta.url), 'utf8'));
+app.get('/api/snap-share', (req, res) => {
+  const zip = /^\d{5}$/.test(req.query.zip || '') ? req.query.zip : null;
+  const local = zip && SNAP_SHARE.zips[zip];
+  res.set('Cache-Control', 'public, max-age=86400').json(local
+    ? { where: 'zip', zip, ...(local === 'most' ? { most: true } : { n: local }) }
+    : { where: 'us', n: SNAP_SHARE.us.n });
+});
+
 app.get('/api/count', async (req, res) => {
   const key = req.city.id;
   let hit = counts.get(key);
