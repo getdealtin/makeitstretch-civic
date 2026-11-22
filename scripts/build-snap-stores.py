@@ -13,6 +13,7 @@ Run:  python3 -I scripts/build-snap-stores.py "<path to the unzipped CSV>" [--st
 Keeps stores in the county that were still authorized (no end date). Store types are
 USDA's own. Display names drop store numbers and tidy chain names; usda_name keeps the original.
 """
+# USDA's CSV drops leading zeros ("6040" for 06040, CT), so every ZIP is padded back to 5 digits.
 import argparse, csv, json, re
 
 SRC_ASOF = '2025-12-31'
@@ -60,7 +61,7 @@ def main(path, state='TX', county='Travis'):
             'type': r['Store Type'], 'group': GROUP.get(r['Store Type'], 'other'),
             'full': r['Store Type'] in FULL, 'membership': name in MEMBERSHIP,
             'addr': ' '.join(x for x in [r['Street Number'].strip(), r['Street Name'].strip()] if x),
-            'zip': r['Zip Code'][:5], 'lat': round(float(r['Latitude']), 5), 'lon': round(float(r['Longitude']), 5),
+            'zip': r['Zip Code'].strip()[:5].zfill(5), 'lat': round(float(r['Latitude']), 5), 'lon': round(float(r['Longitude']), 5),
         })
     out.sort(key=lambda s: s['id'])
     dest = f'data/snap-stores-{county.lower().replace(" ", "-")}.json'
@@ -82,7 +83,7 @@ def national(path):
     for r in csv.DictReader(open(path, encoding='utf-8-sig')):
         if r['End Date'].strip() or not r['Latitude'] or not r['Longitude']:
             continue
-        t, z = r['Store Type'], r['Zip Code'][:5]
+        t, z = r['Store Type'], r['Zip Code'].strip()[:5].zfill(5)
         lat, lon = round(float(r['Latitude']), 5), round(float(r['Longitude']), 5)
         # Store mix inside each ZIP code, by USDA store type (same groups as the City report).
         m = mix.setdefault(z, [None, 0, 0, 0, 0, 0])  # nearest full grocery (mi), full, other grocery, markets, convenience, dollar/other
@@ -119,7 +120,8 @@ def national(path):
             if best is not None and best <= ring * 0.5 * 69.0 * math.cos(math.radians(abs(c[0]) + 0.5)):
                 break
         m = mix.get(z, [None, 0, 0, 0, 0, 0])
-        m[0] = round(best, 1) if best is not None else None
+        # Puerto Rico (006, 007, 009) has no SNAP (it has NAP), so no distance: it would only find Virgin Islands stores (008).
+        m[0] = round(best, 1) if best is not None and z[:3] not in ('006', '007', '009') else None
         out_mix[z] = m
     json.dump({'source': 'USDA SNAP Retailer Locator historical data', 'as_of': SRC_ASOF, 'county': 'United States',
                'cols': ['id', 'name', 'type', 'addr', 'city', 'state', 'zip', 'lat', 'lon'], 'types': TYPES, 'stores': listed},
