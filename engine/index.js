@@ -10,8 +10,15 @@ export { PRINCIPLES, checkPrinciples } from './principles.js';
 
 /** Plan meals and the list (engine/meals.js), checked against the engine's principles (engine/principles.js). */
 export function planMeals(input, prices, recipes) {
-  const r = plan(input, prices, recipes);
-  return { ...r, principles: checkPrinciples(r) };
+  let r = plan(input, prices, recipes);
+  let principles = checkPrinciples(r);
+  // Value first (owner decision, Nov 22 2026): if giving a community recipe its turn makes the plan break
+  // any principle (say, a little less filling than federal guidance asks), make it again without that turn.
+  if (r.state?.communityTurn && principles.failed.length) {
+    r = plan({ ...input, noCommunityTurn: true }, prices, recipes);
+    principles = checkPrinciples(r);
+  }
+  return { ...r, principles };
 }
 export { LEAVE_OUT, DIETS, DIET_NOTE_KEYS, foodAllowed, recipeAllowed } from './diets.js';
 export { groupShoppingList, CATEGORY_ORDER, TIER_KEYS } from './shopping.js';

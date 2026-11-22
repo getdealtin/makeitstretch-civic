@@ -484,6 +484,33 @@ export function planMeals(input, prices, recipes) {
   // on the list or at home, best first, while the plan stays within budget and keeps its calories
   // (within VARIETY_KCAL_GIVE). Rotation means no meal on two days running in a slot with 2+ meals.
   ({ menu, current } = addVariety({ pools, plan, menu, current, budget, size: first, haveIds, target: FLOOR_KCAL * people * d, tieRank: seed === null ? null : tieRank }));
+
+  // Community recipes get a turn (owner decision, Nov 22 2026: option A). Neighbors' recipes are rarely the
+  // very cheapest per calorie, so cost alone would never pick them. Each new plan's menu holds one community
+  // recipe when one fits: it replaces the menu meal whose swap costs least, and only if the plan stays within
+  // budget, keeps its calories, keeps the daily fruit and doesn't repeat ingredients more. Value first: when
+  // none fits, the plan is made as before. Which community recipe is tried first is the plan's random draw
+  // (the last saved plan's meals last), so neighbors take turns. Plans without a draw (links from before)
+  // are unchanged.
+  let communityTurn = false;
+  if (seed !== null && !input.noCommunityTurn && !SLOTS.some(sl => menu[sl].some(r => r.recipe.community))) {
+    const keepKcal = Math.min(current.kcal, FLOOR_KCAL * people * d);
+    const inMenu = new Set(SLOTS.flatMap(sl => menu[sl].map(r => r.id)));
+    const spread = capExcess(plan.assign(menu)).excess;
+    const community = kitchen.prepared.filter(r => r.recipe.community && !inMenu.has(r.id)).sort((a, b) => tieRank(a) - tieRank(b));
+    for (const cand of community) {
+      let best = null;
+      for (const sl of cand.slots) for (let i = 0; i < menu[sl].length; i++) {
+        if (SLOTS.some(x => menu[x].some((m, j) => m.sig === cand.sig && !(x === sl && j === i)))) continue;
+        const trial = { ...menu, [sl]: menu[sl].map((r, j) => (j === i ? cand : r)) };
+        if (capExcess(plan.assign(trial)).excess > spread) continue;
+        const t = plan.total(trial);
+        if (t.cost > budget || t.kcal < keepKcal || (current.fruit && !t.fruit)) continue;
+        if (!best || t.cost < best.t.cost) best = { trial, t };
+      }
+      if (best) { menu = best.trial; current = best.t; communityTurn = true; break; }
+    }
+  }
   const varietyEnd = { pools, plan, menu, current, haveIds, size: first, target: FLOOR_KCAL * people * d };
 
   let assigned = plan.assign(menu);
@@ -516,7 +543,7 @@ export function planMeals(input, prices, recipes) {
     }
   }
   // varietyEnd: the menu as the variety pass left it, so engine/principles.js can check its work.
-  const state = { input: { ...input, days }, kitchen, assigned, altFor, coveredDays: d, budget, balance, varietyEnd };
+  const state = { input: { ...input, days }, kitchen, assigned, altFor, coveredDays: d, budget, balance, varietyEnd, communityTurn };
   const weeks = [];
   for (let day = 0; day < days; day++) {
     const w = Math.floor(day / 7);
@@ -531,6 +558,8 @@ export function planMeals(input, prices, recipes) {
     }
     weeks[w].push(entry);
   }
+  // communityTurn: a community recipe was given its turn (engine/index.js makes the plan again without it if
+  // the finished plan breaks any principle).
   return { ...rebuildList(state, []), weeks, state };
 }
 

@@ -17,13 +17,17 @@
 import { readFileSync } from 'node:fs';
 
 const args = process.argv.slice(2);
-const ROOT = args.find(a => !a.startsWith('--') && !/^\d+$/.test(a));
+const ROOT = args.find((a, i) => !a.startsWith('--') && !/^\d+$/.test(a) && args[i - 1] !== '--community');
 const flag = (k, d) => { const i = args.indexOf(k); return i < 0 ? d : Number(args[i + 1]); };
 const DRAW = args.includes('--draw'), N = flag('--households', 400), WEEKS = flag('--weeks', 4);
+// --community <file>: extra recipes marked community: true (a JSON { recipes: [...] }), to measure how often
+// neighbors' recipes reach plans (option A, Nov 22 2026). The same file runs on any version of the engine.
+const COMMUNITY_FILE = (() => { const i = args.indexOf('--community'); return i < 0 ? null : args[i + 1]; })();
 const E = await import(`${ROOT}/engine/index.js`);
 const { checkPrinciples } = await import(`${ROOT}/engine/principles.js`);
 const read = f => JSON.parse(readFileSync(`${ROOT}/data/${f}`, 'utf8'));
 const recipes = [...E.indexRecipes(read('seed-recipes.json')), ...read('nih-recipes.json').recipes.map(({ es, key, ...r }) => r), ...read('simple-meals.json').recipes];
+if (COMMUNITY_FILE) recipes.push(...JSON.parse(readFileSync(COMMUNITY_FILE, 'utf8')).recipes);
 const byId = new Map(recipes.map(r => [r.id, r]));
 const { snapPerPersonDay: SNAP, tfpPerPersonDay: TFP } = E.BENCHMARKS;
 
@@ -50,12 +54,13 @@ for (let k = 0; k < N; k++) {
   const h = household();
   const t0 = performance.now();
   const r = plan(h);
-  if (checkPrinciples(r).failed.length) out.principleFails++;
+  const fails = checkPrinciples(r).failed;
+  if (fails.length) { out.principleFails++; (out.failDetails ||= []).push({ household: h, failed: fails }); }
   if (r.spent > h.budget + 0.005) out.overBudget++;
   const st = r.state;
   out.value.push({ band: band(h), cppd: r.cppd, calPct: r.calPct, protein: st?.assigned ? st.assigned.reduce((a, x) => a + (x.rec.protein || 0) * (x.servings || 0), 0) / h.people / Math.max(1, r.coveredDays) : 0,
     covered: r.coveredDays / h.days, items: r.cart.length, leftPct: (h.budget - r.spent) / h.budget,
-    balance: Object.keys(st?.balance || {}).length, ms: performance.now() - t0 });
+    balance: Object.keys(st?.balance || {}).length, community: served(r).some(id => byId.get(id)?.community), ms: performance.now() - t0 });
   const ids = served(r);
   for (const id of ids) {
     out.counts[id] = (out.counts[id] || 0) + 1;
@@ -97,15 +102,20 @@ const valueOf = vs => ({ plans: vs.length, caloriesPerPersonDay: Math.round(avg(
   proteinGramsPerPersonDay: Math.round(avg(vs.map(v => v.protein))), daysCovered: +(avg(vs.map(v => v.covered)) * 100).toFixed(1), listItems: med(vs.map(v => v.items)),
   // the vegetable side, second fruit and cup of milk a day added with money left (0–3 per plan)
   balanceAddsPerPlan: +avg(vs.map(v => v.balance)).toFixed(2), budgetLeftPct: +(avg(vs.map(v => v.leftPct)) * 100).toFixed(1),
-  msPerPlanMedian: Math.round(med(vs.map(v => v.ms))) });
+  msPerPlanMedian: Math.round(med(vs.map(v => v.ms))),
+  plansWithACommunityRecipe: +(vs.filter(v => v.community).length / Math.max(vs.length, 1) * 100).toFixed(1) });
 console.log(JSON.stringify({
   version: out.version, draw: out.draw, households: N,
+  failDetails: (out.failDetails || []).slice(0, 5),
   value: { principleFailures: out.principleFails, overBudget: out.overBudget, all: valueOf(out.value),
     belowSNAP: valueOf(byBand('below SNAP')), snapToThrifty: valueOf(byBand('SNAP to Thrifty')), thriftyAndUp: valueOf(byBand('Thrifty and up')) },
   variety: {
     differentMealsInAWeek: +avg(out.weekDifferent).toFixed(1), sameBreakfastAllWeek: `${out.sameBreakfastAllWeek} of ${out.weeksChecked}`,
     recipesReachingHouseholds: `${sorted.length} of ${recipes.length}`, originalRecipesReaching: `${original.filter(r => out.counts[r.id]).length} of ${original.length}`,
     top10ShareOfMeals: +(share(10) * 100).toFixed(1), top25ShareOfMeals: +(share(25) * 100).toFixed(1),
+    communityRecipesReaching: `${recipes.filter(r => r.community && out.counts[r.id]).length} of ${recipes.filter(r => r.community).length}`,
+    communityByRecipe: recipes.filter(r => r.community).map(r => `${r.title}: ${out.counts[r.id] || 0}`),
+    communityShareOfMeals: +(sorted.filter(([id]) => byId.get(Number(id))?.community).reduce((a, x) => a + x[1], 0) / total * 100).toFixed(1),
     mostServed: sorted.slice(0, 5).map(([id, n]) => `${byId.get(Number(id))?.title} (${(n / total * 100).toFixed(1)}%)`),
     cuisineByBudget: Object.fromEntries(Object.entries(out.cuisine).map(([b, c]) => { const t = Object.values(c).reduce((x, y) => x + y, 0); return [b, Object.fromEntries(Object.entries(c).sort((x, y) => y[1] - x[1]).map(([k, v]) => [k, +(v / t * 100).toFixed(1)]))]; })),
     returningFamily: { families: out.returning.length, weeks: WEEKS, newMealsEachWeekPct: +(avg(out.returning.map(x => x.newEachWeek)) * 100).toFixed(1), differentMealsOverTheWeeks: +avg(out.returning.map(x => x.differentInMonth)).toFixed(1) },
