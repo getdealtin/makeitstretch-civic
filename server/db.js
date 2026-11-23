@@ -66,6 +66,7 @@ export function memoryDb() {
     async insertMessage(row) { const m = { ...row, id: crypto.randomUUID(), created_at: now() }; messages.push(m); return copy(m); },
     async listMessages(limit = 200) { return [...messages].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, limit).map(copy); },
     async deleteMessage(id) { const i = messages.findIndex(m => m.id === id); if (i >= 0) messages.splice(i, 1); },
+    async setMessageDone(id, done) { const m = messages.find(x => x.id === id); if (m) m.done_at = done ? now() : null; },
     // Community recipes (db/community-recipes.sql).
     async insertCommunityRecipe(row) { const r = { extras: [], status: 'pending', reviewed_at: null, ...row, id: crypto.randomUUID(), num: ++communityNum, submitted_at: now() }; community.push(r); return copy(r); },
     async listCommunityRecipes(statuses) { return community.filter(r => !statuses || statuses.includes(r.status)).sort((a, b) => b.submitted_at.localeCompare(a.submitted_at)).map(copy); },
@@ -147,6 +148,7 @@ export function supabaseDb({ url, key, fetchImpl = fetch }) {
     insertMessage: async row => one(await call('messages', { method: 'POST', body: row, prefer: 'return=representation' })),
     listMessages: (limit = 200) => call(`messages?order=created_at.desc&limit=${Number(limit) || 200}`),
     deleteMessage: id => call(`messages?id=eq.${enc(id)}`, { method: 'DELETE', prefer: 'return=minimal' }),
+    setMessageDone: (id, done) => call(`messages?id=eq.${enc(id)}`, { method: 'PATCH', body: { done_at: done ? new Date().toISOString() : null }, prefer: 'return=minimal' }),
     // Last good BLS prices per region (db/price-cache.sql), so a restart keeps them.
     getPriceCache: async region => one(await call(`price_cache?region=eq.${enc(region)}&select=region,prices,fetched_at`)),
     savePriceCache: (region, prices, fetchedAt) => call('price_cache?on_conflict=region', { method: 'POST', body: { region, prices, fetched_at: fetchedAt }, prefer: 'resolution=merge-duplicates,return=minimal' }),

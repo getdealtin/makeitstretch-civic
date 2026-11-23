@@ -147,17 +147,32 @@ async function loadChecks() {
 
 // ── Messages (owner decision, Nov 22 2026): "Stay connected" sign-ups from the About page, every site ──
 const ROLE_NAME = { resident: 'Resident', partner: 'Partner or organization', press: 'Press or media', other: 'Something else' };
+// Nov 22 2026: written messages are a to-do list (reply, then Done); email-only sign-ups are the mailing
+// list (copy all or download, delete on request). Answered messages stay on record, folded.
+const toAnswer = list => (list || []).filter(m => m.message && !m.done_at);
+const msgMeta = m => `<span class="tag">${esc(ROLE_NAME[m.role] || m.role)}</span> <span class="muted" style="font:13px var(--font-label)">${day(m.created_at)}${m.lang && m.lang !== 'en' ? ` · ${esc(m.lang)}` : ''}</span>`;
 function messagesHtml(list) {
-  const head = `<h2 id="h-msg">Messages <small>${(list || []).length}</small></h2>
-    <p class="a-hint">From "Stay connected" on the About page. Reply by email; delete one when you're done or when someone asks to be removed.</p>`;
-  if (list === null) return `<section class="a-section" id="messages" aria-labelledby="h-msg">${head}<p class="empty">Couldn’t load messages. Check the database connection.</p></section>`;
-  return `<section class="a-section" id="messages" aria-labelledby="h-msg">${head}
-    ${list.length ? list.map(m => `<article class="card msg">
-      <div class="card-head"><h3><a href="mailto:${esc(m.email)}">${esc(m.email)}</a></h3>
-        <span><span class="tag">${esc(ROLE_NAME[m.role] || m.role)}</span> <span class="muted" style="font:13px var(--font-label)">${day(m.created_at)}${m.lang && m.lang !== 'en' ? ` · ${esc(m.lang)}` : ''}</span></span></div>
-      ${m.message ? `<p class="msg-text">${esc(m.message)}</p>` : ''}
-      <div class="actions"><button class="btn-xs" data-del-msg="${esc(m.id)}">Delete</button></div>
-    </article>`).join('') : '<p class="empty">No messages yet.</p>'}
+  if (list === null) return `<section class="a-section" id="messages" aria-labelledby="h-msg"><h2 id="h-msg">Messages</h2><p class="empty">Couldn’t load messages. Check the database connection.</p></section>`;
+  const open = toAnswer(list), answered = list.filter(m => m.message && m.done_at), signups = list.filter(m => !m.message);
+  const card = m => `<article class="card msg">
+      <div class="card-head"><h3><a href="mailto:${esc(m.email)}">${esc(m.email)}</a></h3><span>${msgMeta(m)}</span></div>
+      <p class="msg-text">${esc(m.message)}</p>
+      <div class="actions"><a class="btn-xs go" href="mailto:${esc(m.email)}?subject=${encodeURIComponent('Make It Stretch')}">Reply by email</a>
+        <button class="btn-xs" data-done-msg="${esc(m.id)}">Done</button><button class="btn-xs" data-del-msg="${esc(m.id)}">Delete</button></div>
+    </article>`;
+  return `<section class="a-section" id="messages" aria-labelledby="h-msg">
+    <h2 id="h-msg">Messages to answer <small>${open.length}</small></h2>
+    <p class="a-hint">People who wrote something on "Stay connected" (About page). Reply by email, then tap Done.</p>
+    ${open.length ? open.map(card).join('') : '<p class="empty">Nothing to answer.</p>'}
+    ${answered.length ? `<details class="msg-fold"><summary>Answered (${answered.length})</summary><ul class="msg-rows">${answered.map(m => `<li><a href="mailto:${esc(m.email)}">${esc(m.email)}</a> ${msgMeta(m)}
+      <span class="muted">· done ${day(m.done_at)}</span><p class="msg-text">${esc(m.message)}</p>
+      <span class="actions"><button class="btn-xs" data-undone-msg="${esc(m.id)}">Not done</button><button class="btn-xs" data-del-msg="${esc(m.id)}">Delete</button></span></li>`).join('')}</ul></details>` : ''}
+    <h3 class="msg-sub">Sign-ups <small>${signups.length + open.length + answered.length}</small></h3>
+    <p class="a-hint">Everyone who left an email to stay connected. Send one short update when you have news (BCC, or a newsletter tool), and delete anyone who asks to be removed.</p>
+    <div class="actions"><button class="btn-xs go" id="msg-copy" ${list.length ? '' : 'disabled'}>Copy all emails</button>
+      <button class="btn-xs" id="msg-csv" ${list.length ? '' : 'disabled'}>Download list</button></div>
+    ${signups.length ? `<details class="msg-fold"><summary>See email-only sign-ups (${signups.length})</summary><ul class="msg-rows">${signups.map(m => `<li><a href="mailto:${esc(m.email)}">${esc(m.email)}</a> ${msgMeta(m)}
+      <span class="actions"><button class="btn-xs" data-del-msg="${esc(m.id)}">Delete</button></span></li>`).join('')}</ul></details>` : ''}
   </section>`;
 }
 
@@ -183,7 +198,7 @@ function render() {
       <a class="count" href="#invites"><b>${usedInvites}/${d.invites.length}</b><span>Invites used</span></a>
       ${(d.maintenance || []).some(m => m.status !== 'ok') ? `<a class="count alert" href="#updates"><b>${d.maintenance.filter(m => m.status !== 'ok').length}</b><span>Annual updates due</span></a>` : ''}
       <a class="count ${(d.community || []).some(r => r.status === 'pending') ? 'alert' : ''}" href="#community"><b>${(d.community || []).filter(r => r.status === 'pending').length}</b><span>Recipes to review</span></a>
-      <a class="count" href="#messages"><b>${(d.messages || []).length}</b><span>Messages</span></a>
+      <a class="count ${toAnswer(d.messages).length ? 'alert' : ''}" href="#messages"><b>${toAnswer(d.messages).length}</b><span>Messages to answer</span></a>
       <a class="count ${d.reviews.some(r => r.status !== 'approved') ? 'alert' : ''}" href="#translations"><b>${d.reviews.filter(r => r.status === 'approved').length}/${d.reviews.length}</b><span>Languages reviewed</span></a>
     </nav>
 
@@ -300,6 +315,28 @@ function wire() {
     commDo(b.dataset.commSave, { action: 'approve', fields }, 'Saved and approved. It joins plans within 10 minutes.');
   }));
   loadChecks();
+  const msgDone = done => async b => {
+    const r = await api(`/messages/${b.dataset.doneMsg || b.dataset.undoneMsg}/done`, { done });
+    toast(r.ok ? (done ? 'Marked done' : 'Back on the list to answer') : 'Couldn’t save that. Try again.');
+    if (r.ok) load();
+  };
+  root.querySelectorAll('[data-done-msg]').forEach(b => b.addEventListener('click', () => msgDone(true)(b)));
+  root.querySelectorAll('[data-undone-msg]').forEach(b => b.addEventListener('click', () => msgDone(false)(b)));
+  // Everyone's email, one per line, for BCC or a newsletter tool.
+  root.querySelector('#msg-copy')?.addEventListener('click', async () => {
+    const emails = [...new Set((data.messages || []).map(m => m.email))].join(', ');
+    try { await navigator.clipboard.writeText(emails); toast(`Copied ${emails.split(', ').length} emails`); }
+    catch { prompt('Copy these emails:', emails); }
+  });
+  // The list as a spreadsheet file (CSV): email, who they are, date, language, message, answered.
+  root.querySelector('#msg-csv')?.addEventListener('click', () => {
+    const cell = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const rows = [['Email', 'Who', 'Signed up', 'Language', 'Message', 'Answered'],
+      ...(data.messages || []).map(m => [m.email, ROLE_NAME[m.role] || m.role, (m.created_at || '').slice(0, 10), m.lang, m.message || '', (m.done_at || '').slice(0, 10)])];
+    const blob = new Blob(['\ufeff' + rows.map(r => r.map(cell).join(',')).join('\r\n')], { type: 'text/csv' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `make-it-stretch-sign-ups-${new Date().toISOString().slice(0, 10)}.csv` });
+    document.body.append(a); a.click(); a.remove();
+  });
   root.querySelectorAll('[data-del-msg]').forEach(b => b.addEventListener('click', async () => {
     if (!confirm('Delete this message? This can’t be undone.')) return;
     const r = await api(`/messages/${b.dataset.delMsg}/delete`, {});

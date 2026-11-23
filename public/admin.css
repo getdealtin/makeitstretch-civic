@@ -100,3 +100,12 @@ a.btn-xs { display: inline-flex; align-items: center; text-decoration: none; }
 .comm-edit input, .comm-edit textarea, .comm-edit select { font: 15px var(--font-body); padding: 8px; border: 1.5px solid var(--rule); border-radius: 8px; }
 .comm-live li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; }
 .comm-edit[hidden], .comm-actions[hidden] { display: none; }
+
+/* Messages (Nov 22 2026): sign-ups folded into a list, answered messages kept on record. */
+.msg-sub { margin: 26px 0 4px; }
+.msg-fold { margin: 12px 0; }
+.msg-fold summary { cursor: pointer; font: 600 14px var(--font-label); }
+.msg-rows { list-style: none; padding: 0; margin: 8px 0; }
+.msg-rows li { padding: 10px 0; border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.msg-rows li .actions { margin-left: auto; }
+.msg-rows li .msg-text { flex-basis: 100%; margin: 2px 0; }

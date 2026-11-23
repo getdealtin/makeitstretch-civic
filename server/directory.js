@@ -304,7 +304,7 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
         activity: await activityFor(city, req.query.days),
         maintenance: [...livePriceItems(priceStatus()), ...maintenanceFor(CITIES[city])],
         // "Stay connected" sign-ups and messages, every site (db/messages.sql); empty if the table isn't there yet.
-        messages: await db().listMessages(200).catch(e => { console.error(e.message); return null; }),
+        messages: await db().listMessages(5000).catch(e => { console.error(e.message); return null; }),
         // Community recipes waiting for review, and the ones in plans (every site; db/community-recipes.sql).
         community: await db().listCommunityRecipes(['pending', 'approved']).catch(e => { console.error(e.message); return null; }),
       });
@@ -312,6 +312,13 @@ export function mountDirectory(app, { getDb, priceStatus = () => null, adminKey 
   });
 
   // Remove a "Stay connected" sign-up (when someone asks, or once answered).
+  // Mark a written message answered (or not), keeping it on record (Nov 22 2026).
+  admin.post('/messages/:id/done', async (req, res) => {
+    if (!/^[0-9a-f-]{36}$/.test(req.params.id)) return res.status(400).json({ ok: false });
+    try { await db().setMessageDone(req.params.id, req.body?.done !== false); res.json({ ok: true }); }
+    catch (e) { console.error(e.message); res.status(500).json({ ok: false }); }
+  });
+
   admin.post('/messages/:id/delete', async (req, res) => {
     if (!/^[0-9a-f-]{36}$/.test(req.params.id)) return res.status(400).json({ ok: false });
     try { await db().deleteMessage(req.params.id); res.json({ ok: true }); }

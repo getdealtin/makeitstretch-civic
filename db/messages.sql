@@ -12,5 +12,7 @@ create table if not exists public.messages (
   created_at  timestamptz not null default now()
 );
 create index if not exists messages_created_at on public.messages (created_at desc);
+-- Nov 22 2026: "Done" in /admin marks a written message as answered without deleting it.
+alter table public.messages add column if not exists done_at timestamptz;
 alter table public.messages enable row level security;
 revoke all on public.messages from anon, authenticated;
