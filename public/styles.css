@@ -663,3 +663,6 @@ button.pill-choice:hover { border-color: var(--violet); }
 /* SNAP box "not alone" line (Nov 22 2026): light text, the number in yellow. */
 .snap-alone { font-family: var(--font-label); font-size: 17px; color: var(--on-violet); margin: 0 0 12px; min-height: 1.4em; }
 .snap-alone strong { color: #F2C94C; }
+
+/* SNAP box: how easy checking is (Nov 23 2026), just above the button. */
+.snap-ease { margin: 0 0 12px; font-family: var(--font-label); font-size: 15px; color: var(--on-violet-eyebrow); }

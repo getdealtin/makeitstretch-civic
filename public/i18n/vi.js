@@ -430,6 +430,7 @@ export default {
   share_meal_p: "Hãy chia sẻ với hàng xóm. Chúng tôi sẽ đưa vào kế hoạch.",
   share_meal_link: "Chia sẻ một bữa ăn tiết kiệm",
   snap_prompt_t: "SNAP có thể giúp thêm tiền đi chợ.",
+  snap_ease: "Kiểm tra là miễn phí và bạn có thể bắt đầu trực tuyến.",
   snap_alone_zip: "Bạn không đơn độc: [khoảng 1 trong {n} hộ gia đình ở {zip}] dùng SNAP.",
   snap_alone_most: "Bạn không đơn độc: [phần lớn hộ gia đình ở {zip}] dùng SNAP.",
   snap_alone_us: "Bạn không đơn độc: [khoảng 1 trong {n} hộ gia đình ở Mỹ] dùng SNAP.",

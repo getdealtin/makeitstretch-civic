@@ -1088,6 +1088,7 @@ function renderResults(plan, restore = {}) {
   const snapPrompt = () => (snapRes && input.budget / input.people / input.days < BENCHMARKS.snapPerPersonDay ? `<div class="snap-prompt no-print">
       <p class="snap-t">${esc(t('snap_prompt_t'))}</p>
       <p class="snap-alone" data-zip="${esc(answers?.zip || 'us')}">${snapAlone(answers?.zip)}</p>
+      <p class="snap-ease">${esc(t('snap_ease'))}</p>
       <a class="btn btn-primary btn-sm" href="${esc(snapRes.url)}" target="_blank" rel="noopener" data-track="resource" data-target="${esc(snapRes.id)}" data-action="website">${esc(t('snap_prompt_btn'))}<span class="sr-only"> (${esc(resText(snapRes, 'name'))})</span></a>
     </div>` : '');
   const dietNotes = DIETS.filter(d => (input.avoid || []).includes(d)).map(d => DIET_NOTE_KEYS[d]);

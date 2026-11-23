@@ -430,6 +430,7 @@ export default {
   share_meal_p: "分享给您的邻居，我们会把它加入计划。",
   share_meal_link: "分享一道省钱的饭菜",
   snap_prompt_t: "SNAP 可以给您增加买菜钱。",
+  snap_ease: "查询是免费的，可以在网上开始。",
   snap_alone_zip: "您并不孤单：[{zip} 大约每 {n} 户家庭就有 1 户]使用 SNAP。",
   snap_alone_most: "您并不孤单：[{zip} 的大多数家庭]都在使用 SNAP。",
   snap_alone_us: "您并不孤单：[全美大约每 {n} 户家庭就有 1 户]使用 SNAP。",

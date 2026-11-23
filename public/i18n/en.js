@@ -454,6 +454,7 @@ export default {
   share_meal_p: "Share it with your neighbors. We'll add it to plans.",
   share_meal_link: "Share a meal that stretches",
   snap_prompt_t: "SNAP could add to your grocery money.",
+  snap_ease: "It’s free to check, and you can start online.",
   snap_alone_zip: "You’re not alone: [about 1 in {n} households in {zip}] use SNAP.",
   snap_alone_most: "You’re not alone: [most households in {zip}] use SNAP.",
   snap_alone_us: "You’re not alone: [about 1 in {n} households in the U.S.] use SNAP.",

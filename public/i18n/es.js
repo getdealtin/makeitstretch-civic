@@ -431,6 +431,7 @@ export default {
   share_meal_p: "Compártala con sus vecinos. La agregaremos a los planes.",
   share_meal_link: "Comparta una comida que rinde",
   snap_prompt_t: "SNAP podría sumar dinero para su mandado.",
+  snap_ease: "Averiguarlo es gratis y puede empezar en línea.",
   snap_alone_zip: "Hay mucha gente en su situación: [alrededor de 1 de cada {n} hogares en {zip}] recibe SNAP.",
   snap_alone_most: "Hay mucha gente en su situación: [la mayoría de los hogares en {zip}] recibe SNAP.",
   snap_alone_us: "Hay mucha gente en su situación: [alrededor de 1 de cada {n} hogares en EE. UU.] recibe SNAP.",
