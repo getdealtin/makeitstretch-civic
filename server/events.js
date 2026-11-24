@@ -75,7 +75,9 @@ export const SCHEMA = {
   language_changed: { from: oneOf(LANGS), to: oneOf(LANGS) },
   // item: a food from the box list; food: one typed by the person (cleaned: letters only, so no numbers or emails).
   cant_use: { item: oneOf(BOX_ITEMS), food: v => cleanFoodWord(v) || undefined, reason: oneOf(REASONS) },
-  plan_reopened: { source: oneOf(['saved', 'link']), kind: oneOf(['plan', 'box']) },
+  // Nov 24 2026: 'link' split into reload / returned / shared / link (public/keep.js classifyOpen); days = whole days
+  // since the plan was saved ('saved') or last shown in that tab ('returned').
+  plan_reopened: { source: oneOf(['saved', 'returned', 'shared', 'link', 'reload']), kind: oneOf(['plan', 'box']), days: int(0, 3650) },
   plan_outcome: { answer: oneOf(['yes', 'some', 'no']), kind: oneOf(['plan', 'box']) },
   need_tapped: { need: oneOf(['rent', 'health', 'childcare', 'jobs', 'id']) },
   list_switched: { to: oneOf(['short', 'full']), short: int(0, 200), full: int(0, 200) },
@@ -136,6 +138,13 @@ export function summarize(events, roles = { benefits: [], food_help: [] }, names
     plans: plans.length,
     boxes: boxes.length,
     returns: count(by('plan_reopened'), e => e.data.source || 'unknown'),
+    // People coming back to their own plan: from "Saved on this phone", or to a tab still open 6+ hours later.
+    came_back: (() => {
+      const back = by('plan_reopened').filter(e => e.data.source === 'saved' || e.data.source === 'returned');
+      const days = back.map(e => e.data.days).filter(Number.isInteger).sort((a, b) => a - b);
+      const mid = Math.floor(days.length / 2); // the middle value; with an even count, the average of the two middle ones
+      return { count: back.length, median_days: !days.length ? null : days.length % 2 ? days[mid] : Math.round((days[mid - 1] + days[mid]) / 2) };
+    })(),
     steps: ['zip', 'budget', 'days', 'people', 'prefs'].map(s => [s, by('step_completed').filter(e => e.data.step === s).length]),
     zips: top(count(events.filter(e => e.event === 'plan_built' || e.event === 'box_built' || e.event === 'zip_added_later'), e => e.data.zip || 'none'), 20),
     budget_total: +plans.reduce((s, p) => s + (p.data.budget || 0), 0).toFixed(2),

@@ -105,6 +105,27 @@ export function readHash(hash) {
 }
 
 export const planHash = packed => '#p=' + encodeState(packed);
+
+/**
+ * What a page load that opens a plan or box link is (owner request, Nov 24 2026: count returns honestly).
+ * Nothing here identifies a person. `seen` is this browser tab's own note of the last plan it showed
+ * ({ h: hash, at: ms }, kept in sessionStorage, which the browser clears when the tab is closed).
+ *   reload   the same plan in the same tab, less than RETURN_HOURS since it was last shown (not a return)
+ *   returned the same plan in the same tab, RETURN_HOURS or more later (someone came back to it)
+ *   shared   a link made by Text, Email or Copy link (?via=share): the person who sent it or whoever got it
+ *   link     any other plan link (typed, bookmarked, or made before Nov 24 2026)
+ * Reopening from "Saved on this phone" is recorded separately as 'saved'.
+ */
+export const RETURN_HOURS = 6;
+export function classifyOpen({ hash, seen, viaShare = false, now = Date.now() }) {
+  if (seen && seen.h === hash && Number.isFinite(seen.at)) {
+    const hours = (now - seen.at) / 36e5;
+    return hours >= RETURN_HOURS ? { source: 'returned', days: Math.floor(hours / 24) } : { source: 'reload' };
+  }
+  return { source: viaShare ? 'shared' : 'link' };
+}
+/** Whole days between a saved plan's date and now (never negative). */
+export const daysSince = (at, now = Date.now()) => Math.max(0, Math.floor((now - (Number(at) || now)) / 864e5));
 export const boxHash = packed => '#b=' + encodeState(packed);
 
 // ── Text for "Text it to me" / "Email it to me" ─────────────────

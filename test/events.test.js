@@ -200,3 +200,18 @@ test('store taps and food access where plans are made (Nov 22 2026)', () => {
   assert.equal(s.access.zips, 2);
   assert.equal(s.access.mix.dollar_or_other, 4);
 });
+
+test('plan_reopened: the new kinds and days are kept, anything else dropped; "came back" counts saved + returned', () => {
+  const c = (data) => cleanEvent({ event: 'plan_reopened', session_id: 'aaaaaaaaaaaa', data });
+  for (const source of ['saved', 'returned', 'shared', 'link', 'reload']) assert.equal(c({ source, kind: 'plan' }).data.source, source);
+  assert.equal(c({ source: 'bogus', kind: 'plan' }).data.source, undefined);
+  assert.equal(c({ source: 'saved', kind: 'plan', days: 3 }).data.days, 3);
+  assert.equal(c({ source: 'saved', kind: 'plan', days: -1 }).data.days, undefined);
+  const ev = (sid, data) => ({ event: 'plan_reopened', data, session_id: sid, created_at: '2026-11-24T10:00:00Z', lang: 'en' });
+  const s = summarize([ev('a1aaaaaaaaaa', { source: 'saved', days: 1 }), ev('b1bbbbbbbbbb', { source: 'returned', days: 5 }),
+    ev('c1cccccccccc', { source: 'returned', days: 2 }), ev('d1dddddddddd', { source: 'reload' }), ev('e1eeeeeeeeee', { source: 'shared' })]);
+  assert.deepEqual(s.came_back, { count: 3, median_days: 2 });
+  assert.deepEqual(s.returns, { saved: 1, returned: 2, reload: 1, shared: 1 });
+  // Even count: the average of the two middle values (1 and 3 days → 2), not the upper one.
+  assert.equal(summarize([ev('a1aaaaaaaaaa', { source: 'saved', days: 1 }), ev('b1bbbbbbbbbb', { source: 'returned', days: 3 })]).came_back.median_days, 2);
+});

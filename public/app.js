@@ -13,7 +13,7 @@ import {
 } from '/engine/index.js';
 import {
   packPlan, packBox, planHash, boxHash, readHash, planText, boxText, smsHref, mailHref, store,
-  savedList, addSaved, updateSaved, removeSaved, findSaved,
+  savedList, addSaved, updateSaved, removeSaved, findSaved, classifyOpen, daysSince,
 } from './keep.js';
 
 // ── Language ────────────────────────────────────────────────────
@@ -84,6 +84,22 @@ const TESTING = (() => { try { return localStorage.getItem('mis:test') === '1'; 
 // Source tag from links and printed QR codes (?src=library); the server keeps only the city's allowed tags.
 const SRC = new URLSearchParams(location.search).get('src');
 const PACKET = location.pathname === '/packet'; // library/pantry staff printing packets
+// Links made by Text, Email or Copy link carry ?via=share (Nov 24 2026), so opening one is counted as a
+// shared link. The marker is read once, then taken out of the address so it isn't passed on or re-read.
+const VIA_SHARE = (() => {
+  try {
+    const u = new URL(location.href);
+    if (!u.searchParams.has('via')) return false;
+    const on = u.searchParams.get('via') === 'share';
+    u.searchParams.delete('via');
+    history.replaceState(history.state, '', u.pathname + u.search + u.hash);
+    return on;
+  } catch { return false; }
+})();
+// This tab's note of the plan it last showed (sessionStorage: this tab only, gone when the tab closes).
+const TAB_SEEN = 'mis:tab-seen';
+const readSeen = () => { try { return JSON.parse(sessionStorage.getItem(TAB_SEEN) || 'null'); } catch { return null; } };
+const noteSeen = h => { try { if (h) sessionStorage.setItem(TAB_SEEN, JSON.stringify({ h, at: Date.now() })); } catch { /* private mode */ } };
 // The website that sent this visit (owner decision, Nov 22 2026): its name only (threads.net), never the page
 // or anything after it, and nothing when it's our own site or there is none.
 const REF = (() => {
@@ -344,7 +360,9 @@ async function boot() {
 
   getRecipes(); getPrices(null); // warm up in the background
   track('page_view', { ...(SRC && (city.sources || []).includes(SRC) ? { src: SRC } : {}), ...(REF ? { ref: REF } : {}) });
-  if (!openFromHash(location.hash, null, 'link')) (PACKET ? renderPacket() : renderIntro());
+  // What this load is: a reload, someone coming back, a shared link, or another link (keep.js classifyOpen).
+  const opened = readHash(location.hash) ? classifyOpen({ hash: location.hash, seen: readSeen(), viaShare: VIA_SHARE }) : null;
+  if (!opened || !openFromHash(location.hash, null, opened.source, opened.days ?? null)) (PACKET ? renderPacket() : renderIntro());
   // A different plan link opened in this same tab only changes the #part: no reload happens.
   // (Our own updates use replaceState, which doesn't fire this.)
   window.addEventListener('hashchange', () => {
@@ -384,20 +402,22 @@ const saveKey = () => 'mis:saved:' + ((homeCity || city).id || 'default');
 // liveHash: the plan as it is now (ticks, swaps). Going back from a card restores it, so nothing is lost.
 let liveHash = '';
 let hubSkipHash = false;
-const setHash = h => { liveHash = h; history.replaceState(history.state, '', location.pathname + qs + h); };
+const setHash = h => { liveHash = h; noteSeen(h); history.replaceState(history.state, '', location.pathname + qs + h); };
 const linkFor = h => location.origin + location.pathname + (homeCity ? cityQs(null) : qs) + h;
+/** A link for Text, Email or Copy link: marked ?via=share so opening it is counted as a shared link. */
+const shareLink = h => { const u = new URL(linkFor(h)); u.searchParams.set('via', 'share'); return u.toString(); };
 
 // Which saved entry (if any) the plan on screen belongs to, so edits update that entry.
 let openedSavedId = null;
 const SAVED_SHOWN = 3; // most recent shown on the start screen; the rest behind a visible "Show all" button
 
 /** Rebuild a plan or box from a "#p=…" / "#b=…" link. */
-function openFromHash(hash, savedId = null, source = null) {
+function openFromHash(hash, savedId = null, source = null, days = null) {
   const hit = readHash(hash);
   if (!hit) return false;
   if (source) startFlow(); // a saved plan or a link opened: a new plan or box begins
   openedSavedId = savedId;
-  logNext = source ? { reopened: source } : null;
+  logNext = source ? { reopened: source, days } : null;
   if (hit.kind === 'plan') { answers = { ...fresh(), ...hit.state.answers }; showResults(hit.state); }
   else { box = hit.state; renderBoxResults(); }
   return true;
@@ -511,7 +531,7 @@ function renderIntro() {
   app.querySelector('#door-box').onclick = () => { box = { items: [], avoid: [], other: [], cant: [], zip: null }; startFlow(); renderBoxZip(); };
   app.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
     const e = findSaved(store, saveKey(), b.dataset.open);
-    if (!e || !openFromHash(e.hash, e.id, 'saved')) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }
+    if (!e || !openFromHash(e.hash, e.id, 'saved', daysSince(e.at))) { removeSaved(store, saveKey(), b.dataset.open); renderIntro(); }
   }));
   app.querySelector('#saved-more')?.addEventListener('click', e => {
     app.querySelectorAll('.saved-item[hidden]').forEach(li => { li.hidden = false; });
@@ -1259,7 +1279,10 @@ function renderResults(plan, restore = {}) {
     pppd: s.pppd, cal_pct: s.calPct, items: s.cart.length, spent: s.spent,
     meals: planMealIds().slice(0, 20), foods: s.cart.map(i => i.id).slice(0, 45),
   });
-  else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'plan' }); askOutcome('plan'); }
+  else if (logNext?.reopened) {
+    track('plan_reopened', { source: logNext.reopened, kind: 'plan', ...(logNext.days != null ? { days: logNext.days } : {}) });
+    if (logNext.reopened !== 'reload') askOutcome('plan');
+  }
   logNext = null;
 
   // Keep this plan: the link, the saved copy and the text/email bodies all follow the live state.
@@ -1281,7 +1304,7 @@ function renderResults(plan, restore = {}) {
       shopping: s.byWeek?.length > 1
         ? s.byWeek.map(w => ({ head: `${t('list_week', { n: w.week })} ($${money(w.spent)})`, items: w.cart.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) }))
         : shopping.map(g => ({ items: g.items.map(i => ({ label: fName(i.id), qty: i.qty, subtotal: i.subtotal })) })),
-      weeks, choice, total: s.spent, url: linkFor(currentHash()), full, titleOf: rTitle, dayOf,
+      weeks, choice, total: s.spent, url: shareLink(currentHash()), full, titleOf: rTitle, dayOf,
       extras: seasonings().length ? t('list_extras', { items: seasonings().map(ing).join(t('list_sep')) }) : '',
       labels: { list: t('sec_list'), week1: t('week_of', { n: 1, total: weeks.length }), leftover: t('leftover_short'), uncovered: t('day_uncovered'), link: t('full_plan_link') },
     }),
@@ -1499,7 +1522,7 @@ function wireKeep({ title, savedTitle, detail, kind, hash, text, meals = () => u
     paintSave();
   };
   app.querySelector('#k-copy').onclick = async () => {
-    const url = linkFor(hash());
+    const url = shareLink(hash());
     track('plan_kept', { how: 'copy', kind });
     try { await navigator.clipboard.writeText(url); status.textContent = t('keep_copied'); }
     catch { status.innerHTML = `${esc(t('keep_copy_manual'))} <input class="keep-url" readonly value="${esc(url)}" aria-label="${esc(t('keep_copy'))}">`; status.querySelector('input').select(); }
@@ -1861,7 +1884,10 @@ async function renderBoxResults() {
     // "Won't use" (Food Plan Goal 4 proxy): one report per food picked, with its reason if given.
     for (const c of logNext.cantReport || []) track('cant_use', { ...(c.id ? { item: c.id } : { food: c.word }), reason: c.reason || 'unsaid' });
   }
-  else if (logNext?.reopened) { track('plan_reopened', { source: logNext.reopened, kind: 'box' }); askOutcome('box'); }
+  else if (logNext?.reopened) {
+    track('plan_reopened', { source: logNext.reopened, kind: 'box', ...(logNext.days != null ? { days: logNext.days } : {}) });
+    if (logNext.reopened !== 'reload') askOutcome('box');
+  }
   logNext = null;
   const openBoxMeal = b => {
     const m = byId.get(b.dataset.id);
@@ -1890,7 +1916,7 @@ async function renderBoxResults() {
     hash: () => boxHash(packBox(box)),
     text: () => boxText({
       title: `${city.name}${city.place ? ' · ' + city.place : ''}: ${t('box_res_title')}`,
-      matches, url: linkFor(boxHash(packBox(box))), titleOf: rTitle, ingOf: ing, labels: { need: t('box_need'), link: t('full_plan_link') },
+      matches, url: shareLink(boxHash(packBox(box))), titleOf: rTitle, ingOf: ing, labels: { need: t('box_need'), link: t('full_plan_link') },
     }),
   });
   app.querySelector('#edit').onclick = renderBox;

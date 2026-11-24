@@ -401,7 +401,11 @@ const PRETTY = {
   group: { cultural: 'Culture or religion', medical: 'Health', practical: 'Other reasons', unsaid: 'Reason not given' },
   cantStep: { picked: 'Picked foods they won’t use', none: 'Said everything works', skipped: 'Skipped the question', not_asked: 'Not asked (before Nov 17)' },
   how: { save: 'Saved on phone', text: 'Texted', email: 'Emailed', copy: 'Link copied' },
-  source: { saved: 'Reopened a saved plan', link: 'Opened a shared link' },
+  source: {
+    saved: 'Came back to a plan saved on their phone', returned: 'Came back to a plan still open in their browser (6+ hours later)',
+    shared: 'Opened a texted, emailed or copied plan link (the sender or whoever got it)', reload: 'Reloaded the page (not a return)',
+    link: 'Opened some other plan link (before Nov 24 this also counted reloads and shares)',
+  },
 };
 const table = (rows, head = ['', 'Count'], fmt = v => v) => rows.length
   ? `<table class="act-table"><thead><tr>${head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(([k, v]) => `<tr><td>${esc(fmt(k))}</td><td>${esc(v)}</td></tr>`).join('')}</tbody></table>`
@@ -438,7 +442,7 @@ function activityHtml(a) {
       <div class="count"><b>${a.boxes}</b><span>Food boxes</span></div>
       <div class="count"><b>${money(a.budget_total)}</b><span>Grocery dollars planned</span></div>
       <div class="count"><b>${money(a.box_value_total)}</b><span>Food-box value (store prices)</span></div>
-      <div class="count"><b>${Object.values(a.returns).reduce((x, y) => x + y, 0)}</b><span>Return visits (saved plan or link)</span></div>
+      <div class="count"><b>${a.came_back?.count ?? 0}</b><span>Came back to their plan${a.came_back?.median_days != null ? ` (typically ${a.came_back.median_days} day${a.came_back.median_days === 1 ? '' : 's'} later)` : ''}</span></div>
     </div>
     <div class="act-grid">
       <div><h3>Visits per day</h3>${table(a.per_day, ['Day', 'Visits'])}</div>
@@ -490,7 +494,8 @@ function activityHtml(a) {
       <div><h3>Websites that sent visitors</h3><p class="a-hint">The site's name only, when there was one. Most visits come from apps, texts or typed links, which don't send one.</p>${table(a.referrers || [], ['Website', 'Visits'])}</div>
       <div><h3>Languages</h3>${table(Object.entries(a.languages), ['Language', 'Visits'])}
         <h4>Plans kept</h4>${table(Object.entries(a.kept), ['How', 'Count'], k => PRETTY.how[k] || k)}
-        <h4>Return visits</h4>${table(Object.entries(a.returns), ['How', 'Count'], k => PRETTY.source[k] || k)}</div>
+        <h4>Plans opened again</h4>${table(Object.entries(a.returns), ['How', 'Count'], k => PRETTY.source[k] || k)}
+        <p class="a-hint">"Came back" counts only the first two rows. Nothing here identifies anyone: a tab keeps its own note of the plan it showed until the tab is closed.</p></div>
     </div>
   </section>`;
 }

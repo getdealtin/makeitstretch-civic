@@ -147,3 +147,24 @@ test('ticks on week 2+ lists survive a plan link', async () => {
   const back = unpackPlan(packPlan(a, { checked: ['rice', 'rice.2', 'bad.item.3'] }));
   assert.deepEqual(back.checked, ['rice', 'rice.2']);
 });
+
+// Reopens counted honestly (owner request, Nov 24 2026): nothing identifies a person; a tab only remembers
+// the plan it last showed, until it is closed.
+test('classifyOpen: reload, came back, shared link, other link', async () => {
+  const { classifyOpen, daysSince, RETURN_HOURS } = await import('../public/keep.js');
+  const h = '#p=abc', now = Date.UTC(2026, 10, 24, 12);
+  const hoursAgo = n => now - n * 36e5;
+  assert.deepEqual(classifyOpen({ hash: h, seen: { h, at: hoursAgo(0.1) }, now }), { source: 'reload' });
+  assert.deepEqual(classifyOpen({ hash: h, seen: { h, at: hoursAgo(RETURN_HOURS - 0.01) }, now }), { source: 'reload' });
+  assert.deepEqual(classifyOpen({ hash: h, seen: { h, at: hoursAgo(RETURN_HOURS) }, now }), { source: 'returned', days: 0 });
+  assert.deepEqual(classifyOpen({ hash: h, seen: { h, at: hoursAgo(50) }, now }), { source: 'returned', days: 2 });
+  // The same tab reloading a shared link is still a reload, not a second share.
+  assert.deepEqual(classifyOpen({ hash: h, seen: { h, at: hoursAgo(1) }, viaShare: true, now }), { source: 'reload' });
+  assert.deepEqual(classifyOpen({ hash: h, seen: null, viaShare: true, now }), { source: 'shared' });
+  assert.deepEqual(classifyOpen({ hash: h, seen: { h: '#p=other', at: hoursAgo(1) }, now }), { source: 'link' });
+  assert.deepEqual(classifyOpen({ hash: h, seen: { h, at: 'bad' }, now }), { source: 'link' });
+  assert.deepEqual(classifyOpen({ hash: h, seen: null, now }), { source: 'link' });
+  assert.equal(daysSince(now - 3.5 * 864e5, now), 3);
+  assert.equal(daysSince(now + 864e5, now), 0);
+  assert.equal(daysSince(undefined, now), 0);
+});
