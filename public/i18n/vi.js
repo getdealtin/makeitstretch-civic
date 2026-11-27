@@ -9,6 +9,7 @@ export default {
   intro_title: "Giúp tiền đi chợ của bạn *đủ dùng* lâu hơn.",
   intro_body: "Chúng tôi ở đây để giúp tiền đi chợ của bạn đi xa hơn. Thực phẩm ngày càng đắt, nên chúng tôi tính toán, tìm cách tiết kiệm và trao cho bạn công cụ để lo bữa ăn cho bản thân và gia đình.",
   home_count: "{n} hộ gia đình đã lên kế hoạch mua thực phẩm tại đây.",
+  seo_title: "{name}: Kế hoạch bữa ăn miễn phí với tiền đi chợ bạn có",
   hero_eyebrow: "Miễn phí · Không cần đăng ký · Khoảng một phút",
   tag_list: "Danh sách mua sắm",
   tag_meals: "Thực đơn một tuần",

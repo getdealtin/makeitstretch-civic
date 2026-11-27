@@ -22,6 +22,7 @@ import { mountHsds } from './server/hsds.js';
 import { mountEvents, AVOID } from './server/events.js';
 import { mountConnect } from './server/connect.js';
 import { mountCommunity, initRecipes, allRecipes, recipesJson } from './server/community.js';
+import { withSeo, robotsTxt, sitemapXml } from './server/seo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -282,7 +283,16 @@ mountHsds(app, { getProviders: city => db.listProviders(city, ['approved']) });
 mountEvents(app, { getDb: () => db, oneSite: ONE_SITE });
 mountConnect(app, { getDb: () => db });
 mountCommunity(app, { getDb: () => db });
-const page = name => (req, res) => res.sendFile(path.join(__dirname, 'public', name));
+// Pages go out with search and link-preview tags added (server/seo.js); each file is read once.
+const HTML = {};
+const page = name => (req, res) => {
+  HTML[name] ??= readFileSync(path.join(__dirname, 'public', name), 'utf8');
+  const home = req.path === '/' && (name === 'index.html' || name === 'landing.html');
+  res.type('html').set('Cache-Control', 'no-cache').send(withSeo(HTML[name], { city: req.city, path: req.path, home }));
+};
+// For search engines: what to list, and where the list of pages is (each web address names its own).
+app.get('/robots.txt', (req, res) => res.type('text/plain').set('Cache-Control', 'public, max-age=86400').send(robotsTxt(req.city)));
+app.get('/sitemap.xml', (req, res) => res.type('application/xml').set('Cache-Control', 'public, max-age=86400').send(sitemapXml(req.city)));
 // ── Cities that are live, and share links / QR codes for partners (landing + /share) ──
 const liveCities = () => Object.values(CITIES).filter(c => c.place && c.hosts?.length).map(c => ({
   id: c.id, place: c.place, region: c.region || '', url: `https://${c.hosts[0]}/`, sources: c.sources || [], source_labels: c.source_labels || {},
@@ -328,7 +338,7 @@ const LANDING_HOSTS = ['makeitstretch.org', 'www.makeitstretch.org'];
 app.get('/', (req, res, next) => {
   const host = (req.headers.host || '').toLowerCase().split(':')[0];
   if ((!ONE_SITE && LANDING_HOSTS.includes(host)) || (ALLOW_CITY_OVERRIDE && req.query.site === 'landing')) return page('landing.html')(req, res);
-  next();
+  page('index.html')(req, res);
 });
 app.get('/share', page('share.html'));
 app.get('/packet', page('index.html'));
@@ -341,7 +351,7 @@ app.get('/about', page('about.html'));
 app.get('/share-a-meal', page('share-meal.html'));
 
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
-app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', 'index.html')));
+app.use((req, res) => { res.status(404); page('index.html')(req, res); });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   app.listen(PORT, () => console.log(`Make It Stretch on :${PORT} (default city: ${DEFAULT_CITY})`));

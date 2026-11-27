@@ -9,6 +9,7 @@ export default {
   intro_title: "让您的买菜钱*更耐用*。",
   intro_body: "我们在这里，帮您的买菜钱走得更远。现在食物越来越贵，我们替您算账、帮您省钱，并为您提供让自己和家人吃好饭的工具。",
   home_count: "已有 {n} 个家庭在这里规划了买菜。",
+  seo_title: "{name}：用您手头的买菜钱，免费制定餐食计划",
   hero_eyebrow: "免费 · 无需注册 · 大约一分钟",
   tag_list: "购物清单",
   tag_meals: "一周饭菜",

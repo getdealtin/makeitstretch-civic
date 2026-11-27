@@ -455,6 +455,8 @@ function renderIntro() {
   if (PACKET) return renderPacket();
   resetCity();
   current = renderIntro;
+  // The home screen's tab title is the search title (server/seo.js homeSeo), in the visitor's language.
+  if (city) document.title = t('seo_title', { name: city.place ? `${city.name} ${city.place}` : city.name });
   printFill = null;
   setHash('');
   openedSavedId = null;

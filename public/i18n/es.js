@@ -10,6 +10,7 @@ export default {
   intro_title: "Haga que su dinero para comida *rinda*.",
   intro_body: "Estamos aquí para ayudar a que su dinero para comida rinda más. La comida cuesta más que nunca, así que nosotros hacemos las cuentas, buscamos los ahorros y le damos las herramientas para alimentarse usted y su familia.",
   home_count: "{n} hogares han planeado sus compras de comida aquí.",
+  seo_title: "{name}: plan de comidas gratis con su dinero para comida",
   hero_eyebrow: "Gratis · Sin registrarse · Como un minuto",
   tag_list: "Lista de compras",
   tag_meals: "Una semana de comidas",
