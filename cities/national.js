@@ -8,6 +8,9 @@ export default {
   // The main site's own addresses (so it is never mistaken for DEFAULT_CITY). With ONE_SITE=off, server.js
   // gives these hosts DEFAULT_CITY again, exactly as before Nov 19.
   hosts: ['makeitstretch.org', 'www.makeitstretch.org'],
+  // The address the site is actually served at: Render redirects makeitstretch.org to www (checked Nov 27 2026).
+  // Search and link-preview tags (server/seo.js) must name this one, not an address that redirects.
+  canonical_host: 'www.makeitstretch.org',
   name: 'Make It Stretch',
   place: null,
   tagline: 'Turn the grocery money you have into a week of real meals.',

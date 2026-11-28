@@ -24,8 +24,8 @@ test('tags: canonical is the city\'s own main address; the preview uses the shar
   const out = withSeo(html, { city: CITIES.national, path: '/', home: true });
   assert.match(out, /<title>Make It Stretch: Free meal plan/);
   assert.match(out, /<meta name="description" content="Plan meals from your food pantry box/);
-  assert.match(out, /<link rel="canonical" href="https:\/\/makeitstretch\.org\/">/);
-  assert.match(out, /og:image" content="https:\/\/makeitstretch\.org\/icons\/share-card\.png"/);
+  assert.match(out, /<link rel="canonical" href="https:\/\/www\.makeitstretch\.org\/">/);
+  assert.match(out, /og:image" content="https:\/\/www\.makeitstretch\.org\/icons\/share-card\.png"/);
   assert.match(out, /twitter:card" content="summary_large_image"/);
   assert.equal(out.match(/<title>/g).length, 1);
   const about = withSeo(html.replace('Make It Stretch<', 'About · Make It Stretch<'), { city: CITIES.austin, path: '/about' });
@@ -39,11 +39,11 @@ test('robots.txt keeps out admin, partner links and the API, and names the sitem
   for (const p of ['/admin', '/join/', '/api/']) assert.ok(r.includes(`Disallow: ${p}`));
   assert.match(r, /Sitemap: https:\/\/austin\.makeitstretch\.org\/sitemap\.xml/);
   const s = sitemapXml(CITIES.national);
-  for (const p of PUBLIC_PAGES) assert.ok(s.includes(`<loc>https://makeitstretch.org${p}</loc>`));
+  for (const p of PUBLIC_PAGES) assert.ok(s.includes(`<loc>https://www.makeitstretch.org${p}</loc>`));
   assert.ok(!s.includes('/admin'));
 });
 
-test('the server sends these on every web address (www and ?via=share point to the main address)', async () => {
+test('the server sends these on every web address (the main site address is www, where makeitstretch.org redirects)', async () => {
   const child = spawn(process.execPath, ['--input-type=module', '-e',
     "const { default: app } = await import('./server.js'); const s = app.listen(0, () => console.log('PORT ' + s.address().port));"],
   { env: { ...process.env, NODE_ENV: 'production' }, stdio: ['ignore', 'pipe', 'inherit'] });
@@ -59,15 +59,15 @@ test('the server sends these on every web address (www and ?via=share point to t
     const home = await get('www.makeitstretch.org', '/?via=share');
     assert.equal(home.status, 200);
     assert.match(home.body, /<title>Make It Stretch: Free meal plan/);
-    assert.match(home.body, /canonical" href="https:\/\/makeitstretch\.org\/"/);
+    assert.match(home.body, /canonical" href="https:\/\/www\.makeitstretch\.org\/"/);
     assert.match(home.body, /id="app"/);
     const austin = await get('austin.makeitstretch.org');
     assert.match(austin.body, /<title>Make It Stretch Austin: /);
-    assert.match((await get('makeitstretch.org', '/about')).body, /canonical" href="https:\/\/makeitstretch\.org\/about"/);
+    assert.match((await get('makeitstretch.org', '/about')).body, /canonical" href="https:\/\/www\.makeitstretch\.org\/about"/);
     const robots = await get('austin.makeitstretch.org', '/robots.txt');
     assert.match(robots.type, /text\/plain/); assert.match(robots.body, /austin\.makeitstretch\.org\/sitemap\.xml/);
     const map = await get('makeitstretch.org', '/sitemap.xml');
-    assert.match(map.type, /xml/); assert.match(map.body, /<loc>https:\/\/makeitstretch\.org\/how-plans-work<\/loc>/);
+    assert.match(map.type, /xml/); assert.match(map.body, /<loc>https:\/\/www\.makeitstretch\.org\/how-plans-work<\/loc>/);
     const missing = await get('makeitstretch.org', '/no-such-page');
     assert.equal(missing.status, 404); assert.match(missing.body, /id="app"/);
   } finally { child.kill(); }

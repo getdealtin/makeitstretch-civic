@@ -23,8 +23,8 @@ export function homeSeo(city) {
   };
 }
 
-/** The city's main web address (its first host); the national site is makeitstretch.org. */
-export const originFor = city => `https://${city?.hosts?.[0] || 'makeitstretch.org'}`;
+/** The address the city is served at: its canonical_host if set (the main site: www), else its first host. */
+export const originFor = city => `https://${city?.canonical_host || city?.hosts?.[0] || 'www.makeitstretch.org'}`;
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
